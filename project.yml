@@ -1,0 +1,284 @@
+name: Ripple
+options:
+  bundleIdPrefix: de.stefansturm.ripple
+  deploymentTarget:
+    iOS: "26.0"
+    watchOS: "26.0"
+    macOS: "26.0"
+    tvOS: "26.0"
+    visionOS: "26.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+  generateEmptyDirectories: true
+configFiles:
+  Debug: Config/Shared.xcconfig
+  Release: Config/Shared.xcconfig
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: 1
+    GENERATE_INFOPLIST_FILE: YES
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    STRING_CATALOG_GENERATE_SYMBOLS: YES
+    ENABLE_PREVIEWS: YES
+packages:
+  RippleDomain:
+    path: Packages/RippleDomain
+  RippleData:
+    path: Packages/RippleData
+  RippleIntentsCore:
+    path: Packages/RippleIntentsCore
+  RippleUI:
+    path: Packages/RippleUI
+  RippleFeatures:
+    path: Packages/RippleFeatures
+targets:
+  RippleiOS:
+    type: application
+    platform: iOS
+    sources:
+      - path: Apps/RippleiOS
+      - path: Shared
+    entitlements:
+      path: Apps/RippleiOS/RippleiOS.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple
+        PRODUCT_NAME: Ripple
+        INFOPLIST_KEY_CFBundleDisplayName: Ripple
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.healthcare-fitness
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSSupportsLiveActivities: YES
+        INFOPLIST_KEY_NSHealthShareUsageDescription: Ripple reads today's workouts only if you opt in, to adjust your water goal. This is not medical advice.
+        INFOPLIST_KEY_NSHealthUpdateUsageDescription: Ripple writes drinks you log as Dietary Water in Health.
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_RippleAppGroup: $(RIPPLE_APP_GROUP)
+        INFOPLIST_KEY_RippleiCloudContainer: $(RIPPLE_ICLOUD_CONTAINER)
+        CODE_SIGN_STYLE: Automatic
+    info:
+      path: Apps/RippleiOS/Info.plist
+      properties:
+        UIBackgroundModes:
+          - remote-notification
+        RippleAppGroup: $(RIPPLE_APP_GROUP)
+        RippleiCloudContainer: $(RIPPLE_ICLOUD_CONTAINER)
+        NSSupportsLiveActivities: true
+    dependencies:
+      - package: RippleDomain
+        product: RippleDomain
+      - package: RippleData
+        product: RippleData
+      - package: RippleIntentsCore
+        product: RippleIntentsCore
+      - package: RippleUI
+        product: RippleUI
+      - package: RippleFeatures
+        product: RippleFeatures
+      - target: RippleWidgets
+        embed: true
+      - target: RipplewatchOS
+        embed: true
+        codeSign: true
+  RippleWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Extensions/RippleWidgets
+      - path: Shared/PrivacyInfo.xcprivacy
+    entitlements:
+      path: Extensions/RippleWidgets/RippleWidgets.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.widgets
+        PRODUCT_NAME: RippleWidgets
+        INFOPLIST_KEY_CFBundleDisplayName: Ripple
+        INFOPLIST_KEY_NSSupportsLiveActivities: YES
+        CODE_SIGN_STYLE: Automatic
+    info:
+      path: Extensions/RippleWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Ripple
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        NSSupportsLiveActivities: true
+        RippleAppGroup: $(RIPPLE_APP_GROUP)
+        RippleiCloudContainer: $(RIPPLE_ICLOUD_CONTAINER)
+    dependencies:
+      - package: RippleDomain
+        product: RippleDomain
+      - package: RippleData
+        product: RippleData
+      - package: RippleIntentsCore
+        product: RippleIntentsCore
+      - package: RippleUI
+        product: RippleUI
+      - sdk: SwiftUI.framework
+      - sdk: WidgetKit.framework
+      - sdk: ActivityKit.framework
+  RipplewatchOS:
+    type: application
+    platform: watchOS
+    sources:
+      - path: Apps/RipplewatchOS
+      - path: Shared
+    entitlements:
+      path: Apps/RipplewatchOS/RipplewatchOS.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.watchkitapp
+        PRODUCT_NAME: Ripple
+        INFOPLIST_KEY_CFBundleDisplayName: Ripple
+        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: de.stefansturm.ripple
+        INFOPLIST_KEY_WKApplication: YES
+        INFOPLIST_KEY_NSHealthShareUsageDescription: Ripple reads today's workouts only if you opt in, to adjust your water goal.
+        INFOPLIST_KEY_NSHealthUpdateUsageDescription: Ripple writes drinks you log as Dietary Water in Health.
+        CODE_SIGN_STYLE: Automatic
+    info:
+      path: Apps/RipplewatchOS/Info.plist
+      properties:
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: de.stefansturm.ripple
+        RippleAppGroup: $(RIPPLE_APP_GROUP)
+        RippleiCloudContainer: $(RIPPLE_ICLOUD_CONTAINER)
+    dependencies:
+      - package: RippleDomain
+        product: RippleDomain
+      - package: RippleData
+        product: RippleData
+      - package: RippleUI
+        product: RippleUI
+      - package: RippleFeatures
+        product: RippleFeatures
+      - target: RippleWatchWidgets
+        embed: true
+  RippleWatchWidgets:
+    type: app-extension
+    platform: watchOS
+    sources:
+      - path: Extensions/RippleWatchWidgets
+    entitlements:
+      path: Extensions/RippleWatchWidgets/RippleWatchWidgets.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.watchkitapp.widgets
+        PRODUCT_NAME: RippleWatchWidgets
+        INFOPLIST_KEY_CFBundleDisplayName: Ripple
+        CODE_SIGN_STYLE: Automatic
+    info:
+      path: Extensions/RippleWatchWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Ripple
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        RippleAppGroup: $(RIPPLE_APP_GROUP)
+    dependencies:
+      - package: RippleDomain
+        product: RippleDomain
+      - package: RippleData
+        product: RippleData
+      - package: RippleUI
+        product: RippleUI
+      - sdk: SwiftUI.framework
+      - sdk: WidgetKit.framework
+  RipplemacOS:
+    type: application
+    platform: macOS
+    sources:
+      - path: Apps/RipplemacOS
+      - path: Shared
+    entitlements:
+      path: Apps/RipplemacOS/RipplemacOS.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.mac
+        PRODUCT_NAME: Ripple
+        COMBINE_HIDPI_IMAGES: YES
+        CODE_SIGN_STYLE: Automatic
+    info:
+      path: Apps/RipplemacOS/Info.plist
+      properties:
+        LSApplicationCategoryType: public.app-category.healthcare-fitness
+        RippleAppGroup: $(RIPPLE_APP_GROUP)
+        RippleiCloudContainer: $(RIPPLE_ICLOUD_CONTAINER)
+    dependencies:
+      - package: RippleDomain
+        product: RippleDomain
+      - package: RippleData
+        product: RippleData
+      - package: RippleIntentsCore
+        product: RippleIntentsCore
+      - package: RippleUI
+        product: RippleUI
+      - package: RippleFeatures
+        product: RippleFeatures
+  RippletvOS:
+    type: application
+    platform: tvOS
+    sources:
+      - path: Apps/RippletvOS
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.tv
+        PRODUCT_NAME: Ripple
+        CODE_SIGN_STYLE: Automatic
+    dependencies:
+      - package: RippleDomain
+        product: RippleDomain
+      - package: RippleData
+        product: RippleData
+      - package: RippleUI
+        product: RippleUI
+      - package: RippleFeatures
+        product: RippleFeatures
+  RipplevisionOS:
+    type: application
+    platform: visionOS
+    sources:
+      - path: Apps/RipplevisionOS
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.vision
+        PRODUCT_NAME: Ripple
+        CODE_SIGN_STYLE: Automatic
+    dependencies:
+      - package: RippleDomain
+        product: RippleDomain
+      - package: RippleData
+        product: RippleData
+      - package: RippleUI
+        product: RippleUI
+      - package: RippleFeatures
+        product: RippleFeatures
+schemes:
+  RippleiOS:
+    build:
+      targets:
+        RippleiOS: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+  RipplemacOS:
+    build:
+      targets:
+        RipplemacOS: all
+    run:
+      config: Debug
+  RippletvOS:
+    build:
+      targets:
+        RippletvOS: all
+    run:
+      config: Debug
+  RipplevisionOS:
+    build:
+      targets:
+        RipplevisionOS: all
+    run:
+      config: Debug

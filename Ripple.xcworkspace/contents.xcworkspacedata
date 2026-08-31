@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Ripple.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Packages/RippleDomain">
+   </FileRef>
+   <FileRef
+      location = "group:Packages/RippleData">
+   </FileRef>
+   <FileRef
+      location = "group:Packages/RippleIntentsCore">
+   </FileRef>
+   <FileRef
+      location = "group:Packages/RippleUI">
+   </FileRef>
+   <FileRef
+      location = "group:Packages/RippleFeatures">
+   </FileRef>
+</Workspace>

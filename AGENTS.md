@@ -1,0 +1,240 @@
+# AGENTS.md — Ripple
+
+This file is binding for every agent (Grok Build, Cursor, Codex, human).  
+No “close enough.” No silent shortcuts.
+
+Conflict order:
+
+1. **This file** for process, architecture, bans, and design tokens  
+2. **`Ripple_Hero_Motion.md`** for glass, level, pour, and tilt  
+3. **`Ripple_History_Stats.md`** for History and Stats  
+4. **`Ripple_PRD.md`** for scope, domain, sync, intents, platforms  
+
+PRD §14 idle-wave text is stale. The hero follows `Ripple_Hero_Motion.md` only.
+
+---
+
+## 0. Mission
+
+Ripple is an open-source reference app: Swift/SwiftUI, every Apple device, CloudKit, strict boundaries.  
+Water is logged wherever the user is (widget, Siri, Watch, Control, Live Activity). The app is Today, History, Stats, Settings.
+
+Name: **Ripple**. Suggested bundle: `de.stefansturm.ripple`.
+
+---
+
+## 1. Stack — not negotiable
+
+- **Swift** and **SwiftUI** only. No UIKit layout as the default. No SpriteKit, Metal, Lottie, or video UI.
+- Swift 6, strict concurrency.
+- State: `@Observable` / `@MainActor`. **No** `ObservableObject`. No Combine for view state.
+- Persistence: **SwiftData** + CloudKit private DB + App Group. One store.
+- HealthKit is a **projection**, never source of truth.
+- Charts: **Swift Charts**.
+- Intents: AppIntents via `RippleIntentsCore`, same `LogIntake` API as the button.
+- Minimum OS: current OS at build time. Do not artificially target iOS 17.
+
+---
+
+## 2. Architecture — feature-first clean MVVM
+
+```
+Apps + Extensions        composition root, scenes
+RippleFeatures           views + @Observable view models
+RippleUI                 tokens, components, motion
+RippleIntentsCore        AppIntent adapters
+RippleDomain             entities, use cases, ports
+RippleData               SwiftData, CloudKit, HealthKit, notifications
+```
+
+### May / must not
+
+| Layer | May | Must not |
+|---|---|---|
+| Domain | use cases, goal formula, units | `import SwiftUI`, SwiftData, CloudKit, HealthKit, WidgetKit |
+| Data | persistence, mapping, projections | view layout, Siri phrases |
+| IntentsCore | system contract, phrases | its own amount logic, a second `LogIntake` |
+| UI | look, motion, tokens | `@Query` writes, `HKHealthStore`, `CKRecord` |
+| Features | VM orchestrates use cases | CloudKit/HealthKit directly, `#if os()` for business rules |
+| Apps | wiring | if/else on source for the amount |
+
+### Hard rules
+
+- Every log goes through `LogIntake.run(amount:source:date:)`. Widget, Siri, Watch, Control, notification, Live Activity, button: **one** implementation.
+- Writes only through a `@ModelActor`. Views do not write SwiftData.
+- No `@Query` to create or mutate intakes.
+- No second source of truth in UserDefaults (ephemeral widget placeholder only).
+- A HealthKit failure must **not** roll back the log.
+- Undo = `UndoLastIntake` on the last own, non-deleted entry. No distributed undo stack.
+- Navigation is platform-local (tab / split / Watch page). No app-wide router.
+- `#if os()` only in apps, UI adapters, composition root. Not in use cases. Not in view models for rules.
+- Internally always **integer milliliters**. UI converts via `UnitConverter`.
+- Soft delete (`isDeleted`). No hard wipe without an export path.
+
+### Use cases (only write/read API features may call)
+
+`LogIntake`, `UndoLastIntake`, `EditIntake`, `DeleteIntake`, `RestoreIntake`, `ObserveToday`, `ObserveMonth`, `ObserveStats`, `ObserveHistory`, `UpdateGoal`, `CalculateGoal`, `UpdateProfile`, `UpsertContainer`, `DeleteContainer`, `ExportData`, `StartOrUpdateLiveActivity`, `RescheduleReminders`.
+
+New write path = new domain use case. Not “just do it in the view.”
+
+### Composition root
+
+One factory/container wires ports. No service-locator singletons except that factory. Extensions use the same App Group store.
+
+---
+
+## 3. Repo layout
+
+```
+Apps/          RippleiOS, watchOS, macOS, tvOS, visionOS
+Extensions/    RippleWidgets (WidgetKit + Live Activity UI)
+Packages/      RippleDomain, RippleData, RippleIntentsCore, RippleUI, RippleFeatures
+Tests/
+Docs/ADR/
+```
+
+No business logic in `Apps/` beyond wiring.  
+New UI that needs tokens → `RippleUI`, not copy-paste inside a feature.
+
+---
+
+## 4. Design system — these tokens only
+
+Colors, type, space, and motion come from `RippleUI`. No magic numbers in features except layout offsets named in the motion spec.
+
+### Color
+
+| Token | Light | Role |
+|---|---|---|
+| `color.water.deep` | `#0B3D4A` | text, icons |
+| `color.water.lagoon` | `#1A7A8C` | primary, stroke |
+| `color.water.aqua` | `#4FB3C6` | water, progress |
+| `color.water.foam` | `#E8F4F6` | background |
+| `color.success` | Lagoon | goal reached |
+| `color.danger` | desaturated system red | delete |
+
+Dark: Deep stays readable, Aqua a bit brighter, surfaces cool anthracite.  
+No extra accent colors in v1 (no orange, no purple).
+
+### Type and shape
+
+- **San Francisco** only. No custom font.
+- Numbers: `.monospacedDigit()`. No `1°500` formatting.
+- Styles only via `Font.TextStyle`: display / title / body / callout / caption.
+- 4-pt grid.
+- Radii: 12 controls, 20 cards, 28 hero.
+- No heavy drop shadows. Material: `ultraThinMaterial` sparingly.
+
+### Motion tokens
+
+| Token | Value | Use |
+|---|---|---|
+| `ripple.duration.quick` | 0.28 s | button, chip |
+| `ripple.duration.hero` | pour 0.40–0.70 s | active stream |
+| `ripple.spring.snappy` | 0.28 / 0.85 | controls |
+| `ripple.spring.liquid` | 0.55 / 0.72 | readout and non-pour refresh |
+| `ripple.level.rise` | pour duration + 0.14 s, linear | active-pour fill level |
+| `ripple.undo` | 0.45 s | level reverse |
+
+`ripple.idle.loop` is **dead**. Idle has no sine loop.
+
+Reduce Motion: no pour stream, no surface reaction, `tilt = 0`, level cross-fade 0.20 s.
+
+### Components (build once, reuse)
+
+`LogButton`, `QuickAddCluster`, `AmountStepper`, `ContainerChip`, `DayHeader`, `RemainingLabel`, `IntakeRow`, `SyncStatusView`, `EmptyState`, `GlassCard`, `GlassShape`, `WaterFill`, `PourStreamShape`, `DayRing`.
+
+Every new component: Light/Dark preview, Dynamic Type XXXL, Reduce Motion.
+
+---
+
+## 5. Today hero — do not improvise
+
+Full text: `Ripple_Hero_Motion.md` (v1.2+). Non-negotiable short list:
+
+- Level = stylized **2D glass**. No circular progress. No `ProgressView` as the hero.
+- Idle: **flat** water surface. No `TimelineView` for water.
+- Tilt: Core Motion `gravity.x`, ±16°, low-pass 0.18. Midpoint = store level. No SPH.
+- `level == 0`: no fill, no bottom shimmer.
+- No single drop metaphor. Use one narrow `PourStreamShape` for an active add series.
+- Stream width 7…12 pt and flow duration 0.40…0.70 s follow the series amount.
+- Start **above** the glass: `glass.minY - 32 pt`. Establish to the surface in 0.14 s.
+- One shared, frame-sampled pour clock drives the level rise and stream fade from first contact through disappearance. The level reaches its target exactly when the stream disappears; no level spring or overshoot during a pour. Numbers remain above the stream. Remaining / last / confirm change when the pour ends.
+- Surface response: central contact depression, one outward pair, one weaker reflection, flat again after 0.90 s.
+- No separate hero rings or idle surface motion.
+- Simulator / Mac / Watch / widget / Live Activity / face-up / Reduce Motion: `tilt = 0`.
+- Coalesce: many taps → many store rows, **one continuous pour**, one duration-locked retargeted level animation, one final surface response.
+
+---
+
+## 6. History and Stats — keep them split
+
+Full text: `Ripple_History_Stats.md`.
+
+- Four tabs: Today | History | Stats | Settings.
+- History = Activity-style month grid, **one ring per day**, cap 1.0. Future days not tappable.
+- Tap → push `DayDetail` (iPad: split). Plus only when the day is today.
+- Stats = its own screen. Period week/month/year. Swift Charts as specified.
+- No combined Insights screen, no three Fitness rings, no GitHub heatmap.
+
+---
+
+## 7. Copy, language, a11y
+
+- v1: **DE and EN**. Follow system language. No other locales.
+- UI copy from the specs (confirm: `+{n} ml · schöner Ripple.` / EN equivalent). No marketing fluff, no medical advice.
+- VoiceOver labels complete (amount, goal, percent, source).
+- Dynamic Type through XXXL. Do not clip hero numbers; scale if needed.
+- Deep on Foam must stay readable.
+
+---
+
+## 8. Platforms
+
+- iPhone: four tabs, hero per motion spec.
+- iPad: split per tab. Not a shrunk iPhone skin.
+- Watch: ring + plus + crown. No calendar, no stats charts.
+- Mac: sidebar, keyboard ⌘N / ⌘Z.
+- tvOS / visionOS: ambient/window minimum from the PRD, not feature parity.
+- Widget + Live Activity: glass silhouette, flat surface, **no** pour stream or surface response, **no** motion tilt.
+
+---
+
+## 9. Quality
+
+- Every use case: at least one unit test (Log, Undo, goal formula, UnitConverter, pourWidth, pourDuration, levelRiseDuration).
+- No force-unwrap on production paths.
+- No `print` as telemetry.
+- Package public API as small as possible.
+- New dependency only with an ADR. Default: no third-party UI libraries.
+
+---
+
+## 10. Explicitly banned
+
+- `ProgressView` / circular progress as the daily level
+- Photoreal water, caustics, particles, fluid solvers
+- Idle sine wave, permanent surface motion
+- A single drop or SF Symbol `drop.fill` as the add metaphor
+- Pour stream starting inside the glass or detached from the water surface
+- Level spring or level overshoot while a pour stream is active
+- HealthKit as truth; rolling back a log on HK failure
+- A second `LogIntake` in widget/intent
+- `@Query` writes, UserDefaults as store
+- Plants, social, streak product, beverage factors (v1.1)
+- Heavy shadows, custom fonts, extra accent colors
+- Back button on tab roots
+- English hardcodes in the DE locale
+
+---
+
+## 11. How agents work
+
+1. Read the spec, then write code. Do not build first and “approximate” the spec.
+2. Extend existing tokens and use cases. Do not invent a parallel path.
+3. UI change to the hero or History/Stats: update the matching `.md` first, then the code.
+4. After motion changes, re-check Reduce Motion and `level == 0`.
+5. Do not inflate scope into v1.1.
+6. Re-read this file at session start when unsure.
+
+Breaking a rule requires changing the spec — not ignoring the rule.
