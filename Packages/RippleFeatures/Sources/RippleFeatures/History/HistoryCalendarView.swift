@@ -25,43 +25,13 @@ public struct HistoryCalendarView: View {
 
     public var body: some View {
         if usesSplit {
-            NavigationSplitView {
-                splitCalendar
-                    .navigationTitle("")
-                    .rippleInlineNavigationTitle()
-                    .rippleNavigationBarBackground(RippleColor.waterFoam)
-                    .navigationSplitViewColumnWidth(
-                        min: RippleLayout.iPadHistoryColumnMinWidth,
-                        ideal: RippleLayout.iPadHistoryColumnIdealWidth,
-                        max: RippleLayout.iPadHistoryColumnMaxWidth
-                    )
-            } detail: {
-                if let day = model.selectedDay {
-                    DayDetailView(
-                        day: day,
-                        useCases: useCases,
-                        refreshID: detailRefreshID,
-                        onAdd: showCustomAmount
-                    )
-                        .id(day)
-                        .rippleNavigationBarBackground(RippleColor.waterFoam)
-                } else {
-                    ContentUnavailableView(L10n.text("Choose a day"), systemImage: "calendar")
-                        .background(RippleColor.waterFoam.ignoresSafeArea())
-                        .rippleNavigationBarBackground(RippleColor.waterFoam)
-                }
-            }
-            .background(RippleColor.waterFoam.ignoresSafeArea())
-            .rippleNavigationBarBackground(RippleColor.waterFoam)
-            .sheet(isPresented: $showsCustomAmount, onDismiss: refreshAfterCustomAmount) {
-                customAmountSheet
-            }
+            iPadHistoryScreen
         } else {
-            compactStack
+            iPhoneHistoryScreen
         }
     }
 
-    private var compactStack: some View {
+    private var iPhoneHistoryScreen: some View {
         NavigationStack {
             calendar
                 .navigationTitle(L10n.text("History"))
@@ -76,15 +46,75 @@ public struct HistoryCalendarView: View {
         }
     }
 
+    private var iPadHistoryScreen: some View {
+        HStack(spacing: 0) {
+            calendar
+                .frame(
+                    minWidth: RippleLayout.iPadHistoryColumnMinWidth,
+                    idealWidth: RippleLayout.iPadHistoryColumnIdealWidth,
+                    maxWidth: RippleLayout.iPadHistoryColumnMaxWidth,
+                    maxHeight: .infinity,
+                    alignment: .top
+                )
+
+            Rectangle()
+                .fill(RippleColor.waterDeep.opacity(0.12))
+                .frame(width: RippleLayout.iPadHistoryDividerWidth)
+                .allowsHitTesting(false)
+
+            iPadDetailPane
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background(RippleColor.waterFoam.ignoresSafeArea())
+        .sheet(isPresented: $showsCustomAmount, onDismiss: refreshAfterCustomAmount) {
+            customAmountSheet
+        }
+    }
+
+    private var iPadDetailPane: some View {
+        ZStack(alignment: .topTrailing) {
+            detailContent
+
+            if canAddToHistory {
+                customAmountButton
+                    .padding(.top, RippleSpace.sm)
+                    .padding(.trailing, RippleSpace.lg)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var detailContent: some View {
+        if let day = model.selectedDay {
+            DayDetailView(
+                day: day,
+                useCases: useCases,
+                refreshID: detailRefreshID
+            )
+                .id(day)
+                .rippleNavigationBarBackground(RippleColor.waterFoam)
+        } else {
+            ContentUnavailableView(L10n.text("Choose a day"), systemImage: "calendar")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(RippleColor.waterFoam.ignoresSafeArea())
+                .rippleNavigationBarBackground(RippleColor.waterFoam)
+        }
+    }
+
     @ToolbarContentBuilder
     private var calendarToolbar: some ToolbarContent {
         if canAddToHistory {
             ToolbarItem(placement: .primaryAction) {
-                Button(L10n.text("Custom amount"), systemImage: "plus", action: showCustomAmount)
-                    .labelStyle(.iconOnly)
-                    .accessibilityLabel(L10n.text("Custom amount"))
+                customAmountButton
             }
         }
+    }
+
+    private var customAmountButton: some View {
+        Button(L10n.text("Custom amount"), systemImage: "plus", action: showCustomAmount)
+            .labelStyle(.iconOnly)
+            .accessibilityLabel(L10n.text("Custom amount"))
     }
 
     private var canAddToHistory: Bool {
@@ -104,17 +134,6 @@ public struct HistoryCalendarView: View {
             ),
             unit: snapshot.unit
         )
-    }
-
-    private var splitCalendar: some View {
-        calendar
-            .overlay(alignment: .trailing) {
-                Rectangle()
-                    .fill(RippleColor.waterDeep.opacity(0.12))
-                    .frame(width: 1)
-                    .allowsHitTesting(false)
-            }
-            .rippleSidebarToggleHidden()
     }
 
     private var calendar: some View {

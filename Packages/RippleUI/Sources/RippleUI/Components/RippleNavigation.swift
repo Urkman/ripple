@@ -36,13 +36,4 @@ public extension View {
         self
         #endif
     }
-
-    @ViewBuilder
-    func rippleSidebarToggleHidden() -> some View {
-        #if os(iOS)
-        self.toolbar(removing: .sidebarToggle)
-        #else
-        self
-        #endif
-    }
 }

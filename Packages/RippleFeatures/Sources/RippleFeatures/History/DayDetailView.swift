@@ -6,19 +6,16 @@ import SwiftUI
 public struct DayDetailView: View {
     @State private var model: DayDetailViewModel
     private let refreshID: Int
-    private let onAdd: (() -> Void)?
     @Environment(\.locale) private var locale
     @Environment(\.rippleHistorySplit) private var usesSplit
 
     public init(
         day: Date,
         useCases: UseCases,
-        refreshID: Int = 0,
-        onAdd: (() -> Void)? = nil
+        refreshID: Int = 0
     ) {
         _model = State(initialValue: DayDetailViewModel(useCases: useCases, day: day))
         self.refreshID = refreshID
-        self.onAdd = onAdd
     }
 
     public var body: some View {
@@ -80,15 +77,6 @@ public struct DayDetailView: View {
         .navigationTitle(usesSplit ? "" : L10n.text("History"))
         .rippleInlineNavigationTitle()
         .rippleNavigationBarBackground(RippleColor.waterFoam)
-        .toolbar {
-            if model.isToday, let onAdd {
-                ToolbarItem(placement: .primaryAction) {
-                    Button(L10n.text("Custom amount"), systemImage: "plus", action: onAdd)
-                        .labelStyle(.iconOnly)
-                        .accessibilityLabel(L10n.text("Custom amount"))
-                }
-            }
-        }
         .safeAreaInset(edge: .bottom) {
             if model.undoIntakeID != nil {
                 HStack {

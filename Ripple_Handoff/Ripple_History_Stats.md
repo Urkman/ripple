@@ -2,7 +2,8 @@
 
 **Dokumenttyp:** Screen-Spec  
 **Empfänger:** Grok Build  
-**Version:** 1.4 — 1. September 2026
+**Version:** 1.5 — 1. September 2026
+**1.5:** Trennt die History-Komposition explizit nach Plattform: iPhone verwendet einen normalen `NavigationStack`; iPad verwendet zwei direkt nebeneinander angeordnete Paneele in einem plain `HStack`, ohne `NavigationStack` oder `NavigationSplitView` in den Paneelen.
 **1.4:** Korrigiert die Position der History-Primäraktion: im offenen iPad-Split am Detail, im kompakten Stack am Kalender-Root; der Sidebar-Toggle wird aus der Masterspalte entfernt.
 **1.3:** Verankert die History-Aktion in der oberen Tabbar-Nähe, öffnet für neue Einträge die benutzerdefinierte Mengen-Sheet und hält die iPad-Kalenderspalte offen.
 **1.2:** Vereinheitlicht die Stats-Oberfläche als GlassCard-Layout, setzt den History-Start auf heute und ergänzt eine dezente iPad-Trennlinie.
@@ -26,15 +27,15 @@ iPhone Tab Bar, vier Tabs:
 Kein Segmented Control, das beide mischt.  
 Zurück-Button nur innerhalb von Pushes (Tagesdetail), nicht auf den Tab-Roots.
 
-iPad: `NavigationSplitView`.
+iPad: eigener Zwei-Pane-Screen mit plain `HStack`; die beiden Paneele werden nicht von `NavigationStack` oder `NavigationSplitView` umschlossen.
 
 - Tab Verlauf: links Monatsraster, rechts `DayDetailView`; heute ist beim Öffnen vorausgewählt, daher gibt es keinen initialen „Tag wählen“-Zustand.
 - Tab Statistik: eine Spalte, Charts volle Breite.
-- Beide iPad-Spalten verwenden durchgehend den Foam-Hintergrund; die systemseitige Sidebar-Farbfläche darf keine zweite Tönung einführen.
+- Beide iPad-Paneele verwenden durchgehend den Foam-Hintergrund; es gibt keine systemseitige Sidebar-Farbfläche und keinen systemseitigen Sidebar-Controller.
 - Beim Öffnen von Verlauf ist der heutige Tag vorausgewählt. Eine manuelle Tagesauswahl bleibt bestehen; der Zustand „Tag wählen“ ist kein initialer Zustand.
 - Zwischen Master- und Detailspalte liegt eine dezente vertikale Trennlinie in Deep mit niedriger Opazität.
-- Die Kalender-Masterspalte bleibt auf iPad geöffnet; ein systemseitiger Schließen-/Sidebar-Toggle wird nicht angeboten.
-- Die primäre „+“-Aktion liegt im oberen Toolbar-Bereich neben der Tabbar. Im offenen iPad-Split gehört sie zur Detailspalte; im kompakten Stack gehört sie zum Kalender-Root. Sie ist nur für den heutigen ausgewählten Tag sichtbar und öffnet die Custom-Amount-Sheet.
+- Die Kalender-Masterspalte bleibt auf iPad immer sichtbar; ein systemseitiger Schließen-/Sidebar-Toggle wird nicht angeboten.
+- Die primäre „+“-Aktion liegt im oberen Bereich neben der Tabbar. Im iPad-Detailpaneel wird sie direkt vom plain-HStack-Screen gerendert; im kompakten Stack gehört sie zum Kalender-Root. Sie ist nur für den heutigen ausgewählten Tag sichtbar und öffnet die Custom-Amount-Sheet.
 - Die obere Tabbar trägt den Screen-Kontext. Auf iPad werden keine zusätzlichen Root-Navigationstitel für Verlauf/History oder Statistik/Stats angezeigt; ein Tagesdatum im Detail bleibt sichtbar.
 
 Watch / tvOS / Widget: kein Kalender, keine Stats-Charts. Watch zeigt höchstens die letzten Einträge des Tages unter dem Plus.
@@ -49,20 +50,28 @@ Vorbild: Fitness-/Activity-App, Monatsraster mit **einem Ring pro Tag**. Keine L
 
 ```
 HistoryCalendarView
-  NavigationStack
-    HorizontalPager {
-      VStack {
-        monthHeader        // „August 2026“  < >
-        weekdayRow         // locale: M T W T F S S
-        LazyVGrid(7 columns) { dayCell }
+  iPhone: HistoryPhoneScreen
+    NavigationStack {
+      HorizontalPager {
+        VStack {
+          monthHeader      // „August 2026“  < >
+          weekdayRow       // locale: M T W T F S S
+          LazyVGrid(7 columns) { dayCell }
+        }
       }
+      .navigationDestination(item: $selectedDay) { DayDetailView(day:) }
     }
-    .navigationDestination(item: $selectedDay) { DayDetailView(day:) }
+  iPad: HistoryPadScreen
+    HStack(spacing: 0) {
+      calendarPane
+      Divider()
+      detailPane
+    }
 ```
 
 - Hintergrund Foam `#E8F4F6`
 - Titel: Wortmarke weglassen. Auf iPhone NavigationTitle `Verlauf` / `History`; auf iPad kein zusätzlicher Root-Titel, weil die obere Tabbar den Kontext trägt
-- Primäre Aktion: ein „+“ im oberen Toolbar-Bereich. Im iPad-Split erscheint es am Detail-Screen; bei kompakter Navigation erscheint es am Kalender-Screen und nicht am gepushten Detail-Screen. Das „+“ öffnet `CustomAmountSheet` zur Eingabe/Stepper-Auswahl einer Menge; die Buchung läuft über denselben `LogIntake`-Pfad wie Today. Für vergangene Tage gibt es keine Add-Aktion.
+- Primäre Aktion: ein „+“ im oberen Bereich neben der Tabbar. Auf iPad wird es direkt im Detailpaneel des plain-HStack-Screens gerendert; bei kompakter Navigation erscheint es am Kalender-Screen und nicht am gepushten Detail-Screen. Das „+“ öffnet `CustomAmountSheet` zur Eingabe/Stepper-Auswahl einer Menge; die Buchung läuft über denselben `LogIntake`-Pfad wie Today. Für vergangene Tage gibt es keine Add-Aktion.
 - Monat per Chevron und horizontalem Swipe. Der vollständige Monatsinhalt — Header, Wochentage und Raster — liegt in einem seitenbreiten horizontalen `ScrollView` mit nativer, auf genau eine Seite begrenzter Paging-Semantik (`scrollTargetLayout` / `scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))`). Der Pager enthält ausschließlich die lückenlose Monatsfolge vom Monat des ersten nicht gelöschten Wassereintrags bis zum aktuellen Monat; ohne Eintrag zeigt er nur den aktuellen Monat. Jede Seite besitzt mit ihrem normalisierten Monatsanfang eine stabile Identität. Sichtbare Seiten werden während oder nach einer Geste weder wiederverwendet noch auf eine künstliche Mittelseite zurückgesetzt. `visibleMonth` wird auf das tatsächlich eingerastete Ziel gesetzt. Die Chevrons liegen im Monats-Header, steuern denselben Pager und sind an den beiden Grenzen deaktiviert.
 - Wochen starten laut `Calendar.current.firstWeekday`
 - Leere Zellen vor dem 1. und nach dem letzten Tag des Monats: unsichtbar, nicht tappable
@@ -129,7 +138,7 @@ DayDetailView
   hero: „1 250 ml“  /  „Ziel 2 000 ml“  /  „62 %“
   caption: „noch 750 ml“ oder „Ziel erreicht“
   List of IntakeRow
-  toolbar: ggf. „+“ loggt auf **dieses** Datum (nicht zwingend auf now — nur wenn selectedDay == today; sonst kein Plus, Einträge der Vergangenheit nur edit/delete)
+  primary action: iPad rendert „+“ direkt im Detailpaneel des plain-HStack-Screens und loggt auf **dieses** Datum; iPhone zeigt das „+“ nicht am gepushten Detail-Screen. Die Aktion ist nur sichtbar, wenn selectedDay == today; vergangene Einträge bleiben edit/delete.
 ```
 
 ### IntakeRow

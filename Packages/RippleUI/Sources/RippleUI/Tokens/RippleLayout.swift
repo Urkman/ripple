@@ -14,4 +14,5 @@ public enum RippleLayout {
     public static let iPadHistoryColumnMinWidth: CGFloat = 320
     public static let iPadHistoryColumnIdealWidth: CGFloat = 336
     public static let iPadHistoryColumnMaxWidth: CGFloat = 360
+    public static let iPadHistoryDividerWidth: CGFloat = 1
 }
