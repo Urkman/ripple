@@ -2,7 +2,7 @@
 
 Hydration that follows you.
 
-Ripple is an open-source Swift 6 + SwiftUI water tracker. Log from the app, widgets, Control Center, Watch, Siri, Live Activity, or notifications. SwiftData is the source of truth. HealthKit is a projection. CloudKit syncs through an App Group store.
+Ripple is an open-source Swift 6 + SwiftUI water tracker. Log from the app, widgets, Control Center, Watch, Siri, or notifications. SwiftData is the source of truth. HealthKit is a projection. CloudKit syncs through an App Group store.
 
 ## Requirements
 

@@ -17,7 +17,7 @@ PRD §14 idle-wave text is stale. The hero follows `Ripple_Hero_Motion.md` only.
 ## 0. Mission
 
 Ripple is an open-source reference app: Swift/SwiftUI, every Apple device, CloudKit, strict boundaries.  
-Water is logged wherever the user is (widget, Siri, Watch, Control, Live Activity). The app is Today, History, Stats, Settings.
+Water is logged wherever the user is (widget, Siri, Watch, Control). The app is Today, History, Stats, Settings.
 
 Name: **Ripple**. Suggested bundle: `de.stefansturm.ripple`.
 
@@ -60,7 +60,7 @@ RippleData               SwiftData, CloudKit, HealthKit, notifications
 
 ### Hard rules
 
-- Every log goes through `LogIntake.run(amount:source:date:)`. Widget, Siri, Watch, Control, notification, Live Activity, button: **one** implementation.
+- Every log goes through `LogIntake.run(amount:source:date:)`. Widget, Siri, Watch, Control, notification, button: **one** implementation.
 - Writes only through a `@ModelActor`. Views do not write SwiftData.
 - No `@Query` to create or mutate intakes.
 - No second source of truth in UserDefaults (ephemeral widget placeholder only).
@@ -73,7 +73,7 @@ RippleData               SwiftData, CloudKit, HealthKit, notifications
 
 ### Use cases (only write/read API features may call)
 
-`LogIntake`, `UndoLastIntake`, `EditIntake`, `DeleteIntake`, `RestoreIntake`, `ObserveToday`, `ObserveMonth`, `ObserveStats`, `ObserveHistory`, `UpdateGoal`, `CalculateGoal`, `UpdateProfile`, `UpsertContainer`, `DeleteContainer`, `ExportData`, `StartOrUpdateLiveActivity`, `RescheduleReminders`.
+`LogIntake`, `UndoLastIntake`, `EditIntake`, `DeleteIntake`, `RestoreIntake`, `ObserveToday`, `ObserveMonth`, `ObserveStats`, `ObserveHistory`, `UpdateGoal`, `CalculateGoal`, `UpdateProfile`, `UpsertContainer`, `DeleteContainer`, `ExportData`, `RescheduleReminders`.
 
 New write path = new domain use case. Not “just do it in the view.”
 
@@ -87,7 +87,7 @@ One factory/container wires ports. No service-locator singletons except that fac
 
 ```
 Apps/          RippleiOS, watchOS, macOS, tvOS, visionOS
-Extensions/    RippleWidgets (WidgetKit + Live Activity UI)
+Extensions/    RippleWidgets (WidgetKit UI)
 Packages/      RippleDomain, RippleData, RippleIntentsCore, RippleUI, RippleFeatures
 Tests/
 Docs/ADR/
@@ -162,7 +162,7 @@ Full text: `Ripple_Hero_Motion.md` (v1.2+). Non-negotiable short list:
 - One shared, frame-sampled pour clock drives the level rise and stream fade from first contact through disappearance. The level reaches its target exactly when the stream disappears; no level spring or overshoot during a pour. Numbers remain above the stream. Remaining / last / confirm change when the pour ends.
 - Surface response: central contact depression, one outward pair, one weaker reflection, flat again after 0.90 s.
 - No separate hero rings or idle surface motion.
-- Simulator / Mac / Watch / widget / Live Activity / face-up / Reduce Motion: `tilt = 0`.
+- Simulator / Mac / Watch / widget / face-up / Reduce Motion: `tilt = 0`.
 - Coalesce: many taps → many store rows, **one continuous pour**, one duration-locked retargeted level animation, one final surface response.
 
 ---
@@ -196,7 +196,7 @@ Full text: `Ripple_History_Stats.md`.
 - Watch: ring + plus + crown. No calendar, no stats charts.
 - Mac: sidebar, keyboard ⌘N / ⌘Z.
 - tvOS / visionOS: ambient/window minimum from the PRD, not feature parity.
-- Widget + Live Activity: glass silhouette, flat surface, **no** pour stream or surface response, **no** motion tilt.
+- Widget: glass silhouette, flat surface, **no** pour stream or surface response, **no** motion tilt.
 
 ---
 

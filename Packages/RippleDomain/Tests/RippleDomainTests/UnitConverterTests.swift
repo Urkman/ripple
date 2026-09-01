@@ -34,4 +34,18 @@ struct UnitConverterTests {
         #expect(text.contains("Noch"))
         #expect(text.contains("750"))
     }
+
+    @Test("hero VoiceOver copy follows the preferred unit")
+    func heroAccessibilityUsesUnit() {
+        let formatter = VolumeFormatter(locale: Locale(identifier: "en_US"))
+        let text = formatter.heroAccessibility(
+            consumedMl: 250,
+            goalMl: 2000,
+            remainingMl: 1750,
+            percent: 0.125,
+            unit: .fluidOunces
+        )
+        #expect(text.contains("fluid ounces"))
+        #expect(!text.contains("milliliters"))
+    }
 }

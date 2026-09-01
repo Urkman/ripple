@@ -4,23 +4,17 @@ public struct UpdateGoal: Sendable {
     private let settingsRepository: any SettingsRepository
     private let workoutReading: any WorkoutReading
     private let widgetReloading: any WidgetReloading
-    private let liveActivity: any LiveActivityControlling
-    private let observeToday: ObserveToday
     private let calculateGoal: CalculateGoal
 
     public init(
         settingsRepository: any SettingsRepository,
         workoutReading: any WorkoutReading,
         widgetReloading: any WidgetReloading,
-        liveActivity: any LiveActivityControlling,
-        observeToday: ObserveToday,
         calculateGoal: CalculateGoal = CalculateGoal()
     ) {
         self.settingsRepository = settingsRepository
         self.workoutReading = workoutReading
         self.widgetReloading = widgetReloading
-        self.liveActivity = liveActivity
-        self.observeToday = observeToday
         self.calculateGoal = calculateGoal
     }
 
@@ -38,8 +32,6 @@ public struct UpdateGoal: Sendable {
         }
 
         try await settingsRepository.saveGoalSettings(settings)
-        let snapshot = try await observeToday.snapshot(for: now)
         await widgetReloading.reload()
-        await liveActivity.startOrUpdate(snapshot)
     }
 }

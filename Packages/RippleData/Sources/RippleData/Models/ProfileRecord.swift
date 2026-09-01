@@ -14,7 +14,6 @@ public final class ProfileRecord {
     public var healthReadWorkoutsEnabled: Bool = false
     public var healthWriteEnabled: Bool = false
     public var hapticsEnabled: Bool = true
-    public var liveActivityEnabled: Bool = true
     public var onboardingCompleted: Bool = false
     public var updatedAt: Date = Date()
 

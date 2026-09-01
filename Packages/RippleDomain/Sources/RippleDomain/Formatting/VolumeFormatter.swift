@@ -45,15 +45,28 @@ public struct VolumeFormatter: Sendable {
         return "\(amount) left"
     }
 
-    public func heroAccessibility(consumedMl: Int, goalMl: Int, remainingMl: Int, percent: Double) -> String {
-        let consumed = grouped(consumedMl)
-        let goal = grouped(goalMl)
-        let remaining = grouped(remainingMl)
+    public func heroAccessibility(
+        consumedMl: Int,
+        goalMl: Int,
+        remainingMl: Int,
+        percent: Double,
+        unit: VolumeUnit = .milliliters
+    ) -> String {
+        let consumed = valueString(milliliters: consumedMl, unit: unit)
+        let goal = valueString(milliliters: goalMl, unit: unit)
+        let remaining = valueString(milliliters: remainingMl, unit: unit)
         let pct = Int((percent * 100).rounded(.toNearestOrEven))
-        if locale.language.languageCode?.identifier == "de" {
-            return "\(consumed) Milliliter von \(goal). \(pct) Prozent. Noch \(remaining) Milliliter."
+        let unitName: String
+        switch unit {
+        case .milliliters:
+            unitName = locale.language.languageCode?.identifier == "de" ? "Milliliter" : "milliliters"
+        case .fluidOunces:
+            unitName = locale.language.languageCode?.identifier == "de" ? "Flüssigunzen" : "fluid ounces"
         }
-        return "\(consumed) milliliters of \(goal). \(pct) percent. \(remaining) milliliters left."
+        if locale.language.languageCode?.identifier == "de" {
+            return "\(consumed) \(unitName) von \(goal). \(pct) Prozent. Noch \(remaining) \(unitName)."
+        }
+        return "\(consumed) \(unitName) of \(goal). \(pct) percent. \(remaining) \(unitName) left."
     }
 
     public func dayCellAccessibility(date: Date, consumedMl: Int, goalMl: Int, hitGoal: Bool) -> String {

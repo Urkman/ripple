@@ -5,6 +5,7 @@ import SwiftUI
 public struct RootView: View {
     @Environment(\.rippleUseCases) private var useCases
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.scenePhase) private var scenePhase
     @State private var today: TodayViewModel
     @State private var history: HistoryViewModel
     @State private var stats: StatsViewModel
@@ -42,7 +43,8 @@ public struct RootView: View {
                 #endif
             }
         }
-        .task {
+        .task(id: scenePhase) {
+            guard scenePhase == .active else { return }
             let profile = try? await useCases.settingsRepository.profile()
             showOnboarding = !(profile?.onboardingCompleted ?? false)
             await today.refresh()

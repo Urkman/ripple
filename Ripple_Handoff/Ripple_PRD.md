@@ -3,7 +3,7 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)  
 **Empfänger:** Grok Build (Implementation)  
 **Produkt:** Ripple – Water Tracker  
-**Version:** 1.3 — 28. August 2026  
+**Version:** 1.4 — 31. August 2026
 **Lizenz:** MIT  
 **Sprache UI:** Deutsch + Englisch (String Catalogs)  
 **Code-Sprache:** English identifiers, German + English copy
@@ -20,7 +20,7 @@ Baue eine **Open-Source-App** namens Ripple ausschließlich in **Swift 6 + Swift
 2. Implementiere den Scope von v1.0 vollständig (Abschnitt 3).
 3. Keine Third-Party-Dependencies.
 4. Keine Accounts, keine Werbung, keine IAP, keine Analytics.
-5. HealthKit und Live Activity gehören zu v1.0.
+5. HealthKit gehört zu v1.0. Eine Live Activity gehört bewusst nicht zu v1.0; Widgets, Control Center, Watch, Siri und Benachrichtigungen decken die schnellen Logs ab.
 6. UI folgt Abschnitt 13 und 14. Screenshots in `screens/` sind Richtung, nicht Pixel-Gesetz.
 7. Liefere ein Xcode-Workspace inkl. Packages, das auf einem echten Gerät startet. CloudKit-Container und App Group als Platzhalter + README-Anleitung.
 8. Domain- und Data-Tests müssen ohne App-Target laufen.
@@ -39,7 +39,7 @@ Wenn etwas unklar ist: die strengere, kleinere Variante wählen und als ADR in `
 **iCloud Container:** `iCloud.de.stefansturm.ripple`  
 **GitHub:** Open Source, MIT. Contributor nutzen eigene IDs (`.xcconfig.example`).
 
-Ripple ist ein Hydration-Tracker für alle Apple-Geräte. Wasser loggt man dort, wo man gerade ist (Widget, Watch, Siri, Control Center, Live Activity). Die App ist der ruhige Ort für Stand, Verlauf und Einstellungen.
+Ripple ist ein Hydration-Tracker für alle Apple-Geräte. Wasser loggt man dort, wo man gerade ist (Widget, Watch, Siri, Control Center). Die App ist der ruhige Ort für Stand, Verlauf und Einstellungen.
 
 Positionierung: erwachsen, systemweit, offen. Kein Lama, keine Gießpflanze, keine Paywall.
 
@@ -99,7 +99,6 @@ Siri: „Alles klar, 250 Milliliter sind drin. Noch 1,1 Liter bis zum Ziel.“
 | F15 | Design System RippleUI | P0 |
 | F16 | Accessibility (VoiceOver, Dynamic Type, Reduce Motion) | P0 |
 | F17 | HealthKit Dietary Water write + optionale Workouts | P0 |
-| F18 | Live Activity + Dynamic Island mit Quick Add | P0 |
 | F19 | Mac Sidebar + Tastatur + optionale Menu Bar | P0 |
 | F20 | tvOS Ambient-Gerüst | P0 (minimal) |
 | F21 | visionOS Fenster-Gerüst | P0 (minimal) |
@@ -152,7 +151,7 @@ RippleData                 SwiftData, CloudKit, HealthKit, Notifications
 ### 4.4 Log-Fluss
 
 ```
-Widget | Control | Siri | Watch | Button | Notification | Live Activity
+Widget | Control | Siri | Watch | Button | Notification
                               │
                               ▼
                  LogIntake.run(amount:source:date:)
@@ -161,8 +160,8 @@ Widget | Control | Siri | Watch | Button | Notification | Live Activity
               IntakeRepository.save  →  SwiftData App Group
                               │
           ┌───────────────────┼───────────────────┐
-          ▼                   ▼                   ▼
-   Widget.reload      LiveActivity.update   HealthProjection.write
+          ▼                   ▼
+   Widget.reload      HealthProjection.write
           │
           ▼
    NotificationScheduler.reschedule()
@@ -204,7 +203,7 @@ Ripple.xcworkspace
     RippletvOS/
     RipplevisionOS/
   Extensions/
-    RippleWidgets/          // WidgetKit + Live Activity UI
+    RippleWidgets/          // WidgetKit UI
   Packages/
     RippleDomain/
     RippleData/
@@ -251,7 +250,7 @@ struct Milliliters: Sendable, Hashable, Codable {
 }
 
 enum IntakeSource: String, Sendable, Codable {
-    case app, widget, intent, watch, control, notification, liveActivity, health
+    case app, widget, intent, watch, control, notification, health
 }
 
 enum Beverage: String, Sendable, Codable {
@@ -294,7 +293,6 @@ Einheiten: intern immer Milliliter. UI rechnet über `UnitConverter`.
 | `UpdateProfile` | |
 | `UpsertContainer` / `DeleteContainer` | |
 | `ExportData` | CSV + JSON |
-| `StartOrUpdateLiveActivity` | via Port |
 | `RescheduleReminders` | via Port |
 
 Ports (Protokolle in Domain):
@@ -303,7 +301,6 @@ Ports (Protokolle in Domain):
 protocol IntakeRepository: Sendable { ... }
 protocol SettingsRepository: Sendable { ... }
 protocol WidgetReloading: Sendable { func reload() async }
-protocol LiveActivityControlling: Sendable { func startOrUpdate(TodaySnapshot) async }
 protocol HealthProjecting: Sendable { func project(intake: Intake) async }
 protocol ReminderScheduling: Sendable { func reschedule(rule: ReminderRule, lastSip: Date?) async }
 ```
@@ -350,9 +347,8 @@ Fehler sichtbar über `SyncStatus` (account, importing, failed, unavailable).
 Nach jedem Write:
 
 1. `WidgetCenter.shared.reloadAllTimelines()`
-2. Live Activity update
-3. Health projection
-4. Reminder reschedule
+2. Health projection
+3. Reminder reschedule
 
 ### 7.3 Konflikte
 
@@ -396,26 +392,9 @@ Watch: HealthKit nur wenn Target es hergibt; iPhone darf die Projektion führen,
 
 ---
 
-## 9. Live Activity + Dynamic Island (v1.0)
+## 9. Live Activity
 
-### Lebenszyklus
-
-- Start: erster Schluck des Tages **oder** Ende Onboarding, wenn der Nutzer Activities erlaubt.
-- Update: nur bei Log/Undo/Goal-Change und um Mitternacht.
-- Ende: Mitternacht lokale Zeitzone, oder Nutzer beendet.
-- Kein Sekundentakt.
-
-### UI
-
-Lock Screen / Expanded: Ring oder Mini-Pegel, Zahl, Rest, Button **+ Default**.  
-Dynamic Island compact: Tropfen + Prozent oder Rest-ml.  
-Minimal: Prozent.
-
-Quick Add ruft `LogIntake` mit `source: .liveActivity`.
-
-Attributes z. B. `RippleActivityAttributes` mit ContentState `{ consumedMl, goalMl, defaultAddMl, unit }`.
-
-Battery: Timeline/Activity-Budget respektieren. Eine Activity pro Tag.
+Ripple nutzt bewusst keine Live Activity und keine Dynamic-Island-Wasseranzeige. Live Activities sind für zeitlich begrenzte, laufende Ereignisse gedacht und dürfen deshalb nicht die dauerhafte Tagesansicht eines Wasser-Trackers ersetzen. Die interaktiven Widgets bleiben die primäre schnelle Anzeige und Log-Fläche.
 
 ---
 
@@ -646,7 +625,7 @@ Button: „250 Milliliter hinzufügen“.
 - Kein Foto-Wasser, keine Caustic-Bitmap, keine Partikel-Engine
 - Keine Extra-Tabs, keine Motivations-Card, kein Wolkenhintergrund
 
-Widget / Live Activity: **dasselbe Glas** verkleinert, ohne Tropfenflug, ohne Idle-Loop. Nur `level` + Zahl. Quick Add = kurze Ellipse auf der Wellenlinie, 0,28 s.
+Widget: **dasselbe Glas** verkleinert, ohne Tropfenflug, ohne Idle-Loop. Nur `level` + Zahl. Quick Add = kurze Ellipse auf der Wellenlinie, 0,28 s.
 
 ---
 
@@ -658,7 +637,7 @@ Widget / Live Activity: **dasselbe Glas** verkleinert, ohne Tropfenflug, ohne Id
 2. Einheit ml oder oz (Locale-Default)
 3. Ziel: Default 2 l oder Gewicht eingeben
 4. Standard-Behälter
-5. iCloud-Hinweis, Health schreiben optional, Widget-Hinweis, Activity-Hinweis
+5. iCloud-Hinweis, Health schreiben optional, Widget-Hinweis
 
 ### Erinnerungen
 
@@ -717,12 +696,11 @@ Nicht umdrehen.
 7. Widgets + Controls  
 8. watchOS App + Komplikationen  
 9. HealthKit Projection  
-10. Live Activity + Island  
-11. History + Charts + Export  
-12. Reminders  
-13. Mac  
-14. tvOS + visionOS Gerüst  
-15. A11y-Pass, DE/EN, README, Privacy Manifest  
+10. History + Charts + Export
+11. Reminders
+12. Mac
+13. tvOS + visionOS Gerüst
+14. A11y-Pass, DE/EN, README, Privacy Manifest
 
 ---
 
@@ -736,7 +714,6 @@ Nicht umdrehen.
 - [ ] Control Center Control
 - [ ] SwiftData + App Group + CloudKit, sichtbarer Sync-Status
 - [ ] HealthKit Dietary Water + optionale Workouts, App ohne Health voll nutzbar
-- [ ] Live Activity + Dynamic Island mit Quick Add, Updates nur bei Logs/Mitternacht
 - [ ] RippleUI Tokens + Hero-Animation + Reduce Motion
 - [ ] Domain- und Data-Tests grün
 - [ ] README startet das Projekt (Container/App Group dokumentiert)
@@ -756,7 +733,6 @@ Nicht umdrehen.
 | Default-Behälter | 250 / 200 / 500 ml |
 | Default-After-Last-Sip | 120 min |
 | Health | schreiben anbieten, Workouts extra opt-in |
-| Live Activity | starten nach erstem Log, wenn erlaubt |
 | tvOS/visionOS | Gerüst, nicht pixelperfekt
 | Icon | SF-Drop-Platzhalter + Asset-Vorlage |
 | Tests | Swift Testing wo möglich |
@@ -768,8 +744,8 @@ Nicht umdrehen.
 **ADR-000:** Feature-first Clean MVVM, `@Observable`, Use Cases als einzige Schreib-API, keine TCA-Pflicht.  
 **ADR-001:** Ein SwiftData-Store, App Group, CloudKit automatic, ModelActor-Writes, CloudKit-kompatibles Schema.  
 **ADR-002:** Health ist Projektion von SwiftData, UUID in Metadata, Fehler blockieren Logs nicht.  
-**ADR-003:** Eine Live Activity pro Tag, Update nur eventgetrieben, Quick Add = LogIntake.
+**ADR-003:** Superseded. Ripple nutzt keine Live Activity; interaktive Widgets und Control Center sind die schnellen Systemflächen.
 
 ---
 
-*Ende PRD 1.2. Grok Build implementiert Abschnitt 18 in dieser Reihenfolge und stoppt bei Abschnitt 19 DoD.*
+*Ende PRD 1.4. Grok Build implementiert Abschnitt 18 in dieser Reihenfolge und stoppt bei Abschnitt 19 DoD.*

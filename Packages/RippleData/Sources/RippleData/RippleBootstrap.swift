@@ -9,15 +9,25 @@ public struct RippleContainer: Sendable {
 
     public static func make(inMemory: Bool = false) -> RippleContainer {
         let shared = SharedContainer.make(inMemory: inMemory)
+        return make(shared: shared)
+    }
+
+    /// Builds another repository/context facade over the already-open shared
+    /// model container. Extensions use this for timeline reads so a reload
+    /// gets a fresh ModelActor context without opening a second persistent
+    /// container for the same App Group store.
+    public static func make(shared: SharedContainer) -> RippleContainer {
         let store = RippleStore(modelContainer: shared.modelContainer)
         let sync = SyncStatusStore(shared.syncStatus)
-        let intakeRepository = SwiftDataIntakeRepository(store: store)
+        let intakeRepository = SwiftDataIntakeRepository(
+            store: store,
+            readModelContainer: shared.modelContainer
+        )
         let settingsRepository = SwiftDataSettingsRepository(store: store, sync: sync)
         let useCases = UseCases.assemble(
             intakeRepository: intakeRepository,
             settingsRepository: settingsRepository,
             widgetReloading: WidgetReloader(),
-            liveActivity: LiveActivityController(),
             health: HealthProjector(),
             reminders: ReminderScheduler(),
             workouts: WorkoutReader(),

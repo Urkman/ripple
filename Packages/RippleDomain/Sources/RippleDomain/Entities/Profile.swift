@@ -10,7 +10,6 @@ public struct Profile: Sendable, Hashable, Codable, Equatable {
     public var healthReadWorkoutsEnabled: Bool
     public var healthWriteEnabled: Bool
     public var hapticsEnabled: Bool
-    public var liveActivityEnabled: Bool
     public var onboardingCompleted: Bool
     public var updatedAt: Date
 
@@ -24,7 +23,6 @@ public struct Profile: Sendable, Hashable, Codable, Equatable {
         healthReadWorkoutsEnabled: Bool = false,
         healthWriteEnabled: Bool = false,
         hapticsEnabled: Bool = true,
-        liveActivityEnabled: Bool = true,
         onboardingCompleted: Bool = false,
         updatedAt: Date = Date()
     ) {
@@ -37,7 +35,6 @@ public struct Profile: Sendable, Hashable, Codable, Equatable {
         self.healthReadWorkoutsEnabled = healthReadWorkoutsEnabled
         self.healthWriteEnabled = healthWriteEnabled
         self.hapticsEnabled = hapticsEnabled
-        self.liveActivityEnabled = liveActivityEnabled
         self.onboardingCompleted = onboardingCompleted
         self.updatedAt = updatedAt
     }

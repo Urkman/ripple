@@ -4,6 +4,26 @@ import Testing
 import RippleDomain
 @testable import RippleData
 
+@Suite("Widget timeline identifiers")
+struct WidgetTimelineIdentifierTests {
+    @Test("home-screen families have distinct kinds")
+    func distinctHomeScreenKinds() {
+        let homeScreenKinds = [
+            RippleWidgetKind.todaySmall,
+            RippleWidgetKind.todayMedium,
+            RippleWidgetKind.todayLarge,
+        ]
+
+        let allKinds = [RippleWidgetKind.legacyToday] + homeScreenKinds
+
+        #expect(Set(allKinds).count == allKinds.count)
+        #expect(RippleWidgetKind.iOSTimelineKinds == [RippleWidgetKind.legacyToday] + homeScreenKinds + [
+            RippleWidgetKind.lockScreen,
+        ])
+        #expect(!RippleWidgetKind.iOSTimelineKinds.contains(RippleWidgetKind.control))
+    }
+}
+
 @Suite("SwiftData store")
 struct SwiftDataStoreTests {
     @Test("in-memory CRUD for intakes")
@@ -24,6 +44,40 @@ struct SwiftDataStoreTests {
         #expect(after?.isDeleted == true)
         let last = try await store.lastUndeletedIntake()
         #expect(last == nil)
+    }
+
+    @Test("a fresh facade reads writes from the shared model container")
+    func sharedContainerFacade() async throws {
+        let original = RippleContainer.make(inMemory: true)
+        let reader = RippleContainer.make(shared: original.shared)
+        let intake = Intake(date: Date(), amountMl: 250, source: .widget)
+
+        #expect(try await reader.store.intakes(
+            from: Date.distantPast,
+            to: Date.distantFuture
+        ).isEmpty)
+        try await original.store.saveIntake(intake)
+
+        let fetched = try await reader.store.intake(id: intake.id)
+        #expect(fetched?.amountMl == 250)
+        #expect(fetched?.source == .widget)
+    }
+
+    @Test("a use-case refresh reads an intake written by another context")
+    func useCaseRefreshReadsExternalContextWrite() async throws {
+        let app = RippleContainer.make(inMemory: true)
+        let externalWriter = RippleStore(modelContainer: app.shared.modelContainer)
+        let now = Date()
+
+        let initial = try await app.useCases.observeToday.snapshot(for: now)
+        #expect(initial.consumed.value == 0)
+
+        try await externalWriter.saveIntake(
+            Intake(date: now, amountMl: 250, source: .widget)
+        )
+
+        let refreshed = try await app.useCases.observeToday.snapshot(for: now)
+        #expect(refreshed.consumed.value == 250)
     }
 
     @Test("first undeleted intake ignores soft-deleted records")

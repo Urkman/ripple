@@ -7,6 +7,5 @@ public enum IntakeSource: String, Sendable, Codable, CaseIterable, Equatable {
     case watch
     case control
     case notification
-    case liveActivity
     case health
 }

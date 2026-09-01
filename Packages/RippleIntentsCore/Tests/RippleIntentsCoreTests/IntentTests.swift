@@ -5,15 +5,15 @@ import RippleDomain
 
 @Suite("App Intents", .serialized)
 struct IntentTests {
-    @Test("LogWaterIntent writes through fake repository")
+    @Test("widget intent writes through the shared log path")
     func logIntent() async throws {
         let intakes = InMemoryIntakeRepository()
         let settings = InMemorySettingsRepository(containers: Container.seededDefaults())
+        let reloader = RecordingWidgetReloading()
         let useCases = UseCases.assemble(
             intakeRepository: intakes,
             settingsRepository: settings,
-            widgetReloading: NoOpWidgetReloading(),
-            liveActivity: NoOpLiveActivityControlling(),
+            widgetReloading: reloader,
             health: FakeHealthProjector(),
             reminders: NoOpReminderScheduling(),
             workouts: NoOpWorkoutReading(),
@@ -21,14 +21,19 @@ struct IntentTests {
         )
         RippleRuntime.install(useCases)
 
-        let intent = LogWaterIntent(milliliters: 250)
+        let intent = LogWidgetWaterIntent(milliliters: 250)
         _ = try await intent.perform()
 
         let stored = try await intakes.intakes(
             from: Date().addingTimeInterval(-60),
             to: Date().addingTimeInterval(60)
         )
-        #expect(stored.contains { $0.amountMl == 250 && !$0.isDeleted })
+        #expect(stored.contains { $0.amountMl == 250 && $0.source == .widget && !$0.isDeleted })
+        #expect(await reloader.reloadCount == 0)
+
+        let appIntent = LogWaterIntent(milliliters: 250, source: .app)
+        _ = try await appIntent.perform()
+        #expect(await reloader.reloadCount == 1)
     }
 
     @Test("GetTodayProgressIntent returns remaining")
@@ -39,7 +44,6 @@ struct IntentTests {
             intakeRepository: intakes,
             settingsRepository: settings,
             widgetReloading: NoOpWidgetReloading(),
-            liveActivity: NoOpLiveActivityControlling(),
             health: FakeHealthProjector(),
             reminders: NoOpReminderScheduling(),
             workouts: NoOpWorkoutReading(),

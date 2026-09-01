@@ -5,12 +5,6 @@ public struct NoOpWidgetReloading: WidgetReloading {
     public func reload() async {}
 }
 
-public struct NoOpLiveActivityControlling: LiveActivityControlling {
-    public init() {}
-    public func startOrUpdate(_ snapshot: TodaySnapshot) async { _ = snapshot }
-    public func end() async {}
-}
-
 public struct NoOpReminderScheduling: ReminderScheduling {
     public init() {}
     public func reschedule(rule: ReminderRule, lastSip: Date?) async {
@@ -60,14 +54,6 @@ public actor RecordingWidgetReloading: WidgetReloading {
     public private(set) var reloadCount = 0
     public init() {}
     public func reload() async { reloadCount += 1 }
-}
-
-public actor RecordingLiveActivity: LiveActivityControlling {
-    public private(set) var snapshots: [TodaySnapshot] = []
-    public private(set) var endCount = 0
-    public init() {}
-    public func startOrUpdate(_ snapshot: TodaySnapshot) async { snapshots.append(snapshot) }
-    public func end() async { endCount += 1 }
 }
 
 public actor RecordingReminders: ReminderScheduling {

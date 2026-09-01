@@ -1,12 +1,13 @@
+import RippleData
 import RippleIntentsCore
 import SwiftUI
 import WidgetKit
 
 struct LogWaterControl: ControlWidget {
     var body: some ControlWidgetConfiguration {
-        StaticControlConfiguration(kind: "de.stefansturm.ripple.control") {
+        StaticControlConfiguration(kind: RippleWidgetKind.control) {
             ControlWidgetButton(action: LogDefaultWaterIntent()) {
-                Label("Ripple", systemImage: "drop.fill")
+                Label("Ripple", systemImage: "plus")
             }
         }
         .displayName("Ripple")

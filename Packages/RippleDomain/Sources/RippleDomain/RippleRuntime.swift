@@ -27,7 +27,6 @@ public enum RippleRuntime: Sendable {
             intakeRepository: intakes,
             settingsRepository: settings,
             widgetReloading: NoOpWidgetReloading(),
-            liveActivity: NoOpLiveActivityControlling(),
             health: PreviewHealth(),
             reminders: NoOpReminderScheduling(),
             workouts: NoOpWorkoutReading(),

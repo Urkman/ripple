@@ -8,7 +8,6 @@ public final class OnboardingViewModel {
     public var page = 0
     public var profile: Profile
     public var weightText = ""
-    public var liveActivity = true
     public var healthWrite = false
 
     @ObservationIgnored private let useCases: UseCases
@@ -24,7 +23,6 @@ public final class OnboardingViewModel {
         if let weight = Double(weightText.replacingOccurrences(of: ",", with: ".")), weight > 0 {
             profile.bodyMassKg = weight
         }
-        profile.liveActivityEnabled = liveActivity
         profile.healthWriteEnabled = healthWrite
         profile.onboardingCompleted = true
         try? await useCases.settingsRepository.seedDefaultsIfNeeded(locale: .current)
@@ -36,9 +34,6 @@ public final class OnboardingViewModel {
         }
         if healthWrite {
             _ = await useCases.healthAuthorizing.requestWaterWrite()
-        }
-        if liveActivity {
-            try? await useCases.startOrUpdateLiveActivity.run()
         }
     }
 }
@@ -163,8 +158,6 @@ public struct OnboardingView: View {
                 body: L10n.text("Sync uses your Apple Account. Health write is optional. Add the widget when you like.")
             )
             Toggle(L10n.text("Write water to Health"), isOn: $model.healthWrite)
-                .padding(.horizontal, 24)
-            Toggle(L10n.text("Live Activity"), isOn: $model.liveActivity)
                 .padding(.horizontal, 24)
         }
     }

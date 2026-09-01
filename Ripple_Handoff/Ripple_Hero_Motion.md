@@ -167,7 +167,7 @@ Beim ersten Kontakt startet eine gemeinsame, frameweise abgetastete `pourProgres
 
 Weitere Taps aktualisieren das Ziel derselben laufenden Uhr. Der aktuell dargestellte Pegel wird als neuer Startwert übernommen, `pourProgress` beginnt für die neue Serienmenge wieder bei 0, und Strahldauer sowie Pegeldauer werden ab dem letzten Tap neu berechnet. Der Strahl bleibt dabei durchgehend sichtbar; es entsteht kein zweiter Pegel- oder Zeitpfad.
 
-Widget, Live Activity, Watch-Komplikation: **kein** Strahl und keine Oberflächenreaktion. Statische ebene Fläche.
+Widget und Watch-Komplikation: **kein** Strahl und keine Oberflächenreaktion. Statische ebene Fläche.
 
 ---
 
@@ -222,7 +222,7 @@ Im Today-Hero gibt es keine `RippleEllipses`. Die Energie bleibt in der echten O
 
 Die Reaktion ist an die Wassermenge gekoppelt, wird bei einem flachen Füllstand unter 15 % auf 4 pt begrenzt und an Rim/Boden geclippt. Neue Taps ersetzen beziehungsweise verlängern die aktive Reaktion; Oberflächenprofile werden nie additiv gestapelt.
 
-Widget, Live Activity und Komplikationen zeigen weder Strahl noch Ringe noch Oberflächenwelle.
+Widget und Komplikationen zeigen weder Strahl noch Ringe noch Oberflächenwelle.
 
 ---
 
@@ -253,7 +253,7 @@ Undo: `level` in 0,45 s zurück, kein Strahl und keine Oberflächenreaktion.
 - VoiceOver Hero: „1.250 Milliliter von 2.000. 62 Prozent. Noch 750 Milliliter.“  
 - Button: „Eigene Menge“ / „Custom amount“; öffnet die Eingabe einer Menge
 
-Widget und Live Activity: dasselbe `GlassShape` + ebene Fläche, **ohne** Core Motion, **ohne** Strahl, Ringe oder Oberflächenbewegung. Zahl und Pegel aktualisieren sich statisch.
+Widget: dasselbe `GlassShape` + ebene Fläche, **ohne** Core Motion, **ohne** Strahl, Ringe oder Oberflächenbewegung. Zahl und Pegel aktualisieren sich statisch.
 
 Dark Mode: dieselben Shapes, Surfaces kühles Anthrazit, Aqua etwas heller, Stroke lesbar. Kein separates Dark-Layout.
 
@@ -288,6 +288,6 @@ Dark Mode: dieselben Shapes, Surfaces kühles Anthrazit, Aqua etwas heller, Stro
 - [ ] Keine separaten Ellipsen und kein einzelner Tropfen im Today-Hero  
 - [ ] Reduce Motion: kein Strahl, keine Oberflächenreaktion, Pegel-Crossfade in 0,2 s  
 - [ ] Coalesce: ein durchgehender Strahl, ein Zielpegel, eine abschließende Reaktion  
-- [ ] Widget und Live Activity kommen ohne Strahl und Oberflächenbewegung aus  
+- [ ] Widget und Komplikationen kommen ohne Strahl und Oberflächenbewegung aus
 
 Grok Build implementiert nur diesen Vertrag plus `Ripple_PRD.md` für den Rest der App.

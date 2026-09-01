@@ -44,6 +44,13 @@ targets:
       - path: Shared
     entitlements:
       path: Apps/RippleiOS/RippleiOS.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - $(RIPPLE_ICLOUD_CONTAINER)
+        com.apple.developer.icloud-services:
+          - CloudKit
+        com.apple.security.application-groups:
+          - $(RIPPLE_APP_GROUP)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple
@@ -51,7 +58,6 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: Ripple
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.healthcare-fitness
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_NSSupportsLiveActivities: YES
         INFOPLIST_KEY_NSHealthShareUsageDescription: Ripple reads today's workouts only if you opt in, to adjust your water goal. This is not medical advice.
         INFOPLIST_KEY_NSHealthUpdateUsageDescription: Ripple writes drinks you log as Dietary Water in Health.
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
@@ -66,7 +72,6 @@ targets:
           - remote-notification
         RippleAppGroup: $(RIPPLE_APP_GROUP)
         RippleiCloudContainer: $(RIPPLE_ICLOUD_CONTAINER)
-        NSSupportsLiveActivities: true
     dependencies:
       - package: RippleDomain
         product: RippleDomain
@@ -91,12 +96,18 @@ targets:
       - path: Shared/PrivacyInfo.xcprivacy
     entitlements:
       path: Extensions/RippleWidgets/RippleWidgets.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - $(RIPPLE_ICLOUD_CONTAINER)
+        com.apple.developer.icloud-services:
+          - CloudKit
+        com.apple.security.application-groups:
+          - $(RIPPLE_APP_GROUP)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.widgets
         PRODUCT_NAME: RippleWidgets
         INFOPLIST_KEY_CFBundleDisplayName: Ripple
-        INFOPLIST_KEY_NSSupportsLiveActivities: YES
         CODE_SIGN_STYLE: Automatic
     info:
       path: Extensions/RippleWidgets/Info.plist
@@ -104,7 +115,6 @@ targets:
         CFBundleDisplayName: Ripple
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
-        NSSupportsLiveActivities: true
         RippleAppGroup: $(RIPPLE_APP_GROUP)
         RippleiCloudContainer: $(RIPPLE_ICLOUD_CONTAINER)
     dependencies:
@@ -118,7 +128,6 @@ targets:
         product: RippleUI
       - sdk: SwiftUI.framework
       - sdk: WidgetKit.framework
-      - sdk: ActivityKit.framework
   RipplewatchOS:
     type: application
     platform: watchOS
@@ -127,6 +136,13 @@ targets:
       - path: Shared
     entitlements:
       path: Apps/RipplewatchOS/RipplewatchOS.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - $(RIPPLE_ICLOUD_CONTAINER)
+        com.apple.developer.icloud-services:
+          - CloudKit
+        com.apple.security.application-groups:
+          - $(RIPPLE_APP_GROUP)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.watchkitapp
@@ -162,6 +178,13 @@ targets:
       - path: Extensions/RippleWatchWidgets
     entitlements:
       path: Extensions/RippleWatchWidgets/RippleWatchWidgets.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - $(RIPPLE_ICLOUD_CONTAINER)
+        com.apple.developer.icloud-services:
+          - CloudKit
+        com.apple.security.application-groups:
+          - $(RIPPLE_APP_GROUP)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.watchkitapp.widgets
@@ -180,6 +203,8 @@ targets:
         product: RippleDomain
       - package: RippleData
         product: RippleData
+      - package: RippleIntentsCore
+        product: RippleIntentsCore
       - package: RippleUI
         product: RippleUI
       - sdk: SwiftUI.framework

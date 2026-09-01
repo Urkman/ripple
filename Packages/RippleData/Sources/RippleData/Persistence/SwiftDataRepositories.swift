@@ -1,11 +1,17 @@
 import Foundation
 import RippleDomain
+import SwiftData
 
 public struct SwiftDataIntakeRepository: IntakeRepository {
     private let store: RippleStore
+    private let readModelContainer: ModelContainer?
 
-    public init(store: RippleStore) {
+    public init(
+        store: RippleStore,
+        readModelContainer: ModelContainer? = nil
+    ) {
         self.store = store
+        self.readModelContainer = readModelContainer
     }
 
     public func save(_ intake: Intake) async throws {
@@ -17,19 +23,19 @@ public struct SwiftDataIntakeRepository: IntakeRepository {
     }
 
     public func intake(id: UUID) async throws -> Intake? {
-        try await store.intake(id: id)
+        try await readStore().intake(id: id)
     }
 
     public func intakes(from start: Date, to end: Date) async throws -> [Intake] {
-        try await store.intakes(from: start, to: end)
+        try await readStore().intakes(from: start, to: end)
     }
 
     public func firstUndeletedIntake() async throws -> Intake? {
-        try await store.firstUndeletedIntake()
+        try await readStore().firstUndeletedIntake()
     }
 
     public func lastUndeletedIntake() async throws -> Intake? {
-        try await store.lastUndeletedIntake()
+        try await readStore().lastUndeletedIntake()
     }
 
     public func monthSummaries(
@@ -38,7 +44,12 @@ public struct SwiftDataIntakeRepository: IntakeRepository {
         goalMl: Int,
         calendar: Calendar
     ) async throws -> [DaySummary] {
-        try await store.monthSummaries(from: start, to: end, goalMl: goalMl, calendar: calendar)
+        try await readStore().monthSummaries(
+            from: start,
+            to: end,
+            goalMl: goalMl,
+            calendar: calendar
+        )
     }
 
     public func statsSnapshot(
@@ -48,7 +59,20 @@ public struct SwiftDataIntakeRepository: IntakeRepository {
         calendar: Calendar,
         now: Date
     ) async throws -> StatsSnapshot {
-        try await store.statsSnapshot(from: start, to: end, goalMl: goalMl, calendar: calendar, now: now)
+        try await readStore().statsSnapshot(
+            from: start,
+            to: end,
+            goalMl: goalMl,
+            calendar: calendar,
+            now: now
+        )
+    }
+
+    private func readStore() -> RippleStore {
+        guard let readModelContainer else { return store }
+        // Extension writes occur in another process. A fresh ModelActor context
+        // prevents a foreground refresh from reusing pre-interaction objects.
+        return RippleStore(modelContainer: readModelContainer)
     }
 }
 

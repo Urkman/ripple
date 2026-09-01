@@ -84,7 +84,10 @@ public struct TodayView: View {
                 unit: snapshot.unit
             )
         }
-        .task { await model.refresh() }
+        .task(id: scenePhase) {
+            guard scenePhase == .active else { return }
+            await model.refresh()
+        }
         .sensoryFeedback(.success, trigger: snapshot.consumed.value)
         .animation(.easeOut(duration: RippleMotion.confirmFade), value: model.confirmation)
         .onChange(of: snapshot.consumed.value) {

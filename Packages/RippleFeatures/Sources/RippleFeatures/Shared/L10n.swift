@@ -26,7 +26,7 @@ enum L10n {
 
     static func source(_ source: IntakeSource) -> String {
         switch source {
-        case .app, .control, .notification, .liveActivity:
+        case .app, .control, .notification:
             text("App")
         case .intent:
             text("Siri")
@@ -56,5 +56,4 @@ enum L10n {
         String(localized: "Longest goal streak: \(count)", bundle: .module)
     }
 }
-
 

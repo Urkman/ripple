@@ -4,7 +4,6 @@ public struct DeleteIntake: Sendable {
     private let intakeRepository: any IntakeRepository
     private let settingsRepository: any SettingsRepository
     private let widgetReloading: any WidgetReloading
-    private let liveActivity: any LiveActivityControlling
     private let health: any HealthProjecting
     private let reminders: any ReminderScheduling
     private let observeToday: ObserveToday
@@ -13,7 +12,6 @@ public struct DeleteIntake: Sendable {
         intakeRepository: any IntakeRepository,
         settingsRepository: any SettingsRepository,
         widgetReloading: any WidgetReloading,
-        liveActivity: any LiveActivityControlling,
         health: any HealthProjecting,
         reminders: any ReminderScheduling,
         observeToday: ObserveToday
@@ -21,7 +19,6 @@ public struct DeleteIntake: Sendable {
         self.intakeRepository = intakeRepository
         self.settingsRepository = settingsRepository
         self.widgetReloading = widgetReloading
-        self.liveActivity = liveActivity
         self.health = health
         self.reminders = reminders
         self.observeToday = observeToday
@@ -38,7 +35,6 @@ public struct DeleteIntake: Sendable {
         let snapshot = (try? await observeToday.snapshot(for: intake.date)) ?? .empty(date: intake.date)
         let rule = (try? await settingsRepository.reminderRule()) ?? .default
         await widgetReloading.reload()
-        await liveActivity.startOrUpdate(snapshot)
         await health.retract(intakeID: intake.id)
         await reminders.reschedule(rule: rule, lastSip: snapshot.entries.last?.date)
     }

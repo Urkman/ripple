@@ -1,19 +1,14 @@
 # ADR-003 Live Activity
 
-**Status:** Accepted  
+**Status:** Superseded
 **Date:** 2026-08-28
 
 ## Decision
 
-One Live Activity per day.
+Ripple does not ship a Live Activity.
 
-- Start on the first sip of the day, or at the end of onboarding if the user allowed activities
-- Update only on log, undo, goal change, and midnight
-- End at local midnight or when the user dismisses it
-- No per-second tick
-- Quick Add calls `LogIntake` with `source: .liveActivity`
-- Attributes content state: `consumedMl`, `goalMl`, `defaultAddMl`, `unit`
+The original decision below was superseded because a water-tracking status surface that can expire after a limited system lifetime is not a dependable daily view. Ripple uses interactive widgets, Control Center, Watch, Siri, and notifications instead.
 
 ## Consequences
 
-Battery and ActivityKit budget stay within system limits. The island and lock screen show a short pulse; the full wave lives only in the app.
+No ActivityKit entitlement, target wiring, or runtime controller is part of the product. Existing persisted profile data remains readable during migration, but it no longer controls any behavior.

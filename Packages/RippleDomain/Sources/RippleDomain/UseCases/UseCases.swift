@@ -16,7 +16,6 @@ public struct UseCases: Sendable {
     public var upsertContainer: UpsertContainer
     public var deleteContainer: DeleteContainer
     public var exportData: ExportData
-    public var startOrUpdateLiveActivity: StartOrUpdateLiveActivity
     public var rescheduleReminders: RescheduleReminders
     public var healthAuthorizing: any HealthAuthorizing
     public var settingsRepository: any SettingsRepository
@@ -37,7 +36,6 @@ public struct UseCases: Sendable {
         upsertContainer: UpsertContainer,
         deleteContainer: DeleteContainer,
         exportData: ExportData,
-        startOrUpdateLiveActivity: StartOrUpdateLiveActivity,
         rescheduleReminders: RescheduleReminders,
         healthAuthorizing: any HealthAuthorizing,
         settingsRepository: any SettingsRepository
@@ -57,7 +55,6 @@ public struct UseCases: Sendable {
         self.upsertContainer = upsertContainer
         self.deleteContainer = deleteContainer
         self.exportData = exportData
-        self.startOrUpdateLiveActivity = startOrUpdateLiveActivity
         self.rescheduleReminders = rescheduleReminders
         self.healthAuthorizing = healthAuthorizing
         self.settingsRepository = settingsRepository
@@ -67,7 +64,6 @@ public struct UseCases: Sendable {
         intakeRepository: any IntakeRepository,
         settingsRepository: any SettingsRepository,
         widgetReloading: any WidgetReloading,
-        liveActivity: any LiveActivityControlling,
         health: any HealthProjecting,
         reminders: any ReminderScheduling,
         workouts: any WorkoutReading,
@@ -85,16 +81,13 @@ public struct UseCases: Sendable {
                 intakeRepository: intakeRepository,
                 settingsRepository: settingsRepository,
                 widgetReloading: widgetReloading,
-                liveActivity: liveActivity,
                 health: health,
-                reminders: reminders,
-                observeToday: observeToday
+                reminders: reminders
             ),
             undoLastIntake: UndoLastIntake(
                 intakeRepository: intakeRepository,
                 settingsRepository: settingsRepository,
                 widgetReloading: widgetReloading,
-                liveActivity: liveActivity,
                 health: health,
                 reminders: reminders,
                 observeToday: observeToday
@@ -102,15 +95,12 @@ public struct UseCases: Sendable {
             editIntake: EditIntake(
                 intakeRepository: intakeRepository,
                 widgetReloading: widgetReloading,
-                liveActivity: liveActivity,
-                health: health,
-                observeToday: observeToday
+                health: health
             ),
             deleteIntake: DeleteIntake(
                 intakeRepository: intakeRepository,
                 settingsRepository: settingsRepository,
                 widgetReloading: widgetReloading,
-                liveActivity: liveActivity,
                 health: health,
                 reminders: reminders,
                 observeToday: observeToday
@@ -134,7 +124,6 @@ public struct UseCases: Sendable {
                 intakeRepository: intakeRepository,
                 settingsRepository: settingsRepository,
                 widgetReloading: widgetReloading,
-                liveActivity: liveActivity,
                 health: health,
                 reminders: reminders,
                 observeToday: observeToday
@@ -143,8 +132,6 @@ public struct UseCases: Sendable {
                 settingsRepository: settingsRepository,
                 workoutReading: workouts,
                 widgetReloading: widgetReloading,
-                liveActivity: liveActivity,
-                observeToday: observeToday,
                 calculateGoal: calculateGoal
             ),
             calculateGoal: calculateGoal,
@@ -156,11 +143,6 @@ public struct UseCases: Sendable {
             deleteContainer: DeleteContainer(settingsRepository: settingsRepository),
             exportData: ExportData(
                 intakeRepository: intakeRepository,
-                settingsRepository: settingsRepository
-            ),
-            startOrUpdateLiveActivity: StartOrUpdateLiveActivity(
-                liveActivity: liveActivity,
-                observeToday: observeToday,
                 settingsRepository: settingsRepository
             ),
             rescheduleReminders: RescheduleReminders(

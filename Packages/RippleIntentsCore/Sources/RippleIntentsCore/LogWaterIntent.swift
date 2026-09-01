@@ -1,9 +1,7 @@
 import AppIntents
 import Foundation
+import OSLog
 import RippleDomain
-#if os(iOS)
-import ActivityKit
-#endif
 
 public struct LogWaterIntent: AppIntent {
     public static let title: LocalizedStringResource = "Log Water"
@@ -88,7 +86,54 @@ public struct LogDefaultWaterIntent: AppIntent {
     }
 }
 
-#if os(iOS)
-extension LogWaterIntent: LiveActivityIntent {}
-extension LogDefaultWaterIntent: LiveActivityIntent {}
-#endif
+/// The widget adapter keeps the widget source out of the archived button
+/// configuration. It delegates to the same LogWaterIntent and LogIntake path.
+public struct LogWidgetWaterIntent: AppIntent {
+    private static let logger = Logger(
+        subsystem: "de.stefansturm.ripple",
+        category: "widget-intent"
+    )
+
+    public static let title: LocalizedStringResource = "Log Water from Widget"
+    public static let description = IntentDescription("Log water from a Ripple widget")
+    public static let openAppWhenRun = false
+    public static let isDiscoverable = false
+
+    @Parameter(title: "Amount in milliliters")
+    public var milliliters: Int
+
+    public init() {
+        milliliters = 250
+    }
+
+    public init(milliliters: Int) {
+        self.milliliters = milliliters
+    }
+
+    public static var parameterSummary: some ParameterSummary {
+        Summary("Log \(\.$milliliters) from a Ripple widget")
+    }
+
+    public func perform() async throws -> some IntentResult & ProvidesDialog {
+        Self.logger.info(
+            "Started widget log amountMl=\(milliliters, privacy: .public)"
+        )
+
+        do {
+            let result = try await LogWaterIntent(
+                milliliters: milliliters,
+                source: .widget
+            ).perform()
+            let snapshot = try? await RippleRuntime.current.observeToday.snapshot(for: Date())
+            Self.logger.info(
+                "Finished widget log amountMl=\(milliliters, privacy: .public) consumedMl=\(snapshot?.consumed.value ?? -1, privacy: .public)"
+            )
+            return result
+        } catch {
+            Self.logger.error(
+                "Failed widget log amountMl=\(milliliters, privacy: .public) error=\(error.localizedDescription, privacy: .public)"
+            )
+            throw error
+        }
+    }
+}

@@ -1,5 +1,6 @@
 import RippleData
 import RippleDomain
+import RippleIntentsCore
 import RippleUI
 import SwiftUI
 import WidgetKit
@@ -9,8 +10,21 @@ struct WatchEntry: TimelineEntry, Sendable {
     let snapshot: TodaySnapshot
 }
 
+enum RippleWatchWidgetsRuntime {
+    static let container = RippleBootstrap.start()
+
+    static func makeReadContainer() -> RippleContainer {
+        _ = container
+        return RippleContainer.make(shared: container.shared)
+    }
+}
+
 @main
 struct WatchWidgetsBundle: WidgetBundle {
+    init() {
+        _ = RippleWatchWidgetsRuntime.container
+    }
+
     var body: some Widget {
         WatchComplicationWidget()
     }
@@ -35,15 +49,16 @@ struct WatchProvider: TimelineProvider {
     }
 
     private func load() async -> WatchEntry {
-        _ = RippleBootstrap.start()
-        let snapshot = (try? await RippleRuntime.current.observeToday.snapshot(for: Date())) ?? .empty()
+        let container = RippleWatchWidgetsRuntime.makeReadContainer()
+        let snapshot = (try? await container.useCases.observeToday.snapshot(for: Date()))
+            ?? .empty()
         return WatchEntry(date: Date(), snapshot: snapshot)
     }
 }
 
 struct WatchComplicationWidget: Widget {
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: "de.stefansturm.ripple.watch", provider: WatchProvider()) { entry in
+        StaticConfiguration(kind: RippleWidgetKind.watch, provider: WatchProvider()) { entry in
             WatchComplicationView(entry: entry)
                 .containerBackground(.clear, for: .widget)
         }
@@ -54,27 +69,116 @@ struct WatchComplicationWidget: Widget {
 }
 
 struct WatchComplicationView: View {
-    var entry: WatchEntry
+    let entry: WatchEntry
+
     @Environment(\.widgetFamily) private var family
+    @Environment(\.locale) private var locale
 
     var body: some View {
         let snapshot = entry.snapshot
-        let percent = Int((min(snapshot.percent, 1) * 100).rounded())
+        let formatter = VolumeFormatter(locale: locale)
+
         switch family {
         case .accessoryCircular:
-            Gauge(value: min(snapshot.percent, 1)) {
-                Image(systemName: "drop.fill")
-            } currentValueLabel: {
-                Text("\(percent)")
-            }
-            .gaugeStyle(.accessoryCircularCapacity)
+            WatchCircularView(snapshot: snapshot, formatter: formatter)
         case .accessoryRectangular:
-            VStack(alignment: .leading) {
-                Text("Ripple")
-                Text(VolumeFormatter.current.remainingPhrase(milliliters: snapshot.remaining.value, unit: snapshot.unit))
-            }
+            WatchRectangularView(snapshot: snapshot, formatter: formatter)
+        case .accessoryInline:
+            WatchInlineView(snapshot: snapshot, formatter: formatter)
         default:
-            Text("\(percent)%")
+            Text(verbatim: formatter.percentString(snapshot.percent))
+                .monospacedDigit()
         }
     }
+}
+
+private struct WatchCircularView: View {
+    let snapshot: TodaySnapshot
+    let formatter: VolumeFormatter
+
+    var body: some View {
+        Button(intent: LogWidgetWaterIntent(milliliters: snapshot.defaultAddMl)) {
+            ZStack {
+                WidgetGlass(consumedMl: snapshot.consumed.value, goalMl: snapshot.goal.value)
+                    .frame(width: RippleWidgetMetrics.accessoryCircularGlassWidth)
+
+                Text(verbatim: formatter.percentString(snapshot.percent))
+                    .font(RippleFont.caption.monospacedDigit())
+                    .widgetAccentable()
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(verbatim: watchAccessibilityLabel(
+            snapshot: snapshot,
+            formatter: formatter
+        )))
+    }
+}
+
+private struct WatchRectangularView: View {
+    let snapshot: TodaySnapshot
+    let formatter: VolumeFormatter
+
+    var body: some View {
+        Button(intent: LogWidgetWaterIntent(milliliters: snapshot.defaultAddMl)) {
+            HStack(spacing: RippleSpace.sm) {
+                WidgetGlass(consumedMl: snapshot.consumed.value, goalMl: snapshot.goal.value)
+                    .frame(width: RippleWidgetMetrics.accessoryRectangularGlassWidth)
+
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Ripple")
+                        .font(RippleFont.caption)
+                    Text(verbatim: formatter.remainingPhrase(
+                        milliliters: snapshot.remaining.value,
+                        unit: snapshot.unit
+                    ))
+                    .font(RippleFont.caption.monospacedDigit())
+                    .lineLimit(1)
+                    .minimumScaleFactor(RippleWidgetMetrics.accessoryMinimumScaleFactor)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(verbatim: watchAccessibilityLabel(
+            snapshot: snapshot,
+            formatter: formatter
+        )))
+    }
+}
+
+private struct WatchInlineView: View {
+    let snapshot: TodaySnapshot
+    let formatter: VolumeFormatter
+
+    var body: some View {
+        Button(intent: LogWidgetWaterIntent(milliliters: snapshot.defaultAddMl)) {
+            Text(verbatim: formatter.percentString(snapshot.percent) + " · " + formatter.remainingPhrase(
+                milliliters: snapshot.remaining.value,
+                unit: snapshot.unit
+            ))
+            .monospacedDigit()
+            .lineLimit(1)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(verbatim: watchAccessibilityLabel(
+            snapshot: snapshot,
+            formatter: formatter
+        )))
+    }
+}
+
+private func watchAccessibilityLabel(
+    snapshot: TodaySnapshot,
+    formatter: VolumeFormatter
+) -> String {
+    formatter.heroAccessibility(
+        consumedMl: snapshot.consumed.value,
+        goalMl: snapshot.goal.value,
+        remainingMl: snapshot.remaining.value,
+        percent: snapshot.percent,
+        unit: snapshot.unit
+    ) + " +" + formatter.string(
+        milliliters: snapshot.defaultAddMl,
+        unit: snapshot.unit
+    )
 }

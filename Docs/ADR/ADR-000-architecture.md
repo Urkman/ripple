@@ -20,4 +20,4 @@ Ripple uses feature-first Clean MVVM.
 
 ## Consequences
 
-Widget, Siri, Watch, Control Center, notifications, and Live Activity all call `LogIntake`. HealthKit is a projection, not a source of truth.
+Widget, Siri, Watch, Control Center, and notifications all call `LogIntake`. HealthKit is a projection, not a source of truth.

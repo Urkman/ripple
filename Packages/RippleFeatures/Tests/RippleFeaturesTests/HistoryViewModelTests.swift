@@ -54,7 +54,6 @@ struct HistoryViewModelTests {
             intakeRepository: intakes,
             settingsRepository: InMemorySettingsRepository(containers: Container.seededDefaults()),
             widgetReloading: NoOpWidgetReloading(),
-            liveActivity: NoOpLiveActivityControlling(),
             health: FakeHealthProjector(),
             reminders: NoOpReminderScheduling(),
             workouts: NoOpWorkoutReading(),

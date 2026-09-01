@@ -4,27 +4,21 @@ public struct LogIntake: Sendable {
     private let intakeRepository: any IntakeRepository
     private let settingsRepository: any SettingsRepository
     private let widgetReloading: any WidgetReloading
-    private let liveActivity: any LiveActivityControlling
     private let health: any HealthProjecting
     private let reminders: any ReminderScheduling
-    private let observeToday: ObserveToday
 
     public init(
         intakeRepository: any IntakeRepository,
         settingsRepository: any SettingsRepository,
         widgetReloading: any WidgetReloading,
-        liveActivity: any LiveActivityControlling,
         health: any HealthProjecting,
-        reminders: any ReminderScheduling,
-        observeToday: ObserveToday
+        reminders: any ReminderScheduling
     ) {
         self.intakeRepository = intakeRepository
         self.settingsRepository = settingsRepository
         self.widgetReloading = widgetReloading
-        self.liveActivity = liveActivity
         self.health = health
         self.reminders = reminders
-        self.observeToday = observeToday
     }
 
     @discardableResult
@@ -46,18 +40,18 @@ public struct LogIntake: Sendable {
             updatedAt: now
         )
         try await intakeRepository.save(intake)
-        await project(after: intake)
+        await project(after: intake, source: source)
         return intake
     }
 
-    private func project(after intake: Intake) async {
-        let snapshot = (try? await observeToday.snapshot(for: intake.date)) ?? .empty(date: intake.date)
+    private func project(after intake: Intake, source: IntakeSource) async {
         let rule = (try? await settingsRepository.reminderRule()) ?? .default
-        let profile = try? await settingsRepository.profile()
 
-        await widgetReloading.reload()
-        if profile?.liveActivityEnabled == true {
-            await liveActivity.startOrUpdate(snapshot)
+        // WidgetKit reloads the interacted widget after the AppIntent returns.
+        // Requesting another reload while that render session is paused can
+        // leave the active small widget displaying its previous entry.
+        if source != .widget {
+            await widgetReloading.reload()
         }
         await health.project(intake: intake)
         await reminders.reschedule(rule: rule, lastSip: intake.date)

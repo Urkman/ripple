@@ -85,7 +85,6 @@ extension ProfileRecord {
             healthReadWorkoutsEnabled: healthReadWorkoutsEnabled,
             healthWriteEnabled: healthWriteEnabled,
             hapticsEnabled: hapticsEnabled,
-            liveActivityEnabled: liveActivityEnabled,
             onboardingCompleted: onboardingCompleted,
             updatedAt: updatedAt
         )
@@ -103,7 +102,6 @@ extension ProfileRecord {
         healthReadWorkoutsEnabled = profile.healthReadWorkoutsEnabled
         healthWriteEnabled = profile.healthWriteEnabled
         hapticsEnabled = profile.hapticsEnabled
-        liveActivityEnabled = profile.liveActivityEnabled
         onboardingCompleted = profile.onboardingCompleted
         updatedAt = profile.updatedAt
     }
