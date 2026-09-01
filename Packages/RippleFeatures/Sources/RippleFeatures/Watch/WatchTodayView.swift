@@ -8,7 +8,6 @@ public struct WatchTodayView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.locale) private var locale
-    @Environment(\.scenePhase) private var scenePhase
 
     public init(model: WatchTodayViewModel) {
         _model = State(initialValue: model)
@@ -54,10 +53,6 @@ public struct WatchTodayView: View {
         .background(RippleColor.surface.ignoresSafeArea())
         .sheet(isPresented: customSheetBinding) {
             WatchCustomAmountView(model: model)
-        }
-        .task(id: scenePhase) {
-            guard scenePhase == .active else { return }
-            await model.refresh()
         }
         .sensoryFeedback(.success, trigger: model.confirmation)
     }
@@ -212,6 +207,7 @@ public struct WatchTodayView: View {
             RoundedRectangle(cornerRadius: RippleRadius.card, style: .continuous)
                 .stroke(foreground.opacity(0.12), lineWidth: 1)
         }
+        .animation(.easeInOut(duration: RippleMotion.confirmFade), value: model.confirmation)
         .accessibilityElement(children: .contain)
     }
 

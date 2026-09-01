@@ -12,7 +12,7 @@ struct RippleWatchApp: App {
 
     var body: some Scene {
         WindowGroup {
-            WatchTodayView(useCases: container.useCases)
+            WatchRootView(useCases: container.useCases)
                 .environment(\.rippleUseCases, container.useCases)
         }
     }

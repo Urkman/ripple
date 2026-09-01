@@ -6,6 +6,7 @@ import RippleDomain
 @Observable
 public final class WatchHistoryViewModel {
     public private(set) var days: [DayTotal]
+    public private(set) var unit: VolumeUnit
     public private(set) var errorMessage: String?
 
     @ObservationIgnored private let useCases: UseCases
@@ -15,6 +16,7 @@ public final class WatchHistoryViewModel {
         self.useCases = useCases
         self.calendar = calendar
         self.days = []
+        self.unit = .milliliters
         self.errorMessage = nil
     }
 
@@ -24,10 +26,12 @@ public final class WatchHistoryViewModel {
                 for: .recentDays(anchor: now, count: 7),
                 calendar: calendar
             )
+            let profile = try await useCases.settingsRepository.profile()
             let today = calendar.startOfDay(for: now)
             days = snapshot.days
                 .filter { $0.date <= today }
                 .sorted { $0.date > $1.date }
+            unit = profile.preferredUnit
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
