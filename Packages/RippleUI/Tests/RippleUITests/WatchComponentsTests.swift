@@ -45,4 +45,21 @@ struct WatchComponentsTests {
         #expect(custom.kind == .custom)
         #expect([predefined, custom].map(\.id) == ["container", "custom"])
     }
+
+    @Test("weekly chart points preserve dated categories and empty state")
+    func chartPointIdentity() {
+        let calendar = Calendar(identifier: .gregorian)
+        let start = calendar.date(from: DateComponents(year: 2026, month: 8, day: 31))!
+        let points = (0..<7).compactMap { offset -> WatchStatChartPoint? in
+            guard let date = calendar.date(byAdding: .day, value: offset, to: start) else {
+                return nil
+            }
+            return WatchStatChartPoint(date: date, consumed: Double(offset * 100), goal: 2_000)
+        }
+
+        #expect(points.count == 7)
+        #expect(points.map(\.id) == points.map(\.date))
+        #expect(WatchStatChartPoint(date: start, consumed: 0, goal: 2_000) != points[1])
+        #expect([WatchStatChartPoint]().isEmpty)
+    }
 }
