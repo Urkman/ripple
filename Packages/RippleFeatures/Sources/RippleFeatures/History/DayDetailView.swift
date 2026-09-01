@@ -6,16 +6,19 @@ import SwiftUI
 public struct DayDetailView: View {
     @State private var model: DayDetailViewModel
     private let refreshID: Int
+    private let onAdd: (() -> Void)?
     @Environment(\.locale) private var locale
     @Environment(\.rippleHistorySplit) private var usesSplit
 
     public init(
         day: Date,
         useCases: UseCases,
-        refreshID: Int = 0
+        refreshID: Int = 0,
+        onAdd: (() -> Void)? = nil
     ) {
         _model = State(initialValue: DayDetailViewModel(useCases: useCases, day: day))
         self.refreshID = refreshID
+        self.onAdd = onAdd
     }
 
     public var body: some View {
@@ -70,6 +73,8 @@ public struct DayDetailView: View {
                         }
                     }
                 }
+            } header: {
+                entriesHeader
             }
         }
         .scrollContentBackground(.hidden)
@@ -101,6 +106,23 @@ public struct DayDetailView: View {
                 Task { await model.saveEdit(amountMl: amount, date: date, containerId: containerId) }
             }
         }
+    }
+
+    private var entriesHeader: some View {
+        HStack {
+            Text(L10n.text("Entries"))
+                .font(RippleFont.title)
+                .foregroundStyle(RippleColor.waterDeep)
+
+            Spacer()
+
+            if model.isToday, let onAdd {
+                Button(L10n.text("Custom amount"), systemImage: "plus", action: onAdd)
+                    .labelStyle(.iconOnly)
+                    .accessibilityLabel(L10n.text("Custom amount"))
+            }
+        }
+        .textCase(nil)
     }
 
     private func undoDelete() {

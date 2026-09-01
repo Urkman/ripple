@@ -73,15 +73,7 @@ public struct HistoryCalendarView: View {
     }
 
     private var iPadDetailPane: some View {
-        ZStack(alignment: .topTrailing) {
-            detailContent
-
-            if canAddToHistory {
-                customAmountButton
-                    .padding(.top, RippleSpace.sm)
-                    .padding(.trailing, RippleSpace.lg)
-            }
-        }
+        detailContent
     }
 
     @ViewBuilder
@@ -90,7 +82,8 @@ public struct HistoryCalendarView: View {
             DayDetailView(
                 day: day,
                 useCases: useCases,
-                refreshID: detailRefreshID
+                refreshID: detailRefreshID,
+                onAdd: showCustomAmount
             )
                 .id(day)
                 .rippleNavigationBarBackground(RippleColor.waterFoam)

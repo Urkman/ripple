@@ -2,7 +2,8 @@
 
 **Dokumenttyp:** Screen-Spec  
 **Empfänger:** Grok Build  
-**Version:** 1.5 — 1. September 2026
+**Version:** 1.6 — 1. September 2026
+**1.6:** Ergänzt im Tagesdetail eine lokalisierte Überschrift `Entries` über den Intake-Zeilen; die iPad-„+“-Aktion sitzt rechts in derselben Überschriftszeile.
 **1.5:** Trennt die History-Komposition explizit nach Plattform: iPhone verwendet einen normalen `NavigationStack`; iPad verwendet zwei direkt nebeneinander angeordnete Paneele in einem plain `HStack`, ohne `NavigationStack` oder `NavigationSplitView` in den Paneelen.
 **1.4:** Korrigiert die Position der History-Primäraktion: im offenen iPad-Split am Detail, im kompakten Stack am Kalender-Root; der Sidebar-Toggle wird aus der Masterspalte entfernt.
 **1.3:** Verankert die History-Aktion in der oberen Tabbar-Nähe, öffnet für neue Einträge die benutzerdefinierte Mengen-Sheet und hält die iPad-Kalenderspalte offen.
@@ -137,8 +138,9 @@ DayDetailView
   header: Wochentag + Datum
   hero: „1 250 ml“  /  „Ziel 2 000 ml“  /  „62 %“
   caption: „noch 750 ml“ oder „Ziel erreicht“
+  entriesHeader: „Entries“ über den IntakeRow-Zeilen
+  primary action: iPad rendert „+“ rechts in derselben Überschriftszeile und loggt auf **dieses** Datum; iPhone zeigt das „+“ nicht am gepushten Detail-Screen. Die Aktion ist nur sichtbar, wenn selectedDay == today; vergangene Einträge bleiben edit/delete.
   List of IntakeRow
-  primary action: iPad rendert „+“ direkt im Detailpaneel des plain-HStack-Screens und loggt auf **dieses** Datum; iPhone zeigt das „+“ nicht am gepushten Detail-Screen. Die Aktion ist nur sichtbar, wenn selectedDay == today; vergangene Einträge bleiben edit/delete.
 ```
 
 ### IntakeRow
