@@ -1,6 +1,6 @@
 # Ripple Watch app redesign
 
-Status: Design decisions approved in chat; awaiting written-spec review.
+Status: Design decisions and written spec approved in chat; implementation plan follows.
 Date: 1 September 2026
 
 ## Context
