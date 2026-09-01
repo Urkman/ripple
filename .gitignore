@@ -11,5 +11,6 @@ Config/Ripple.xcconfig
 *.dSYM
 .idea/
 .xcodebuildmcp/
+.superpowers/
 Docs/ADR/
 Ripple_Handoff/
