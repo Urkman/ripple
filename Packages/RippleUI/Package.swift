@@ -17,6 +17,9 @@ let package = Package(
     targets: [
         .target(
             name: "RippleUI",
+            resources: [
+                .process("Resources/RippleColors.xcassets"),
+            ],
             swiftSettings: [
                 .swiftLanguageMode(.v6),
             ],
