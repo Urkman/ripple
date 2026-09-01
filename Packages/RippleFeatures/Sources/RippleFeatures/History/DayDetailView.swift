@@ -5,10 +5,20 @@ import SwiftUI
 
 public struct DayDetailView: View {
     @State private var model: DayDetailViewModel
+    private let refreshID: Int
+    private let onAdd: (() -> Void)?
     @Environment(\.locale) private var locale
+    @Environment(\.rippleHistorySplit) private var usesSplit
 
-    public init(day: Date, useCases: UseCases) {
+    public init(
+        day: Date,
+        useCases: UseCases,
+        refreshID: Int = 0,
+        onAdd: (() -> Void)? = nil
+    ) {
         _model = State(initialValue: DayDetailViewModel(useCases: useCases, day: day))
+        self.refreshID = refreshID
+        self.onAdd = onAdd
     }
 
     public var body: some View {
@@ -41,9 +51,6 @@ public struct DayDetailView: View {
                         Text(L10n.text("No entries"))
                             .font(RippleFont.body)
                             .foregroundStyle(.secondary)
-                        if model.isToday {
-                            Button(addTitle(formatter: formatter), action: addDefault)
-                        }
                     }
                     .listRowBackground(Color.clear)
                 } else {
@@ -70,12 +77,15 @@ public struct DayDetailView: View {
         }
         .scrollContentBackground(.hidden)
         .background(RippleColor.waterFoam.ignoresSafeArea())
-        .navigationTitle(L10n.text("History"))
+        .navigationTitle(usesSplit ? "" : L10n.text("History"))
         .rippleInlineNavigationTitle()
+        .rippleNavigationBarBackground(RippleColor.waterFoam)
         .toolbar {
-            if model.isToday {
+            if model.isToday, let onAdd {
                 ToolbarItem(placement: .primaryAction) {
-                    Button(addTitle(formatter: formatter), systemImage: "plus", action: addDefault)
+                    Button(L10n.text("Custom amount"), systemImage: "plus", action: onAdd)
+                        .labelStyle(.iconOnly)
+                        .accessibilityLabel(L10n.text("Custom amount"))
                 }
             }
         }
@@ -93,7 +103,7 @@ public struct DayDetailView: View {
                 .padding(.bottom, RippleSpace.sm)
             }
         }
-        .task { await model.refresh() }
+        .task(id: refreshID) { await model.refresh() }
         .sheet(item: $model.editing) { intake in
             EditIntakeSheet(
                 intake: intake,
@@ -105,20 +115,12 @@ public struct DayDetailView: View {
         }
     }
 
-    private func addDefault() {
-        Task { await model.addDefault() }
-    }
-
     private func undoDelete() {
         Task { await model.undoDelete() }
     }
 
     private func delete(_ intake: Intake) {
         Task { await model.delete(intake) }
-    }
-
-    private func addTitle(formatter: VolumeFormatter) -> String {
-        "+ \(formatter.string(milliliters: model.snapshot.defaultAddMl, unit: model.snapshot.unit))"
     }
 
     private func caption(formatter: VolumeFormatter, snapshot: TodaySnapshot) -> String {

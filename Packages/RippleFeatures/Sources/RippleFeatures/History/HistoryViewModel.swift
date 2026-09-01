@@ -16,6 +16,7 @@ public final class HistoryViewModel {
     @ObservationIgnored private let useCases: UseCases
     @ObservationIgnored private let calendar: Calendar
     @ObservationIgnored private let currentMonth: Date
+    @ObservationIgnored private let currentDay: Date
     private var monthDays: [Date: [DaySummary]] = [:]
 
     public struct MonthSlot: Identifiable, Equatable, Sendable {
@@ -29,13 +30,16 @@ public final class HistoryViewModel {
     }
 
     public init(useCases: UseCases, now: Date = Date(), calendar: Calendar = .current) {
+        let currentDay = calendar.startOfDay(for: now)
         let currentMonth = calendar.dateInterval(of: .month, for: now)?.start
             ?? calendar.startOfDay(for: now)
         self.useCases = useCases
         self.calendar = calendar
         self.currentMonth = currentMonth
+        self.currentDay = currentDay
         self.visibleMonth = currentMonth
         self.days = []
+        self.selectedDay = currentDay
         self.slots = []
         self.weekdayColumns = Self.orderedWeekdayColumns(calendar: calendar)
         self.availableMonths = [currentMonth]
@@ -97,6 +101,7 @@ public final class HistoryViewModel {
     }
 
     public func refreshAvailableMonths() async {
+        selectTodayIfNeeded()
         do {
             let firstDate = try await useCases.observeHistory.firstIntakeDate()
             let firstMonth = firstDate.map { monthStart(for: $0) } ?? currentMonth
@@ -112,6 +117,11 @@ public final class HistoryViewModel {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    public func selectTodayIfNeeded() {
+        guard selectedDay == nil else { return }
+        selectedDay = currentDay
     }
 
     public func refresh() async {

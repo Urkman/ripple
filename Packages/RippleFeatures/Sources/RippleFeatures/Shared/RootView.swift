@@ -27,33 +27,46 @@ public struct RootView: View {
     }
 
     public var body: some View {
-        Group {
-            if showOnboarding {
-                OnboardingView(model: onboarding) {
-                    showOnboarding = false
-                    Task { await today.refresh() }
+        GeometryReader { proxy in
+            let iPadLayout = isIPadLayout(for: proxy.size)
+            Group {
+                if showOnboarding {
+                    OnboardingView(model: onboarding) {
+                        showOnboarding = false
+                        Task { await today.refresh() }
+                    }
+                } else {
+                    #if os(iOS)
+                    iOSTabs(isIPadLayout: iPadLayout)
+                    #else
+                    NavigationStack {
+                        TodayView(model: today)
+                    }
+                    #endif
                 }
-            } else {
-                #if os(iOS)
-                iOSTabs
-                #else
-                NavigationStack {
-                    TodayView(model: today)
-                }
-                #endif
             }
+            .task(id: scenePhase) {
+                guard scenePhase == .active else { return }
+                let profile = try? await useCases.settingsRepository.profile()
+                showOnboarding = !(profile?.onboardingCompleted ?? false)
+                await today.refresh()
+            }
+            .environment(\.rippleIPadLayout, iPadLayout)
+            .tint(RippleColor.waterLagoon)
         }
-        .task(id: scenePhase) {
-            guard scenePhase == .active else { return }
-            let profile = try? await useCases.settingsRepository.profile()
-            showOnboarding = !(profile?.onboardingCompleted ?? false)
-            await today.refresh()
-        }
-        .tint(RippleColor.waterLagoon)
+    }
+
+    private func isIPadLayout(for size: CGSize) -> Bool {
+        #if os(iOS)
+        // iPhone is portrait-only; the width threshold covers compact iPad windows.
+        sizeClass == .regular || size.width >= RippleLayout.iPadLayoutMinimumWidth
+        #else
+        false
+        #endif
     }
 
     #if os(iOS)
-    private var iOSTabs: some View {
+    private func iOSTabs(isIPadLayout: Bool) -> some View {
         TabView(selection: $selected) {
             Tab(L10n.text("Today"), systemImage: "drop.fill", value: .today) {
                 NavigationStack {
@@ -61,8 +74,8 @@ public struct RootView: View {
                 }
             }
             Tab(L10n.text("History"), systemImage: "calendar", value: .history) {
-                HistoryCalendarView(model: history)
-                    .environment(\.rippleHistorySplit, sizeClass == .regular)
+                HistoryCalendarView(model: history, todayModel: today)
+                    .environment(\.rippleHistorySplit, isIPadLayout)
             }
             Tab(L10n.text("Stats"), systemImage: "chart.bar.xaxis", value: .stats) {
                 StatsView(model: stats)

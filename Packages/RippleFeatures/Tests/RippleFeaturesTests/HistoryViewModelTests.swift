@@ -45,6 +45,12 @@ struct HistoryViewModelTests {
         await model.refreshAvailableMonths()
 
         #expect(model.availableMonths == [model.visibleMonth])
+        #expect(model.selectedDay.map { calendar.isDate($0, inSameDayAs: now) } == true)
+
+        model.selectedDay = nil
+        await model.refreshAvailableMonths()
+
+        #expect(model.selectedDay.map { calendar.isDate($0, inSameDayAs: now) } == true)
         #expect(!model.canNavigate(from: model.visibleMonth, by: -1))
         #expect(!model.canNavigate(from: model.visibleMonth, by: 1))
     }

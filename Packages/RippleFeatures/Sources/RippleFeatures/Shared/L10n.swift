@@ -52,8 +52,11 @@ enum L10n {
         String(localized: "\(count) days without entries", bundle: .module)
     }
 
+    static func minutes(_ count: Int) -> String {
+        String(localized: "\(count) min", bundle: .module)
+    }
+
     static func streak(_ count: Int) -> String {
         String(localized: "Longest goal streak: \(count)", bundle: .module)
     }
 }
-

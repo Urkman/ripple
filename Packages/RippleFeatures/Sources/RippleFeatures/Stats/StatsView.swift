@@ -7,6 +7,7 @@ public struct StatsView: View {
     @Bindable var model: StatsViewModel
     @Environment(\.locale) private var locale
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.rippleIPadLayout) private var usesIPadLayout
 
     public init(model: StatsViewModel) {
         self.model = model
@@ -16,7 +17,10 @@ public struct StatsView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: RippleSpace.xl) {
-                    periodPicker
+                    GlassCard {
+                        periodPicker
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     summaryRow
                     if model.snapshot.hasData {
                         chartBlock(title: L10n.text("Actual vs goal")) {
@@ -36,19 +40,25 @@ public struct StatsView: View {
                             ContainerShareChart(points: model.containerPoints, unitSymbol: model.unit.symbol)
                         }
                     } else {
-                        Text(L10n.text("No data for this period."))
-                            .font(RippleFont.body)
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.vertical, RippleSpace.xl)
+                        GlassCard {
+                            Text(L10n.text("No data for this period."))
+                                .font(RippleFont.body)
+                                .foregroundStyle(.secondary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     highlights
                 }
                 .padding(.horizontal, RippleSpace.lg)
                 .padding(.bottom, RippleSpace.xl)
+                .frame(maxWidth: RippleLayout.iPadLandscapeContentMaxWidth)
+                .frame(maxWidth: .infinity)
             }
             .background(RippleColor.waterFoam.ignoresSafeArea())
-            .navigationTitle(L10n.text("Stats"))
+            .navigationTitle(usesIPadLayout ? "" : L10n.text("Stats"))
+            .rippleNavigationBarVisibility(hidden: usesIPadLayout)
+            .rippleNavigationBarBackground(RippleColor.waterFoam)
             .task { await model.refresh() }
             .onChange(of: model.kind) {
                 Task { await model.refresh() }
@@ -106,56 +116,54 @@ public struct StatsView: View {
     }
 
     private func summaryTile(title: String, value: String, unit: String?) -> some View {
-        VStack(alignment: .leading, spacing: RippleSpace.xs) {
-            Text(title)
-                .font(RippleFont.caption)
-                .foregroundStyle(.secondary)
-            HStack(alignment: .firstTextBaseline, spacing: RippleSpace.xs) {
-                Text(value)
-                    .font(RippleFont.title.monospacedDigit())
-                    .foregroundStyle(RippleColor.waterDeep)
-                if let unit {
-                    Text(unit)
-                        .font(RippleFont.caption)
-                        .foregroundStyle(.secondary)
+        GlassCard {
+            VStack(alignment: .leading, spacing: RippleSpace.xs) {
+                Text(title)
+                    .font(RippleFont.caption)
+                    .foregroundStyle(.secondary)
+                HStack(alignment: .firstTextBaseline, spacing: RippleSpace.xs) {
+                    Text(value)
+                        .font(RippleFont.title.monospacedDigit())
+                        .foregroundStyle(RippleColor.waterDeep)
+                    if let unit {
+                        Text(unit)
+                            .font(RippleFont.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(RippleSpace.md)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: RippleRadius.control, style: .continuous))
     }
 
     private func chartBlock<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: RippleSpace.sm) {
-            Text(title)
-                .font(RippleFont.title)
-                .foregroundStyle(RippleColor.waterDeep)
+        GlassCard(title: title) {
             content()
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var highlights: some View {
         let formatter = VolumeFormatter(locale: locale)
-        return VStack(alignment: .leading, spacing: RippleSpace.sm) {
-            Text(L10n.text("Highlights"))
-                .font(RippleFont.title)
-                .foregroundStyle(RippleColor.waterDeep)
-            if let best = model.snapshot.bestDay {
-                Text("\(L10n.text("Best day")) · \(best.date.formatted(.dateTime.month(.abbreviated).day())) · \(formatter.string(milliliters: best.consumedMl, unit: model.unit))")
+        return GlassCard(title: L10n.text("Highlights")) {
+            VStack(alignment: .leading, spacing: RippleSpace.sm) {
+                if let best = model.snapshot.bestDay {
+                    Text("\(L10n.text("Best day")) · \(best.date.formatted(.dateTime.month(.abbreviated).day())) · \(formatter.string(milliliters: best.consumedMl, unit: model.unit))")
+                        .font(RippleFont.body.monospacedDigit())
+                }
+                if let weakest = model.weakestDay {
+                    Text("\(L10n.text("Weakest day")) · \(weakest.date.formatted(.dateTime.month(.abbreviated).day())) · \(formatter.string(milliliters: weakest.consumedMl, unit: model.unit))")
+                        .font(RippleFont.body.monospacedDigit())
+                }
+                Text(L10n.emptyDays(model.emptyDayCount))
                     .font(RippleFont.body.monospacedDigit())
-            }
-            if let weakest = model.weakestDay {
-                Text("\(L10n.text("Weakest day")) · \(weakest.date.formatted(.dateTime.month(.abbreviated).day())) · \(formatter.string(milliliters: weakest.consumedMl, unit: model.unit))")
-                    .font(RippleFont.body.monospacedDigit())
-            }
-            Text(L10n.emptyDays(model.emptyDayCount))
-                .font(RippleFont.body.monospacedDigit())
-            if model.snapshot.currentHitRun >= 2 {
-                Text(L10n.streak(model.snapshot.currentHitRun))
-                    .font(RippleFont.body.monospacedDigit())
+                if model.snapshot.currentHitRun >= 2 {
+                    Text(L10n.streak(model.snapshot.currentHitRun))
+                        .font(RippleFont.body.monospacedDigit())
+                }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func previousPeriod() {

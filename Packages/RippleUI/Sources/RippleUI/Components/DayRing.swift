@@ -2,7 +2,7 @@ import SwiftUI
 
 public enum DayRingMetrics {
     public static let compactDiameter: CGFloat = 36
-    public static let regularDiameter: CGFloat = 44
+    public static let regularDiameter: CGFloat = 36
     public static let lineWidth: CGFloat = 3
     public static let todayDot: CGFloat = 1.5
     public static let selectedHalo: CGFloat = 2
@@ -51,14 +51,6 @@ public struct DayRing: View {
     public var body: some View {
         VStack(spacing: RippleSpace.xs) {
             ZStack {
-                if isSelected {
-                    Circle()
-                        .stroke(RippleColor.waterLagoon, lineWidth: DayRingMetrics.selectedHalo)
-                        .frame(
-                            width: diameter + DayRingMetrics.selectedHalo * 2,
-                            height: diameter + DayRingMetrics.selectedHalo * 2
-                        )
-                }
                 Circle()
                     .stroke(RippleColor.waterDeep.opacity(0.12), lineWidth: DayRingMetrics.lineWidth)
                     .frame(width: diameter, height: diameter)
@@ -72,6 +64,16 @@ public struct DayRing: View {
                     .font(numberFont)
                     .monospacedDigit()
                     .foregroundStyle(numberColor)
+            }
+            .overlay {
+                if isSelected {
+                    Circle()
+                        .stroke(RippleColor.waterLagoon, lineWidth: DayRingMetrics.selectedHalo)
+                        .frame(
+                            width: diameter + DayRingMetrics.selectedHalo * 2,
+                            height: diameter + DayRingMetrics.selectedHalo * 2
+                        )
+                }
             }
             Circle()
                 .fill(isToday ? RippleColor.waterDeep : Color.clear)

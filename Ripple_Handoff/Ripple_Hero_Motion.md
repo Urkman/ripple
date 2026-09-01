@@ -2,7 +2,10 @@
 
 **Dokumenttyp:** Implementierungsspec nur für Today-Hero  
 **Empfänger:** Grok Build  
-**Version:** 1.8 — 31. August 2026  
+**Version:** 2.1 — 1. September 2026
+**2.1:** Vergrößert den begrenzten Portrait-Hero auf etwa 280 × 392 pt; die Landscape-Komposition bleibt unverändert.
+**2.0:** Präzisiert die iPad-Ausrichtung: Zwei Spalten gibt es nur im Landscape; Portrait behält die vertikale Heute-Komposition mit kleinerem Hero, Status oben und CTA unten.
+**1.9:** Ergänzt die eigenständige iPad-Komposition mit begrenztem Hero und seitlichem Aktionsbereich; die Hero-Geometrie und die Eingießbewegung bleiben unverändert.
 **1.8:** Verankert das Readout in einer ruhigen Frontglas-Schicht und koppelt das Strahlende an dieselbe innere Wasseroberkante wie der Fill.  
 **1.7:** Führt eine gemeinsame, frameweise abgetastete `pourProgress`-Zeitbasis für Pegel und Strahl-Fade ein; neue Taps retargeten ab dem aktuell dargestellten Pegel.  
 **1.6:** Koppelt den Pegelanstieg exakt an die sichtbare Strahldauer vom ersten Kontakt bis zum vollständigen Ausblenden; der Pegel steigt linear und ohne Overshoot.  
@@ -47,6 +50,18 @@ Farben: Deep `#0B3D4A`, Lagoon `#1A7A8C`, Aqua `#4FB3C6`, Foam `#E8F4F6`.
 Zahlen: San Francisco, `monospacedDigit()`, kein `1°500`.
 
 Das Readout sitzt als ruhige, leicht transluzente Frontglas-Schicht innerhalb des Glases. Die Schicht bekommt eine sehr zurückhaltende helle Kante und eine weiche, vertikale Glasreflexion; sie ist kein zusätzlicher Fortschrittsindikator und verdeckt die Wasseroberfläche nicht vollständig. Menge mit Einheit bleibt oben, Prozent unten, beide bleiben über dem Strahl und folgen den bestehenden Text- und Accessibility-Vorgaben.
+
+### 2.1 Screen-Komposition (iPad Heute)
+
+Das iPad nutzt die zusätzliche Breite nur im Landscape für eine ruhige Zwei-Spalten-Komposition:
+
+- oben steht das Status-Label mit verbleibender Menge und Ziel
+- in der Mitte links ein zentrierter, begrenzter Hero mit unverändertem Seitenverhältnis und derselben Motion; er darf bis etwa 240 × 336 pt groß werden und wächst nicht bis zur verfügbaren Höhe
+- in der Mitte rechts stehen die drei Behälter-Aktionen als flache Buttons ohne `GlassCard` oder einzelne Glas-Karten
+- unten bleibt die Primary-Pille `Eigene Menge` / `Custom amount` als CTA im Safe-Area-Inset
+- die obere iPad-Tabbar ist der Kontext für den Tab. Ein zusätzlicher Today-Screen-Titel, eine Wortmarke oder ein Datum in der Navigation werden auf iPad nicht angezeigt
+
+Im Portrait verwendet das iPad die vertikale Heute-Komposition aus Abschnitt 2. Der Hero bleibt dabei auf etwa 280 × 392 pt begrenzt, damit er nicht den gesamten verbleibenden Platz füllt; Status-Label, flache Behälter-Aktionen und CTA bleiben in ihrer bisherigen Reihenfolge. Auch im Portrait gibt es für iPad keine einzelnen Glas-Karten um die Aktionen. iPhone verwendet weiterhin die Komposition aus Abschnitt 2.
 
 ---
 

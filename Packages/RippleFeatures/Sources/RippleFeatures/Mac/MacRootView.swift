@@ -35,7 +35,7 @@ public struct MacRootView: View {
             case .today:
                 TodayView(model: today)
             case .history:
-                HistoryCalendarView(model: history)
+                HistoryCalendarView(model: history, todayModel: today)
             case .stats:
                 StatsView(model: stats)
             case .settings:

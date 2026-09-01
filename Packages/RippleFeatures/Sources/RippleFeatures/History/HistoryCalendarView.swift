@@ -5,14 +5,20 @@ import SwiftUI
 
 public struct HistoryCalendarView: View {
     @Bindable private var model: HistoryViewModel
+    private let todayModel: TodayViewModel
     @Environment(\.rippleUseCases) private var useCases
+    @Environment(\.locale) private var locale
     @Environment(\.rippleHistorySplit) private var usesSplit
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var pagerPosition: Date?
     @State private var scrollPhase: ScrollPhase = .idle
+    @State private var compactSelectedDay: Date?
+    @State private var showsCustomAmount = false
+    @State private var detailRefreshID = 0
 
-    public init(model: HistoryViewModel) {
+    public init(model: HistoryViewModel, todayModel: TodayViewModel) {
         self.model = model
+        self.todayModel = todayModel
         let initialMonth = model.month(atOffset: 0)
         _pagerPosition = State(initialValue: initialMonth)
     }
@@ -20,16 +26,35 @@ public struct HistoryCalendarView: View {
     public var body: some View {
         if usesSplit {
             NavigationSplitView {
-                calendar
-                    .navigationTitle(L10n.text("History"))
+                splitCalendar
+                    .navigationTitle("")
+                    .rippleInlineNavigationTitle()
+                    .rippleNavigationBarBackground(RippleColor.waterFoam)
+                    .navigationSplitViewColumnWidth(
+                        min: RippleLayout.iPadHistoryColumnMinWidth,
+                        ideal: RippleLayout.iPadHistoryColumnIdealWidth,
+                        max: RippleLayout.iPadHistoryColumnMaxWidth
+                    )
             } detail: {
                 if let day = model.selectedDay {
-                    DayDetailView(day: day, useCases: useCases)
+                    DayDetailView(
+                        day: day,
+                        useCases: useCases,
+                        refreshID: detailRefreshID,
+                        onAdd: showCustomAmount
+                    )
                         .id(day)
+                        .rippleNavigationBarBackground(RippleColor.waterFoam)
                 } else {
                     ContentUnavailableView(L10n.text("Choose a day"), systemImage: "calendar")
                         .background(RippleColor.waterFoam.ignoresSafeArea())
+                        .rippleNavigationBarBackground(RippleColor.waterFoam)
                 }
+            }
+            .background(RippleColor.waterFoam.ignoresSafeArea())
+            .rippleNavigationBarBackground(RippleColor.waterFoam)
+            .sheet(isPresented: $showsCustomAmount, onDismiss: refreshAfterCustomAmount) {
+                customAmountSheet
             }
         } else {
             compactStack
@@ -40,10 +65,56 @@ public struct HistoryCalendarView: View {
         NavigationStack {
             calendar
                 .navigationTitle(L10n.text("History"))
-                .navigationDestination(item: $model.selectedDay) { day in
-                    DayDetailView(day: day, useCases: useCases)
+                .rippleNavigationBarBackground(RippleColor.waterFoam)
+                .navigationDestination(item: $compactSelectedDay) { day in
+                    DayDetailView(day: day, useCases: useCases, refreshID: detailRefreshID)
+                }
+                .toolbar { calendarToolbar }
+                .sheet(isPresented: $showsCustomAmount, onDismiss: refreshAfterCustomAmount) {
+                    customAmountSheet
                 }
         }
+    }
+
+    @ToolbarContentBuilder
+    private var calendarToolbar: some ToolbarContent {
+        if canAddToHistory {
+            ToolbarItem(placement: .primaryAction) {
+                Button(L10n.text("Custom amount"), systemImage: "plus", action: showCustomAmount)
+                    .labelStyle(.iconOnly)
+                    .accessibilityLabel(L10n.text("Custom amount"))
+            }
+        }
+    }
+
+    private var canAddToHistory: Bool {
+        guard let selectedDay = model.selectedDay else { return false }
+        return model.isToday(selectedDay)
+    }
+
+    private var customAmountSheet: some View {
+        let snapshot = todayModel.snapshot
+        let formatter = VolumeFormatter(locale: locale)
+        return CustomAmountSheet(
+            model: todayModel,
+            initialAmountMl: snapshot.defaultAddMl,
+            initialAmountText: formatter.valueString(
+                milliliters: snapshot.defaultAddMl,
+                unit: snapshot.unit
+            ),
+            unit: snapshot.unit
+        )
+    }
+
+    private var splitCalendar: some View {
+        calendar
+            .overlay(alignment: .trailing) {
+                Rectangle()
+                    .fill(RippleColor.waterDeep.opacity(0.12))
+                    .frame(width: 1)
+                    .allowsHitTesting(false)
+            }
+            .rippleSidebarToggleHidden()
     }
 
     private var calendar: some View {
@@ -77,13 +148,15 @@ public struct HistoryCalendarView: View {
             settlePager()
         }
         .task {
+            model.selectTodayIfNeeded()
             await model.refreshAvailableMonths()
             alignPagerWithVisibleMonth()
         }
     }
 
     private var dayColumns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: RippleSpace.sm), count: 7)
+        let spacing = usesSplit ? RippleSpace.xs : RippleSpace.sm
+        return Array(repeating: GridItem(.flexible(), spacing: spacing), count: 7)
     }
 
     private func monthPage(month: Date, diameter: CGFloat) -> some View {
@@ -150,7 +223,7 @@ public struct HistoryCalendarView: View {
                 .allowsHitTesting(false)
             } else {
                 Button {
-                    model.select(date)
+                    select(date)
                 } label: {
                     HistoryDayCell(
                         date: date,
@@ -165,6 +238,22 @@ public struct HistoryCalendarView: View {
                 .buttonStyle(.plain)
             }
         }
+    }
+
+    private func select(_ date: Date) {
+        model.select(date)
+        if !usesSplit {
+            compactSelectedDay = date
+        }
+    }
+
+    private func showCustomAmount() {
+        showsCustomAmount = true
+    }
+
+    private func refreshAfterCustomAmount() {
+        detailRefreshID += 1
+        Task { await model.refresh(month: model.visibleMonth) }
     }
 
     private func previousMonth() {

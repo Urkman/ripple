@@ -2,7 +2,10 @@
 
 **Dokumenttyp:** Screen-Spec  
 **Empfänger:** Grok Build  
-**Version:** 1.0 — 28. August 2026  
+**Version:** 1.4 — 1. September 2026
+**1.4:** Korrigiert die Position der History-Primäraktion: im offenen iPad-Split am Detail, im kompakten Stack am Kalender-Root; der Sidebar-Toggle wird aus der Masterspalte entfernt.
+**1.3:** Verankert die History-Aktion in der oberen Tabbar-Nähe, öffnet für neue Einträge die benutzerdefinierte Mengen-Sheet und hält die iPad-Kalenderspalte offen.
+**1.2:** Vereinheitlicht die Stats-Oberfläche als GlassCard-Layout, setzt den History-Start auf heute und ergänzt eine dezente iPad-Trennlinie.
 **Gehört zu:** `Ripple_PRD.md`. Hero/Animation bleibt in `Ripple_Hero_Motion.md`.
 
 Zwei getrennte Screens, zwei Tab-Einträge. Kein kombinierter „Insights“-Screen.
@@ -25,8 +28,14 @@ Zurück-Button nur innerhalb von Pushes (Tagesdetail), nicht auf den Tab-Roots.
 
 iPad: `NavigationSplitView`.
 
-- Tab Verlauf: links Monatsraster, rechts `DayDetailView` (leeres Right: „Tag wählen“).
+- Tab Verlauf: links Monatsraster, rechts `DayDetailView`; heute ist beim Öffnen vorausgewählt, daher gibt es keinen initialen „Tag wählen“-Zustand.
 - Tab Statistik: eine Spalte, Charts volle Breite.
+- Beide iPad-Spalten verwenden durchgehend den Foam-Hintergrund; die systemseitige Sidebar-Farbfläche darf keine zweite Tönung einführen.
+- Beim Öffnen von Verlauf ist der heutige Tag vorausgewählt. Eine manuelle Tagesauswahl bleibt bestehen; der Zustand „Tag wählen“ ist kein initialer Zustand.
+- Zwischen Master- und Detailspalte liegt eine dezente vertikale Trennlinie in Deep mit niedriger Opazität.
+- Die Kalender-Masterspalte bleibt auf iPad geöffnet; ein systemseitiger Schließen-/Sidebar-Toggle wird nicht angeboten.
+- Die primäre „+“-Aktion liegt im oberen Toolbar-Bereich neben der Tabbar. Im offenen iPad-Split gehört sie zur Detailspalte; im kompakten Stack gehört sie zum Kalender-Root. Sie ist nur für den heutigen ausgewählten Tag sichtbar und öffnet die Custom-Amount-Sheet.
+- Die obere Tabbar trägt den Screen-Kontext. Auf iPad werden keine zusätzlichen Root-Navigationstitel für Verlauf/History oder Statistik/Stats angezeigt; ein Tagesdatum im Detail bleibt sichtbar.
 
 Watch / tvOS / Widget: kein Kalender, keine Stats-Charts. Watch zeigt höchstens die letzten Einträge des Tages unter dem Plus.
 
@@ -52,14 +61,15 @@ HistoryCalendarView
 ```
 
 - Hintergrund Foam `#E8F4F6`
-- Titel: Wortmarke weglassen. NavigationTitle `Verlauf` / `History`
+- Titel: Wortmarke weglassen. Auf iPhone NavigationTitle `Verlauf` / `History`; auf iPad kein zusätzlicher Root-Titel, weil die obere Tabbar den Kontext trägt
+- Primäre Aktion: ein „+“ im oberen Toolbar-Bereich. Im iPad-Split erscheint es am Detail-Screen; bei kompakter Navigation erscheint es am Kalender-Screen und nicht am gepushten Detail-Screen. Das „+“ öffnet `CustomAmountSheet` zur Eingabe/Stepper-Auswahl einer Menge; die Buchung läuft über denselben `LogIntake`-Pfad wie Today. Für vergangene Tage gibt es keine Add-Aktion.
 - Monat per Chevron und horizontalem Swipe. Der vollständige Monatsinhalt — Header, Wochentage und Raster — liegt in einem seitenbreiten horizontalen `ScrollView` mit nativer, auf genau eine Seite begrenzter Paging-Semantik (`scrollTargetLayout` / `scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))`). Der Pager enthält ausschließlich die lückenlose Monatsfolge vom Monat des ersten nicht gelöschten Wassereintrags bis zum aktuellen Monat; ohne Eintrag zeigt er nur den aktuellen Monat. Jede Seite besitzt mit ihrem normalisierten Monatsanfang eine stabile Identität. Sichtbare Seiten werden während oder nach einer Geste weder wiederverwendet noch auf eine künstliche Mittelseite zurückgesetzt. `visibleMonth` wird auf das tatsächlich eingerastete Ziel gesetzt. Die Chevrons liegen im Monats-Header, steuern denselben Pager und sind an den beiden Grenzen deaktiviert.
 - Wochen starten laut `Calendar.current.firstWeekday`
 - Leere Zellen vor dem 1. und nach dem letzten Tag des Monats: unsichtbar, nicht tappable
 
 ### 2.2 Day Cell (Ring)
 
-Durchmesser **36 pt** auf iPhone, **44 pt** auf iPad. Abstand so, dass 7 Spalten ohne Enge sitzen.
+Durchmesser **36 pt** auf iPhone und iPad. Auf iPad bleibt die Master-Spalte kompakt genug, damit 7 Spalten ohne Überlauf sitzen.
 
 ```
 ZStack {
@@ -144,6 +154,8 @@ VoiceOver Row: „250 Milliliter, Glas, 15 Uhr 8, Widget.“
 
 Eigener Screen, kein Kalender.
 
+Die Oberfläche verwendet ein eigenes Ripple-Kartenlayout auf Foam: Periodensteuerung, Kennzahlen, jeder Chart und die Highlights liegen in wiederverwendbaren `GlassCard`-Flächen. Keine systemseitige Form- oder Listenfläche und keine ungekarteten Chart-Blöcke. Die Karten bleiben ruhig und funktional: 20-pt-Radius, RippleUI-Abstände, Deep/Lagoon/Aqua und dezente interne Trennlinien.
+
 ```
 StatsView
   NavigationStack
@@ -156,7 +168,7 @@ StatsView
       chartContainer        // Behälter-Anteil
       highlights            // Best day, Durchschnitt, leere Tage
     }
-    .navigationTitle("Statistik")
+    .navigationTitle("Statistik")       // iPhone; auf iPad trägt die obere Tabbar den Kontext
 ```
 
 Periode:
