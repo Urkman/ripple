@@ -29,7 +29,7 @@ public struct WatchTodayView: View {
             VStack(spacing: 0) {
                 header(snapshot: snapshot, formatter: formatter, foreground: foreground)
 
-                Spacer(minLength: RippleSpace.sm)
+                Spacer(minLength: 0)
 
                 dailyReadout(
                     snapshot: snapshot,
@@ -38,7 +38,7 @@ public struct WatchTodayView: View {
                 )
                 .frame(maxWidth: .infinity)
 
-                Spacer(minLength: RippleSpace.sm)
+                Spacer(minLength: 0)
 
                 bottomDock(
                     snapshot: snapshot,
@@ -47,8 +47,11 @@ public struct WatchTodayView: View {
                 )
             }
             .padding(.horizontal, RippleWatchLayout.todayDockPadding)
-            .padding(.top, RippleWatchLayout.todayDockPadding)
-            .padding(.bottom, RippleWatchLayout.todayDockPadding)
+            .padding(.top, RippleSpace.xs)
+            .padding(
+                .bottom,
+                RippleWatchLayout.todayDockPadding + RippleWatchLayout.pageIndicatorClearance
+            )
         }
         .background(RippleColor.surface.ignoresSafeArea())
         .sheet(isPresented: customSheetBinding) {
@@ -87,11 +90,9 @@ public struct WatchTodayView: View {
         formatter: VolumeFormatter,
         foreground: Color
     ) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: RippleSpace.sm) {
+        VStack(alignment: .leading, spacing: RippleWatchLayout.todayContentSpacing) {
             Text(L10n.text("Today"))
                 .font(RippleFont.caption.weight(.semibold))
-
-            Spacer(minLength: RippleSpace.sm)
 
             Text(
                 L10n.text("Goal") + " " + formatter.string(
@@ -101,7 +102,10 @@ public struct WatchTodayView: View {
             )
             .font(RippleFont.caption.monospacedDigit())
             .lineLimit(1)
+            .minimumScaleFactor(0.70)
+            .allowsTightening(true)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(foreground)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(L10n.text("Today"))
@@ -119,27 +123,30 @@ public struct WatchTodayView: View {
         foreground: Color
     ) -> some View {
         VStack(spacing: RippleSpace.xs) {
-            Text(formatter.valueString(milliliters: snapshot.consumed.value, unit: snapshot.unit))
+            Text(formatter.string(milliliters: snapshot.consumed.value, unit: snapshot.unit))
                 .font(RippleFont.display)
                 .minimumScaleFactor(0.55)
                 .lineLimit(1)
+                .allowsTightening(true)
 
-            Text(snapshot.unit.symbol)
-                .font(RippleFont.callout.weight(.semibold))
-
-            Text(
-                formatter.remainingPhrase(
-                    milliliters: snapshot.remaining.value,
-                    unit: snapshot.unit
+            HStack(alignment: .firstTextBaseline, spacing: RippleSpace.sm) {
+                Text(
+                    formatter.remainingPhrase(
+                        milliliters: snapshot.remaining.value,
+                        unit: snapshot.unit
+                    )
                 )
-            )
-            .font(RippleFont.callout)
-            .lineLimit(1)
-            .minimumScaleFactor(0.75)
+                .font(RippleFont.callout)
+                .lineLimit(1)
+                .minimumScaleFactor(0.65)
 
-            Text(formatter.percentString(snapshot.percent))
-                .font(RippleFont.caption.monospacedDigit())
-                .opacity(0.82)
+                Text(formatter.percentString(snapshot.percent))
+                    .font(RippleFont.caption.monospacedDigit())
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.65)
+                    .opacity(0.82)
+            }
+            .frame(maxWidth: .infinity)
         }
         .foregroundStyle(foreground)
         .accessibilityElement(children: .ignore)
@@ -225,19 +232,26 @@ public struct WatchTodayView: View {
         let predefined = model.quickContainers.map { container in
             WatchAmountOption(
                 id: containerOptionID(container.id),
-                title: container.name,
-                subtitle: formatter.string(
+                title: formatter.valueString(
                     milliliters: container.amountMl,
                     unit: snapshot.unit
                 ),
-                kind: .predefined(container.id)
+                subtitle: snapshot.unit.symbol,
+                kind: .predefined(container.id),
+                accessibilityLabel: container.name,
+                accessibilityValue: formatter.string(
+                    milliliters: container.amountMl,
+                    unit: snapshot.unit
+                )
             )
         }
         let custom = WatchAmountOption(
             id: "custom",
-            title: L10n.custom,
-            subtitle: "+",
-            kind: .custom
+            title: "+",
+            subtitle: "",
+            kind: .custom,
+            accessibilityLabel: L10n.custom,
+            accessibilityValue: L10n.text("Custom amount")
         )
         return predefined + [custom]
     }

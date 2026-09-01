@@ -8,4 +8,5 @@ public enum RippleWatchLayout {
     public static let quickOptionSpacing: CGFloat = 4
     public static let dayRowSpacing: CGFloat = 8
     public static let chartHeight: CGFloat = 128
+    public static let pageIndicatorClearance: CGFloat = 8
 }
