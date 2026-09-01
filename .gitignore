@@ -11,3 +11,5 @@ Config/Ripple.xcconfig
 *.dSYM
 .idea/
 .xcodebuildmcp/
+Docs/ADR/
+Ripple_Handoff/
