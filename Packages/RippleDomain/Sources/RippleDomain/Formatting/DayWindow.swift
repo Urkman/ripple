@@ -22,6 +22,16 @@ public enum DayWindow: Sendable {
             let start = calendar.dateInterval(of: .month, for: date)?.start ?? startOfDay(date, calendar: calendar)
             let end = calendar.date(byAdding: .month, value: 1, to: start) ?? start
             return (start, end)
+        case .recentDays(let anchor, let count):
+            let anchorStart = startOfDay(anchor, calendar: calendar)
+            let dayCount = max(count, 1)
+            let start = calendar.date(
+                byAdding: .day,
+                value: -(dayCount - 1),
+                to: anchorStart
+            ) ?? anchorStart
+            let end = calendar.date(byAdding: .day, value: 1, to: anchorStart) ?? anchorStart
+            return (start, end)
         }
     }
 

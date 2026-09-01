@@ -147,6 +147,61 @@ struct HistoryStatsTests {
         #expect(snapshot.currentHitRun == 0)
     }
 
+    @Test("recent days returns an inclusive local calendar window")
+    func recentDays() async throws {
+        let intakes = InMemoryIntakeRepository()
+        let settings = InMemorySettingsRepository(
+            goal: GoalSettings(mode: .manual, manualGoalMl: 2000),
+            containers: Container.seededDefaults()
+        )
+        let useCases = UseCases.assemble(
+            intakeRepository: intakes,
+            settingsRepository: settings,
+            widgetReloading: NoOpWidgetReloading(),
+            health: FakeHealthProjector(),
+            reminders: NoOpReminderScheduling(),
+            workouts: NoOpWorkoutReading(),
+            healthAuthorizing: NoOpHealthAuthorizing()
+        )
+        let anchor = date(year: 2026, month: 8, day: 28, hour: 12)
+        let snapshot = try await useCases.observeHistory.snapshot(
+            for: .recentDays(anchor: anchor, count: 7),
+            calendar: calendar
+        )
+        let anchorStart = calendar.startOfDay(for: anchor)
+        let expectedStart = calendar.date(byAdding: .day, value: -6, to: anchorStart)!
+
+        #expect(snapshot.days.count == 7)
+        #expect(snapshot.days.first?.date == expectedStart)
+        #expect(snapshot.days.last?.date == anchorStart)
+        #expect(snapshot.days.allSatisfy { $0.date <= anchorStart })
+    }
+
+    @Test("recent days uses calendar arithmetic across daylight saving time")
+    func recentDaysAcrossDaylightSavingTime() {
+        var dstCalendar = Calendar(identifier: .gregorian)
+        dstCalendar.timeZone = TimeZone(identifier: "Europe/Berlin")!
+        let anchor = dstCalendar.date(
+            from: DateComponents(year: 2026, month: 3, day: 29, hour: 12)
+        )!
+        let range = DayWindow.range(
+            for: .recentDays(anchor: anchor, count: 7),
+            calendar: dstCalendar
+        )
+        let calendarDays = dstCalendar.dateComponents([.day], from: range.0, to: range.1).day
+
+        #expect(calendarDays == 7)
+        #expect(range.1.timeIntervalSince(range.0) < Double(7 * 86_400))
+        #expect(dstCalendar.component(.hour, from: range.0) == 0)
+        #expect(dstCalendar.component(.hour, from: range.1) == 0)
+
+        let oneDay = DayWindow.range(
+            for: .recentDays(anchor: anchor, count: 0),
+            calendar: dstCalendar
+        )
+        #expect(dstCalendar.dateComponents([.day], from: oneDay.0, to: oneDay.1).day == 1)
+    }
+
     @Test("restore undoes a soft delete")
     func restore() async throws {
         let intakes = InMemoryIntakeRepository()

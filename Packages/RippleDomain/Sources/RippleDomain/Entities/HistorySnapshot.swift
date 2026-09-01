@@ -4,6 +4,7 @@ public enum HistoryRange: Sendable, Hashable, Equatable {
     case day(Date)
     case week(Date)
     case month(Date)
+    case recentDays(anchor: Date, count: Int)
 }
 
 public struct DayTotal: Sendable, Hashable, Equatable, Identifiable {
