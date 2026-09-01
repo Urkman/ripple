@@ -97,4 +97,20 @@ public struct WatchHistoryView: View {
         return "\(amount) · \(L10n.text("Goal")) \(goal) · \(status)"
     }
 }
+
+#Preview("Watch History") {
+    WatchHistoryView(
+        model: WatchHistoryViewModel(useCases: RippleRuntime.preview),
+        useCases: RippleRuntime.preview
+    )
+}
+
+#Preview("Watch History · Dark · XXXL") {
+    WatchHistoryView(
+        model: WatchHistoryViewModel(useCases: RippleRuntime.preview),
+        useCases: RippleRuntime.preview
+    )
+    .preferredColorScheme(.dark)
+    .dynamicTypeSize(.accessibility3)
+}
 #endif

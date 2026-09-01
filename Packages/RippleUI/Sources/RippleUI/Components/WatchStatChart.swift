@@ -91,3 +91,14 @@ public struct WatchStatChart: View {
     )
     .padding()
 }
+
+#Preview("Watch Stats Chart · Empty · Dark · XXXL") {
+    WatchStatChart(
+        points: [],
+        emptyMessage: "No data for this period.",
+        accessibilitySummary: "Current week, no data"
+    )
+    .padding()
+    .preferredColorScheme(.dark)
+    .dynamicTypeSize(.accessibility3)
+}

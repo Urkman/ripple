@@ -40,7 +40,7 @@ public struct WatchCustomAmountView: View {
                 formatter.string(milliliters: selection.milliliters, unit: selection.unit)
             )
 
-            Text(L10n.text("Turn the Digital Crown"))
+            Text(L10n.turnDigitalCrown)
                 .font(RippleFont.caption)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)

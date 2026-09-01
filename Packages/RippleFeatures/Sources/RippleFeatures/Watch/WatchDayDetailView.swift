@@ -152,4 +152,28 @@ private struct WatchIntakeDetailRow: View {
             .joined(separator: " · ")
     }
 }
+
+#Preview("Watch Day Detail") {
+    NavigationStack {
+        WatchDayDetailView(
+            model: WatchDayDetailViewModel(
+                useCases: RippleRuntime.preview,
+                day: Date()
+            )
+        )
+    }
+}
+
+#Preview("Watch Day Detail · Dark · XXXL") {
+    NavigationStack {
+        WatchDayDetailView(
+            model: WatchDayDetailViewModel(
+                useCases: RippleRuntime.preview,
+                day: Date()
+            )
+        )
+    }
+    .preferredColorScheme(.dark)
+    .dynamicTypeSize(.accessibility3)
+}
 #endif

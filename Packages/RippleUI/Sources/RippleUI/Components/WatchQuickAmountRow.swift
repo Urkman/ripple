@@ -88,3 +88,19 @@ public struct WatchQuickAmountRow: View {
     )
     .padding()
 }
+
+#Preview("Watch Quick Amounts · Dark · XXXL") {
+    WatchQuickAmountRow(
+        options: [
+            WatchAmountOption(id: "glass", title: "Glass", subtitle: "250 ml", kind: .predefined(UUID())),
+            WatchAmountOption(id: "cup", title: "Cup", subtitle: "200 ml", kind: .predefined(UUID())),
+            WatchAmountOption(id: "bottle", title: "Bottle", subtitle: "500 ml", kind: .predefined(UUID())),
+            WatchAmountOption(id: "custom", title: "Custom", subtitle: "+", kind: .custom),
+        ],
+        selectedID: "custom",
+        onSelect: { _ in }
+    )
+    .padding()
+    .preferredColorScheme(.dark)
+    .dynamicTypeSize(.accessibility3)
+}

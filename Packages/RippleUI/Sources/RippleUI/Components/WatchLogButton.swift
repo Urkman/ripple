@@ -43,3 +43,10 @@ private struct WatchLogButtonStyle: ButtonStyle {
     WatchLogButton(title: "Add 250 ml") {}
         .padding()
 }
+
+#Preview("Watch Log Button · Dark · XXXL") {
+    WatchLogButton(title: "Add 250 ml") {}
+        .padding()
+        .preferredColorScheme(.dark)
+        .dynamicTypeSize(.accessibility3)
+}

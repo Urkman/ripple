@@ -72,3 +72,16 @@ public struct WatchDayRow: View {
     )
     .padding()
 }
+
+#Preview("Watch Day Row · Dark · XXXL") {
+    WatchDayRow(
+        title: "Monday",
+        subtitle: "1 Sep",
+        amountText: "1,250 ml",
+        progress: 0.625,
+        statusText: "1,250 ml of 2,000 ml"
+    )
+    .padding()
+    .preferredColorScheme(.dark)
+    .dynamicTypeSize(.accessibility3)
+}

@@ -42,7 +42,10 @@ public struct WatchStatsView: View {
                     )
                     summaryMetric(
                         label: L10n.text("Goal"),
-                        value: "\(model.hitDayCount) / \(model.elapsedDayCount)"
+                        value: L10n.goalDays(
+                            hitDays: model.hitDayCount,
+                            elapsedDays: model.elapsedDayCount
+                        )
                     )
                     summaryMetric(
                         label: L10n.text("Total"),
@@ -127,5 +130,15 @@ public struct WatchStatsView: View {
             unit: model.unit
         )
     }
+}
+
+#Preview("Watch Stats") {
+    WatchStatsView(model: WatchStatsViewModel(useCases: RippleRuntime.preview))
+}
+
+#Preview("Watch Stats · Dark · XXXL") {
+    WatchStatsView(model: WatchStatsViewModel(useCases: RippleRuntime.preview))
+        .preferredColorScheme(.dark)
+        .dynamicTypeSize(.accessibility3)
 }
 #endif

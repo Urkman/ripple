@@ -10,6 +10,14 @@ enum L10n {
         String(localized: "Add \(formatted)", bundle: .module)
     }
 
+    static var custom: String { text("Custom") }
+
+    static var turnDigitalCrown: String { text("Turn the Digital Crown") }
+
+    static func goalDays(hitDays: Int, elapsedDays: Int) -> String {
+        String(localized: "\(hitDays) / \(elapsedDays) days", bundle: .module)
+    }
+
     static func confirmation(amount: String) -> String {
         String(localized: "+\(amount) · nice Ripple.", bundle: .module)
     }

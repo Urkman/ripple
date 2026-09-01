@@ -50,6 +50,24 @@
         }
       }
     },
+    "%lld / %lld days" : {
+      "comment" : "Goal-day summary — the first value is the number of days that reached the goal and the second is the number of elapsed days.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld / %2$lld Tage"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld / %2$lld days"
+          }
+        }
+      }
+    },
     "%lld %@ · %lld %%" : {
       "localizations" : {
         "en" : {
@@ -540,6 +558,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Custom amount"
+          }
+        }
+      }
+    },
+    "Custom" : {
+      "comment" : "Watch quick-add option for an amount chosen with the Digital Crown.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Benutzerdefiniert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
           }
         }
       }
@@ -1742,6 +1778,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today you're in the flow."
+          }
+        }
+      }
+    },
+    "Turn the Digital Crown" : {
+      "comment" : "Watch instruction shown above the custom amount control.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drehe die Digital Crown"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn the Digital Crown"
           }
         }
       }

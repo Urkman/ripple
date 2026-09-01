@@ -235,7 +235,7 @@ public struct WatchTodayView: View {
         }
         let custom = WatchAmountOption(
             id: "custom",
-            title: L10n.text("Custom"),
+            title: L10n.custom,
             subtitle: "+",
             kind: .custom
         )

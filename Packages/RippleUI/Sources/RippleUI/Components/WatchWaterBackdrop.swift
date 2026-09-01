@@ -75,7 +75,7 @@ public struct WatchWaterBackdrop: View {
 }
 
 #Preview("Watch Water · Dark · Reduce Motion") {
-    WatchWaterBackdrop(level: 0)
+    WatchWaterBackdrop(level: 0.52)
         .frame(width: 184, height: 224)
         .preferredColorScheme(.dark)
 }
