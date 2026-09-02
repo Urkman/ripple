@@ -24,7 +24,7 @@ let package = Package(
                 .swiftLanguageMode(.v6),
             ],
             linkerSettings: [
-                .linkedFramework("CoreMotion", .when(platforms: [.iOS])),
+                .linkedFramework("CoreMotion", .when(platforms: [.iOS, .watchOS])),
             ]
         ),
         .testTarget(

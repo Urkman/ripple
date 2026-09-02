@@ -3,7 +3,6 @@ import SwiftUI
 public struct WatchAmountOption: Identifiable, Equatable, Sendable {
     public enum Kind: Equatable, Sendable {
         case predefined(UUID)
-        case custom
     }
 
     public let id: String
@@ -83,15 +82,15 @@ private struct WatchQuickAmountButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .frame(height: RippleWatchLayout.controlHeight)
             .padding(.horizontal, RippleSpace.xs)
-            .foregroundStyle(isSelected ? Color.white : RippleColor.waterDeep)
+            .foregroundStyle(isSelected ? Color.white : RippleColor.watchText)
             .background(
                 RoundedRectangle(cornerRadius: RippleRadius.control, style: .continuous)
-                    .fill(isSelected ? RippleColor.waterLagoon : RippleColor.surface.opacity(0.82))
+                    .fill(isSelected ? RippleColor.watchLagoon : RippleColor.watchSurfaceElevated)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: RippleRadius.control, style: .continuous)
                     .stroke(
-                        isSelected ? RippleColor.waterAqua : RippleColor.waterDeep.opacity(0.14),
+                        isSelected ? RippleColor.watchAqua : RippleColor.watchText.opacity(0.14),
                         lineWidth: 1
                     )
             )
@@ -105,7 +104,7 @@ private struct WatchQuickAmountButtonStyle: ButtonStyle {
         options: [
             WatchAmountOption(id: "glass", title: "Glass", subtitle: "250 ml", kind: .predefined(UUID())),
             WatchAmountOption(id: "cup", title: "Cup", subtitle: "200 ml", kind: .predefined(UUID())),
-            WatchAmountOption(id: "custom", title: "Custom", subtitle: "+", kind: .custom),
+            WatchAmountOption(id: "bottle", title: "Bottle", subtitle: "500 ml", kind: .predefined(UUID())),
         ],
         selectedID: "glass",
         onSelect: { _ in }
@@ -119,9 +118,8 @@ private struct WatchQuickAmountButtonStyle: ButtonStyle {
             WatchAmountOption(id: "glass", title: "Glass", subtitle: "250 ml", kind: .predefined(UUID())),
             WatchAmountOption(id: "cup", title: "Cup", subtitle: "200 ml", kind: .predefined(UUID())),
             WatchAmountOption(id: "bottle", title: "Bottle", subtitle: "500 ml", kind: .predefined(UUID())),
-            WatchAmountOption(id: "custom", title: "Custom", subtitle: "+", kind: .custom),
         ],
-        selectedID: "custom",
+        selectedID: "bottle",
         onSelect: { _ in }
     )
     .padding()

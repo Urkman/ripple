@@ -8,42 +8,39 @@ public struct WatchCustomAmountView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.locale) private var locale
-    @State private var crownValue: Double
 
     public init(model: WatchTodayViewModel) {
         self.model = model
-        _crownValue = State(initialValue: model.customSelection.crownValue)
     }
 
     public var body: some View {
         let formatter = VolumeFormatter(locale: locale)
-        let selection = model.customSelection
+        let selection = model.crownSelection
 
-        VStack(spacing: RippleSpace.md) {
-            VStack(spacing: RippleSpace.xs) {
-                Text(L10n.text("Custom amount"))
-                    .font(RippleFont.caption)
-                    .foregroundStyle(.secondary)
+        VStack(spacing: RippleSpace.sm) {
+            Text(L10n.text("Amount"))
+                .font(RippleFont.caption)
+                .foregroundStyle(.secondary)
 
-                Text(formatter.valueString(milliliters: selection.milliliters, unit: selection.unit))
-                    .font(RippleFont.display)
-                    .minimumScaleFactor(0.55)
-                    .lineLimit(1)
-
-                Text(selection.unit.symbol)
-                    .font(RippleFont.callout.weight(.semibold))
-            }
-            .frame(maxWidth: .infinity)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(L10n.text("Amount"))
-            .accessibilityValue(
-                formatter.string(milliliters: selection.milliliters, unit: selection.unit)
+            WatchQuickAmountRow(
+                options: amountOptions(formatter: formatter),
+                selectedID: selectedOptionID,
+                onSelect: selectAmount
             )
 
             Text(L10n.turnDigitalCrown)
                 .font(RippleFont.caption)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+                .frame(maxWidth: RippleWatchLayout.amountSheetCrownHintWidth)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(L10n.text("Amount"))
+                .accessibilityValue(
+                    formatter.string(milliliters: model.selectedAmountMl, unit: selection.unit)
+                )
+                .accessibilityHint(L10n.turnDigitalCrown)
 
             if let errorMessage = model.errorMessage {
                 Text(errorMessage)
@@ -58,37 +55,25 @@ public struct WatchCustomAmountView: View {
 
             WatchLogButton(
                 title: L10n.addAmount(
-                    formatter.string(milliliters: selection.milliliters, unit: selection.unit)
+                    formatter.string(milliliters: model.selectedAmountMl, unit: selection.unit)
                 ),
                 isEnabled: !model.isLogging,
                 action: add
             )
-
-            Button(L10n.text("Cancel"), action: cancel)
-                .font(RippleFont.callout)
-                .frame(maxWidth: .infinity, minHeight: RippleWatchLayout.controlHeight)
-                .foregroundStyle(RippleColor.waterDeep)
-                .buttonStyle(.plain)
-                .accessibilityLabel(L10n.text("Cancel"))
         }
         .padding(.horizontal, RippleWatchLayout.pageHorizontalPadding)
-        .padding(.vertical, RippleSpace.md)
+        .padding(.vertical, RippleWatchLayout.amountSheetVerticalPadding)
+        .background(RippleColor.watchSurface.ignoresSafeArea())
         .focusable(true)
         .digitalCrownRotation(
-            $crownValue,
+            crownBinding,
             from: selection.crownLowerBound,
             through: selection.crownUpperBound,
-            by: 1,
+            by: Double(WatchAmountSelection.stepMilliliters),
             sensitivity: .medium,
             isContinuous: false,
             isHapticFeedbackEnabled: true
         )
-        .onChange(of: crownValue) { _, newValue in
-            model.updateCustomCrown(newValue)
-        }
-        .onAppear {
-            crownValue = model.customSelection.crownValue
-        }
         .presentationDetents([.medium])
     }
 
@@ -101,21 +86,62 @@ public struct WatchCustomAmountView: View {
         }
     }
 
-    private func cancel() {
-        model.cancelCustom()
-        dismiss()
+    private var selectedOptionID: String? {
+        guard let containerID = model.selectedContainerID else {
+            return nil
+        }
+        return containerOptionID(containerID)
+    }
+
+    private func amountOptions(formatter: VolumeFormatter) -> [WatchAmountOption] {
+        let predefined = model.quickContainers.map { container in
+            WatchAmountOption(
+                id: containerOptionID(container.id),
+                title: formatter.valueString(
+                    milliliters: container.amountMl,
+                    unit: model.snapshot.unit
+                ),
+                subtitle: model.snapshot.unit.symbol,
+                kind: .predefined(container.id),
+                accessibilityLabel: container.name,
+                accessibilityValue: formatter.string(
+                    milliliters: container.amountMl,
+                    unit: model.snapshot.unit
+                )
+            )
+        }
+        return predefined
+    }
+
+    private func selectAmount(_ option: WatchAmountOption) {
+        guard case .predefined(let id) = option.kind,
+              let container = model.quickContainers.first(where: { $0.id == id }) else {
+            return
+        }
+        model.select(container: container)
+    }
+
+    private var crownBinding: Binding<Double> {
+        Binding(
+            get: { Double(model.selectedAmountMl) },
+            set: { model.updateCrown($0) }
+        )
+    }
+
+    private func containerOptionID(_ id: UUID) -> String {
+        "container-\(id.uuidString)"
     }
 }
 
 #Preview("Watch Custom Amount") {
     let model = WatchTodayViewModel(useCases: RippleRuntime.preview)
-    model.openCustom()
+    model.openAmountSheet()
     return WatchCustomAmountView(model: model)
 }
 
 #Preview("Watch Custom Amount · Dark · XXXL") {
     let model = WatchTodayViewModel(useCases: RippleRuntime.preview)
-    model.openCustom()
+    model.openAmountSheet()
     return WatchCustomAmountView(model: model)
         .preferredColorScheme(.dark)
         .dynamicTypeSize(.accessibility3)

@@ -14,6 +14,8 @@ struct RippleWatchApp: App {
         WindowGroup {
             WatchRootView(useCases: container.useCases)
                 .environment(\.rippleUseCases, container.useCases)
+                .preferredColorScheme(.dark)
+                .environment(\.colorScheme, .dark)
         }
     }
 }

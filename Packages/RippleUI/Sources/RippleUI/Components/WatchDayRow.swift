@@ -43,9 +43,9 @@ public struct WatchDayRow: View {
                     let clampedProgress = min(max(progress, 0), 1)
                     ZStack(alignment: .leading) {
                         Capsule(style: .continuous)
-                            .fill(RippleColor.waterDeep.opacity(0.14))
+                            .fill(RippleColor.watchText.opacity(0.14))
                         Capsule(style: .continuous)
-                            .fill(RippleColor.waterAqua)
+                            .fill(RippleColor.watchAqua)
                             .frame(width: proxy.size.width * clampedProgress)
                     }
                 }

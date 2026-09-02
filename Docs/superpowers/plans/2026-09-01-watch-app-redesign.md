@@ -18,7 +18,7 @@
 - Use `@Observable` and `@MainActor`; do not add `ObservableObject`, `Combine`, `@Query` writes, or view-owned persistence.
 - Every Watch write must call `useCases.logIntake.run(amount:source:date:containerId:)` with `source: .watch`. Predefined options pass their container ID; Custom passes `nil`.
 - Keep all stored amounts as integer milliliters. `WatchAmountSelection` may convert for display/Crown stepping only.
-- Keep Watch navigation platform-local: three horizontal Today/History/Stats pages, with History pushing a local read-only Day Detail page. No app-wide router, month grid, Month/Year picker, or Watch complication redesign.
+- Keep Watch navigation platform-local: three horizontal Today/History/Stats pages, with History pushing a local Day Detail page that supports individual-entry deletion and Undo. No app-wide router, month grid, Month/Year picker, or Watch complication redesign.
 - Today uses a full-canvas water field as its sole progress visualization. It has no ring, glass, `ProgressView`, pour stream, surface reaction, idle wave, Core Motion tilt, or last-log row.
 - Today water is flat when idle; level zero renders no water or surface path. Normal level refresh uses a restrained liquid transition; Reduce Motion uses a 0.20-second cross-fade.
 - Use only RippleUI color, type, space, radius, and motion tokens. Add named Watch layout metrics instead of unnamed feature magic numbers.
@@ -82,8 +82,8 @@ Files expected to be created:
 **Changes:**
 
 - In `AGENTS.md`, replace the Watch platform sentence that currently says “ring + plus + crown. No calendar, no stats charts.” with the approved three-page contract: Today full-canvas level plus logging, History recent seven-day list/detail, Stats current ISO-week summary with one compact chart. Explicitly retain “no calendar” and “no stats charts” for Watch complications/widgets where those restrictions still apply.
-- In `Ripple_PRD.md` §12.3, replace the one-screen ring description with Today/History/Stats pages, Watch-native full-canvas level, predefined/Crown custom logging, read-only Day Detail, and current-week Stats. Update the v1 definition of done to require those pages and their tests.
-- In `Ripple_History_Stats.md`, keep the iPhone/iPad calendar and multi-period requirements unchanged, replace the contradictory Watch sentence, and add a Watch subsection specifying seven elapsed local days newest-first, read-only detail, and one current ISO-week Swift Charts view. State that Watch has no month calendar, no period picker, and no editing/deletion.
+- In `Ripple_PRD.md` §12.3, replace the one-screen ring description with Today/History/Stats pages, Watch-native full-canvas level, predefined/Crown custom logging, an individual-entry-deletable Day Detail, and current-week Stats. Update the v1 definition of done to require those pages and their tests.
+- In `Ripple_History_Stats.md`, keep the iPhone/iPad calendar and multi-period requirements unchanged, replace the contradictory Watch sentence, and add a Watch subsection specifying seven elapsed local days newest-first, individual-entry deletion with Undo in detail, and one current ISO-week Swift Charts view. State that Watch has no month calendar, no period picker, and no editing or logging in detail.
 - Keep the design spec’s status aligned with its already approved chat decision.
 
 **Steps:**
@@ -389,7 +389,7 @@ public final class WatchTodayViewModel {
     public private(set) var customSelection: WatchAmountSelection { get }
     public private(set) var isCustomPresented: Bool { get }
     public private(set) var isLogging: Bool { get }
-    public private(set) var confirmation: String? { get }
+    public private(set) var successFeedback: Int { get }
     public private(set) var errorMessage: String? { get }
 
     public init(useCases: UseCases, now: Date = Date(), calendar: Calendar = .current)
@@ -421,7 +421,7 @@ try await useCases.logIntake.run(
 )
 ```
 
-- On success, refresh Today, show existing localized `L10n.confirmation(amount:)`, clear it after the existing confirmation duration, and dismiss Custom if it was open. On failure, keep amount/container/Crown selection intact and expose `errorMessage`.
+- On success, refresh Today, increment the success-feedback trigger, and dismiss the amount sheet if it was open. Do not insert confirmation copy into the Today layout. On failure, keep amount/container/Crown selection intact and expose `errorMessage`.
 - `waterLevel` delegates to the existing `RippleMotion.fillLevel(consumedMl:goalMl:)`; the view owns the transition and Reduce Motion behavior.
 - The view model imports domain/UI APIs only as needed for orchestration and formatting; it does not import SwiftData, CloudKit, HealthKit, WidgetKit, or repositories.
 
@@ -436,14 +436,14 @@ try await useCases.logIntake.run(
 
 - [ ] Add the default-selection, no-write-on-select, predefined-write, custom-write, and failure-preservation tests before implementing the view model.
 - [ ] Run the focused Watch Today tests and record the expected failure.
-- [ ] Implement the observable state, selection transitions, confirmation task, and single `.watch` LogIntake call.
+- [ ] Implement the observable state, selection transitions, success-feedback trigger, and single `.watch` LogIntake call.
 - [ ] Run the focused tests and the complete `RippleFeatures` suite.
 - [ ] Commit the Today model as `feat: add Watch Today logging model`.
 
 **Implementation and verification:**
 
 - Run `swift test --package-path Packages/RippleFeatures --filter WatchTodayViewModelTests` before implementation and confirm failure.
-- Implement the model with `@ObservationIgnored` dependencies and cancellable confirmation task; do not copy `TodayViewModel.log` or its `.app` source.
+- Implement the model with `@ObservationIgnored` dependencies and a success-feedback trigger; do not copy `TodayViewModel.log` or its `.app` source.
 - Run the focused tests and the complete `swift test --package-path Packages/RippleFeatures` suite.
 
 **Commit:** `feat: add Watch Today logging model`
@@ -507,7 +507,7 @@ public final class WatchStatsViewModel {
 **Rules:**
 
 - `WatchHistoryViewModel.refresh(now:)` calls `useCases.observeHistory.snapshot(for: .recentDays(anchor: now, count: 7), calendar: calendar)`, filters to elapsed local days, and stores newest-first `DayTotal` values. Empty days remain in the seven-row window.
-- `WatchDayDetailViewModel.refresh()` calls `useCases.observeToday.snapshot(for: day, calendar: calendar)`. `entries` is the snapshot’s undeleted entries sorted newest-first. This model has no add/edit/delete methods.
+- `WatchDayDetailViewModel.refresh()` calls `useCases.observeToday.snapshot(for: day, calendar: calendar)`. `entries` is the snapshot’s undeleted entries sorted newest-first. The model exposes individual-entry soft-delete and temporary Undo through the existing `DeleteIntake` and `RestoreIntake` use cases; it has no add/edit methods.
 - `WatchStatsViewModel.refresh(now:)` calls `useCases.observeStats.run(range: .week(now), calendar: calendar, now: now)`, reads the preferred unit from `settingsRepository.profile()`, and exposes `StatsSnapshot`-derived summary values through `daysElapsed`, `hitDays`, `averageMlPerDay`, and `totalMl`. It must not reimplement these calculations.
 - `WatchStatsViewModel.ChartPoint` contains raw integer milliliters; the view performs only unit conversion for display/chart axes through `UnitConverter`. `chartPoints` returns an empty array when `snapshot.hasData == false`; when data exists it maps the seven source days, including legitimate zero-amount days, without inventing values.
 - On refresh failure, keep the prior snapshot and set `errorMessage`. No fake days or chart bars are inserted.
@@ -561,7 +561,7 @@ public struct WatchCustomAmountView: View {
 - Use a full-screen `ZStack` with `WatchWaterBackdrop(level: model.waterLevel)` behind the content. The water field is the sole progress visualization; do not add a ring, glass outline, bar, `ProgressView`, last-log row, or iPhone hero.
 - Place localized `Today`, the consumed amount, a localized remaining phrase, and percent over the canvas using `RippleFont` styles and monospaced digits. Use a contrast-safe token foreground for both adaptive appearances; do not render `waterDeep` as unreadable text on a dark surface.
 - Put `WatchQuickAmountRow` and `WatchLogButton(title: L10n.addAmount(...))` in a compact bottom dock. The first three options map to the first three sorted `model.quickContainers`; tapping one selects only. The Custom option opens the sheet; only the primary Add button writes.
-- Show `model.confirmation` and `model.errorMessage` as accessible, transient/inline status text without changing the water metaphor. Keep the composition within a 416 × 496 canvas and allow content to compress rather than clip at XXXL.
+- Show `model.errorMessage` as accessible inline status text without changing the water metaphor; success uses haptic feedback without adding layout copy. Keep the composition within a 416 × 496 canvas and allow content to compress rather than clip at XXXL.
 - Apply a 0.20-second cross-fade for level changes when `accessibilityReduceMotion` is enabled. Otherwise use the named liquid transition; never use Core Motion or an idle animation.
 - Refresh through `.task(id: scenePhase)` or the root lifecycle task when the Watch scene is active. Do not refresh every frame.
 
@@ -586,7 +586,7 @@ public struct WatchCustomAmountView: View {
 
 **Commit:** `feat: build Watch Today and custom Crown UI`
 
-## Task 10: Build Watch History, read-only Day Detail, Stats, and page navigation
+## Task 10: Build Watch History, deletable Day Detail, Stats, and page navigation
 
 **Files:**
 
@@ -620,7 +620,7 @@ public struct WatchStatsView: View {
 
 - `WatchRootView` owns `@State` instances of the Today, History, and Stats models and presents exactly three `TabView` pages with `.tabViewStyle(.page(indexDisplayMode: .automatic))`, selected Today on launch. Day Detail creates its own model for the pushed destination. The root is not a shared router and has no tab bar or Settings page.
 - `WatchHistoryView` uses a local `NavigationStack` and `NavigationLink(value: day.date)` rows. Each row uses `WatchDayRow` with weekday/short-date, consumed/goal, capped bar, and a disclosure affordance. The destination is `WatchDayDetailView`; no month calendar, ring, chart wall, or add button appears.
-- `WatchDayDetailView` shows date, total, goal percentage, and an `Entries` list. Each row includes time, amount, container when available, and localized source. Empty days show `No entries`. Do not expose editing, deletion, or logging actions.
+- `WatchDayDetailView` shows date, total, goal percentage, and an `Entries` list. Each row includes time, amount, container when available, and localized source. Empty days show `No entries`. Each row exposes a trailing destructive delete action with temporary Undo; editing and logging remain on iPhone/iPad.
 - `WatchStatsView` shows localized `Avg / day`, goal days as `{hitDays} / {elapsedDays}`, and total volume, followed by `WatchStatChart` with seven current-week points. If `snapshot.hasData == false`, show the localized no-data empty state and no bars.
 - `RippleWatchApp` must instantiate `WatchRootView(useCases: container.useCases)` and keep its existing `RippleBootstrap.start()` composition. No app-target service or state store is added.
 
@@ -637,7 +637,7 @@ public struct WatchStatsView: View {
 
 **Steps:**
 
-- [ ] Implement the three page views, local History navigation destination, read-only Day Detail, and current-week Stats composition.
+- [ ] Implement the three page views, local History navigation destination, deletable Day Detail, and current-week Stats composition.
 - [ ] Replace the app composition root’s `WatchTodayView` call with `WatchRootView` while preserving `RippleBootstrap.start()` and the existing environment injection.
 - [ ] Run the RippleFeatures suite and build the Watch scheme.
 - [ ] Perform the page-swipe, History-push, and back-navigation smoke check.
@@ -716,8 +716,8 @@ xcodebuild -project Ripple.xcodeproj -scheme RipplewatchOS \
 **Device verification:**
 
 - Use the booted Apple Watch Series 11 (46 mm) simulator with UUID `E7C9A957-0AE4-4E36-9852-1AF0F8AF2C04`; install and launch the built app, capture a screenshot, and inspect it at the supplied 416 × 496 dimensions.
-- Verify the Today zero state, partial fill, goal-reaching fill, predefined selection then Add, Custom Crown steps in ml and fl oz, confirmation/error state, and no accidental write on selection or Cancel.
-- Swipe Today → History → Stats; verify seven elapsed newest-first rows, empty-day row, read-only Day Detail, current ISO-week summary, populated chart, and no-data chart state.
+- Verify the Today zero state, partial fill, goal-reaching fill, predefined selection then Add, Custom Crown steps in ml and fl oz, success haptic/error state, and no accidental write on selection or Cancel.
+- Swipe Today → History → Stats; verify seven elapsed newest-first rows, empty-day row, deletable Day Detail with Undo, current ISO-week summary, populated chart, and no-data chart state.
 - Repeat a smoke pass on a smaller available Watch simulator, then switch Light/Dark appearance, Dynamic Type XXXL, Reduce Motion, and VoiceOver. Confirm text contrast, fixed level-zero behavior, labels, and no clipping/oversized pill.
 - Use `xcrun simctl io E7C9A957-0AE4-4E36-9852-1AF0F8AF2C04 screenshot /tmp/ripple-watch-redesign.png` and inspect the resulting image with the image viewer.
 

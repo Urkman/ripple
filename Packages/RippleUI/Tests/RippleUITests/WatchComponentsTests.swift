@@ -24,7 +24,26 @@ struct WatchComponentsTests {
         #expect(capped.boundingRect.maxY <= rect.maxY + 0.001)
     }
 
-    @Test("amount options preserve stable identity and selection kind")
+    @Test("wrist response moves and settles the water surface")
+    func wristResponseSettles() {
+        let rect = CGRect(x: 0, y: 0, width: 200, height: 400)
+        let flat = WatchWaterSurfaceShape(level: 0.5).path(in: rect)
+        let moving = WatchWaterSurfaceShape(
+            level: 0.5,
+            wavePosition: RippleMotion.watchWaveOutPosition,
+            waveAmplitude: RippleMotion.watchWaveAmplitude
+        ).path(in: rect)
+        let settled = WatchWaterSurfaceShape(
+            level: 0.5,
+            wavePosition: RippleMotion.watchWaveSettlePosition,
+            waveAmplitude: 0
+        ).path(in: rect)
+
+        #expect(moving.boundingRect.height > flat.boundingRect.height)
+        #expect(settled.boundingRect.height == flat.boundingRect.height)
+    }
+
+    @Test("amount options preserve stable identity and predefined kind")
     func amountOptionIdentity() {
         let containerID = UUID()
         let predefined = WatchAmountOption(
@@ -33,17 +52,9 @@ struct WatchComponentsTests {
             subtitle: "250 ml",
             kind: .predefined(containerID)
         )
-        let custom = WatchAmountOption(
-            id: "custom",
-            title: "Custom",
-            subtitle: "",
-            kind: .custom
-        )
 
         #expect(predefined.id == "container")
         #expect(predefined.kind == .predefined(containerID))
-        #expect(custom.kind == .custom)
-        #expect([predefined, custom].map(\.id) == ["container", "custom"])
     }
 
     @Test("weekly chart points preserve dated categories and empty state")

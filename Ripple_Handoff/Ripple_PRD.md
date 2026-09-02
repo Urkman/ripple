@@ -462,9 +462,9 @@ Settings: Profil, Einheiten, Behälter-CRUD, Erinnerungen, Health-Status, Sync-S
 
 ### 12.3 Apple Watch
 
-Die Watch-App hat drei horizontale Seiten: **Heute | Verlauf | Statistik**. Heute ist eine vollflächige, flache Wasserstand-Darstellung ohne Ring oder Glas und bietet drei vorkonfigurierte Mengen sowie eine Crown-first-Eingabe für eigene Mengen. Die primäre Aktion schreibt über denselben `LogIntake`-Use-Case mit Quelle `watch`; eine Auswahl allein schreibt nicht.
+Die Watch-App hat drei horizontale Seiten: **Heute | Verlauf | Statistik**. Heute ist eine vollflächige, flache Wasserstand-Darstellung ohne Ring oder Glas und bietet eine einzelne `+`-Aktion. Sie öffnet das Mengen-Sheet mit drei vorkonfigurierten Mengen; die Crown passt den aktuellen Wert in 10-ml-Schritten an und macht ihn bei einer Änderung zu einer eigenen Menge ohne Behälter-ID. Ein separater `+`-Modusschalter ist nicht nötig. Erst die Bestätigung im Sheet schreibt über denselben `LogIntake`-Use-Case mit Quelle `watch`; eine Auswahl allein schreibt nicht. Zum Verwerfen gibt es nur das systemseitige `×` oben, keinen zusätzlichen Cancel-Button. Verlauf und Statistik verwenden jeweils einen lokalen Navigationsstapel für ihr scrollbares Titelverhalten; Heute bleibt für das vollflächige Wasserfeld ohne Navigationsstapel. Die Watch-App bevorzugt die dunkle OLED-Darstellung. Auf einer echten Watch darf eine Handgelenkbewegung eine kurze, gedämpfte Wasseroberflächen-Reaktion auslösen, die im Ruhezustand wieder glatt ausläuft.
 
-Verlauf zeigt die letzten sieben vergangenen bzw. heutigen lokalen Kalendertage als kompakte Liste, sortiert neu nach alt. Ein Tap öffnet ein schreibgeschütztes Tagesdetail mit Summe, Ziel und Einträgen. Statistik zeigt die aktuelle ISO-Woche mit Durchschnitt pro vergangenem Tag, Zieltreffern, Gesamtmenge und genau einem kompakten Swift-Charts-Diagramm. Kein Monatskalender und kein Perioden-Picker auf der Watch.
+Verlauf zeigt die letzten sieben vergangenen bzw. heutigen lokalen Kalendertage als kompakte Liste, sortiert neu nach alt. Ein Tap öffnet ein Tagesdetail mit Summe, Ziel und Einträgen. Einzelne Einträge können dort per Wischaktion über den bestehenden `DeleteIntake`-Use-Case soft-deleted und über eine kurze Undo-Aktion wiederhergestellt werden; Bearbeiten und Hinzufügen bleiben auf iPhone/iPad. Statistik zeigt die aktuelle ISO-Woche mit Durchschnitt pro vergangenem Tag, Zieltreffern, Gesamtmenge und genau einem kompakten Swift-Charts-Diagramm. Kein Monatskalender und kein Perioden-Picker auf der Watch.
 
 Komplikationen bleiben fokussiert: circular ring, rectangular remaining. Sie übernehmen nicht die Watch-App-Seiten oder deren Chart.
 Ultra Action Button: +Default wenn konfigurierbar.
@@ -710,7 +710,7 @@ Nicht umdrehen.
 ## 19. Definition of Done v1.0
 
 - [ ] Log, Undo, Today, History, Settings, Onboarding auf iPhone und iPad
-- [ ] watchOS-App mit Today, History, Stats, Default-/Custom-Log, read-only Day Detail und ≥1 Komplikation
+- [ ] watchOS-App mit Today, History, Stats, Default-/Custom-Log, Day Detail mit Entry-Delete/Undo und ≥1 Komplikation
 - [ ] Mac-App mit Sidebar und Tastaturkürzeln
 - [ ] Interaktives Medium-Widget und Lock-Screen-Accessory
 - [ ] App Intents + Shortcuts DE/EN

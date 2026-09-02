@@ -9,6 +9,16 @@ public enum RippleMotion {
     public static let reduceMotionCrossfade: TimeInterval = 0.20
     public static let afterglowDuration: TimeInterval = 1.30
 
+    public static let watchMotionUpdateInterval: TimeInterval = 1.0 / 30.0
+    public static let watchMotionAccelerationThreshold: Double = 0.12
+    public static let watchMotionRotationThreshold: Double = 1.0
+    public static let watchMotionCooldown: TimeInterval = 0.24
+    public static let watchWaveAmplitude: CGFloat = 5
+    public static let watchWaveReflectionAmplitude: CGFloat = 1.8
+    public static let watchWaveOutPosition: CGFloat = 0.46
+    public static let watchWaveReflectionPosition: CGFloat = 0.24
+    public static let watchWaveSettlePosition: CGFloat = 0.12
+
     public static let pourLeadIn: TimeInterval = 0.14
     public static let pourFadeOut: TimeInterval = 0.14
     public static let pourClockStep: TimeInterval = 1.0 / 60.0

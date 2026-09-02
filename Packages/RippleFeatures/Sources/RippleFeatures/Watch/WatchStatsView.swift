@@ -15,65 +15,65 @@ public struct WatchStatsView: View {
     public var body: some View {
         let formatter = VolumeFormatter(locale: locale)
 
-        ScrollView {
-            VStack(alignment: .leading, spacing: RippleSpace.md) {
-                HStack(alignment: .firstTextBaseline, spacing: RippleSpace.sm) {
-                    Text(L10n.text("Stats"))
-                        .font(RippleFont.title)
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: RippleSpace.md) {
+                    HStack(alignment: .firstTextBaseline, spacing: RippleSpace.sm) {
+                        Text(weekRange)
+                            .font(RippleFont.caption)
+                            .foregroundStyle(.secondary)
 
-                    Spacer(minLength: RippleSpace.xs)
+                        Spacer(minLength: RippleSpace.xs)
 
-                    Text(L10n.text("Week"))
-                        .font(RippleFont.caption)
-                        .foregroundStyle(.secondary)
-                }
+                        Text(L10n.text("Week"))
+                            .font(RippleFont.caption)
+                            .foregroundStyle(.secondary)
+                    }
 
-                Text(weekRange)
-                    .font(RippleFont.caption)
-                    .foregroundStyle(.secondary)
-
-                HStack(spacing: RippleSpace.xs) {
-                    summaryMetric(
-                        label: L10n.text("Avg / day"),
-                        value: formatter.string(
-                            milliliters: model.averageMl,
-                            unit: model.unit
+                    HStack(spacing: RippleSpace.xs) {
+                        summaryMetric(
+                            label: L10n.text("Avg / day"),
+                            value: formatter.string(
+                                milliliters: model.averageMl,
+                                unit: model.unit
+                            )
                         )
-                    )
-                    summaryMetric(
-                        label: L10n.text("Goal"),
-                        value: L10n.goalDays(
-                            hitDays: model.hitDayCount,
-                            elapsedDays: model.elapsedDayCount
+                        summaryMetric(
+                            label: L10n.text("Goal"),
+                            value: L10n.goalDays(
+                                hitDays: model.hitDayCount,
+                                elapsedDays: model.elapsedDayCount
+                            )
                         )
-                    )
-                    summaryMetric(
-                        label: L10n.text("Total"),
-                        value: formatter.string(
-                            milliliters: model.snapshot.totalMl,
-                            unit: model.unit
+                        summaryMetric(
+                            label: L10n.text("Total"),
+                            value: formatter.string(
+                                milliliters: model.snapshot.totalMl,
+                                unit: model.unit
+                            )
                         )
+                    }
+
+                    WatchStatChart(
+                        points: chartPoints,
+                        emptyMessage: L10n.text("No data for this period."),
+                        accessibilitySummary: chartAccessibilitySummary(formatter: formatter)
                     )
-                }
 
-                WatchStatChart(
-                    points: chartPoints,
-                    emptyMessage: L10n.text("No data for this period."),
-                    accessibilitySummary: chartAccessibilitySummary(formatter: formatter)
-                )
-
-                if let errorMessage = model.errorMessage {
-                    Text(errorMessage)
-                        .font(RippleFont.caption)
-                        .foregroundStyle(RippleColor.danger)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity)
+                    if let errorMessage = model.errorMessage {
+                        Text(errorMessage)
+                            .font(RippleFont.caption)
+                            .foregroundStyle(RippleColor.danger)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity)
+                    }
                 }
+                .padding(.horizontal, RippleWatchLayout.pageHorizontalPadding)
+                .padding(.vertical, RippleSpace.md)
             }
-            .padding(.horizontal, RippleWatchLayout.pageHorizontalPadding)
-            .padding(.vertical, RippleSpace.md)
+            .background(RippleColor.watchSurface.ignoresSafeArea())
+            .navigationTitle(L10n.text("Stats"))
         }
-        .background(RippleColor.surface.ignoresSafeArea())
     }
 
     private var chartPoints: [WatchStatChartPoint] {
@@ -119,7 +119,7 @@ public struct WatchStatsView: View {
         .padding(RippleSpace.sm)
         .background(
             RoundedRectangle(cornerRadius: RippleRadius.control, style: .continuous)
-                .fill(RippleColor.waterFoam.opacity(0.55))
+                .fill(RippleColor.watchSurfaceElevated)
         )
         .accessibilityElement(children: .combine)
     }

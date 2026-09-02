@@ -49,10 +49,29 @@ struct WatchTodayViewModelTests {
         #expect(rows.first?.amountMl == container.amountMl)
         #expect(rows.first?.containerId == container.id)
         #expect(rows.first?.source == .watch)
+        #expect(model.successFeedback == 1)
     }
 
-    @Test("custom Crown selection writes without a container")
-    func customSelectionWritesWithoutContainer() async throws {
+    @Test("opening the amount sheet keeps the quick selection")
+    func openingAmountSheetKeepsQuickSelection() async {
+        let intakes = InMemoryIntakeRepository()
+        let model = WatchTodayViewModel(
+            useCases: makeUseCases(intakes: intakes),
+            now: now,
+            calendar: calendar
+        )
+        await model.refresh(now: now)
+        let defaultContainer = model.quickContainers.first(where: \.isDefault)
+
+        model.openAmountSheet()
+
+        #expect(model.isAmountSheetPresented)
+        #expect(model.selectedAmountMl == defaultContainer?.amountMl)
+        #expect(model.selectedContainerID == defaultContainer?.id)
+    }
+
+    @Test("Crown adjustment writes without a container")
+    func crownAdjustmentWritesWithoutContainer() async throws {
         let intakes = InMemoryIntakeRepository()
         let model = WatchTodayViewModel(
             useCases: makeUseCases(intakes: intakes),
@@ -61,11 +80,12 @@ struct WatchTodayViewModelTests {
         )
         await model.refresh(now: now)
 
-        model.openCustom()
-        #expect(model.isCustomPresented)
-        #expect(model.selectedContainerID == nil)
-        model.updateCustomCrown(6)
+        model.openAmountSheet()
+        #expect(model.isAmountSheetPresented)
+        #expect(model.selectedContainerID != nil)
+        model.updateCrown(300)
         #expect(model.selectedAmountMl == 300)
+        #expect(model.selectedContainerID == nil)
 
         await model.addSelected()
         let rows = try await intakes.intakes(from: .distantPast, to: .distantFuture)
@@ -84,16 +104,37 @@ struct WatchTodayViewModelTests {
         )
         let container = Container.seededDefaults()[2]
         model.select(container: container)
-        model.openCustom()
-        model.updateCustomCrown(7)
+        model.openAmountSheet()
+        model.updateCrown(310)
         let amountBeforeLog = model.selectedAmountMl
-        let selectionBeforeLog = model.customSelection
+        let selectionBeforeLog = model.crownSelection
 
         await model.addSelected()
 
         #expect(model.selectedAmountMl == amountBeforeLog)
-        #expect(model.customSelection == selectionBeforeLog)
+        #expect(model.crownSelection == selectionBeforeLog)
         #expect(model.errorMessage != nil)
+    }
+
+    @Test("top dismissal restores the pending quick selection")
+    func amountSheetDismissalRestoresSelection() async {
+        let intakes = InMemoryIntakeRepository()
+        let model = WatchTodayViewModel(
+            useCases: makeUseCases(intakes: intakes),
+            now: now,
+            calendar: calendar
+        )
+        await model.refresh(now: now)
+        let container = Container.seededDefaults()[2]
+        model.select(container: container)
+
+        model.openAmountSheet()
+        model.updateCrown(310)
+        model.dismissAmountSheet()
+
+        #expect(!model.isAmountSheetPresented)
+        #expect(model.selectedAmountMl == container.amountMl)
+        #expect(model.selectedContainerID == container.id)
     }
 
     private var now: Date {

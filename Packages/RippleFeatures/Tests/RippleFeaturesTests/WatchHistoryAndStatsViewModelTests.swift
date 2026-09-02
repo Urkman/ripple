@@ -82,6 +82,39 @@ struct WatchHistoryAndStatsViewModelTests {
         #expect(model.containerName(for: model.entries[0]) == nil)
     }
 
+    @Test("day detail deletes an entry and restores it with undo")
+    func dayDetailDeletesAndRestoresEntry() async throws {
+        let intakes = InMemoryIntakeRepository()
+        let settings = InMemorySettingsRepository(
+            goal: GoalSettings(mode: .manual, manualGoalMl: 2_000),
+            containers: Container.seededDefaults()
+        )
+        let useCases = makeUseCases(intakes: intakes, settings: settings)
+        let day = date(year: 2026, month: 8, day: 28, hour: 12)
+        let intake = Intake(
+            date: date(year: 2026, month: 8, day: 28, hour: 12),
+            amountMl: 250,
+            source: .watch
+        )
+        try await intakes.save(intake)
+
+        let model = WatchDayDetailViewModel(useCases: useCases, day: day, calendar: calendar)
+        await model.refresh()
+        #expect(model.entries.contains { $0.id == intake.id })
+
+        await model.delete(intake)
+
+        #expect(model.entries.contains { $0.id == intake.id } == false)
+        #expect(model.undoIntakeID == intake.id)
+        #expect(try await intakes.intake(id: intake.id)?.isDeleted == true)
+
+        await model.undoDelete()
+
+        #expect(model.entries.contains { $0.id == intake.id })
+        #expect(model.undoIntakeID == nil)
+        #expect(try await intakes.intake(id: intake.id)?.isDeleted == false)
+    }
+
     @Test("stats use the current ISO week and expose raw chart days")
     func statsUseCurrentISOWeek() async throws {
         let intakes = InMemoryIntakeRepository()

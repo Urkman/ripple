@@ -5,12 +5,13 @@ import SwiftUI
 #if os(watchOS)
 public struct WatchTodayView: View {
     @State private var model: WatchTodayViewModel
+    @State private var wristMotion: WristMotionController
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.locale) private var locale
 
     public init(model: WatchTodayViewModel) {
         _model = State(initialValue: model)
+        _wristMotion = State(initialValue: WristMotionController())
     }
 
     public init(useCases: UseCases) {
@@ -23,7 +24,11 @@ public struct WatchTodayView: View {
         let foreground = foregroundColor(for: model.waterLevel)
 
         ZStack(alignment: .top) {
-            WatchWaterBackdrop(level: model.waterLevel)
+            WatchWaterBackdrop(
+                level: model.waterLevel,
+                motionTrigger: wristMotion.trigger,
+                motionEnabled: !reduceMotion
+            )
                 .animation(levelAnimation, value: model.waterLevel)
 
             VStack(spacing: 0) {
@@ -41,23 +46,28 @@ public struct WatchTodayView: View {
                 Spacer(minLength: 0)
 
                 bottomDock(
-                    snapshot: snapshot,
-                    formatter: formatter,
                     foreground: foreground
                 )
             }
             .padding(.horizontal, RippleWatchLayout.todayDockPadding)
-            .padding(.top, RippleSpace.xs)
-            .padding(
-                .bottom,
-                RippleWatchLayout.todayDockPadding + RippleWatchLayout.pageIndicatorClearance
-            )
+            .padding(.top, RippleWatchLayout.todayTopInset)
+            .padding(.bottom, RippleWatchLayout.todayBottomInset)
+            .ignoresSafeArea(.container, edges: [.top, .bottom])
         }
-        .background(RippleColor.surface.ignoresSafeArea())
-        .sheet(isPresented: customSheetBinding) {
+        .background(RippleColor.watchSurface.ignoresSafeArea())
+        .sheet(isPresented: amountSheetBinding) {
             WatchCustomAmountView(model: model)
         }
-        .sensoryFeedback(.success, trigger: model.confirmation)
+        .onAppear {
+            updateWristMotion(isReduceMotionEnabled: reduceMotion)
+        }
+        .onDisappear {
+            wristMotion.stop()
+        }
+        .onChange(of: reduceMotion) { _, isReduceMotionEnabled in
+            updateWristMotion(isReduceMotionEnabled: isReduceMotionEnabled)
+        }
+        .sensoryFeedback(.success, trigger: model.successFeedback)
     }
 
     private var levelAnimation: Animation {
@@ -67,22 +77,22 @@ public struct WatchTodayView: View {
         return RippleMotion.springLiquid
     }
 
-    private var customSheetBinding: Binding<Bool> {
+    private var amountSheetBinding: Binding<Bool> {
         Binding(
-            get: { model.isCustomPresented },
+            get: { model.isAmountSheetPresented },
             set: { isPresented in
                 if !isPresented {
-                    model.cancelCustom()
+                    model.dismissAmountSheet()
                 }
             }
         )
     }
 
     private func foregroundColor(for level: CGFloat) -> Color {
-        if colorScheme == .dark, level > 0.70 {
-            return RippleColor.surface
+        if level > 0.70 {
+            return RippleColor.watchSurface
         }
-        return RippleColor.waterDeep
+        return RippleColor.watchText
     }
 
     private func header(
@@ -163,37 +173,16 @@ public struct WatchTodayView: View {
     }
 
     private func bottomDock(
-        snapshot: TodaySnapshot,
-        formatter: VolumeFormatter,
         foreground: Color
     ) -> some View {
         VStack(spacing: RippleSpace.xs) {
-            WatchQuickAmountRow(
-                options: amountOptions(snapshot: snapshot, formatter: formatter),
-                selectedID: selectedOptionID,
-                onSelect: selectAmount
-            )
-
             WatchLogButton(
-                title: L10n.addAmount(
-                    formatter.string(
-                        milliliters: model.selectedAmountMl,
-                        unit: snapshot.unit
-                    )
-                ),
+                title: "+",
                 isEnabled: !model.isLogging,
-                action: addSelectedAmount
+                action: openAmountSheet,
+                font: RippleFont.title.monospacedDigit(),
+                accessibilityLabel: L10n.text("Add")
             )
-
-            if let confirmation = model.confirmation {
-                Text(confirmation)
-                    .font(RippleFont.caption)
-                    .foregroundStyle(RippleColor.success)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.75)
-                    .transition(.opacity)
-                    .accessibilityAddTraits(.updatesFrequently)
-            }
 
             if let errorMessage = model.errorMessage {
                 Text(errorMessage)
@@ -208,70 +197,25 @@ public struct WatchTodayView: View {
         .padding(RippleWatchLayout.todayDockPadding)
         .background(
             RoundedRectangle(cornerRadius: RippleRadius.card, style: .continuous)
-                .fill(RippleColor.surface.opacity(0.90))
+                .fill(RippleColor.watchSurface.opacity(0.90))
         )
         .overlay {
             RoundedRectangle(cornerRadius: RippleRadius.card, style: .continuous)
                 .stroke(foreground.opacity(0.12), lineWidth: 1)
         }
-        .animation(.easeInOut(duration: RippleMotion.confirmFade), value: model.confirmation)
         .accessibilityElement(children: .contain)
     }
 
-    private var selectedOptionID: String? {
-        guard let containerID = model.selectedContainerID else {
-            return model.isCustomPresented ? "custom" : nil
+    private func openAmountSheet() {
+        model.openAmountSheet()
+    }
+
+    private func updateWristMotion(isReduceMotionEnabled: Bool) {
+        if isReduceMotionEnabled {
+            wristMotion.stop()
+        } else {
+            wristMotion.start()
         }
-        return containerOptionID(containerID)
-    }
-
-    private func amountOptions(
-        snapshot: TodaySnapshot,
-        formatter: VolumeFormatter
-    ) -> [WatchAmountOption] {
-        let predefined = model.quickContainers.map { container in
-            WatchAmountOption(
-                id: containerOptionID(container.id),
-                title: formatter.valueString(
-                    milliliters: container.amountMl,
-                    unit: snapshot.unit
-                ),
-                subtitle: snapshot.unit.symbol,
-                kind: .predefined(container.id),
-                accessibilityLabel: container.name,
-                accessibilityValue: formatter.string(
-                    milliliters: container.amountMl,
-                    unit: snapshot.unit
-                )
-            )
-        }
-        let custom = WatchAmountOption(
-            id: "custom",
-            title: "+",
-            subtitle: "",
-            kind: .custom,
-            accessibilityLabel: L10n.custom,
-            accessibilityValue: L10n.text("Custom amount")
-        )
-        return predefined + [custom]
-    }
-
-    private func selectAmount(_ option: WatchAmountOption) {
-        switch option.kind {
-        case .predefined(let id):
-            guard let container = model.quickContainers.first(where: { $0.id == id }) else { return }
-            model.select(container: container)
-        case .custom:
-            model.openCustom()
-        }
-    }
-
-    private func addSelectedAmount() {
-        Task { await model.addSelected() }
-    }
-
-    private func containerOptionID(_ id: UUID) -> String {
-        "container-\(id.uuidString)"
     }
 }
 

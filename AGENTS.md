@@ -175,7 +175,7 @@ Full text: `Ripple_History_Stats.md`.
 - History = Activity-style month grid, **one ring per day**, cap 1.0. Future days not tappable.
 - Tap → push `DayDetail` (iPad: split). Plus only when the day is today.
 - Stats = its own screen. Period week/month/year. Swift Charts as specified.
-- Watch app History is a separate Watch-native recent-seven-day list with a read-only Day Detail; Watch Stats is a separate current-ISO-week summary with one compact Swift Charts view.
+- Watch app History is a separate Watch-native recent-seven-day list with a Day Detail that allows deleting individual entries; Watch Stats is a separate current-ISO-week summary with one compact Swift Charts view.
 - No combined Insights screen, no three Fitness rings, no GitHub heatmap.
 
 ---
@@ -194,7 +194,7 @@ Full text: `Ripple_History_Stats.md`.
 
 - iPhone: four tabs, hero per motion spec.
 - iPad: split per tab. Not a shrunk iPhone skin.
-- Watch app: three horizontal Today | History | Stats pages. Today uses the full canvas as a flat water-level field with predefined and Crown-first custom logging; History shows seven elapsed local days and a read-only Day Detail; Stats shows the current ISO-week summary and one compact chart. No Watch month calendar or Stats period picker.
+- Watch app: three horizontal Today | History | Stats pages. Today uses the full canvas as a flat water-level field with predefined and Crown-first custom logging; History shows seven elapsed local days and a Day Detail where individual entries can be deleted; Stats shows the current ISO-week summary and one compact chart. No Watch month calendar or Stats period picker.
 - Watch complications and widgets: no calendar and no Stats charts; retain their focused ring/remaining surfaces.
 - Mac: sidebar, keyboard ⌘N / ⌘Z.
 - tvOS / visionOS: ambient/window minimum from the PRD, not feature parity.

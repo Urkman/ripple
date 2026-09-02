@@ -9,16 +9,15 @@ public final class WatchTodayViewModel {
     public private(set) var snapshot: TodaySnapshot
     public private(set) var selectedAmountMl: Int
     public private(set) var selectedContainerID: UUID?
-    public private(set) var customSelection: WatchAmountSelection
-    public private(set) var isCustomPresented: Bool
+    public private(set) var crownSelection: WatchAmountSelection
+    public private(set) var isAmountSheetPresented: Bool
     public private(set) var isLogging: Bool
-    public private(set) var confirmation: String?
+    public private(set) var successFeedback: Int
     public private(set) var errorMessage: String?
 
     @ObservationIgnored private let useCases: UseCases
     @ObservationIgnored private let calendar: Calendar
     @ObservationIgnored private var savedSelection: SavedSelection?
-    @ObservationIgnored private var confirmationTask: Task<Void, Never>?
 
     private struct SavedSelection: Sendable {
         var amountMl: Int
@@ -32,13 +31,13 @@ public final class WatchTodayViewModel {
         self.snapshot = initialSnapshot
         self.selectedAmountMl = initialSnapshot.defaultAddMl
         self.selectedContainerID = initialSnapshot.containers.first(where: \.isDefault)?.id
-        self.customSelection = WatchAmountSelection(
+        self.crownSelection = WatchAmountSelection(
             milliliters: initialSnapshot.defaultAddMl,
             unit: initialSnapshot.unit
         )
-        self.isCustomPresented = false
+        self.isAmountSheetPresented = false
         self.isLogging = false
-        self.confirmation = nil
+        self.successFeedback = 0
         self.errorMessage = nil
     }
 
@@ -65,19 +64,19 @@ public final class WatchTodayViewModel {
             snapshot = refreshed
             errorMessage = nil
 
-            if !isCustomPresented {
+            if !isAmountSheetPresented {
                 selectedAmountMl = refreshed.defaultAddMl
                 selectedContainerID = refreshed.containers.first(where: \.isDefault)?.id
-                customSelection = WatchAmountSelection(
+                crownSelection = WatchAmountSelection(
                     milliliters: refreshed.defaultAddMl,
                     unit: refreshed.unit
                 )
-            } else if customSelection.unit != refreshed.unit {
-                customSelection = WatchAmountSelection(
+            } else if crownSelection.unit != refreshed.unit {
+                crownSelection = WatchAmountSelection(
                     milliliters: selectedAmountMl,
                     unit: refreshed.unit
                 )
-                selectedAmountMl = customSelection.milliliters
+                selectedAmountMl = crownSelection.milliliters
             }
         } catch {
             errorMessage = error.localizedDescription
@@ -87,39 +86,45 @@ public final class WatchTodayViewModel {
     public func select(container: Container) {
         selectedAmountMl = max(container.amountMl, WatchAmountSelection.minimumMilliliters)
         selectedContainerID = container.id
+        crownSelection = WatchAmountSelection(
+            milliliters: selectedAmountMl,
+            unit: snapshot.unit
+        )
         errorMessage = nil
     }
 
-    public func openCustom() {
+    public func openAmountSheet() {
         savedSelection = SavedSelection(
             amountMl: selectedAmountMl,
             containerID: selectedContainerID
         )
-        customSelection = WatchAmountSelection(
+        crownSelection = WatchAmountSelection(
             milliliters: selectedAmountMl,
             unit: snapshot.unit
         )
-        selectedAmountMl = customSelection.milliliters
-        selectedContainerID = nil
-        isCustomPresented = true
+        isAmountSheetPresented = true
         errorMessage = nil
     }
 
-    public func updateCustomCrown(_ value: Double) {
-        guard isCustomPresented else { return }
-        customSelection.update(crownValue: value)
-        selectedAmountMl = customSelection.milliliters
+    public func updateCrown(_ value: Double) {
+        guard isAmountSheetPresented else { return }
+        crownSelection.update(crownValue: value)
+        selectedAmountMl = crownSelection.milliliters
         selectedContainerID = nil
         errorMessage = nil
     }
 
-    public func cancelCustom() {
+    public func dismissAmountSheet() {
         if let savedSelection {
             selectedAmountMl = savedSelection.amountMl
             selectedContainerID = savedSelection.containerID
+            crownSelection = WatchAmountSelection(
+                milliliters: savedSelection.amountMl,
+                unit: snapshot.unit
+            )
         }
         self.savedSelection = nil
-        isCustomPresented = false
+        isAmountSheetPresented = false
         errorMessage = nil
     }
 
@@ -140,30 +145,15 @@ public final class WatchTodayViewModel {
                 containerId: containerID
             )
 
-            let amountText = VolumeFormatter.current.string(
-                milliliters: amountMl,
-                unit: snapshot.unit
-            )
             await refresh()
-            confirmation = L10n.confirmation(amount: amountText)
-            scheduleConfirmationClear()
-            if isCustomPresented {
+            successFeedback += 1
+            if isAmountSheetPresented {
                 savedSelection = nil
-                isCustomPresented = false
+                isAmountSheetPresented = false
             }
         } catch {
             errorMessage = error.localizedDescription
         }
     }
 
-    private func scheduleConfirmationClear() {
-        confirmationTask?.cancel()
-        confirmationTask = Task { @MainActor [weak self] in
-            try? await Task.sleep(
-                for: .seconds(RippleMotion.durationConfirm + RippleMotion.confirmFade)
-            )
-            guard !Task.isCancelled else { return }
-            self?.confirmation = nil
-        }
-    }
 }

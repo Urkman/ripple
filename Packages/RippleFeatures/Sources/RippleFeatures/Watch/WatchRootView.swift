@@ -37,7 +37,7 @@ public struct WatchRootView: View {
                 .tag(Page.stats)
         }
         .tabViewStyle(.page(indexDisplayMode: .automatic))
-        .background(RippleColor.surface.ignoresSafeArea())
+        .background(RippleColor.watchSurface.ignoresSafeArea())
         .task(id: scenePhase) {
             guard scenePhase == .active else { return }
             await refreshAll()

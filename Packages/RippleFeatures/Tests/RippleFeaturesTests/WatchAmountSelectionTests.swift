@@ -5,42 +5,43 @@ import Testing
 
 @Suite("Watch Crown amount selection")
 struct WatchAmountSelectionTests {
-    @Test("metric Crown values snap and clamp to 50 ml steps")
+    @Test("Crown values snap and clamp to 10 ml steps")
     func metricSteps() {
         var selection = WatchAmountSelection(milliliters: 251, unit: .milliliters)
 
         #expect(selection.milliliters == 250)
-        #expect(selection.crownValue == 5)
-        #expect(selection.crownLowerBound == 1)
-        #expect(selection.crownUpperBound == 40)
+        #expect(selection.crownValue == 250)
+        #expect(selection.crownLowerBound == 50)
+        #expect(selection.crownUpperBound == 2_000)
 
-        selection.update(crownValue: 6)
-        #expect(selection.milliliters == 300)
+        selection.update(crownValue: 260)
+        #expect(selection.milliliters == 260)
 
-        selection.update(crownValue: -10)
+        selection.update(crownValue: 1)
         #expect(selection.milliliters == 50)
-        selection.update(crownValue: 99)
+        selection.update(crownValue: 2_099)
         #expect(selection.milliliters == 2_000)
     }
 
-    @Test("fluid-ounce Crown values use one-ounce steps")
+    @Test("fluid-ounce display preserves 10 ml Crown steps")
     func fluidOunceSteps() {
         var selection = WatchAmountSelection(milliliters: 250, unit: .fluidOunces)
 
-        #expect(selection.milliliters == 237)
-        #expect(selection.crownValue == 8)
-        #expect(selection.crownLowerBound == 2)
-        #expect(selection.crownUpperBound == 67)
+        #expect(selection.milliliters == 250)
+        #expect(selection.crownValue == 250)
+        #expect(selection.crownLowerBound == 50)
+        #expect(selection.crownUpperBound == 2_000)
 
-        selection.update(crownValue: 9)
-        #expect(selection.milliliters == 266)
+        selection.update(crownValue: 260)
+        #expect(selection.milliliters == 260)
+        #expect(UnitConverter.fluidOunces(fromMilliliters: selection.milliliters) > 8)
 
         selection.update(crownValue: 1)
-        #expect(selection.crownValue == 2)
-        #expect(selection.milliliters == 59)
-        selection.update(crownValue: 100)
-        #expect(selection.crownValue == 67)
-        #expect(selection.milliliters == 1_981)
+        #expect(selection.crownValue == 50)
+        #expect(selection.milliliters == 50)
+        selection.update(crownValue: 2_099)
+        #expect(selection.crownValue == 2_000)
+        #expect(selection.milliliters == 2_000)
     }
 
     @Test("selection is a value type with stable equality")

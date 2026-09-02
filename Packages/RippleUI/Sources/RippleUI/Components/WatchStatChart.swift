@@ -46,12 +46,12 @@ public struct WatchStatChart: View {
                         x: .value("Day", point.date, unit: .day),
                         y: .value("Consumed", point.consumed)
                     )
-                    .foregroundStyle(RippleColor.waterAqua)
+                    .foregroundStyle(RippleColor.watchAqua)
                 }
 
                 if goal > 0 {
                     RuleMark(y: .value("Goal", goal))
-                        .foregroundStyle(RippleColor.waterLagoon.opacity(0.55))
+                        .foregroundStyle(RippleColor.watchLagoon.opacity(0.55))
                         .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 3]))
                 }
             }

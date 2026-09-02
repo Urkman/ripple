@@ -22,6 +22,13 @@ public struct WatchDayDetailView: View {
             VStack(alignment: .leading, spacing: RippleSpace.md) {
                 daySummary(formatter: formatter)
 
+                if let errorMessage = model.errorMessage {
+                    Text(errorMessage)
+                        .font(RippleFont.caption)
+                        .foregroundStyle(RippleColor.danger)
+                        .multilineTextAlignment(.leading)
+                }
+
                 Divider()
 
                 Text(L10n.text("Entries"))
@@ -45,6 +52,15 @@ public struct WatchDayDetailView: View {
                                 sourceText: L10n.source(intake.source),
                                 timeText: time(for: intake.date)
                             )
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button(
+                                    L10n.text("Delete"),
+                                    systemImage: "trash",
+                                    role: .destructive
+                                ) {
+                                    delete(intake)
+                                }
+                            }
                         }
                     }
                 }
@@ -52,8 +68,26 @@ public struct WatchDayDetailView: View {
             .padding(.horizontal, RippleWatchLayout.pageHorizontalPadding)
             .padding(.vertical, RippleSpace.md)
         }
-        .background(RippleColor.surface.ignoresSafeArea())
+        .background(RippleColor.watchSurface.ignoresSafeArea())
         .navigationTitle(longDate(for: model.day))
+        .safeAreaInset(edge: .bottom) {
+            if model.undoIntakeID != nil {
+                HStack(spacing: RippleSpace.sm) {
+                    Text(L10n.text("Deleted"))
+                        .font(RippleFont.caption)
+                        .foregroundStyle(RippleColor.watchText)
+
+                    Spacer(minLength: RippleSpace.xs)
+
+                    Button(L10n.text("Undo"), action: undoDelete)
+                        .font(RippleFont.caption.weight(.semibold))
+                        .foregroundStyle(RippleColor.watchAqua)
+                }
+                .padding(.horizontal, RippleWatchLayout.pageHorizontalPadding)
+                .padding(.vertical, RippleSpace.sm)
+                .background(RippleColor.watchSurfaceElevated)
+            }
+        }
         .task {
             await model.refresh()
         }
@@ -111,6 +145,14 @@ public struct WatchDayDetailView: View {
                 .minute()
                 .locale(locale)
         )
+    }
+
+    private func delete(_ intake: Intake) {
+        Task { await model.delete(intake) }
+    }
+
+    private func undoDelete() {
+        Task { await model.undoDelete() }
     }
 }
 

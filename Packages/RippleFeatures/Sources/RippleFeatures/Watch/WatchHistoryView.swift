@@ -49,10 +49,15 @@ public struct WatchHistoryView: View {
                 }
                 .padding(.vertical, RippleSpace.sm)
             }
-            .background(RippleColor.surface.ignoresSafeArea())
+            .background(RippleColor.watchSurface.ignoresSafeArea())
             .navigationTitle(L10n.text("History"))
             .navigationDestination(for: Date.self) { day in
                 WatchDayDetailView(useCases: useCases, day: day)
+            }
+            .onAppear {
+                Task {
+                    await model.refresh()
+                }
             }
         }
     }
