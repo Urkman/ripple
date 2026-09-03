@@ -32,6 +32,22 @@ public struct HealthAuthorizer: HealthAuthorizing {
         #endif
     }
 
+    public func requestBodyMassRead() async -> Bool {
+        #if canImport(HealthKit) && (os(iOS) || os(watchOS))
+        await HealthKitClient.shared.requestBodyMassRead()
+        #else
+        false
+        #endif
+    }
+
+    public func latestBodyMassKg() async -> Double? {
+        #if canImport(HealthKit) && (os(iOS) || os(watchOS))
+        await HealthKitClient.shared.latestBodyMassKg()
+        #else
+        nil
+        #endif
+    }
+
     public func requestWaterWrite() async -> Bool {
         #if canImport(HealthKit) && (os(iOS) || os(watchOS))
         await HealthKitClient.shared.requestWaterWrite()

@@ -14,6 +14,10 @@ actor HealthKitClient {
         HKQuantityType.quantityType(forIdentifier: .dietaryWater)
     }
 
+    private var bodyMassType: HKQuantityType? {
+        HKQuantityType.quantityType(forIdentifier: .bodyMass)
+    }
+
     private var workoutType: HKSampleType {
         HKObjectType.workoutType()
     }
@@ -38,6 +42,59 @@ actor HealthKitClient {
             return store.authorizationStatus(for: waterType) == .sharingAuthorized
         } catch {
             return false
+        }
+    }
+
+    func requestBodyMassRead() async -> Bool {
+        guard HKHealthStore.isHealthDataAvailable(), let bodyMassType else {
+            return false
+        }
+
+        do {
+            try await store.requestAuthorization(toShare: [], read: [bodyMassType])
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    func latestBodyMassKg() async -> Double? {
+        guard HKHealthStore.isHealthDataAvailable(), let bodyMassType else {
+            return nil
+        }
+
+        let sortDescriptors = [
+            NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        ]
+
+        do {
+            let samples: [HKSample] = try await withCheckedThrowingContinuation {
+                (continuation: CheckedContinuation<[HKSample], Error>) in
+                let query = HKSampleQuery(
+                    sampleType: bodyMassType,
+                    predicate: nil,
+                    limit: 1,
+                    sortDescriptors: sortDescriptors
+                ) { _, samples, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: samples ?? [])
+                    }
+                }
+                store.execute(query)
+            }
+
+            guard let sample = samples.first as? HKQuantitySample else {
+                return nil
+            }
+
+            let kilograms = sample.quantity.doubleValue(
+                for: HKUnit.gramUnit(with: .kilo)
+            )
+            return kilograms.isFinite && kilograms > 0 ? kilograms : nil
+        } catch {
+            return nil
         }
     }
 
