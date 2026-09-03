@@ -18,6 +18,10 @@ enum L10n {
         String(localized: "\(hitDays) / \(elapsedDays) days", bundle: .module)
     }
 
+    static func onboardingProgress(page: Int) -> String {
+        String(localized: "\(page) of 5", bundle: .module)
+    }
+
     static func confirmation(amount: String) -> String {
         String(localized: "+\(amount) · nice Ripple.", bundle: .module)
     }
