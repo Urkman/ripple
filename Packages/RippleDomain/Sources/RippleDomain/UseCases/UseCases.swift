@@ -18,6 +18,9 @@ public struct UseCases: Sendable {
     public var exportData: ExportData
     public var rescheduleReminders: RescheduleReminders
     public var healthAuthorizing: any HealthAuthorizing
+    public var requestHealthReadAccess: RequestHealthReadAccess
+    public var requestHealthWaterWrite: RequestHealthWaterWrite
+    public var requestNotificationAuthorization: RequestNotificationAuthorization
     public var settingsRepository: any SettingsRepository
 
     public init(
@@ -38,6 +41,9 @@ public struct UseCases: Sendable {
         exportData: ExportData,
         rescheduleReminders: RescheduleReminders,
         healthAuthorizing: any HealthAuthorizing,
+        requestHealthReadAccess: RequestHealthReadAccess,
+        requestHealthWaterWrite: RequestHealthWaterWrite,
+        requestNotificationAuthorization: RequestNotificationAuthorization,
         settingsRepository: any SettingsRepository
     ) {
         self.logIntake = logIntake
@@ -57,6 +63,9 @@ public struct UseCases: Sendable {
         self.exportData = exportData
         self.rescheduleReminders = rescheduleReminders
         self.healthAuthorizing = healthAuthorizing
+        self.requestHealthReadAccess = requestHealthReadAccess
+        self.requestHealthWaterWrite = requestHealthWaterWrite
+        self.requestNotificationAuthorization = requestNotificationAuthorization
         self.settingsRepository = settingsRepository
     }
 
@@ -67,7 +76,8 @@ public struct UseCases: Sendable {
         health: any HealthProjecting,
         reminders: any ReminderScheduling,
         workouts: any WorkoutReading,
-        healthAuthorizing: any HealthAuthorizing
+        healthAuthorizing: any HealthAuthorizing,
+        notificationAuthorizing: any NotificationAuthorizing = NoOpNotificationAuthorizing()
     ) -> UseCases {
         let calculateGoal = CalculateGoal()
         let observeToday = ObserveToday(
@@ -151,6 +161,15 @@ public struct UseCases: Sendable {
                 reminders: reminders
             ),
             healthAuthorizing: healthAuthorizing,
+            requestHealthReadAccess: RequestHealthReadAccess(
+                healthAuthorizing: healthAuthorizing
+            ),
+            requestHealthWaterWrite: RequestHealthWaterWrite(
+                healthAuthorizing: healthAuthorizing
+            ),
+            requestNotificationAuthorization: RequestNotificationAuthorization(
+                authorizing: notificationAuthorizing
+            ),
             settingsRepository: settingsRepository
         )
     }

@@ -24,13 +24,32 @@ public struct NoOpWorkoutReading: WorkoutReading {
 
 public struct NoOpHealthAuthorizing: HealthAuthorizing {
     public var current: HealthAuthorizationStatus
-    public init(current: HealthAuthorizationStatus = .init()) {
+    public var bodyMassKg: Double?
+
+    public init(
+        current: HealthAuthorizationStatus = .init(),
+        bodyMassKg: Double? = nil
+    ) {
         self.current = current
+        self.bodyMassKg = bodyMassKg
     }
 
     public func status() async -> HealthAuthorizationStatus { current }
+    public func requestBodyMassRead() async -> Bool { true }
+    public func latestBodyMassKg() async -> Double? { bodyMassKg }
     public func requestWaterWrite() async -> Bool { current.waterWrite }
     public func requestWorkoutRead() async -> Bool { current.workoutRead }
+}
+
+public struct NoOpNotificationAuthorizing: NotificationAuthorizing {
+    public var current: NotificationAuthorizationStatus
+
+    public init(current: NotificationAuthorizationStatus = .notDetermined) {
+        self.current = current
+    }
+
+    public func status() async -> NotificationAuthorizationStatus { current }
+    public func requestAuthorization() async -> NotificationAuthorizationStatus { current }
 }
 
 public actor FakeHealthProjector: HealthProjecting {
