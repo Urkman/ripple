@@ -80,14 +80,33 @@ private struct OnboardingUnitsPage: View {
             )
 
             GlassCard(title: L10n.text("Units")) {
-                Picker(L10n.text("Units"), selection: $unit) {
-                    Text(L10n.text("ml")).tag(VolumeUnit.milliliters)
-                    Text(L10n.text("fl oz")).tag(VolumeUnit.fluidOunces)
+                HStack(spacing: RippleSpace.sm) {
+                    unitButton(VolumeUnit.milliliters, title: L10n.text("ml"))
+                    unitButton(VolumeUnit.fluidOunces, title: L10n.text("fl oz"))
                 }
-                .pickerStyle(.segmented)
                 .accessibilityLabel(L10n.text("Units"))
             }
         }
+    }
+
+    private func unitButton(_ value: VolumeUnit, title: String) -> some View {
+        let isSelected = unit == value
+
+        return Button {
+            unit = value
+        } label: {
+            Text(title)
+                .font(RippleFont.callout.weight(.semibold))
+                .foregroundStyle(isSelected ? Color.white : RippleColor.waterDeep)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, RippleSpace.md)
+                .background(
+                    isSelected ? RippleColor.waterLagoon : RippleColor.waterFoam.opacity(0.7),
+                    in: RoundedRectangle(cornerRadius: RippleRadius.control, style: .continuous)
+                )
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 
@@ -148,7 +167,6 @@ private struct OnboardingHealthGoalPage: View {
 
             GlassCard(title: L10n.text("Weight in kg")) {
                 TextField(L10n.text("Weight in kg"), text: $weightText)
-                    .textFieldStyle(.roundedBorder)
                     .accessibilityLabel(L10n.text("Weight in kg"))
             }
 
