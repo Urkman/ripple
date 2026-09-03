@@ -2,42 +2,6 @@ import RippleDomain
 import RippleUI
 import SwiftUI
 
-@MainActor
-@Observable
-public final class OnboardingViewModel {
-    public var page = 0
-    public var profile: Profile
-    public var weightText = ""
-    public var healthWrite = false
-
-    @ObservationIgnored private let useCases: UseCases
-
-    public init(useCases: UseCases) {
-        self.useCases = useCases
-        self.profile = .fresh()
-    }
-
-    public var canSkip: Bool { page != 1 }
-
-    public func finish() async {
-        if let weight = Double(weightText.replacingOccurrences(of: ",", with: ".")), weight > 0 {
-            profile.bodyMassKg = weight
-        }
-        profile.healthWriteEnabled = healthWrite
-        profile.onboardingCompleted = true
-        try? await useCases.settingsRepository.seedDefaultsIfNeeded(locale: .current)
-        try? await useCases.updateProfile.run(profile)
-        if profile.bodyMassKg != nil {
-            try? await useCases.updateGoal.run(mode: .calculated)
-        } else {
-            try? await useCases.updateGoal.run(mode: .manual, manualGoalMl: 2000)
-        }
-        if healthWrite {
-            _ = await useCases.healthAuthorizing.requestWaterWrite()
-        }
-    }
-}
-
 public struct OnboardingView: View {
     @Bindable var model: OnboardingViewModel
     var onDone: () -> Void
