@@ -854,7 +854,7 @@
 				INFOPLIST_FILE = Apps/RippleiOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads today's workouts only if you opt in, to adjust your water goal. This is not medical advice.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads your weight and today's workouts only if you opt in, to calculate a personal water goal. This is not medical advice.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Ripple writes drinks you log as Dietary Water in Health.";
 				INFOPLIST_KEY_RippleAppGroup = "$(RIPPLE_APP_GROUP)";
 				INFOPLIST_KEY_RippleiCloudContainer = "$(RIPPLE_ICLOUD_CONTAINER)";
@@ -898,7 +898,7 @@
 				INFOPLIST_FILE = Apps/RippleiOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads today's workouts only if you opt in, to adjust your water goal. This is not medical advice.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads your weight and today's workouts only if you opt in, to calculate a personal water goal. This is not medical advice.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Ripple writes drinks you log as Dietary Water in Health.";
 				INFOPLIST_KEY_RippleAppGroup = "$(RIPPLE_APP_GROUP)";
 				INFOPLIST_KEY_RippleiCloudContainer = "$(RIPPLE_ICLOUD_CONTAINER)";
@@ -1047,7 +1047,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Apps/RipplewatchOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads today's workouts only if you opt in, to adjust your water goal.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads your weight and today's workouts only if you opt in, to calculate a personal water goal. This is not medical advice.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Ripple writes drinks you log as Dietary Water in Health.";
 				INFOPLIST_KEY_WKApplication = YES;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = de.stefansturm.ripple;
@@ -1105,7 +1105,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Apps/RipplewatchOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads today's workouts only if you opt in, to adjust your water goal.";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads your weight and today's workouts only if you opt in, to calculate a personal water goal. This is not medical advice.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Ripple writes drinks you log as Dietary Water in Health.";
 				INFOPLIST_KEY_WKApplication = YES;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = de.stefansturm.ripple;
