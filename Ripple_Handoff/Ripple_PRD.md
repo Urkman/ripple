@@ -291,6 +291,9 @@ Einheiten: intern immer Milliliter. UI rechnet über `UnitConverter`.
 | `UpdateGoal` | manuell oder recalc |
 | `CalculateGoal` | Formel |
 | `UpdateProfile` | |
+| `RequestHealthReadAccess` | explizite Health-Leseerlaubnis und aktuelles Gewicht lesen |
+| `RequestHealthWaterWrite` | explizite Health-Schreiberlaubnis für Dietary Water |
+| `RequestNotificationAuthorization` | explizite System-Erlaubnis für Erinnerungen |
 | `UpsertContainer` / `DeleteContainer` | |
 | `ExportData` | CSV + JSON |
 | `RescheduleReminders` | via Port |
@@ -303,6 +306,16 @@ protocol SettingsRepository: Sendable { ... }
 protocol WidgetReloading: Sendable { func reload() async }
 protocol HealthProjecting: Sendable { func project(intake: Intake) async }
 protocol ReminderScheduling: Sendable { func reschedule(rule: ReminderRule, lastSip: Date?) async }
+protocol HealthAuthorizing: Sendable {
+  func requestBodyMassRead() async -> Bool
+  func latestBodyMassKg() async -> Double?
+  func requestWaterWrite() async -> Bool
+  func requestWorkoutRead() async -> Bool
+}
+protocol NotificationAuthorizing: Sendable {
+  func status() async -> NotificationAuthorizationStatus
+  func requestAuthorization() async -> NotificationAuthorizationStatus
+}
 ```
 
 ### 6.4 Ziel-Formel
@@ -376,7 +389,14 @@ Nach jedem erfolgreichen Log:
 
 ### Lesen
 
-Nur mit **zweiter** expliziter Erlaubnis: Workouts des aktuellen Tages für Goal-Boost. Ablehnung ist gültig. Kein stilles Re-Prompt.
+Nur mit **expliziter** Erlaubnis und nur für den konkreten Zweck: das
+aktuellste Körpergewicht (`bodyMass`) für die persönliche Zielberechnung.
+Wenn der Nutzer zustimmt, wird der Wert als lokaler `Profile.bodyMassKg`
+Snapshot übernommen und über die bestehende Ziel-Formel berechnet. Das
+Lesen von Workouts für den Goal-Boost bleibt ein getrenntes, optionales
+Opt-in in Settings. Ablehnung oder fehlende Daten sind gültige Zustände; es
+gibt kein stilles Re-Prompt. HealthKit darf bei Read-Rechten nicht als
+"abgelehnt" interpretiert werden, nur weil eine Abfrage keine Daten liefert.
 
 ### Dedup
 
@@ -384,7 +404,9 @@ Nie denselben UUID zweimal schreiben. Undo/Delete: korrespondierende HK-Sample l
 
 ### UI
 
-Onboarding: Health schreiben anbieten. Settings: Status schreiben / Workouts lesen getrennt. App bleibt ohne Health voll nutzbar.
+Onboarding: Körpergewicht aus Health explizit anbieten, Health schreiben als
+separate optionale Aktion anbieten. Settings: Health schreiben / Workouts
+lesen getrennt. App bleibt ohne Health voll nutzbar.
 
 Privacy Nutrition Label: Health (Dietary Water, optional Workouts). Kein Tracking.
 
@@ -481,7 +503,7 @@ Ambient: großer Pegel, Siri Remote Fokus auf +250 / +500 / +750. Kein Fein-Edit
 
 ### 12.6 visionOS
 
-Fenster + Glass. Log-Buttons im Ornament. Volume optional; wenn Zeit knapp: nur Fenster. Widgets pinnbar, wenn Target Widget-Extension mitnimmt.
+Fenster + Glass. Die systemseitige adaptive Glass-Fläche füllt das resizable Fenster; es gibt kein zusätzliches schwarzes Innenpanel. Das Fenster bleibt resizable, darf aber nicht kleiner als die definierte Mindestfläche von 720 × 440 pt werden (`windowResizability(.contentMinSize)`). Ein führendes, vertikales Ornament bietet die lokale Navigation **Today | History | Stats | Settings** als SF-Symbol-Icons mit vollständigen Accessibility-Labels; die Log-Aktionen (gespeicherte Behälter + Custom amount) liegen gesammelt im unteren Ornament. Das Ornament bleibt innerhalb der verfügbaren Fensterbreite und scrollt bei kleinen Größen horizontal. Kein zusätzlicher Inline-Log-Button und keine separate Default-Mengen-Aktion, die einen gespeicherten Behälter dupliziert. History und Stats verwenden ihre bestehenden Feature-Screens und Datenverträge. Kein Immersive Space und kein app-weiter Router. Widgets pinnbar, wenn Target Widget-Extension mitnimmt.
 
 ---
 
@@ -634,17 +656,24 @@ Widget: **dasselbe Glas** verkleinert, ohne Tropfenflug, ohne Idle-Loop. Nur `le
 
 ## 15. Onboarding, Erinnerungen, Export
 
-### Onboarding (3–5 Seiten, skipbar außer Einheit)
+### Onboarding (5 Seiten, skipbar außer Einheit)
 
 1. Willkommen / Metapher
 2. Einheit ml oder oz (Locale-Default)
-3. Ziel: Default 2 l oder Gewicht eingeben
+3. Health + Ziel: Gewicht aus Apple Health explizit anfordern, sonst Gewicht
+   eingeben; Ziel mit bestehender Formel live anzeigen
 4. Standard-Behälter
-5. iCloud-Hinweis, Health schreiben optional, Widget-Hinweis
+5. Erinnerungen erklären und explizit anfordern; Health schreiben optional;
+   iCloud-/Widget-Hinweis
 
 ### Erinnerungen
 
 Fenster wake…sleep. Intervall nach letzter Sip (`afterLastSip`, Default 120 min). Keine Notification in Sleep. Keine Starre-Alle-2h-Schleife ohne Bezug zum letzten Log. Notification Action: +Default → `LogIntake`.
+
+Die Permission wird erst nach einer erklärenden Onboarding-Fläche und einem
+expliziten Button über `UNUserNotificationCenter.requestAuthorization`
+angefordert. `ReminderScheduler` fragt nie implizit nach Permission; er entfernt
+und plant nur Requests, wenn der aktuelle Authorization-Status das erlaubt.
 
 Focus Filter: Erinnerungen in Fokuszeiten dämpfen, wenn ohne großen Aufwand machbar; sonst Settings-Pause.
 

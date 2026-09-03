@@ -73,7 +73,7 @@ RippleData               SwiftData, CloudKit, HealthKit, notifications
 
 ### Use cases (only write/read API features may call)
 
-`LogIntake`, `UndoLastIntake`, `EditIntake`, `DeleteIntake`, `RestoreIntake`, `ObserveToday`, `ObserveMonth`, `ObserveStats`, `ObserveHistory`, `UpdateGoal`, `CalculateGoal`, `UpdateProfile`, `UpsertContainer`, `DeleteContainer`, `ExportData`, `RescheduleReminders`.
+`LogIntake`, `UndoLastIntake`, `EditIntake`, `DeleteIntake`, `RestoreIntake`, `ObserveToday`, `ObserveMonth`, `ObserveStats`, `ObserveHistory`, `UpdateGoal`, `CalculateGoal`, `UpdateProfile`, `UpsertContainer`, `DeleteContainer`, `ExportData`, `RescheduleReminders`, `RequestHealthReadAccess`, `RequestHealthWaterWrite`, `RequestNotificationAuthorization`.
 
 New write path = new domain use case. Not “just do it in the view.”
 
@@ -238,5 +238,30 @@ Full text: `Ripple_History_Stats.md`.
 4. After motion changes, re-check Reduce Motion and `level == 0`.
 5. Do not inflate scope into v1.1.
 6. Re-read this file at session start when unsure.
+
+## 12. Required skills
+
+Before designing, writing, reviewing, or debugging work in one of these areas, read and follow the applicable skill. If a task spans multiple areas, use every applicable skill. Read the skill's `SKILL.md` completely, then load only the linked references needed for the task.
+
+### Mobile design and SwiftUI
+
+- [mobile-ios-design](/Users/urkman/.agents/skills/mobile-ios-design/SKILL.md): mobile design and layout, HIG, navigation, adaptive iPhone/iPad behavior, accessibility, Dynamic Type, and Dark Mode.
+- [swiftui-specialist](/Users/urkman/.agents/skills/swiftui-specialist/SKILL.md): SwiftUI structure, data flow, `@Observable`, `ForEach`/`List` identity, localization, modifiers, and soft-deprecated APIs.
+- [swiftui-animation](/Users/urkman/.agents/skills/swiftui-animation/SKILL.md): SwiftUI animation, transitions, choreography, content transitions, and Reduce Motion behavior.
+- [swiftui-liquid-glass](/Users/urkman/.codex/skills/swiftui-liquid-glass/SKILL.md): iOS 26+ Liquid Glass, `GlassEffectContainer`, interactive glass, availability, and fallbacks.
+- [swiftui-whats-new-27](/Users/urkman/.agents/skills/swiftui-whats-new-27/SKILL.md): SDK 27 SwiftUI APIs, behavior changes, deprecations, and related compiler errors. Read its specific reference before using a new SDK 27 API.
+
+### Data, concurrency, charts, and intents
+
+- [swiftdata-pro](/Users/urkman/.agents/skills/swiftdata-pro/SKILL.md): SwiftData models, predicates, relationships, CloudKit constraints, indexing, and modern concurrency.
+- [swift-concurrency](/Users/urkman/.agents/skills/swift-concurrency/SKILL.md): Swift 6 isolation, actors, `Sendable`, async/await, tasks, cancellation, and concurrency diagnostics. Check the project language/concurrency settings before giving migration-sensitive guidance.
+- [swift-charts](/Users/urkman/.agents/skills/swift-charts/SKILL.md): Swift Charts mark selection, axes, scales, accessibility, theming, and validation across representative states.
+- [app-intents-specialist](/Users/urkman/.agents/skills/app-intents-specialist/SKILL.md): App Intents execution, entities, queries, parameters, dependencies, localization, donations, phrases, and stable public contracts.
+
+### Build, run, debug, and App Store Connect
+
+- [ios-debugger-agent](/Users/urkman/.codex/skills/ios-debugger-agent/SKILL.md): iOS build/run/debug workflows, simulator UI inspection, screenshots, and log capture. Discover the booted simulator before using XcodeBuildMCP.
+- [build-ios-apps:ios-simulator-browser](/Users/urkman/.codex/plugins/cache/openai-curated-remote/build-ios-apps/0.1.2/skills/ios-simulator-browser/SKILL.md): mirroring a specific simulator in the in-app browser and SwiftUI preview hot reload. Keep `serve-sim` scoped to the selected simulator and verify a real rendered frame.
+- [asc-cli-usage](/Users/urkman/.agents/skills/asc-cli-usage/SKILL.md): App Store Connect work through `asc`. Discover commands and flags with `--help`/`asc search`, inspect schemas before API-facing commands, use explicit long flags, and require `--confirm` for destructive operations.
 
 Breaking a rule requires changing the spec — not ignoring the rule.
