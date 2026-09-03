@@ -3,18 +3,22 @@ import RippleDomain
 import UserNotifications
 
 public struct ReminderScheduler: ReminderScheduling {
-    public init() {}
+    private let notificationAuthorizing: any NotificationAuthorizing
+
+    public init(
+        notificationAuthorizing: any NotificationAuthorizing = NotificationAuthorizer()
+    ) {
+        self.notificationAuthorizing = notificationAuthorizing
+    }
 
     public func reschedule(rule: ReminderRule, lastSip: Date?) async {
-        let center = UNUserNotificationCenter.current()
-        center.removePendingNotificationRequests(withIdentifiers: [Self.identifier])
-
         guard rule.enabled else { return }
 
-        let settings = await center.notificationSettings()
-        if settings.authorizationStatus == .notDetermined {
-            _ = try? await center.requestAuthorization(options: [.alert, .sound, .badge])
-        }
+        let authorization = await notificationAuthorizing.status()
+        guard authorization.isAllowed else { return }
+
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: [Self.identifier])
 
         guard let fireDate = Self.nextFireDate(rule: rule, lastSip: lastSip, now: Date()) else {
             return

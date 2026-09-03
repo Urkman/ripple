@@ -24,14 +24,16 @@ public struct RippleContainer: Sendable {
             readModelContainer: shared.modelContainer
         )
         let settingsRepository = SwiftDataSettingsRepository(store: store, sync: sync)
+        let notificationAuthorizer = NotificationAuthorizer()
         let useCases = UseCases.assemble(
             intakeRepository: intakeRepository,
             settingsRepository: settingsRepository,
             widgetReloading: WidgetReloader(),
             health: HealthProjector(),
-            reminders: ReminderScheduler(),
+            reminders: ReminderScheduler(notificationAuthorizing: notificationAuthorizer),
             workouts: WorkoutReader(),
-            healthAuthorizing: HealthAuthorizer()
+            healthAuthorizing: HealthAuthorizer(),
+            notificationAuthorizing: notificationAuthorizer
         )
         return RippleContainer(shared: shared, useCases: useCases, store: store, sync: sync)
     }

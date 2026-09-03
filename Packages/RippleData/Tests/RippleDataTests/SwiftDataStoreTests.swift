@@ -171,3 +171,32 @@ struct ReminderWindowTests {
         #expect(hour == 7)
     }
 }
+
+actor RecordingNotificationAuthorizer: NotificationAuthorizing {
+    let current: NotificationAuthorizationStatus
+    private(set) var requestCount = 0
+
+    init(current: NotificationAuthorizationStatus) {
+        self.current = current
+    }
+
+    func status() async -> NotificationAuthorizationStatus { current }
+
+    func requestAuthorization() async -> NotificationAuthorizationStatus {
+        requestCount += 1
+        return current
+    }
+}
+
+@Suite("Notification authorization")
+struct NotificationAuthorizationTests {
+    @Test("Reminder rescheduling never requests notification authorization")
+    func schedulerDoesNotPrompt() async {
+        let authorizer = RecordingNotificationAuthorizer(current: .notDetermined)
+        let scheduler = ReminderScheduler(notificationAuthorizing: authorizer)
+
+        await scheduler.reschedule(rule: .default, lastSip: nil)
+
+        #expect(await authorizer.requestCount == 0)
+    }
+}
