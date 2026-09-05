@@ -27,10 +27,12 @@ public struct LogIntake: Sendable {
         source: IntakeSource,
         date: Date = Date(),
         containerId: UUID? = nil,
-        note: String? = nil
+        note: String? = nil,
+        id: UUID? = nil
     ) async throws -> Intake {
         let now = Date()
         let intake = Intake(
+            id: id ?? UUID(),
             date: date,
             amountMl: max(amount.value, 0),
             source: source,

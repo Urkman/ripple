@@ -36,6 +36,36 @@ struct LogUndoTests {
         #expect(first.isDeleted == false)
     }
 
+    @Test("explicit intake IDs upsert without changing normal logging")
+    func explicitIDUpserts() async throws {
+        let intakes = InMemoryIntakeRepository()
+        let settings = InMemorySettingsRepository(containers: Container.seededDefaults())
+        let useCases = UseCases.assemble(
+            intakeRepository: intakes,
+            settingsRepository: settings,
+            widgetReloading: NoOpWidgetReloading(),
+            health: FakeHealthProjector(),
+            reminders: NoOpReminderScheduling(),
+            workouts: NoOpWorkoutReading(),
+            healthAuthorizing: NoOpHealthAuthorizing()
+        )
+        let id = UUID()
+        _ = try await useCases.logIntake.run(
+            amount: Milliliters(250),
+            source: .app,
+            id: id
+        )
+        _ = try await useCases.logIntake.run(
+            amount: Milliliters(500),
+            source: .widget,
+            id: id
+        )
+
+        let stored = try await intakes.intake(id: id)
+        #expect(stored?.amountMl == 500)
+        #expect(stored?.source == .widget)
+    }
+
     @Test("delete is a soft delete")
     func softDelete() async throws {
         let intakes = InMemoryIntakeRepository()
