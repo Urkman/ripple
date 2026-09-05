@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "appName": "Ripple",
+  "fontPath": "/Library/Fonts/SF-Pro-Display-Bold.otf",
+  "palette": {
+    "deep": "#0B3D4A",
+    "lagoon": "#1A7A8C",
+    "aqua": "#4FB3C6",
+    "foam": "#E8F4F6"
+  },
+  "locales": [
+    "en-US",
+    "de-DE"
+  ],
+  "devices": {
+    "iphone-69": {
+      "width": 1320,
+      "height": 2868,
+      "outputDirectory": "iphone-69"
+    },
+    "ipad-129": {
+      "width": 2064,
+      "height": 2752,
+      "outputDirectory": "ipad-129"
+    }
+  },
+  "layoutValues": {
+    "safeTop": 0.07,
+    "sideMargin": 0.08,
+    "headlineSize": 0.078,
+    "subheadSize": 0.03,
+    "copyGap": 0.018,
+    "deviceScale": 0.57,
+    "tabletDeviceScale": 0.62,
+    "mosaicDeviceScale": 0.275
+  },
+  "slides": [
+    {
+      "id": "today",
+      "layout": "hero",
+      "devices": [
+        "iphone-69"
+      ],
+      "source": "raw/{locale}/iphone-69/01-today.png",
+      "headline": {
+        "en-US": "Make water\nvisible.",
+        "de-DE": "Wasser\nsichtbar machen."
+      },
+      "subhead": {
+        "en-US": "Your daily goal at a glance.",
+        "de-DE": "Dein Tagesziel auf einen Blick."
+      },
+      "background": "foam",
+      "accent": {
+        "kind": "circles",
+        "color": "aqua",
+        "anchor": "top-right",
+        "opacity": 120
+      }
+    },
+    {
+      "id": "quick-log",
+      "layout": "phone-offset",
+      "devices": [
+        "iphone-69"
+      ],
+      "source": "raw/{locale}/iphone-69/01-today.png",
+      "headline": {
+        "en-US": "Log in one\ntap.",
+        "de-DE": "Mit einem\nTipp loggen."
+      },
+      "subhead": {
+        "en-US": "Quick adds keep your day moving.",
+        "de-DE": "Schnelle Mengen halten deinen Tag im Fluss."
+      },
+      "background": "foam",
+      "accent": {
+        "kind": "arc",
+        "color": "lagoon",
+        "anchor": "middle-left",
+        "opacity": 120
+      }
+    },
+    {
+      "id": "history",
+      "layout": "phone-offset",
+      "devices": [
+        "iphone-69"
+      ],
+      "source": "raw/{locale}/iphone-69/02-history.png",
+      "headline": {
+        "en-US": "See every\nday.",
+        "de-DE": "Jeden Tag\nsehen."
+      },
+      "subhead": {
+        "en-US": "One ring for the full month.",
+        "de-DE": "Ein Ring für den ganzen Monat."
+      },
+      "background": "foam",
+      "accent": {
+        "kind": "dots",
+        "color": "aqua",
+        "anchor": "top-right",
+        "opacity": 105
+      }
+    },
+    {
+      "id": "stats",
+      "layout": "stats-focus",
+      "devices": [
+        "iphone-69"
+      ],
+      "source": "raw/{locale}/iphone-69/03-stats.png",
+      "headline": {
+        "en-US": "Find your\nrhythm.",
+        "de-DE": "Deinen Rhythmus\nsehen."
+      },
+      "subhead": {
+        "en-US": "Clear trends from real intake.",
+        "de-DE": "Klare Trends aus echten Einträgen."
+      },
+      "background": "foam",
+      "accent": {
+        "kind": "circles",
+        "color": "lagoon",
+        "anchor": "top-right",
+        "opacity": 105
+      }
+    },
+    {
+      "id": "flow",
+      "layout": "mosaic",
+      "devices": [
+        "iphone-69"
+      ],
+      "sources": [
+        "raw/{locale}/iphone-69/01-today.png",
+        "raw/{locale}/iphone-69/02-history.png",
+        "raw/{locale}/iphone-69/03-stats.png"
+      ],
+      "headline": {
+        "en-US": "Your flow,\nyour setup.",
+        "de-DE": "Dein Flow,\ndein Setup."
+      },
+      "subhead": {
+        "en-US": "Goals, reminders, and units in one place.",
+        "de-DE": "Ziele, Erinnerungen und Einheiten an einem Ort."
+      },
+      "background": "foam",
+      "accent": {
+        "kind": "arc",
+        "color": "aqua",
+        "anchor": "top-right",
+        "opacity": 105
+      }
+    },
+    {
+      "id": "day",
+      "layout": "hero",
+      "devices": [
+        "ipad-129"
+      ],
+      "source": "raw/{locale}/ipad-129/01-today.png",
+      "headline": {
+        "en-US": "A clearer\nday.",
+        "de-DE": "Ein klarer\nTag."
+      },
+      "subhead": {
+        "en-US": "See your progress in one calm view.",
+        "de-DE": "Deinen Fortschritt auf einen Blick."
+      },
+      "background": "foam",
+      "accent": {
+        "kind": "circles",
+        "color": "aqua",
+        "anchor": "top-right",
+        "opacity": 115
+      }
+    },
+    {
+      "id": "month",
+      "layout": "tablet-split",
+      "devices": [
+        "ipad-129"
+      ],
+      "source": "raw/{locale}/ipad-129/02-history.png",
+      "headline": {
+        "en-US": "Keep the\nflow.",
+        "de-DE": "Im Fluss\nbleiben."
+      },
+      "subhead": {
+        "en-US": "A full month, one glance.",
+        "de-DE": "Ein ganzer Monat auf einen Blick."
+      },
+      "background": "foam",
+      "accent": {
+        "kind": "arc",
+        "color": "lagoon",
+        "anchor": "middle-left",
+        "opacity": 110
+      }
+    },
+    {
+      "id": "rhythm",
+      "layout": "stats-focus",
+      "devices": [
+        "ipad-129"
+      ],
+      "source": "raw/{locale}/ipad-129/03-stats.png",
+      "headline": {
+        "en-US": "Spot your\nrhythm.",
+        "de-DE": "Deinen Rhythmus\nsehen."
+      },
+      "subhead": {
+        "en-US": "Simple trends from every entry.",
+        "de-DE": "Einfache Trends aus jedem Eintrag."
+      },
+      "background": "foam",
+      "accent": {
+        "kind": "dots",
+        "color": "aqua",
+        "anchor": "top-right",
+        "opacity": 100
+      }
+    },
+    {
+      "id": "setup",
+      "layout": "tablet-split",
+      "devices": [
+        "ipad-129"
+      ],
+      "source": "raw/{locale}/ipad-129/04-settings.png",
+      "headline": {
+        "en-US": "Make it\nyours.",
+        "de-DE": "Mach es zu\ndeinem."
+      },
+      "subhead": {
+        "en-US": "Goals, reminders, and units in one place.",
+        "de-DE": "Ziele, Erinnerungen und Einheiten an einem Ort."
+      },
+      "background": "foam",
+      "accent": {
+        "kind": "circles",
+        "color": "lagoon",
+        "anchor": "top-right",
+        "opacity": 105
+      }
+    }
+  ]
+}
