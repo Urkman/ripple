@@ -1,3 +1,4 @@
+import Foundation
 import RippleData
 import RippleDomain
 import RippleFeatures
@@ -21,12 +22,37 @@ struct RippleiOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView(useCases: container.useCases)
+            rootView
                 .environment(\.rippleUseCases, container.useCases)
                 .onOpenURL { _ in }
                 .onAppear { consumePendingRoute() }
         }
     }
+
+    @ViewBuilder
+    private var rootView: some View {
+        #if DEBUG
+        if demoDataRequested {
+            DemoDataGateView(useCases: container.useCases) {
+                normalRootView
+            }
+        } else {
+            normalRootView
+        }
+        #else
+        normalRootView
+        #endif
+    }
+
+    private var normalRootView: some View {
+        RootView(useCases: container.useCases)
+    }
+
+    #if DEBUG
+    private var demoDataRequested: Bool {
+        ProcessInfo.processInfo.arguments.contains("-ripple-demo-data")
+    }
+    #endif
 
     private func consumePendingRoute() {
         _ = RippleNavigation.pending
