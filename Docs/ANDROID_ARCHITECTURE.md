@@ -2,10 +2,14 @@
 
 **Status:** Approved design for implementation
 
-**Date:** 2026-09-07
+**Last verified:** 2026-09-07
 
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
+
+**Document version:** 1.1.0
+
+**Companion document:** [Ripple Architecture](ARCHITECTURE.md)
 
 This document is the implementation contract for an Android version of Ripple. It defines the functionality that must exist, the Android architecture that should contain it, the platform-native UI behavior, and the verification required before release.
 
@@ -1151,3 +1155,76 @@ An agent may call the Android port complete only when every item is true:
 - [ADR-000: Architecture](ADR/ADR-000-architecture.md)
 - [ADR-001: Persistence](ADR/ADR-001-persistence.md)
 - [ADR-002: HealthKit](ADR/ADR-002-healthkit.md)
+
+## 23. Documentation maintenance
+
+This document and [Ripple Architecture](ARCHITECTURE.md) are maintained as a pair. Android has a separate data boundary and native UI, but it must stay aligned with shared Ripple capabilities, domain semantics, and product specifications.
+
+### Source-of-truth precedence
+
+When sources disagree, use this order:
+
+1. `AGENTS.md` for repository process, shared architecture constraints, design tokens, and explicit bans.
+2. The authoritative product specifications: [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md), [Ripple Hero Motion](../Ripple_Handoff/Ripple_Hero_Motion.md), and [Ripple History and Stats](../Ripple_Handoff/Ripple_History_Stats.md).
+3. An approved ADR or Android decision record for a deliberate platform-specific choice.
+4. This Android document for Android module boundaries, platform mapping, and Android-native workflows.
+5. Android source and tests, which reveal current behavior and must be brought back into agreement when they drift.
+
+The Android document must never be used to introduce iOS/Android data sharing or to override a shared product invariant without an approved specification change.
+
+### Changes that require a documentation review
+
+Review this document and its iOS companion whenever a change affects:
+
+- domain entities, value types, goal formulas, units, use cases, ports, or source attribution;
+- Room tables, migrations, local backup, Wear outbox, mutation ordering, or export;
+- Health Connect projection/permissions, reminders, notification actions, WorkManager, or AlarmManager;
+- Glance widgets, Quick Settings, launcher shortcuts, Assistant/App Actions, or Wear complications/Tiles;
+- Android modules, Gradle dependencies, SDK/minimum versions, manifests, exported components, or concurrency;
+- Android-native navigation, Material/Wear design, Today hero behavior, motion, reduced motion, History, Stats, accessibility, or localization;
+- Android-only privacy, security, backup, device-transfer, or release requirements;
+- the explicit no-cross-platform-data boundary.
+
+Review the iOS document even for an Android-only change. If the shared contract is unchanged, record that the change is Android-only in this document's timeline and leave the iOS document's version unchanged.
+
+### Required update workflow
+
+1. Read both architecture documents and the affected source specification before editing Android code or build configuration.
+2. Classify the change as shared, Android-only, iOS-only, or a product-contract change.
+3. Update this document in the same change as Android implementation or an Android ADR.
+4. Update `Document version` and the date metadata in every document that changed.
+5. Append one immutable row to this document's timeline. New rows go at the bottom; historical rows are not rewritten or deleted.
+6. If shared domain behavior or a product contract changed, update both documents and add corresponding timeline rows with the same release/change reference.
+7. Verify Markdown links, Gradle/module examples, permissions, and relevant tests/builds. A documentation-only correction still runs whitespace/link checks.
+8. Commit the documentation with the implementation/ADR, or as a separate documentation commit when no code changed.
+
+### Documentation versioning
+
+Use semantic document versions independently from the app version:
+
+- **MAJOR**: incompatible Android architecture, scope, data, sync, or public system-entry contract change.
+- **MINOR**: new Android capability, system surface, module boundary, or normative requirement that remains compatible.
+- **PATCH**: factual correction, wording clarification, link correction, formatting, or example update with no contract change.
+
+The timeline is the audit trail. Each row records the document version, date, change, and impact. Do not combine unrelated changes into an unexplained version bump.
+
+### Synchronized-document checklist
+
+Before merging an architecture-affecting change, confirm:
+
+- [ ] The source specification or ADR is updated when required.
+- [ ] The iOS document reflects the current Swift implementation.
+- [ ] This Android document reflects the current Android contract or explicitly records that Android is unaffected.
+- [ ] Shared use cases, units, sources, permissions, and feature names mean the same thing in both documents.
+- [ ] Android UI/workflow differences are intentional Android-native choices, not accidental parity gaps.
+- [ ] The no-cross-platform-data boundary remains explicit and intact.
+- [ ] The new timeline entry is present and the version/date metadata is current.
+
+## 24. Timeline
+
+Newest entries are appended at the bottom. Historical entries are immutable.
+
+| Version | Date | Change | Impact |
+| --- | --- | --- | --- |
+| 1.0.0 | 2026-09-07 | Initial Android architecture and implementation guide created. | Establishes the separate Android data boundary, native Android UI, phone/tablet/Wear capabilities, system surfaces, and delivery requirements. |
+| 1.1.0 | 2026-09-07 | Added the paired-document maintenance contract, semantic document versioning, synchronized-document checklist, and immutable timeline. | Android architecture changes now require an explicit documentation review and versioned audit entry. |
