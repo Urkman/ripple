@@ -7,15 +7,17 @@
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.1.0
+**Document version:** 1.2.0
 
 **Companion document:** [Ripple Architecture](ARCHITECTURE.md)
+
+**UI companion:** [Ripple Android UI Specification](ANDROID_UI_SPEC.md)
 
 This document is the implementation contract for an Android version of Ripple. It defines the functionality that must exist, the Android architecture that should contain it, the platform-native UI behavior, and the verification required before release.
 
 The Android app is a separate product implementation. It must preserve Ripple's domain behavior and feature coverage, but it must look and behave like a well-designed Android app. It must not copy iOS navigation, controls, typography, glass treatment, or workflows merely to achieve functional parity.
 
-The existing iOS architecture is described in [`Docs/ARCHITECTURE.md`](ARCHITECTURE.md). Product behavior is specified by the [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md), [hero motion specification](../Ripple_Handoff/Ripple_Hero_Motion.md), and [History/Stats specification](../Ripple_Handoff/Ripple_History_Stats.md). Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
+The existing iOS architecture is described in [`Docs/ARCHITECTURE.md`](ARCHITECTURE.md). Android screen composition and state behavior are specified in [`Docs/ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md). Product behavior is specified by the [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md), [hero motion specification](../Ripple_Handoff/Ripple_Hero_Motion.md), and [History/Stats specification](../Ripple_Handoff/Ripple_History_Stats.md). Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
 
 ## 1. Product boundary and non-negotiable rules
 
@@ -1155,6 +1157,7 @@ An agent may call the Android port complete only when every item is true:
 - [ADR-000: Architecture](ADR/ADR-000-architecture.md)
 - [ADR-001: Persistence](ADR/ADR-001-persistence.md)
 - [ADR-002: HealthKit](ADR/ADR-002-healthkit.md)
+- [Android UI specification](ANDROID_UI_SPEC.md)
 
 ## 23. Documentation maintenance
 
@@ -1228,3 +1231,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | --- | --- | --- | --- |
 | 1.0.0 | 2026-09-07 | Initial Android architecture and implementation guide created. | Establishes the separate Android data boundary, native Android UI, phone/tablet/Wear capabilities, system surfaces, and delivery requirements. |
 | 1.1.0 | 2026-09-07 | Added the paired-document maintenance contract, semantic document versioning, synchronized-document checklist, and immutable timeline. | Android architecture changes now require an explicit documentation review and versioned audit entry. |
+| 1.2.0 | 2026-09-07 | Added the Android UI specification companion and linked it as the normative screen/state contract. | Android UI implementation now has explicit wireframes, responsive behavior, state coverage, interaction flows, and screenshot acceptance criteria. |

@@ -238,9 +238,9 @@ Full text: `Ripple_History_Stats.md`.
 4. After motion changes, re-check Reduce Motion and `level == 0`.
 5. Do not inflate scope into v1.1.
 6. Re-read this file at session start when unsure.
-7. Treat [`Docs/ARCHITECTURE.md`](Docs/ARCHITECTURE.md) and [`Docs/ANDROID_ARCHITECTURE.md`](Docs/ANDROID_ARCHITECTURE.md) as maintained architecture contracts. Before changing shared product behavior, domain rules, persistence, platform surfaces, UI/motion, or module boundaries, read both documents and the affected source specifications.
-8. Update the relevant architecture document in the same change as the implementation or ADR. Shared contract changes require updates to both documents; platform-only changes must explicitly record why the companion document is unaffected.
-9. Every architecture-document change must update its semantic version and `Last verified` metadata and append an immutable entry to the document's final `Timeline` section. Follow the maintenance contract in those documents; do not leave code, specs, and architecture documentation silently out of sync.
+7. Treat [`Docs/ARCHITECTURE.md`](Docs/ARCHITECTURE.md), [`Docs/ANDROID_ARCHITECTURE.md`](Docs/ANDROID_ARCHITECTURE.md), and [`Docs/ANDROID_UI_SPEC.md`](Docs/ANDROID_UI_SPEC.md) as maintained contracts. Before changing shared product behavior, domain rules, persistence, platform surfaces, UI/motion, module boundaries, or Android screen behavior, read the applicable documents and affected source specifications.
+8. Update the relevant architecture/UI document in the same change as the implementation or ADR. Shared contract changes require updates to both architecture documents; Android UI changes also require the Android UI specification; platform-only changes must explicitly record why companion documents are unaffected.
+9. Every architecture/UI-document change must update its semantic version and `Last verified` metadata and append an immutable entry to the document's final `Timeline` section. Follow the maintenance contracts in those documents; do not leave code, specs, and architecture documentation silently out of sync.
 
 ## 12. Required skills
 
