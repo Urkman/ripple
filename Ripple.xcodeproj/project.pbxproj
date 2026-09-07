@@ -12,6 +12,7 @@
 		0994451E671B78B3AEACD1E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD76E300AC85F40BD99B369A /* Assets.xcassets */; };
 		09CCACBD8D6F5896B54C4CFD /* RippleFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = B0D89A1C5D56347F48DFEF7A /* RippleFeatures */; };
 		1091706AACB98F90688D5A9A /* RippleMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36F649D85E6A9A8C0C781EB /* RippleMacApp.swift */; };
+		B7B1C54D892D41468FE619FE /* MacRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DAF92E66C4424AA09599B4C /* MacRootView.swift */; };
 		1543D8B30984D068D0BD1DD4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E907C1BCBA3F001DE302C2D3 /* PrivacyInfo.xcprivacy */; };
 		1A1D57CA49FC93E2B81BEAD5 /* RippleDomain in Frameworks */ = {isa = PBXBuildFile; productRef = E7464318C93308C7F9996EC2 /* RippleDomain */; };
 		16174FF60B6B42AEA4BED9C35E437F5B /* DemoDataGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143B5FEC77544C2E91359919088FAAD5 /* DemoDataGateView.swift */; };
@@ -22,6 +23,7 @@
 		30905A3D615293E0DF05C11F /* RippleDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 7676F5AF18DD11460264F90B /* RippleDomain */; };
 		315613A6655C23AB12DA72AD /* RippleDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 707D3A4A534F3C3D01A08DEB /* RippleDomain */; };
 		37E5253B4A7A05DB8DA7681E /* RippleTVApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E92F86B7E7651C36E3AD419 /* RippleTVApp.swift */; };
+		19DF30CD01EE4711BA02D888 /* TVRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7B96BBD652A44569A6A16F4 /* TVRootView.swift */; };
 		3CB3CCC9140BFDE15D0F3115 /* RippleFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = B02BECD0DE2CE6BEF84BE395 /* RippleFeatures */; };
 		47992FCECE9A261CAC8B79A4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E907C1BCBA3F001DE302C2D3 /* PrivacyInfo.xcprivacy */; };
 		4A3C9FA2C641676B663B4850 /* RippleFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = B56EF3575CCEA9693770B49E /* RippleFeatures */; };
@@ -30,6 +32,7 @@
 		5331D90CCE786C5D0CEA852D /* TodayWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA7A3493DB55596CDE1EE73 /* TodayWidget.swift */; };
 		54C8C86C359C1C11BAF0C43F /* RippleUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4493051ADA755B7145821ACE /* RippleUI */; };
 		59CDA1DA745813379D15F3AF /* RippleiOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06288C8BFF2C32E610C25CE7 /* RippleiOSApp.swift */; };
+		A9795773F9C847A480749705 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84360B5B45A2416B9F79345E /* RootView.swift */; };
 		5A387FFD3FEEAB40593BDAAD /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E907C1BCBA3F001DE302C2D3 /* PrivacyInfo.xcprivacy */; };
 		5B87209493B3595E09D41FF2 /* RippleDomain in Frameworks */ = {isa = PBXBuildFile; productRef = F808B826486FF5CB8C396F87 /* RippleDomain */; };
 		5C307FAB889C5D0672D0C40F /* RippleUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2DEBCDA88C376B15BCCC7BFB /* RippleUI */; };
@@ -54,10 +57,12 @@
 		BA570EBD517DBD2803E8821C /* WatchWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDAC896DCEA7EF8829D2155 /* WatchWidgetsBundle.swift */; };
 		BE6C6711609F25B236E6DFFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD76E300AC85F40BD99B369A /* Assets.xcassets */; };
 		D3728E10FBA8501A1870A364 /* RippleVisionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C04662CBFE6FFCC531AAC3C /* RippleVisionApp.swift */; };
+		44D63CBBAFC646518E5D9538 /* VisionRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B99925DA7244D7F8EE74C0D /* VisionRootView.swift */; };
 		DB3F6069C4F0574A169AEA72 /* Ripple.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 6F82A41F7BC567700B054D3D /* Ripple.app */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DB990EBA9A414048F0F2105F /* RippleData in Frameworks */ = {isa = PBXBuildFile; productRef = BD808E1BC486FEB45DFB21C1 /* RippleData */; };
 		DC26ADF0B70BD34B43F43185 /* RippleData in Frameworks */ = {isa = PBXBuildFile; productRef = 2FAA7A80E356EDDC77FFB43A /* RippleData */; };
 		DD608454BCDAF7500C4BF960 /* RippleWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E472D1CB3E7A0ABA1C82F3 /* RippleWatchApp.swift */; };
+		E76B187A33E64FE9876CD6EC /* WatchRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588DBAE744FB47A2BCE17F7E /* WatchRootView.swift */; };
 		D9E4A1C7F2B84C55A6D10E3F /* WatchDemoDataGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D1E4C93F5B6A82D0E7C114 /* WatchDemoDataGateView.swift */; };
 		DFEC8D2A9BBF6B8D71D3EADC /* RippleUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5365D287536959F3E0F8CC7D /* RippleUI */; };
 		EA536F59349D65F285CF5EBE /* RippleData in Frameworks */ = {isa = PBXBuildFile; productRef = 8E489339C35024D6C1EC604F /* RippleData */; };
@@ -134,10 +139,12 @@
 		034A51DB6A5123F9D7C75107 /* RippleFeatures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleFeatures; path = Packages/RippleFeatures; sourceTree = SOURCE_ROOT; };
 		060371C6F8D1AF6DD6C7B466 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		06288C8BFF2C32E610C25CE7 /* RippleiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleiOSApp.swift; sourceTree = "<group>"; };
+		84360B5B45A2416B9F79345E /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		08AF11E70586678494DFC02E /* RippleWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RippleWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		09022787A52A7EE8B189B499 /* RippleWatchWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RippleWatchWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		09494154CC93881874307CBE /* RippleData */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleData; path = Packages/RippleData; sourceTree = SOURCE_ROOT; };
 		0C04662CBFE6FFCC531AAC3C /* RippleVisionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleVisionApp.swift; sourceTree = "<group>"; };
+		3B99925DA7244D7F8EE74C0D /* VisionRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionRootView.swift; sourceTree = "<group>"; };
 		10ABD62A4CD87ABC0EC0742E /* RippleDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleDomain; path = Packages/RippleDomain; sourceTree = SOURCE_ROOT; };
 		111F26BA25349552EBB0154C /* RipplewatchOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RipplewatchOS.entitlements; sourceTree = "<group>"; };
 		1341789B3EC2BEA6B2AFE68A /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,6 +164,7 @@
 		868A0651C5BB96734A89AEC7 /* LogWaterControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogWaterControl.swift; sourceTree = "<group>"; };
 		8BEFDAC5A6F4CB2590481390 /* RippleIntentsCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleIntentsCore; path = Packages/RippleIntentsCore; sourceTree = SOURCE_ROOT; };
 		8E92F86B7E7651C36E3AD419 /* RippleTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleTVApp.swift; sourceTree = "<group>"; };
+		C7B96BBD652A44569A6A16F4 /* TVRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVRootView.swift; sourceTree = "<group>"; };
 		9CC59DEFB8F7C15FA205A831 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A0EF66DC927AE209E2DB0F57 /* RippleUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleUI; path = Packages/RippleUI; sourceTree = SOURCE_ROOT; };
 		B15E013624132A486B5F3A01 /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,8 +175,10 @@
 		E907C1BCBA3F001DE302C2D3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		EEA7A3493DB55596CDE1EE73 /* TodayWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayWidget.swift; sourceTree = "<group>"; };
 		F36F649D85E6A9A8C0C781EB /* RippleMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleMacApp.swift; sourceTree = "<group>"; };
+		A1DAF92E66C4424AA09599B4C /* MacRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacRootView.swift; sourceTree = "<group>"; };
 		F7E472D1CB3E7A0ABA1C82F3 /* RippleWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleWatchApp.swift; sourceTree = "<group>"; };
 		A7D1E4C93F5B6A82D0E7C114 /* WatchDemoDataGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDemoDataGateView.swift; sourceTree = "<group>"; };
+		588DBAE744FB47A2BCE17F7E /* WatchRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRootView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +316,7 @@
 			isa = PBXGroup;
 			children = (
 				0C04662CBFE6FFCC531AAC3C /* RippleVisionApp.swift */,
+				3B99925DA7244D7F8EE74C0D /* VisionRootView.swift */,
 			);
 			path = RipplevisionOS;
 			sourceTree = "<group>";
@@ -329,6 +340,7 @@
 				6A3B485130D021E62855CC95 /* RippleiOS.entitlements */,
 				06288C8BFF2C32E610C25CE7 /* RippleiOSApp.swift */,
 				143B5FEC77544C2E91359919088FAAD5 /* DemoDataGateView.swift */,
+				84360B5B45A2416B9F79345E /* RootView.swift */,
 			);
 			path = RippleiOS;
 			sourceTree = "<group>";
@@ -368,6 +380,7 @@
 			isa = PBXGroup;
 			children = (
 				8E92F86B7E7651C36E3AD419 /* RippleTVApp.swift */,
+				C7B96BBD652A44569A6A16F4 /* TVRootView.swift */,
 			);
 			path = RippletvOS;
 			sourceTree = "<group>";
@@ -378,6 +391,7 @@
 				4AE329549754C703C685E2DF /* Info.plist */,
 				F36F649D85E6A9A8C0C781EB /* RippleMacApp.swift */,
 				C465C143969D818A1D3894F3 /* RipplemacOS.entitlements */,
+				A1DAF92E66C4424AA09599B4C /* MacRootView.swift */,
 			);
 			path = RipplemacOS;
 			sourceTree = "<group>";
@@ -402,6 +416,7 @@
 				F7E472D1CB3E7A0ABA1C82F3 /* RippleWatchApp.swift */,
 				A7D1E4C93F5B6A82D0E7C114 /* WatchDemoDataGateView.swift */,
 				111F26BA25349552EBB0154C /* RipplewatchOS.entitlements */,
+				588DBAE744FB47A2BCE17F7E /* WatchRootView.swift */,
 			);
 			path = RipplewatchOS;
 			sourceTree = "<group>";
@@ -721,6 +736,7 @@
 			files = (
 				59CDA1DA745813379D15F3AF /* RippleiOSApp.swift in Sources */,
 				16174FF60B6B42AEA4BED9C35E437F5B /* DemoDataGateView.swift in Sources */,
+				A9795773F9C847A480749705 /* RootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -729,6 +745,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3728E10FBA8501A1870A364 /* RippleVisionApp.swift in Sources */,
+				44D63CBBAFC646518E5D9538 /* VisionRootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -748,6 +765,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1091706AACB98F90688D5A9A /* RippleMacApp.swift in Sources */,
+				B7B1C54D892D41468FE619FE /* MacRootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -757,6 +775,7 @@
 			files = (
 				DD608454BCDAF7500C4BF960 /* RippleWatchApp.swift in Sources */,
 				D9E4A1C7F2B84C55A6D10E3F /* WatchDemoDataGateView.swift in Sources */,
+				E76B187A33E64FE9876CD6EC /* WatchRootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -765,6 +784,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37E5253B4A7A05DB8DA7681E /* RippleTVApp.swift in Sources */,
+				19DF30CD01EE4711BA02D888 /* TVRootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

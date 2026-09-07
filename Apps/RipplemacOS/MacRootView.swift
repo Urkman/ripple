@@ -1,8 +1,8 @@
 import RippleDomain
+import RippleFeatures
 import RippleUI
 import SwiftUI
 
-#if os(macOS)
 public struct MacRootView: View {
     @Bindable var today: TodayViewModel
     @State private var history: HistoryViewModel
@@ -94,4 +94,3 @@ public struct MacMenuBarExtra: View {
         .task { await model.refresh() }
     }
 }
-#endif

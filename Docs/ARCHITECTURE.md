@@ -4,7 +4,7 @@ Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean 
 
 This document describes the repository's architecture and current implementation. Product behavior remains defined by the [PRD](../Ripple_Handoff/Ripple_PRD.md), [hero motion specification](../Ripple_Handoff/Ripple_Hero_Motion.md), and [History/Stats specification](../Ripple_Handoff/Ripple_History_Stats.md).
 
-**Document version:** 1.1.0
+**Document version:** 1.2.0
 
 **Last verified:** 2026-09-07
 
@@ -27,7 +27,7 @@ Ripple is organized around a small set of invariants:
 
 ## 2. System at a glance
 
-The repository is split into package layers. Apps and extensions are composition roots: they assemble dependencies and provide scenes, but do not own business logic.
+The repository is split into package layers. Apps and extensions are composition roots: they assemble dependencies, provide scenes, and own platform-specific root shells, but do not own business logic.
 
 ```text
  Apps + Extensions
@@ -56,9 +56,9 @@ The repository is split into package layers. Apps and extensions are composition
 | `RippleData` | `RippleDomain` | SwiftData models/store, CloudKit-compatible configuration, HealthKit projection, notifications, widget reloads |
 | `RippleIntentsCore` | `RippleDomain` | App Intents, entities, shortcuts, and system-entry adapters |
 | `RippleUI` | None; Core Motion on supported platforms | Design tokens, reusable controls, hero water geometry, motion, widgets, watch components |
-| `RippleFeatures` | `RippleDomain`, `RippleUI` | Screen views, platform-local navigation, and `@Observable` view models |
+| `RippleFeatures` | `RippleDomain`, `RippleUI` | Reusable screen views and `@Observable` view models; it does not contain executable platform root shells |
 
-The apps link the packages together. `RippleFeatures` intentionally does not depend on `RippleData`; the composition root injects the domain use cases into the feature layer.
+The apps link the packages together. `RippleFeatures` intentionally does not depend on `RippleData`; the app composition root injects the domain use cases into reusable feature screens and owns the platform-local root navigation shell.
 
 ## 3. Repository layout
 
@@ -256,7 +256,7 @@ Notifications are also adapters. `NotificationAuthorizer` translates system auth
 
 ## 9. Feature layer and MVVM
 
-`RippleFeatures` is a UI orchestration layer. Each view model is `@MainActor @Observable`, stores the injected use cases as an ignored observation dependency, and exposes plain state for views:
+`RippleFeatures` is a UI orchestration layer. Each view model is `@MainActor @Observable`, stores the injected use cases as an ignored observation dependency, and exposes plain state for views. Platform executable targets own their root shell files; those shells compose these reusable feature views and models without moving business rules into the app targets.
 
 - `TodayViewModel`: observes today's snapshot, logs app intakes, coalesces rapid additions for hero motion, and invokes undo.
 - `HistoryViewModel`: loads month summaries, computes calendar slots, prevents future-day selection, and drives day-detail navigation.
@@ -279,13 +279,13 @@ On iPhone and iPad, `RootView` provides four tabs:
 
 History and Stats are deliberately separate products. History is a month activity calendar with one ring per day and a day detail. Stats is a period summary with Swift Charts. iPad uses split layouts where appropriate instead of shrinking the iPhone hierarchy.
 
-Platform roots are local to each app:
+Platform roots are local to each app target. The root shell is not compiled as part of the multiplatform `RippleFeatures` target:
 
-- iOS: tab navigation and local navigation stacks/splits.
-- watchOS: horizontal Today, History, and Stats pages.
-- macOS: `NavigationSplitView` sidebar with keyboard commands.
-- tvOS: minimal Today surface and predefined logging actions.
-- visionOS: windowed navigation with ornaments and shared feature screens.
+- iOS (`Apps/RippleiOS/RootView.swift`): tab navigation and local navigation stacks/splits.
+- watchOS (`Apps/RipplewatchOS/WatchRootView.swift`): horizontal Today, History, and Stats pages.
+- macOS (`Apps/RipplemacOS/MacRootView.swift`): `NavigationSplitView` sidebar with keyboard commands and menu-bar composition.
+- tvOS (`Apps/RippletvOS/TVRootView.swift`): minimal Today surface and predefined logging actions.
+- visionOS (`Apps/RipplevisionOS/VisionRootView.swift`): windowed navigation with ornaments and shared feature screens.
 
 ## 10. UI system and motion
 
@@ -504,3 +504,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | --- | --- | --- | --- |
 | 1.0.0 | 2026-09-07 | Initial complete Swift/SwiftUI architecture document created from the repository specifications and implementation. | Establishes the iOS layering, persistence, use-case, platform, UI, motion, and testing baseline. |
 | 1.1.0 | 2026-09-07 | Added the paired-document maintenance contract, semantic document versioning, synchronized-document checklist, and immutable timeline. | Architecture changes now require an explicit documentation review and versioned audit entry. |
+| 1.2.0 | 2026-09-07 | Moved the iOS, watchOS, macOS, tvOS, and visionOS root SwiftUI shells into their executable app targets; `RippleFeatures` now contains reusable feature screens and view models only. | Platform-specific root APIs are compiled only by their owning Apple target. The Android companion contract is unaffected because this is an Apple repository-boundary refactor with no shared product or domain change. |

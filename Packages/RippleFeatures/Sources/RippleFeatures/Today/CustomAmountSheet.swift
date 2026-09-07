@@ -3,7 +3,7 @@ import RippleDomain
 import RippleUI
 import SwiftUI
 
-struct CustomAmountSheet: View {
+public struct CustomAmountSheet: View {
     private static let amountRange = 50...2000
 
     let model: TodayViewModel
@@ -16,7 +16,7 @@ struct CustomAmountSheet: View {
     @State private var amountText: String
     @State private var validationMessage: String?
 
-    init(
+    public init(
         model: TodayViewModel,
         initialAmountMl: Int,
         initialAmountText: String,
@@ -28,7 +28,7 @@ struct CustomAmountSheet: View {
         _amountText = State(initialValue: initialAmountText)
     }
 
-    var body: some View {
+    public var body: some View {
         NavigationStack {
             VStack(spacing: RippleSpace.xl) {
                 VStack(spacing: RippleSpace.sm) {

@@ -1,8 +1,8 @@
 import RippleDomain
+import RippleFeatures
 import RippleUI
 import SwiftUI
 
-#if os(watchOS)
 public struct WatchRootView: View {
     private enum Page: Int, Hashable {
         case today
@@ -52,4 +52,3 @@ public struct WatchRootView: View {
         await statsModel.refresh()
     }
 }
-#endif

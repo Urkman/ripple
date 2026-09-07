@@ -1,4 +1,5 @@
 import RippleDomain
+import RippleFeatures
 import RippleUI
 import SwiftUI
 
@@ -36,13 +37,7 @@ public struct RootView: View {
                         Task { await today.refresh() }
                     }
                 } else {
-                    #if os(iOS)
                     iOSTabs(isIPadLayout: iPadLayout)
-                    #else
-                    NavigationStack {
-                        TodayView(model: today)
-                    }
-                    #endif
                 }
             }
             .task(id: scenePhase) {
@@ -57,15 +52,10 @@ public struct RootView: View {
     }
 
     private func isIPadLayout(for size: CGSize) -> Bool {
-        #if os(iOS)
         // iPhone is portrait-only; the width threshold covers compact iPad windows.
         sizeClass == .regular || size.width >= RippleLayout.iPadLayoutMinimumWidth
-        #else
-        false
-        #endif
     }
 
-    #if os(iOS)
     private func iOSTabs(isIPadLayout: Bool) -> some View {
         TabView(selection: $selected) {
             Tab(L10n.text("Today"), systemImage: "drop.fill", value: .today) {
@@ -88,7 +78,6 @@ public struct RootView: View {
         }
         .tabBarMinimizeBehavior(.onScrollDown)
     }
-    #endif
 
     public func select(_ tab: AppSection) {
         selected = tab

@@ -1,8 +1,8 @@
 import RippleDomain
+import RippleFeatures
 import RippleUI
 import SwiftUI
 
-#if os(visionOS)
 public struct VisionRootView: View {
     @State private var model: TodayViewModel
     @State private var history: HistoryViewModel
@@ -317,4 +317,3 @@ private struct VisionConfirmationSection: View {
         .preferredColorScheme(.dark)
         .dynamicTypeSize(.accessibility3)
 }
-#endif

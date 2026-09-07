@@ -1,8 +1,8 @@
 import Foundation
 import RippleDomain
 
-enum L10n {
-    static func text(_ key: String.LocalizationValue) -> String {
+public enum L10n {
+    public static func text(_ key: String.LocalizationValue) -> String {
         String(localized: key, bundle: .module)
     }
 

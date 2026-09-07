@@ -1,8 +1,8 @@
 import RippleDomain
+import RippleFeatures
 import RippleUI
 import SwiftUI
 
-#if os(tvOS)
 public struct TVRootView: View {
     @State private var model: TodayViewModel
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -44,4 +44,3 @@ public struct TVRootView: View {
         .task { await model.refresh() }
     }
 }
-#endif
