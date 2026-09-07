@@ -62,6 +62,7 @@ public struct TodayView: View {
                 model.presentedSnapshot = snapshot
             }
         }
+        .rippleMotionScene(gravityTilt)
         .onAppear { syncGravityTilt() }
         .onDisappear { gravityTilt.stop() }
         .onChange(of: scenePhase) { _, _ in syncGravityTilt() }
@@ -161,6 +162,7 @@ public struct TodayView: View {
             reduceMotion: reduceMotion,
             expandsToFit: expandsToFit,
             tilt: reduceMotion ? 0 : gravityTilt.tilt,
+            slosh: reduceMotion ? 0 : gravityTilt.slosh,
             amountText: formatter.valueString(milliliters: snapshot.consumed.value, unit: snapshot.unit),
             unitText: snapshot.unit.symbol,
             percentText: formatter.percentString(snapshot.percent),

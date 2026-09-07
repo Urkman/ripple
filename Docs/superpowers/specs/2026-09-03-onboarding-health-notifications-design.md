@@ -2,16 +2,17 @@
 
 ## Status
 
-Approved in conversation on 2026-09-03. This design is the implementation
-boundary for the onboarding revision; it does not expand the product beyond
-the existing five-page onboarding, HealthKit Dietary Water projection, and
-optional workout goal boost.
+Approved in conversation on 2026-09-03 and revised on 2026-09-04. This design
+is the implementation boundary for the onboarding revision; it does not
+expand the product beyond the six-page onboarding, HealthKit Dietary Water
+projection, and optional workout goal boost.
 
 ## Goals
 
 - Make onboarding feel like Ripple: calm, tactile, glass-led, and legible in
   light mode, dark mode, Dynamic Type through XXXL, and Reduce Motion.
-- Ask for the minimum HealthKit access needed to personalize the daily goal.
+- Ask for the minimum combined HealthKit access needed to personalize the
+  daily goal and project logged water.
 - Use the latest available Apple Health body-mass sample as the onboarding
   weight when the user opts in.
 - Request notification permission at a clear, user-initiated point and never
@@ -22,27 +23,31 @@ optional workout goal boost.
 
 ## User flow
 
-The onboarding remains five pages:
+The onboarding has six pages:
 
 1. **Welcome** — Ripple’s glass-and-water metaphor and a concise explanation
    of logging from the app and system surfaces.
 2. **Units** — milliliters or fluid ounces, with the locale default selected.
-3. **Health and goal** — an explanation of using Apple Health weight, an
-   explicit `Use Apple Health weight` action, a manual weight fallback, and a
-   live calculated-goal preview. The Health read request is made only from the
-   explicit action. If no weight is returned, the UI says that no weight was
-   available and leaves the manual field usable; it does not claim that the
-   user denied read access.
-4. **Containers** — explains the seeded quick-add containers without adding
+3. **Apple Health** — explains that Ripple can read the latest body mass for
+   goal personalization and save logged water to Health. The single footer
+   `Continue` action makes one combined HealthKit authorization request for
+   both permissions. There is no in-page permission button or separate water-
+   write question. Dismissing the system sheet continues without HealthKit.
+4. **Goal setup** — provides the Health-derived weight when available, a
+   manual weight field, and a live calculated-goal preview. This is its own
+   page and can be revisited or skipped.
+5. **Containers** — explains the seeded quick-add containers without adding
    another permission prompt.
-5. **Reminders and Health write** — explains reminders, provides an explicit
-   `Allow reminders` action, and provides a separate optional action to allow
-   Ripple to write logged water to Dietary Water in Health.
+6. **Notifications** — explains reminders and shows the current status. The
+   single footer `Continue` action invokes notification authorization. There
+   is no in-page permission button; after the request, onboarding completes.
 
-Every page except Units remains skippable. Skipping the permission actions
-keeps the app fully usable. When onboarding finishes, reminders are enabled
-only when the user has authorized them; Health water writing remains off
-unless its explicit action succeeded.
+Welcome, Goal setup, and Containers may be skipped. Units, Apple Health, and
+Notifications do not show a Skip action. A permission page has only its one
+footer action, and dismissing a system sheet is the way to continue without
+that permission. When onboarding finishes, reminders are enabled only when
+the user has authorized them; Health water writing remains off unless the
+combined HealthKit request succeeded for that permission.
 
 ## Visual design
 
@@ -71,19 +76,21 @@ The existing `Profile.bodyMassKg` remains the local snapshot used by
 `CalculateGoal`; SwiftData remains the source of truth for Ripple’s settings.
 The new flow is:
 
-1. The Health page invokes a domain authorization use case.
-2. The RippleData HealthKit adapter requests read access for
-   `HKQuantityTypeIdentifier.bodyMass` only.
+1. The Apple Health page invokes one domain authorization use case.
+2. The RippleData HealthKit adapter makes one
+   `requestAuthorization(toShare:read:)` call with Dietary Water in `toShare`
+   and `HKQuantityTypeIdentifier.bodyMass` in `read`.
 3. After the request, the adapter queries the newest body-mass sample,
-   converts it to kilograms, and returns a positive finite value when one is
-   available.
-4. The onboarding model places that value in its weight field and profile
-   snapshot. The preview uses `CalculateGoal`; final persistence goes through
-   the existing `UpdateProfile` and `UpdateGoal` use cases.
+   converts it to kilograms, and reads the Dietary Water sharing status.
+4. The onboarding model places a valid weight in its weight field and profile
+   snapshot and stores the water-write result. The preview uses
+   `CalculateGoal`; final persistence goes through the existing
+   `UpdateProfile` and `UpdateGoal` use cases.
 
 Workout read access remains a separate opt-in in Settings. It is not silently
-added to the onboarding request. Dietary Water write remains a separate,
-explicit permission action.
+added to the onboarding request. Dietary Water write is requested as part of
+the combined Apple Health permission action and is not exposed as a separate
+onboarding question or button.
 
 Because HealthKit intentionally does not expose whether read access was
 denied, an empty query result is treated only as “no weight available.” The
@@ -92,11 +99,13 @@ permission; that API is for sharing/write authorization.
 
 ### Domain changes
 
-- Extend `HealthAuthorizing` with body-mass read authorization and latest body
-  mass access.
-- Add small domain authorization use cases for Health read, Health water
-  write, and notification authorization so onboarding coordinates system
-  access through `UseCases` rather than importing framework APIs.
+- Extend `HealthAuthorizing` with a combined onboarding authorization result,
+  alongside the existing body-mass and water-write operations used elsewhere.
+- Add `HealthOnboardingAccess` and `RequestHealthOnboardingAccess` so
+  onboarding coordinates the combined system access through `UseCases` rather
+  than importing framework APIs.
+- Keep the existing small domain authorization use cases for Health read,
+  Health water write, and notification authorization for non-onboarding flows.
 - Add `NotificationAuthorizationStatus` and `NotificationAuthorizing` with
   `notDetermined`, `denied`, `authorized`, `provisional`, and `ephemeral`
   states. The allowed states are exposed through a small `isAllowed` helper.
@@ -104,8 +113,9 @@ permission; that API is for sharing/write authorization.
 
 ### Data changes
 
-- `HealthKitClient` requests body-mass read access and queries the latest
-  `HKQuantitySample` using a descending end-date sort.
+- `HealthKitClient` makes the combined body-mass-read/Dietary-Water-write
+  request and queries the latest `HKQuantitySample` using a descending
+  end-date sort.
 - `HealthAuthorizer` maps the new port methods and retains existing water
   write/workout behavior.
 - Add `NotificationAuthorizer` backed by
@@ -119,12 +129,13 @@ permission; that API is for sharing/write authorization.
 ## Notification flow
 
 `RippleBootstrap` continues to register the notification category before the
-app presents onboarding. The onboarding explanation precedes the explicit
-button that calls the notification authorization use case. If the user
-denies access, the page shows that it can be changed in system Settings and
-does not retry the system prompt. If access is authorized or provisional,
-the onboarding saves an enabled reminder rule and calls the existing
-`RescheduleReminders` path after persistence.
+app presents onboarding. The Notifications page explains the setting and its
+single footer `Continue` action calls the notification authorization use case.
+There is no separate in-page button. If the user denies access, the page
+shows that it can be changed in system Settings and does not retry the system
+prompt. If access is authorized or provisional, the onboarding saves an
+enabled reminder rule and calls the existing `RescheduleReminders` path after
+persistence.
 
 `ReminderScheduler.reschedule` will remove pending requests, inspect current
 notification settings, and return without scheduling when notifications are
@@ -134,12 +145,13 @@ unexpected permission sheet.
 
 ## Failure handling
 
-- HealthKit unavailable, request failure, no body-mass sample, or a nonfinite
-  value leaves the app on the manual/default goal path.
+- HealthKit unavailable, combined request failure, no body-mass sample, or a
+  nonfinite value leaves the app on the manual/default goal path. The user can
+  dismiss the system sheet and continue.
 - A HealthKit read denial is not surfaced as a definitive denial because
   HealthKit does not disclose that state for reads.
-- Health water write failure leaves the Ripple log and onboarding completion
-  intact; only the local write-enabled state remains false.
+- Health water write denial/failure leaves the Ripple log and onboarding
+  completion intact; only the local write-enabled state remains false.
 - Notification denial leaves reminders disabled and does not block onboarding.
 - A failed settings save keeps the existing app behavior of best-effort
   completion, but the onboarding UI remains guarded by an `isFinishing` state
@@ -147,7 +159,8 @@ unexpected permission sheet.
 
 ## Verification
 
-- Add domain tests for authorization use cases using no-op/recording ports.
+- Add domain tests for authorization use cases using no-op/recording ports,
+  including the combined onboarding result.
 - Add onboarding view-model tests for manual fallback, Health weight goal
   preview, unavailable Health data, notification denial, and successful
   notification authorization.
@@ -164,8 +177,8 @@ unexpected permission sheet.
 
 - `Ripple_Handoff/Ripple_PRD.md`
 - `AGENTS.md` authorization use-case inventory
-- `Packages/RippleDomain` authorization ports, status entity, use cases, and
-  fakes/tests
+- `Packages/RippleDomain` authorization ports, status entities, use cases,
+  and fakes/tests
 - `Packages/RippleData` HealthKit and notification adapters, bootstrap, and
   tests
 - `Packages/RippleFeatures/Sources/RippleFeatures/Onboarding` and its string

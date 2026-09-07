@@ -10,6 +10,7 @@ public struct RippleHeroView: View {
     public var animatesPour: Bool
     public var showsPour: Bool
     public var expandsToFit: Bool
+    public var slosh: CGFloat
     public var tilt: CGFloat
     public var amountText: String
     public var unitText: String
@@ -30,7 +31,6 @@ public struct RippleHeroView: View {
     @State private var streamProgress: CGFloat = 0
     @State private var streamOpacity: Double = 0
     @State private var streamWidthScale: CGFloat = 1
-    @State private var streamContactY: CGFloat = RippleMotion.heroHeight
     @State private var streamVisible = false
     @State private var pourProgress: CGFloat = 0
     @State private var pourStartLevel: CGFloat = 0
@@ -55,6 +55,7 @@ public struct RippleHeroView: View {
         showsPour: Bool = true,
         expandsToFit: Bool = false,
         tilt: CGFloat = 0,
+        slosh: CGFloat = 0,
         amountText: String,
         unitText: String,
         percentText: String,
@@ -69,6 +70,7 @@ public struct RippleHeroView: View {
         self.showsPour = showsPour
         self.expandsToFit = expandsToFit
         self.tilt = tilt
+        self.slosh = slosh
         self.amountText = amountText
         self.unitText = unitText
         self.percentText = percentText
@@ -122,11 +124,12 @@ public struct RippleHeroView: View {
 
         return ZStack {
             if showsPour, !reduceMotion, let addedMl, streamVisible {
+                let height = streamHeight(in: metrics)
                 PourStreamView(addedMl: addedMl, progress: streamProgress)
-                    .frame(height: streamHeight(in: metrics))
+                    .frame(height: height)
                     .position(
                         x: metrics.centerX,
-                        y: streamTopY(in: metrics) + streamHeight(in: metrics) / 2
+                        y: streamTopY(in: metrics) + height / 2
                     )
                     .scaleEffect(x: renderedStreamWidthScale, y: 1, anchor: .center)
                     .opacity(renderedStreamOpacity)
@@ -135,6 +138,7 @@ public struct RippleHeroView: View {
             WaterFill(
                 level: renderedLevel,
                 tilt: reduceMotion ? 0 : tilt,
+                slosh: reduceMotion ? 0 : slosh,
                 pourDepth: reduceMotion || !animatesPour ? 0 : pourDepth,
                 ripplePosition: ripplePosition,
                 rippleAmplitude: reduceMotion || !animatesPour ? 0 : rippleAmplitude
@@ -167,9 +171,12 @@ public struct RippleHeroView: View {
             in: metrics.rect,
             inset: GlassMetrics.strokeWidth
         )
-        let contactY = pourClockActive
-            ? surfaceMetrics.y(forLevel: renderedLevel)
-            : streamContactY
+        let contactY = WaterSurfaceGeometry(
+            metrics: surfaceMetrics, level: renderedLevel,
+            tilt: reduceMotion ? 0 : tilt, slosh: reduceMotion ? 0 : slosh,
+            pourDepth: pourDepth, ripplePosition: ripplePosition,
+            rippleAmplitude: rippleAmplitude
+        ).contactY(atX: surfaceMetrics.centerX, fallback: surfaceMetrics.bottomY)
         return max(contactY - streamTopY(in: metrics), 1)
     }
 
@@ -253,14 +260,9 @@ public struct RippleHeroView: View {
         isAddPlaying = true
         hasContact = false
 
-        let metrics = GlassMetrics(
-            in: CGRect(origin: .zero, size: glassSize),
-            inset: GlassMetrics.strokeWidth
-        )
         var placement = Transaction()
         placement.disablesAnimations = true
         withTransaction(placement) {
-            streamContactY = metrics.y(forLevel: visualLevel)
             streamProgress = 0
             streamOpacity = 0
             streamWidthScale = 0.82
@@ -299,15 +301,10 @@ public struct RippleHeroView: View {
     private func restartPourAfterRipple(deltaMl: Int) {
         rippleTask?.cancel()
         rippleTask = nil
-        let metrics = GlassMetrics(
-            in: CGRect(origin: .zero, size: glassSize),
-            inset: GlassMetrics.strokeWidth
-        )
 
         var placement = Transaction()
         placement.disablesAnimations = true
         withTransaction(placement) {
-            streamContactY = metrics.y(forLevel: visualLevel)
             streamProgress = 1
             streamOpacity = 0
             streamWidthScale = RippleMotion.pourExitScale

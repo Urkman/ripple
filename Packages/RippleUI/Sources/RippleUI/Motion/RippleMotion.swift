@@ -38,9 +38,19 @@ public enum RippleMotion {
     static let rippleReflectionPosition: CGFloat = 0.24
     static let rippleSettlePosition: CGFloat = 0.12
 
-    public static let maxTiltDegrees: CGFloat = 16
-    public static let tiltGravityCap: CGFloat = 0.55
-    public static let tiltLowPass: CGFloat = 0.18
+    static let motionUpdateInterval: TimeInterval = 1.0 / 60.0
+    static let motionIntegrationStep: TimeInterval = 1.0 / 120.0
+    static let motionMaxElapsed: TimeInterval = 0.1
+    static let motionDeadband: CGFloat = 0.002
+    static let tiltFrequency: CGFloat = 12
+    static let tiltDamping: CGFloat = 0.48
+    static let sloshFrequency: CGFloat = 10
+    static let sloshDamping: CGFloat = 0.18
+    static let sloshImpulse: CGFloat = 3
+    static let sloshLimit: CGFloat = 0.06
+    static let sloshRestThreshold: CGFloat = 0.0001
+    static let surfaceSegments = 96
+    static let surfaceAreaIterations = 18
     public static let faceUpGravityZ: Double = 0.92
     public static let shallowLevel: CGFloat = 0.15
     public static let shallowAmplitudeCap: CGFloat = 4
@@ -199,19 +209,12 @@ public enum RippleMotion {
         return requested
     }
 
-    public static var maxTiltRadians: CGFloat {
-        maxTiltDegrees * .pi / 180
+    public static func tiltTarget(gravityX: Double, gravityY: Double = -1, gravityZ: Double) -> CGFloat {
+        guard gravityX.isFinite, gravityY.isFinite, gravityZ.isFinite,
+              abs(gravityZ) <= faceUpGravityZ else { return 0 }
+        return CGFloat(atan2(-gravityX, -gravityY))
     }
 
-    public static func tiltTarget(gravityX: Double, gravityZ: Double) -> CGFloat {
-        if abs(gravityZ) > faceUpGravityZ { return 0 }
-        let raw = min(max(CGFloat(gravityX), -tiltGravityCap), tiltGravityCap)
-        return (raw / tiltGravityCap) * maxTiltRadians
-    }
-
-    public static func lowPass(current: CGFloat, target: CGFloat) -> CGFloat {
-        current + (target - current) * tiltLowPass
-    }
 }
 
 public enum RippleMotionPhase: Equatable, Sendable {

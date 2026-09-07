@@ -35,6 +35,12 @@ public struct NoOpHealthAuthorizing: HealthAuthorizing {
     }
 
     public func status() async -> HealthAuthorizationStatus { current }
+    public func requestOnboardingAccess() async -> HealthOnboardingAccess {
+        HealthOnboardingAccess(
+            bodyMassKg: bodyMassKg,
+            waterWriteAuthorized: current.waterWrite
+        )
+    }
     public func requestBodyMassRead() async -> Bool { true }
     public func latestBodyMassKg() async -> Double? { bodyMassKg }
     public func requestWaterWrite() async -> Bool { current.waterWrite }

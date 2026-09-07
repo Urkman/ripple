@@ -35,6 +35,30 @@ actor HealthKitClient {
         )
     }
 
+    func requestOnboardingAccess() async -> HealthOnboardingAccess {
+        guard HKHealthStore.isHealthDataAvailable(),
+              let waterType,
+              let bodyMassType else {
+            return HealthOnboardingAccess()
+        }
+
+        do {
+            try await store.requestAuthorization(
+                toShare: [waterType],
+                read: [bodyMassType]
+            )
+        } catch {
+            return HealthOnboardingAccess(
+                waterWriteAuthorized: store.authorizationStatus(for: waterType) == .sharingAuthorized
+            )
+        }
+
+        return HealthOnboardingAccess(
+            bodyMassKg: await latestBodyMassKg(),
+            waterWriteAuthorized: store.authorizationStatus(for: waterType) == .sharingAuthorized
+        )
+    }
+
     func requestWaterWrite() async -> Bool {
         guard HKHealthStore.isHealthDataAvailable(), let waterType else { return false }
         do {

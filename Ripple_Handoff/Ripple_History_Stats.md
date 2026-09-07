@@ -2,7 +2,11 @@
 
 **Dokumenttyp:** Screen-Spec  
 **Empfänger:** Grok Build  
-**Version:** 1.6 — 1. September 2026
+**Version:** 2.0 — 2. September 2026
+**2.0:** Ergänzt für VisionOS eine resizable Mindestfenstergröße von 720 × 440 pt über die Content-Minimum-Resizability des Fensters.
+**1.9:** Passt die VisionOS-Fensterfläche an: Today verwendet die systemseitige adaptive Glass-Fläche ohne zusätzliches schwarzes Innenpanel. Das untere Log-Ornament misst sich an der verfügbaren Fensterbreite und scrollt bei kleinen Größen innerhalb seiner Begrenzung.
+**1.8:** Vereinheitlicht die VisionOS-Log-Aktionen im unteren Ornament: gespeicherte Behälter plus `Custom amount`; kein zusätzlicher Inline-Log-Button und keine separate Default-Mengen-Aktion, die einen Behälter dupliziert. Die führende Navigation zeigt nur Symbole, bleibt aber vollständig beschriftet.
+**1.7:** Ergänzt die VisionOS-Navigation als führendes Ornament mit Today, History, Stats und Settings. History und Stats verwenden dort dieselben Feature-Screens und Datenverträge; die Log-Aktionen bleiben im unteren Ornament.
 **1.6:** Ergänzt im Tagesdetail eine lokalisierte Überschrift `Entries` über den Intake-Zeilen; die iPad-„+“-Aktion sitzt rechts in derselben Überschriftszeile.
 **1.5:** Trennt die History-Komposition explizit nach Plattform: iPhone verwendet einen normalen `NavigationStack`; iPad verwendet zwei direkt nebeneinander angeordnete Paneele in einem plain `HStack`, ohne `NavigationStack` oder `NavigationSplitView` in den Paneelen.
 **1.4:** Korrigiert die Position der History-Primäraktion: im offenen iPad-Split am Detail, im kompakten Stack am Kalender-Root; der Sidebar-Toggle wird aus der Masterspalte entfernt.
@@ -38,6 +42,8 @@ iPad: eigener Zwei-Pane-Screen mit plain `HStack`; die beiden Paneele werden nic
 - Die Kalender-Masterspalte bleibt auf iPad immer sichtbar; ein systemseitiger Schließen-/Sidebar-Toggle wird nicht angeboten.
 - Die primäre „+“-Aktion liegt im oberen Bereich neben der Tabbar. Im iPad-Detailpaneel wird sie direkt vom plain-HStack-Screen gerendert; im kompakten Stack gehört sie zum Kalender-Root. Sie ist nur für den heutigen ausgewählten Tag sichtbar und öffnet die Custom-Amount-Sheet.
 - Die obere Tabbar trägt den Screen-Kontext. Auf iPad werden keine zusätzlichen Root-Navigationstitel für Verlauf/History oder Statistik/Stats angezeigt; ein Tagesdatum im Detail bleibt sichtbar.
+
+VisionOS: Das Fenster verwendet die systemseitige adaptive Glass-Fläche ohne zusätzliches schwarzes Innenpanel. Ein führendes, vertikales System-Glass-Ornament dient als lokale Navigation mit Today, History, Stats und Settings. Es zeigt ausschließlich die SF-Symbol-Icons; VoiceOver erhält weiterhin den lokalisierten Screen-Namen. History öffnet den bestehenden Monatsraster-Screen, Stats den bestehenden Perioden-/Chart-Screen; beide bleiben eigenständige Screens und teilen keine Insights-Ansicht. Alle Log-Aktionen liegen im unteren Ornament: gespeicherte Behälter und `Custom amount`. Eine separate Default-Mengen-Aktion wird nicht angeboten, wenn sie einen gespeicherten Behälter dupliziert; der Inline-Log-Button im Fenster entfällt. Das Ornament passt sich an die verfügbare Fensterbreite an und scrollt bei kleinen Größen innerhalb dieser Breite. Die Ornament-Ziele sind für Blicksteuerung und Pinch mindestens 60 pt groß; es gibt keinen Immersive Space und keinen app-weiten Router.
 
 Watch-App: kein Monatskalender und kein Perioden-Picker. Sie zeigt auf einer eigenen History-Seite sieben lokale Kalendertage (heute und die sechs vorherigen), neu nach alt, mit leer bleibenden Tagen. Ein Tap öffnet ein Tagesdetail mit Summe, Zielquote und Einträgen; einzelne Einträge können dort per Wischaktion gelöscht und über eine kurz sichtbare Undo-Aktion wiederhergestellt werden, Edit/Add bleiben auf iPhone/iPad. Die eigene Stats-Seite zeigt ausschließlich die aktuelle ISO-Woche mit Durchschnitt pro vergangenem Tag, Zieltreffern, Gesamtmenge und einem kompakten Swift-Charts-Diagramm. Empty Stats zeigt nur den lokalisierten Zero-State, niemals künstliche Balken. History und Stats verwenden jeweils einen lokalen `NavigationStack`, damit der große Titel beim Scrollen in die kompakte Titelzeile unter der Uhrzeit kollabiert; Today bleibt als vollflächige Wasser-Seite ohne Navigationsstapel. Die Watch-App verwendet standardmäßig eine dunkle OLED-Oberfläche.
 

@@ -54,10 +54,12 @@ public struct OnboardingArtwork: View {
         case 0:
             0.16
         case 1:
-            0.34
+            0.30
         case 2:
-            0.56
+            0.44
         case 3:
+            0.58
+        case 4:
             0.72
         default:
             0.84
@@ -90,7 +92,7 @@ public struct OnboardingArtwork: View {
 }
 
 #Preview("Onboarding artwork · final · Reduce Motion") {
-    OnboardingArtwork(stage: 4, reduceMotionOverride: true)
+    OnboardingArtwork(stage: 5, reduceMotionOverride: true)
         .padding()
         .background(RippleColor.waterFoam)
 }

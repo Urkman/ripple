@@ -19,7 +19,7 @@ enum L10n {
     }
 
     static func onboardingProgress(page: Int) -> String {
-        String(localized: "\(page) of 5", bundle: .module)
+        String(localized: "\(page) of 6", bundle: .module)
     }
 
     static func confirmation(amount: String) -> String {

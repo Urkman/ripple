@@ -234,32 +234,12 @@ struct HeroMotionTests {
         #expect(metrics.width(atY: metrics.rimBottomY) > metrics.width(atY: metrics.bottomY))
     }
 
-    @Test("tilt target clamps to 16 degrees and zeros when face-up")
-    func tiltFromGravity() {
-        #expect(RippleMotion.tiltTarget(gravityX: 0, gravityZ: 0) == 0)
-        #expect(RippleMotion.tiltTarget(gravityX: 1, gravityZ: 0.95) == 0)
-        let full = RippleMotion.tiltTarget(gravityX: 1, gravityZ: 0.1)
-        #expect(abs(full - RippleMotion.maxTiltRadians) < 0.0001)
-        let left = RippleMotion.tiltTarget(gravityX: -1, gravityZ: 0.1)
-        #expect(abs(left + RippleMotion.maxTiltRadians) < 0.0001)
-        #expect(abs(RippleMotion.lowPass(current: 0, target: 1) - 0.18) < 0.0001)
-    }
-
-    @Test("tilted surface keeps mid level and stays inside the glass")
-    func tiltedSurfaceClamp() {
-        let metrics = GlassMetrics(in: CGRect(x: 0, y: 0, width: 200, height: 280), inset: 3)
-        let levelY = metrics.y(forLevel: 0.45)
-        let flat = metrics.clampedSurface(levelY: levelY, tilt: 0)
-        #expect(abs(flat.left.y - levelY) < 0.02)
-        #expect(abs(flat.right.y - levelY) < 0.02)
-
-        let tilted = metrics.clampedSurface(levelY: metrics.y(forLevel: 0.12), tilt: RippleMotion.maxTiltRadians)
-        #expect(tilted.left.y <= metrics.bottomY + 0.01)
-        #expect(tilted.right.y <= metrics.bottomY + 0.01)
-        #expect(tilted.left.y >= metrics.rimBottomY - 0.01)
-        #expect(tilted.right.y >= metrics.rimBottomY - 0.01)
-        let mid = (tilted.left.y + tilted.right.y) / 2
-        #expect(abs(mid - metrics.y(forLevel: 0.12)) < 1.5)
+    @Test("gravity follows the full angle without a 16 degree cap", arguments: [-170.0, -90, -45, 0, 45, 90, 170])
+    func gravityAngle(degrees: Double) {
+        let angle = degrees * .pi / 180
+        let target = RippleMotion.tiltTarget(gravityX: -sin(angle), gravityY: -cos(angle), gravityZ: 0)
+        #expect(abs(target - angle) < 0.0001)
+        #expect(RippleMotion.tiltTarget(gravityX: 1, gravityY: 0, gravityZ: 0.95) == 0)
     }
 
     @Test("level zero produces no water path")

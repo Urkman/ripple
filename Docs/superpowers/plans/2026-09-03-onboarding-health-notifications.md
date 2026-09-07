@@ -10,6 +10,17 @@
 
 **Spec:** `Docs/superpowers/specs/2026-09-03-onboarding-health-notifications-design.md`
 
+## Revision — 2026-09-04
+
+The approved flow is six pages, not five: Welcome, Units, Apple Health,
+Goal setup, Containers, and Notifications. Apple Health and Notifications are
+their own permission pages. Each has one footer `Continue` action that invokes
+the system request; neither page has an in-page permission button or a Skip
+action. HealthKit uses one combined request for body-mass read and Dietary
+Water write. Goal setup is a separate page containing the manual weight field
+and calculated goal preview. The task details below are historical planning
+notes; this revision is the implementation boundary.
+
 ## Global Constraints
 
 - Minimum OS is iOS/watchOS/macOS/tvOS/visionOS 26.0; do not add an older deployment fallback.
@@ -19,7 +30,8 @@
 - RippleFeatures may not import HealthKit or UserNotifications and must not contain `#if os()` business rules.
 - All user-facing copy must be localized in the existing DE/EN string catalog; no English hardcodes in the DE locale.
 - Use existing RippleUI colors, typography, spacing, radii, and motion tokens; no magic colors, custom fonts, heavy shadows, or extra accents.
-- Onboarding remains five pages and every page except Units is skippable.
+- Onboarding has six pages. Welcome, Goal setup, and Containers are skippable;
+  Units, Apple Health, and Notifications are not.
 - HealthKit read denial and an empty read result must not be conflated; the app must never infer read authorization from `authorizationStatus(for:)`.
 - Notification authorization is requested only after explanatory UI and an explicit user action; scheduling must never request permission.
 - Every new domain behavior gets a Swift Testing test, and all four package test suites plus the iOS build must pass before handoff.
@@ -32,7 +44,9 @@
 
 - Create `Packages/RippleDomain/Sources/RippleDomain/Entities/NotificationAuthorizationStatus.swift` for the Sendable system-status value and its `isAllowed` projection.
 - Create `Packages/RippleDomain/Sources/RippleDomain/Ports/NotificationAuthorizing.swift` for notification permission/status access.
-- Modify `Packages/RippleDomain/Sources/RippleDomain/Ports/HealthAuthorizing.swift` to expose body-mass read authorization and latest body mass.
+- Modify `Packages/RippleDomain/Sources/RippleDomain/Ports/HealthAuthorizing.swift` to expose combined onboarding authorization, body-mass read authorization, and latest body mass.
+- Create `Packages/RippleDomain/Sources/RippleDomain/Entities/HealthOnboardingAccess.swift` for the combined authorization result.
+- Create `Packages/RippleDomain/Sources/RippleDomain/UseCases/RequestHealthOnboardingAccess.swift` for the onboarding permission operation.
 - Create `Packages/RippleDomain/Sources/RippleDomain/UseCases/RequestHealthReadAccess.swift`, `RequestHealthWaterWrite.swift`, and `RequestNotificationAuthorization.swift` for feature-facing authorization operations.
 - Modify `Packages/RippleDomain/Sources/RippleDomain/UseCases/UseCases.swift` to expose the three authorization use cases while preserving default construction for existing tests.
 - Modify `Packages/RippleDomain/Sources/RippleDomain/Fakes/NoOpAdapters.swift` and create `Packages/RippleDomain/Tests/RippleDomainTests/AuthorizationUseCaseTests.swift` for deterministic tests.
@@ -51,7 +65,7 @@
 
 - Create `Packages/RippleFeatures/Sources/RippleFeatures/Onboarding/OnboardingViewModel.swift` by moving the model out of the current view file and adding Health/notification state.
 - Replace `Packages/RippleFeatures/Sources/RippleFeatures/Onboarding/OnboardingView.swift` with a thin composition view containing the footer/progress layout.
-- Create `Packages/RippleFeatures/Sources/RippleFeatures/Onboarding/OnboardingPages.swift` for the five page-specific view types.
+- Create `Packages/RippleFeatures/Sources/RippleFeatures/Onboarding/OnboardingPages.swift` for the six-page-specific view types.
 - Modify `Packages/RippleFeatures/Sources/RippleFeatures/Shared/L10n.swift` and `Packages/RippleFeatures/Sources/RippleFeatures/Resources/Localizable.xcstrings` for all new DE/EN copy.
 - Create `Packages/RippleUI/Sources/RippleUI/Components/OnboardingArtwork.swift` and add named onboarding artwork dimensions to `Packages/RippleUI/Sources/RippleUI/Tokens/RippleLayout.swift`.
 - Create `Packages/RippleFeatures/Tests/RippleFeaturesTests/OnboardingViewModelTests.swift` for Health, fallback, and notification state behavior.
@@ -72,7 +86,8 @@
 - Test: `Packages/RippleDomain/Tests/RippleDomainTests/AuthorizationUseCaseTests.swift`
 
 **Interfaces:**
-- `HealthAuthorizing` produces `requestBodyMassRead() async -> Bool`, `latestBodyMassKg() async -> Double?`, `requestWaterWrite() async -> Bool`, and the existing workout/status methods.
+- `HealthAuthorizing` produces `requestOnboardingAccess() async -> HealthOnboardingAccess`, alongside `requestBodyMassRead() async -> Bool`, `latestBodyMassKg() async -> Double?`, `requestWaterWrite() async -> Bool`, and the existing workout/status methods.
+- `RequestHealthOnboardingAccess.run() async -> HealthOnboardingAccess` delegates the single combined onboarding request and validates any returned body mass.
 - `NotificationAuthorizationStatus` has cases `.notDetermined`, `.denied`, `.authorized`, `.provisional`, and `.ephemeral`; only the last three have `isAllowed == true`.
 - `NotificationAuthorizing` produces `status() async -> NotificationAuthorizationStatus` and `requestAuthorization() async -> NotificationAuthorizationStatus`.
 - `RequestHealthReadAccess.run() async -> Double?` validates that the adapter result is finite and greater than zero.
@@ -333,9 +348,8 @@ git commit -m "feat: make notification authorization explicit"
 
 **Interfaces:**
 - `HealthWeightState` is `Sendable, Equatable` with `.idle`, `.loading`, `.found`, and `.unavailable`.
-- `OnboardingViewModel` exposes `page`, `pageCount` (5), `profile`, `weightText`, `healthWeightKg`, `healthWeightState`, `healthWrite`, `notificationStatus`, `isRequestingHealthWeight`, `isRequestingWaterWrite`, `isRequestingNotifications`, `isFinishing`, and `calculatedGoalMl`.
-- `requestHealthWeight() async` calls `useCases.requestHealthReadAccess.run()`, stores a valid result in `profile.bodyMassKg`, formats it into the editable weight field, and otherwise sets `.unavailable` without asserting denial.
-- `requestWaterWrite() async` calls `useCases.requestHealthWaterWrite.run()` and sets `healthWrite` to the returned value.
+- `OnboardingViewModel` exposes `page`, `pageCount` (6), `profile`, `weightText`, `healthWeightKg`, `healthWeightState`, `healthWrite`, `notificationStatus`, `isRequestingHealthAccess`, `isRequestingNotifications`, `isFinishing`, and `calculatedGoalMl`.
+- `requestHealthAccess() async` calls `useCases.requestHealthOnboardingAccess.run()`, stores a valid result in `profile.bodyMassKg`, formats it into the editable weight field, stores the water-write result, and otherwise sets `.unavailable` without asserting denial.
 - `refreshNotificationStatus() async` calls `useCases.requestNotificationAuthorization.status()` without prompting.
 - `requestNotifications() async` calls `.run()` and stores the returned status.
 - `finish() async` is idempotent while `isFinishing` is true, saves profile/goal/reminder state through existing use cases/repositories, and never requests HealthKit or notification permission implicitly.
@@ -350,7 +364,7 @@ struct OnboardingViewModelTests {
     func healthWeightCalculatesGoal() async {
         let model = OnboardingViewModel(useCases: makeUseCases(bodyMassKg: 70))
 
-        await model.requestHealthWeight()
+        await model.requestHealthAccess()
 
         #expect(model.healthWeightState == .found)
         #expect(model.profile.bodyMassKg == 70)
@@ -361,7 +375,7 @@ struct OnboardingViewModelTests {
     func missingHealthWeightUsesFallback() async {
         let model = OnboardingViewModel(useCases: makeUseCases(bodyMassKg: nil))
 
-        await model.requestHealthWeight()
+        await model.requestHealthAccess()
 
         #expect(model.healthWeightState == .unavailable)
         #expect(model.profile.bodyMassKg == nil)
@@ -496,7 +510,7 @@ public struct OnboardingArtwork: View {
 
 - [ ] **Step 2: Add light/dark, XXXL, and Reduce Motion previews.**
 
-Create previews for the first, Health/goal, and final stages with both color
+Create previews for the first, Apple Health, Goal setup, and final stages with both color
 schemes and `.dynamicTypeSize(.xxxLarge)`. The preview must show the vessel
 without an extra accent color or heavy shadow.
 
@@ -525,9 +539,9 @@ git commit -m "feat: add onboarding glass artwork"
 
 **Interfaces:**
 - `OnboardingView` remains the public entry point and accepts `OnboardingViewModel` plus `onDone`.
-- `OnboardingPages.swift` contains separate view types for Welcome, Units, Health/goal, Containers, and Reminders/Health write; each receives only the model values/bindings it reads.
-- Permission buttons call `requestHealthWeight`, `requestWaterWrite`, and `requestNotifications` through `Task` and expose disabled/progress/completed states.
-- The footer owns Skip/Continue/Done; Continue advances pages and Done awaits `finish()` before `onDone()`.
+- `OnboardingPages.swift` contains separate view types for Welcome, Units, Apple Health, Goal setup, Containers, and Notifications; each receives only the model values/bindings it reads.
+- The Apple Health and Notifications footer actions call `requestHealthAccess` and `requestNotifications` through `Task`; they expose disabled/progress states while the system request is active. There are no separate in-page permission buttons.
+- The footer owns Skip/Continue; permission pages omit Skip, and their sole Continue action awaits the system request before advancing or finishing.
 
 - [ ] **Step 1: Add the new DE/EN catalog entries.**
 
@@ -537,26 +551,28 @@ existing `nice Ripple`/goal copy:
 | English source key | German localization |
 |---|---|
 | Make Ripple yours. | Mach Ripple zu deinem. |
-| Use Apple Health weight | Gewicht aus Apple Health verwenden |
-| Ripple can use your latest Health weight to suggest a personal daily goal. | Ripple kann dein aktuelles Health-Gewicht für ein persönliches Tagesziel verwenden. |
-| No weight found in Health. You can enter it below instead. | Kein Gewicht in Health gefunden. Du kannst es stattdessen unten eingeben. |
+| Connect Apple Health | Apple Health verbinden |
+| Read weight | Gewicht lesen |
+| Suggest a personal daily goal | Persönliches Tagesziel vorschlagen |
+| Save logged water | Protokolliertes Wasser speichern |
+| Keep your Ripple entries in Health | Deine Ripple-Einträge in Health behalten |
+| Set your daily goal | Tagesziel festlegen |
+| Use your Health weight or enter it manually. You can change this later. | Verwende dein Health-Gewicht oder gib es manuell ein. Du kannst das später ändern. |
+| Health weight is ready. | Health-Gewicht ist bereit. |
+| No weight was available from Health. Enter it below or keep the default. | In Health war kein Gewicht verfügbar. Gib es unten ein oder behalte das Standardziel. |
 | Weight in kg | Gewicht in kg |
 | Calculated daily goal | Berechnetes Tagesziel |
 | Based on your weight | Basierend auf deinem Gewicht |
-| Your goal, your way | Dein Ziel, dein Weg |
+| Default goal | Standardziel |
 | Allow reminders | Erinnerungen erlauben |
 | Reminders stay quiet outside your day. | Außerhalb deines Tages bleiben Erinnerungen ruhig. |
 | You can change this later in Settings. | Du kannst das später in den Einstellungen ändern. |
 | Reminders enabled | Erinnerungen aktiviert |
 | Notifications are off. You can change this in Settings. | Benachrichtigungen sind aus. Du kannst das in den Einstellungen ändern. |
-| Allow Ripple to write water to Health | Ripple erlauben, Wasser an Health zu schreiben |
-| Water logging in Health is optional. | Wasser in Health zu protokollieren ist optional. |
-| Water write enabled | Wasser-Schreiben aktiviert |
-| Use Health weight | Health-Gewicht verwenden |
-| Not now | Nicht jetzt |
+| Apple Health access is optional. Dismiss the system sheet to continue without it. | Der Zugriff auf Apple Health ist optional. Schließe den Systemdialog, um ohne ihn fortzufahren. |
 
 Add an L10n helper for the
-progress label using the existing `%lld of 5` catalog key rather than
+progress label using the existing `%lld of 6` catalog key rather than
 hardcoding English in the view.
 
 - [ ] **Step 2: Replace the single-file page builders with focused View types.**
@@ -567,13 +583,12 @@ existing RippleUI tokens for all spacing and typography. Keep the progress
 indicator accessible as one element, and use a bottom action area that
 respects the safe area.
 
-The Health page must show the calculated goal from `model.calculatedGoalMl`
-and a manual editable fallback. The Health button’s result copy must say
-“no weight found” when there is no sample; it must not say “Health denied.”
-The reminders page must explain the value before its explicit permission
-button. When `notificationStatus == .denied`, show the Settings guidance and
-do not start another request. The optional Health write button is separate
-from the notification button.
+The Apple Health page is informational and contains no permission button. The
+Goal setup page shows the calculated goal from `model.calculatedGoalMl` and a
+manual editable fallback. The Notifications page explains the value and
+shows current status without a permission button. When
+`notificationStatus == .denied`, show the Settings guidance and do not start
+another request from the page; the footer remains the sole request trigger.
 
 Use an explicit transition on the page content:
 

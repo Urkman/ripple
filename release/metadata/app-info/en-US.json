@@ -1,0 +1,5 @@
+{
+  "name": "Ripple – Water Tracker",
+  "subtitle": "Hydration that follows you.",
+  "privacyPolicyText": "Ripple does not require an account and does not use advertising or analytics. Your water entries are stored in the app's SwiftData store and can sync through your private iCloud account when available. HealthKit is optional and is used only to project your logged water entries. You can export or delete your data from Settings."
+}

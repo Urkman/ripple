@@ -41,6 +41,7 @@ public final class SettingsViewModel {
     public func saveProfile() async {
         try? await useCases.updateProfile.run(profile)
         try? await useCases.settingsRepository.saveReminderRule(reminder)
+        try? await useCases.rescheduleReminders.run()
         await refresh()
     }
 
@@ -51,6 +52,16 @@ public final class SettingsViewModel {
 
     public func saveContainer(_ container: Container) async {
         try? await useCases.upsertContainer.run(container)
+        await refresh()
+    }
+
+    public func saveReminder(_ updatedReminder: ReminderRule) async {
+        reminder = updatedReminder
+        reminder.updatedAt = Date()
+        profile.remindersEnabled = reminder.enabled
+        try? await useCases.settingsRepository.saveReminderRule(reminder)
+        try? await useCases.updateProfile.run(profile)
+        try? await useCases.rescheduleReminders.run()
         await refresh()
     }
 

@@ -18,6 +18,7 @@ public struct UseCases: Sendable {
     public var exportData: ExportData
     public var rescheduleReminders: RescheduleReminders
     public var healthAuthorizing: any HealthAuthorizing
+    public var requestHealthOnboardingAccess: RequestHealthOnboardingAccess
     public var requestHealthReadAccess: RequestHealthReadAccess
     public var requestHealthWaterWrite: RequestHealthWaterWrite
     public var requestNotificationAuthorization: RequestNotificationAuthorization
@@ -41,6 +42,7 @@ public struct UseCases: Sendable {
         exportData: ExportData,
         rescheduleReminders: RescheduleReminders,
         healthAuthorizing: any HealthAuthorizing,
+        requestHealthOnboardingAccess: RequestHealthOnboardingAccess,
         requestHealthReadAccess: RequestHealthReadAccess,
         requestHealthWaterWrite: RequestHealthWaterWrite,
         requestNotificationAuthorization: RequestNotificationAuthorization,
@@ -63,6 +65,7 @@ public struct UseCases: Sendable {
         self.exportData = exportData
         self.rescheduleReminders = rescheduleReminders
         self.healthAuthorizing = healthAuthorizing
+        self.requestHealthOnboardingAccess = requestHealthOnboardingAccess
         self.requestHealthReadAccess = requestHealthReadAccess
         self.requestHealthWaterWrite = requestHealthWaterWrite
         self.requestNotificationAuthorization = requestNotificationAuthorization
@@ -161,6 +164,9 @@ public struct UseCases: Sendable {
                 reminders: reminders
             ),
             healthAuthorizing: healthAuthorizing,
+            requestHealthOnboardingAccess: RequestHealthOnboardingAccess(
+                healthAuthorizing: healthAuthorizing
+            ),
             requestHealthReadAccess: RequestHealthReadAccess(
                 healthAuthorizing: healthAuthorizing
             ),

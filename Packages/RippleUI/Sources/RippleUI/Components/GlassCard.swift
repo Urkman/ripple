@@ -26,7 +26,7 @@ public struct GlassCard<Content: View>: View {
 
 public extension View {
     func rippleGlass(cornerRadius: CGFloat) -> some View {
-        #if os(iOS) || os(macOS) || os(visionOS)
+        #if os(iOS) || os(macOS)
         self.glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
         #else
         self.background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))

@@ -1,0 +1,7 @@
+{
+  "description": "Ripple ist ein ruhiger, quelloffener Wassertracker für deine Apple-Geräte.\n\nLogge Wasser in der App, über ein Widget, mit Siri, auf der Apple Watch, im Kontrollzentrum oder aus einer Erinnerung. Jeder Eintrag fließt in eine gemeinsame Historie.\n\nSieh den Pegel für heute auf einen Blick, setze dein persönliches Ziel und prüfe deinen Fortschritt für Woche, Monat oder Jahr. Gespeicherte Behälter machen häufige Mengen schnell. Eigene Mengen sowie ml oder fl oz halten Ripple flexibel.\n\nDeine Daten bleiben deine Daten. Ripple nutzt SwiftData mit CloudKit-Sync. HealthKit ist optional und dient nur als Projektion deiner geloggten Wassermengen. Es gibt keine Konten, Werbung, Abos oder Analytics.\n\nFür einen ruhigen Tagesrhythmus:\n• Schnell loggen über die Oberflächen, die du ohnehin nutzt\n• Ruhige, gut lesbare Heute-Ansicht mit Glasoptik\n• Verlauf mit Bearbeiten, Löschen und Rückgängig\n• Statistik für Mengen, erreichte Ziele, Tageszeiten und Behälter\n• iPhone, iPad, Mac, Apple Watch, Widgets, Siri und Kontrollzentrum\n• Bedienungshilfen, Dunkelmodus, dynamische Schrift und Bewegung reduzieren\n\nRipple ist keine medizinische Beratung. Trink so, wie es für dich passt.",
+  "keywords": "wasser,hydrierung,trinken,tracker,ziel,erinnerung,widget,Siri,Apple Watch,HealthKit,tagesziel",
+  "promotionalText": "Logge Wasser, wo du bist — Ripple hält deinen Tag im Fluss.",
+  "supportUrl": "https://github.com/Urkman/ripple",
+  "marketingUrl": "https://github.com/Urkman/ripple"
+}

@@ -6,7 +6,8 @@
     "deep": "#0B3D4A",
     "lagoon": "#1A7A8C",
     "aqua": "#4FB3C6",
-    "foam": "#E8F4F6"
+    "foam": "#E8F4F6",
+    "foamMist": "#DDEFF2"
   },
   "locales": [
     "en-US",
@@ -22,6 +23,11 @@
       "width": 2064,
       "height": 2752,
       "outputDirectory": "ipad-129"
+    },
+    "watch-46": {
+      "width": 416,
+      "height": 496,
+      "outputDirectory": "watch-46"
     }
   },
   "layoutValues": {
@@ -30,9 +36,9 @@
     "headlineSize": 0.078,
     "subheadSize": 0.03,
     "copyGap": 0.018,
-    "deviceScale": 0.57,
-    "tabletDeviceScale": 0.62,
-    "mosaicDeviceScale": 0.275
+    "deviceScale": 0.65,
+    "tabletDeviceScale": 0.71,
+    "mosaicDeviceScale": 0.36
   },
   "slides": [
     {
@@ -42,6 +48,9 @@
         "iphone-69"
       ],
       "source": "raw/{locale}/iphone-69/01-today.png",
+      "layoutValues": {
+        "deviceScale": 0.65
+      },
       "headline": {
         "en-US": "Make water\nvisible.",
         "de-DE": "Wasser\nsichtbar machen."
@@ -50,7 +59,10 @@
         "en-US": "Your daily goal at a glance.",
         "de-DE": "Dein Tagesziel auf einen Blick."
       },
-      "background": "foam",
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
       "accent": {
         "kind": "circles",
         "color": "aqua",
@@ -65,6 +77,9 @@
         "iphone-69"
       ],
       "source": "raw/{locale}/iphone-69/01-today.png",
+      "layoutValues": {
+        "deviceScale": 0.65
+      },
       "headline": {
         "en-US": "Log in one\ntap.",
         "de-DE": "Mit einem\nTipp loggen."
@@ -73,7 +88,10 @@
         "en-US": "Quick adds keep your day moving.",
         "de-DE": "Schnelle Mengen halten deinen Tag im Fluss."
       },
-      "background": "foam",
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
       "accent": {
         "kind": "arc",
         "color": "lagoon",
@@ -88,6 +106,9 @@
         "iphone-69"
       ],
       "source": "raw/{locale}/iphone-69/02-history.png",
+      "layoutValues": {
+        "deviceScale": 0.65
+      },
       "headline": {
         "en-US": "See every\nday.",
         "de-DE": "Jeden Tag\nsehen."
@@ -96,7 +117,10 @@
         "en-US": "One ring for the full month.",
         "de-DE": "Ein Ring für den ganzen Monat."
       },
-      "background": "foam",
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
       "accent": {
         "kind": "dots",
         "color": "aqua",
@@ -111,6 +135,9 @@
         "iphone-69"
       ],
       "source": "raw/{locale}/iphone-69/03-stats.png",
+      "layoutValues": {
+        "deviceScale": 0.64
+      },
       "headline": {
         "en-US": "Find your\nrhythm.",
         "de-DE": "Deinen Rhythmus\nsehen."
@@ -119,7 +146,10 @@
         "en-US": "Clear trends from real intake.",
         "de-DE": "Klare Trends aus echten Einträgen."
       },
-      "background": "foam",
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
       "accent": {
         "kind": "circles",
         "color": "lagoon",
@@ -146,7 +176,10 @@
         "en-US": "Goals, reminders, and units in one place.",
         "de-DE": "Ziele, Erinnerungen und Einheiten an einem Ort."
       },
-      "background": "foam",
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
       "accent": {
         "kind": "arc",
         "color": "aqua",
@@ -161,6 +194,9 @@
         "ipad-129"
       ],
       "source": "raw/{locale}/ipad-129/01-today.png",
+      "layoutValues": {
+        "tabletDeviceScale": 0.71
+      },
       "headline": {
         "en-US": "A clearer\nday.",
         "de-DE": "Ein klarer\nTag."
@@ -169,7 +205,10 @@
         "en-US": "See your progress in one calm view.",
         "de-DE": "Deinen Fortschritt auf einen Blick."
       },
-      "background": "foam",
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
       "accent": {
         "kind": "circles",
         "color": "aqua",
@@ -184,6 +223,9 @@
         "ipad-129"
       ],
       "source": "raw/{locale}/ipad-129/02-history.png",
+      "layoutValues": {
+        "tabletDeviceScale": 0.71
+      },
       "headline": {
         "en-US": "Keep the\nflow.",
         "de-DE": "Im Fluss\nbleiben."
@@ -192,7 +234,10 @@
         "en-US": "A full month, one glance.",
         "de-DE": "Ein ganzer Monat auf einen Blick."
       },
-      "background": "foam",
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
       "accent": {
         "kind": "arc",
         "color": "lagoon",
@@ -207,6 +252,9 @@
         "ipad-129"
       ],
       "source": "raw/{locale}/ipad-129/03-stats.png",
+      "layoutValues": {
+        "tabletDeviceScale": 0.71
+      },
       "headline": {
         "en-US": "Spot your\nrhythm.",
         "de-DE": "Deinen Rhythmus\nsehen."
@@ -215,7 +263,10 @@
         "en-US": "Simple trends from every entry.",
         "de-DE": "Einfache Trends aus jedem Eintrag."
       },
-      "background": "foam",
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
       "accent": {
         "kind": "dots",
         "color": "aqua",
@@ -230,6 +281,9 @@
         "ipad-129"
       ],
       "source": "raw/{locale}/ipad-129/04-settings.png",
+      "layoutValues": {
+        "tabletDeviceScale": 0.71
+      },
       "headline": {
         "en-US": "Make it\nyours.",
         "de-DE": "Mach es zu\ndeinem."
@@ -238,12 +292,117 @@
         "en-US": "Goals, reminders, and units in one place.",
         "de-DE": "Ziele, Erinnerungen und Einheiten an einem Ort."
       },
-      "background": "foam",
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
       "accent": {
         "kind": "circles",
         "color": "lagoon",
         "anchor": "top-right",
         "opacity": 105
+      }
+    },
+    {
+      "id": "watch-today",
+      "layout": "hero",
+      "devices": [
+        "watch-46"
+      ],
+      "source": "raw/{locale}/watch-46/01-today.png",
+      "headline": {
+        "en-US": "Your day,\nat a glance.",
+        "de-DE": "Dein Tag,\nauf einen Blick."
+      },
+      "subhead": {
+        "en-US": "Log water right from your wrist.",
+        "de-DE": "Wasser direkt am Handgelenk loggen."
+      },
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
+      "layoutValues": {
+        "safeTop": 0.06,
+        "sideMargin": 0.075,
+        "headlineSize": 0.062,
+        "subheadSize": 0.026,
+        "copyGap": 0.012,
+        "deviceScale": 0.66
+      },
+      "accent": {
+        "kind": "circles",
+        "color": "aqua",
+        "anchor": "top-right",
+        "opacity": 70
+      }
+    },
+    {
+      "id": "watch-history",
+      "layout": "hero",
+      "devices": [
+        "watch-46"
+      ],
+      "source": "raw/{locale}/watch-46/02-history.png",
+      "headline": {
+        "en-US": "Keep the\nflow.",
+        "de-DE": "Im Fluss\nbleiben."
+      },
+      "subhead": {
+        "en-US": "Seven days, always close.",
+        "de-DE": "Sieben Tage immer griffbereit."
+      },
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
+      "layoutValues": {
+        "safeTop": 0.06,
+        "sideMargin": 0.075,
+        "headlineSize": 0.062,
+        "subheadSize": 0.026,
+        "copyGap": 0.012,
+        "deviceScale": 0.66
+      },
+      "accent": {
+        "kind": "arc",
+        "color": "lagoon",
+        "anchor": "middle-left",
+        "opacity": 70
+      }
+    },
+    {
+      "id": "watch-stats",
+      "layout": "hero",
+      "devices": [
+        "watch-46"
+      ],
+      "source": "raw/{locale}/watch-46/03-stats.png",
+      "headline": {
+        "en-US": "See your\nrhythm.",
+        "de-DE": "Deinen Rhythmus\nsehen."
+      },
+      "subhead": {
+        "en-US": "A compact weekly view.",
+        "de-DE": "Deine kompakte Wochenansicht."
+      },
+      "background": {
+        "from": "foam",
+        "to": "foamMist"
+      },
+      "layoutValues": {
+        "safeTop": 0.06,
+        "sideMargin": 0.075,
+        "headlineSize": 0.062,
+        "subheadSize": 0.026,
+        "copyGap": 0.012,
+        "deviceScale": 0.66
+      },
+      "accent": {
+        "kind": "dots",
+        "color": "aqua",
+        "anchor": "top-right",
+        "opacity": 65
       }
     }
   ]

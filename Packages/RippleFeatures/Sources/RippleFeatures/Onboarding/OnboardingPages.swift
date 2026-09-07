@@ -23,37 +23,19 @@ struct OnboardingPageContent: View {
         case 1:
             OnboardingUnitsPage(unit: $model.profile.preferredUnit)
         case 2:
-            OnboardingHealthGoalPage(
+            OnboardingHealthPermissionPage()
+        case 3:
+            OnboardingGoalPage(
                 weightText: $model.weightText,
                 healthWeightState: model.healthWeightState,
                 calculatedGoalMl: model.calculatedGoalMl,
                 unit: model.profile.preferredUnit,
-                isRequestingHealthWeight: model.isRequestingHealthWeight,
-                requestHealthWeight: {
-                    Task { @MainActor in
-                        await model.requestHealthWeight()
-                    }
-                }
+                usesWeight: model.goalUsesWeight
             )
-        case 3:
+        case 4:
             OnboardingContainersPage(unit: model.profile.preferredUnit)
         default:
-            OnboardingRemindersPage(
-                notificationStatus: model.notificationStatus,
-                healthWrite: model.healthWrite,
-                isRequestingNotifications: model.isRequestingNotifications,
-                isRequestingWaterWrite: model.isRequestingWaterWrite,
-                requestNotifications: {
-                    Task { @MainActor in
-                        await model.requestNotifications()
-                    }
-                },
-                requestWaterWrite: {
-                    Task { @MainActor in
-                        await model.requestWaterWrite()
-                    }
-                }
-            )
+            OnboardingRemindersPage(notificationStatus: model.notificationStatus)
         }
     }
 }
@@ -110,60 +92,63 @@ private struct OnboardingUnitsPage: View {
     }
 }
 
-private struct OnboardingHealthGoalPage: View {
+private struct OnboardingHealthPermissionPage: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: RippleSpace.lg) {
+            OnboardingPageHeader(
+                title: L10n.text("Connect Apple Health"),
+                message: L10n.text(
+                    "Ripple can use your latest Health weight for your goal and save the water you log to Health. Both permissions are requested together."
+                )
+            )
+
+            GlassCard(title: L10n.text("Health")) {
+                VStack(alignment: .leading, spacing: RippleSpace.md) {
+                    OnboardingPermissionRow(
+                        title: L10n.text("Read weight"),
+                        message: L10n.text("Suggest a personal daily goal"),
+                        systemImage: "scalemass"
+                    )
+
+                    Divider()
+
+                    OnboardingPermissionRow(
+                        title: L10n.text("Save logged water"),
+                        message: L10n.text("Keep your Ripple entries in Health"),
+                        systemImage: "arrow.up.heart"
+                    )
+                }
+            }
+
+            Text(
+                L10n.text(
+                    "Apple Health access is optional. Dismiss the system sheet to continue without it."
+                )
+            )
+            .font(RippleFont.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private struct OnboardingGoalPage: View {
     @Binding var weightText: String
     let healthWeightState: HealthWeightState
     let calculatedGoalMl: Int
     let unit: VolumeUnit
-    let isRequestingHealthWeight: Bool
-    let requestHealthWeight: () -> Void
+    let usesWeight: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: RippleSpace.lg) {
             OnboardingPageHeader(
-                title: L10n.text("Use Apple Health weight"),
+                title: L10n.text("Set your daily goal"),
                 message: L10n.text(
-                    "Ripple can use your latest Health weight to suggest a personal daily goal."
+                    "Use your Health weight or enter it manually. You can change this later."
                 )
             )
 
-            GlassCard {
-                VStack(alignment: .leading, spacing: RippleSpace.md) {
-                    Label(
-                        L10n.text("Use Apple Health weight"),
-                        systemImage: "heart.text.square"
-                    )
-                    .font(RippleFont.callout.weight(.semibold))
-                    .foregroundStyle(RippleColor.waterDeep)
-
-                    Button(action: requestHealthWeight) {
-                        if isRequestingHealthWeight {
-                            ProgressView()
-                                .accessibilityLabel(L10n.text("Use Apple Health weight"))
-                        } else if healthWeightState == .found {
-                            Label(L10n.text("Use Health weight"), systemImage: "checkmark")
-                        } else {
-                            Label(
-                                L10n.text("Use Apple Health weight"),
-                                systemImage: "arrow.down"
-                            )
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(isRequestingHealthWeight)
-
-                    if healthWeightState == .unavailable {
-                        Text(
-                            L10n.text(
-                                "No weight found in Health. You can enter it below instead."
-                            )
-                        )
-                        .font(RippleFont.caption)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-            }
+            healthWeightMessage
 
             GlassCard(title: L10n.text("Weight in kg")) {
                 TextField(L10n.text("Weight in kg"), text: $weightText)
@@ -186,12 +171,62 @@ private struct OnboardingHealthGoalPage: View {
                     .monospacedDigit()
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
-                    Text(L10n.text("Based on your weight"))
+                    Text(
+                        L10n.text(usesWeight ? "Based on your weight" : "Default goal")
+                    )
                         .font(RippleFont.caption)
                         .foregroundStyle(.secondary)
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private var healthWeightMessage: some View {
+        switch healthWeightState {
+        case .found:
+            Text(L10n.text("Health weight is ready."))
+                .font(RippleFont.caption)
+                .foregroundStyle(RippleColor.waterLagoon)
+        case .unavailable:
+            Text(
+                L10n.text(
+                    "No weight was available from Health. Enter it below or keep the default."
+                )
+            )
+            .font(RippleFont.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        case .idle, .loading:
+            EmptyView()
+        }
+    }
+}
+
+private struct OnboardingPermissionRow: View {
+    let title: String
+    let message: String
+    let systemImage: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: RippleSpace.md) {
+            Image(systemName: systemImage)
+                .font(RippleFont.callout)
+                .foregroundStyle(RippleColor.waterLagoon)
+                .frame(width: RippleSpace.xl, height: RippleSpace.xl)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: RippleSpace.xs) {
+                Text(title)
+                    .font(RippleFont.callout.weight(.semibold))
+                    .foregroundStyle(RippleColor.waterDeep)
+                Text(message)
+                    .font(RippleFont.body)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -244,16 +279,11 @@ private struct OnboardingContainersPage: View {
 
 private struct OnboardingRemindersPage: View {
     let notificationStatus: NotificationAuthorizationStatus
-    let healthWrite: Bool
-    let isRequestingNotifications: Bool
-    let isRequestingWaterWrite: Bool
-    let requestNotifications: () -> Void
-    let requestWaterWrite: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: RippleSpace.lg) {
             OnboardingPageHeader(
-                title: L10n.text("Your goal, your way"),
+                title: L10n.text("Reminders"),
                 message: L10n.text("Reminders stay quiet outside your day.")
             )
 
@@ -262,63 +292,21 @@ private struct OnboardingRemindersPage: View {
                     Label(L10n.text("Allow reminders"), systemImage: "bell.badge")
                         .font(RippleFont.callout.weight(.semibold))
                         .foregroundStyle(RippleColor.waterDeep)
-                    Text(L10n.text("You can change this later in Settings."))
-                        .font(RippleFont.body)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
 
-                    if notificationStatus == .denied {
+                    if notificationStatus.isAllowed {
+                        Text(L10n.text("Reminders enabled"))
+                            .font(RippleFont.caption)
+                            .foregroundStyle(RippleColor.waterLagoon)
+                    } else if notificationStatus == .denied {
                         Text(L10n.text("Notifications are off. You can change this in Settings."))
                             .font(RippleFont.caption)
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     } else {
-                        Button(action: requestNotifications) {
-                            if isRequestingNotifications {
-                                ProgressView()
-                                    .accessibilityLabel(L10n.text("Allow reminders"))
-                            } else if notificationStatus.isAllowed {
-                                Label(L10n.text("Reminders enabled"), systemImage: "checkmark")
-                            } else {
-                                Label(L10n.text("Allow reminders"), systemImage: "bell.badge")
-                            }
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .disabled(isRequestingNotifications || notificationStatus.isAllowed)
+                        Text(L10n.text("You can change this later in Settings."))
+                            .font(RippleFont.caption)
+                            .foregroundStyle(.secondary)
                     }
-                }
-            }
-
-            GlassCard {
-                VStack(alignment: .leading, spacing: RippleSpace.md) {
-                    Label(
-                        L10n.text("Allow Ripple to write water to Health"),
-                        systemImage: "heart"
-                    )
-                    .font(RippleFont.callout.weight(.semibold))
-                    .foregroundStyle(RippleColor.waterDeep)
-                    Text(L10n.text("Water logging in Health is optional."))
-                        .font(RippleFont.body)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    Button(action: requestWaterWrite) {
-                        if isRequestingWaterWrite {
-                            ProgressView()
-                                .accessibilityLabel(
-                                    L10n.text("Allow Ripple to write water to Health")
-                                )
-                        } else if healthWrite {
-                            Label(L10n.text("Water write enabled"), systemImage: "checkmark")
-                        } else {
-                            Label(
-                                L10n.text("Allow Ripple to write water to Health"),
-                                systemImage: "arrow.up"
-                            )
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(isRequestingWaterWrite || healthWrite)
                 }
             }
         }

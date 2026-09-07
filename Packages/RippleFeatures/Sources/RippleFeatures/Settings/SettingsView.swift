@@ -6,6 +6,8 @@ public struct SettingsView: View {
     @Bindable var model: SettingsViewModel
     @Environment(\.locale) private var locale
     @Environment(\.rippleIPadLayout) private var usesIPadLayout
+    @State private var containerEditor: Container?
+    @State private var isReminderEditorPresented = false
 
     public init(model: SettingsViewModel) {
         self.model = model
@@ -33,6 +35,26 @@ public struct SettingsView: View {
         .rippleNavigationBarVisibility(hidden: usesIPadLayout)
         .rippleNavigationBarBackground(RippleColor.waterFoam)
         .task { await model.refresh() }
+        .sheet(item: $containerEditor) { container in
+            ContainerEditorSheet(
+                container: container,
+                title: model.containers.contains(where: { $0.id == container.id })
+                    ? L10n.text("Edit")
+                    : L10n.text("Add container"),
+                preferredUnit: model.profile.preferredUnit,
+                onSave: { updatedContainer in
+                    Task { await model.saveContainer(updatedContainer) }
+                }
+            )
+        }
+        .sheet(isPresented: $isReminderEditorPresented) {
+            ReminderEditorSheet(
+                reminder: model.reminder,
+                onSave: { updatedReminder in
+                    Task { await model.saveReminder(updatedReminder) }
+                }
+            )
+        }
     }
 
     private var profileCard: some View {
@@ -134,29 +156,31 @@ public struct SettingsView: View {
 
     private var remindersCard: some View {
         GlassCard(title: L10n.text("Reminders")) {
-            VStack(spacing: 0) {
-                GlassCardRow(L10n.text("Reminders")) {
-                    Toggle(L10n.text("Reminders"), isOn: $model.reminder.enabled)
-                        .labelsHidden()
-                        .onChange(of: model.reminder.enabled) { _, _ in
-                            Task { await model.saveProfile() }
-                        }
-                }
-
-                GlassCardRow(L10n.text("After last sip"), showsDivider: false) {
-                    Stepper(
-                        L10n.minutes(model.reminder.afterLastSipMinutes),
-                        value: $model.reminder.afterLastSipMinutes,
-                        in: 30...240,
-                        step: 15
-                    )
-                    .labelsHidden()
-                    .accessibilityLabel(L10n.text("After last sip"))
-                    .onChange(of: model.reminder.afterLastSipMinutes) { _, _ in
-                        Task { await model.saveProfile() }
+            Button {
+                isReminderEditorPresented = true
+            } label: {
+                HStack(spacing: RippleSpace.md) {
+                    VStack(alignment: .leading, spacing: RippleSpace.xs) {
+                        Text(model.reminder.enabled ? L10n.text("On") : L10n.text("Off"))
+                            .font(RippleFont.body)
+                            .foregroundStyle(RippleColor.waterDeep)
+                        Text(
+                            "\(L10n.text("After last sip")): \(L10n.minutes(model.reminder.afterLastSipMinutes))"
+                        )
+                        .font(RippleFont.caption)
+                        .foregroundStyle(.secondary)
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Image(systemName: "pencil")
+                        .foregroundStyle(.tertiary)
+                        .accessibilityHidden(true)
                 }
             }
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .padding(.vertical, RippleSpace.md)
         }
     }
 
@@ -269,23 +293,31 @@ public struct SettingsView: View {
     }
 
     private func containerRow(_ container: Container, showsDivider: Bool) -> some View {
-        HStack(spacing: RippleSpace.md) {
-            Image(systemName: container.symbolName)
-                .foregroundStyle(RippleColor.waterDeep)
-                .frame(width: RippleSpace.xl)
-            Text(container.name)
-                .font(RippleFont.body)
-                .foregroundStyle(RippleColor.waterDeep)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(volumeFormatter.string(milliliters: container.amountMl, unit: model.profile.preferredUnit))
-                .font(RippleFont.body.monospacedDigit())
-                .foregroundStyle(.secondary)
-            if container.isDefault {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(RippleColor.waterLagoon)
+        Button {
+            containerEditor = container
+        } label: {
+            HStack(spacing: RippleSpace.md) {
+                Image(systemName: container.symbolName)
+                    .foregroundStyle(RippleColor.waterDeep)
+                    .frame(width: RippleSpace.xl)
+                Text(container.name)
+                    .font(RippleFont.body)
+                    .foregroundStyle(RippleColor.waterDeep)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(volumeFormatter.string(milliliters: container.amountMl, unit: model.profile.preferredUnit))
+                    .font(RippleFont.body.monospacedDigit())
+                    .foregroundStyle(.secondary)
+                if container.isDefault {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(RippleColor.waterLagoon)
+                        .accessibilityHidden(true)
+                }
+                Image(systemName: "pencil")
+                    .foregroundStyle(.tertiary)
                     .accessibilityHidden(true)
             }
         }
+        .buttonStyle(.plain)
         .padding(.vertical, RippleSpace.md)
         .overlay(alignment: .bottom) {
             if showsDivider {
@@ -304,16 +336,13 @@ public struct SettingsView: View {
     }
 
     private func addContainer() {
-        Task {
-            let next = Container(
-                name: L10n.text("Glass"),
-                amountMl: 250,
-                isDefault: model.containers.isEmpty,
-                sort: (model.containers.map(\.sort).max() ?? -1) + 1,
-                symbolName: "drop.fill"
-            )
-            await model.saveContainer(next)
-        }
+        containerEditor = Container(
+            name: L10n.text("Glass"),
+            amountMl: 250,
+            isDefault: model.containers.isEmpty,
+            sort: (model.containers.map(\.sort).max() ?? -1) + 1,
+            symbolName: "cup.and.saucer.fill"
+        )
     }
 
     private func requestHealthWrite() {
@@ -348,4 +377,158 @@ private struct CSVFile: Transferable {
     static var transferRepresentation: some TransferRepresentation {
         DataRepresentation(exportedContentType: .commaSeparatedText) { $0.data }
     }
+}
+
+private struct ContainerEditorSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.locale) private var locale
+    @State private var draft: Container
+
+    private let title: String
+    private let preferredUnit: VolumeUnit
+    private let onSave: (Container) -> Void
+
+    init(
+        container: Container,
+        title: String,
+        preferredUnit: VolumeUnit,
+        onSave: @escaping (Container) -> Void
+    ) {
+        _draft = State(initialValue: container)
+        self.title = title
+        self.preferredUnit = preferredUnit
+        self.onSave = onSave
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                TextField(L10n.text("Container"), text: $draft.name)
+
+                Stepper(
+                    volumeFormatter.string(
+                        milliliters: draft.amountMl,
+                        unit: preferredUnit
+                    ),
+                    value: $draft.amountMl,
+                    in: 50...2_000,
+                    step: 10
+                )
+                .accessibilityLabel(L10n.text("Amount"))
+            }
+            .navigationTitle(title)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L10n.text("Cancel")) {
+                        dismiss()
+                    }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L10n.text("Save")) {
+                        var updatedContainer = draft
+                        updatedContainer.name = updatedContainer.name.trimmingCharacters(
+                            in: .whitespacesAndNewlines
+                        )
+                        onSave(updatedContainer)
+                        dismiss()
+                    }
+                    .disabled(draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+        }
+    }
+
+    private var volumeFormatter: VolumeFormatter {
+        VolumeFormatter(locale: locale)
+    }
+}
+
+private struct ReminderEditorSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var draft: ReminderRule
+
+    private let onSave: (ReminderRule) -> Void
+
+    init(reminder: ReminderRule, onSave: @escaping (ReminderRule) -> Void) {
+        _draft = State(initialValue: reminder)
+        self.onSave = onSave
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Toggle(L10n.text("Reminders"), isOn: $draft.enabled)
+
+                HStack {
+                    Text(L10n.text("After last sip"))
+                    Spacer(minLength: RippleSpace.sm)
+                    Stepper(
+                        L10n.minutes(draft.afterLastSipMinutes),
+                        value: $draft.afterLastSipMinutes,
+                        in: 30...240,
+                        step: 15
+                    )
+                    .labelsHidden()
+                    .accessibilityLabel(L10n.text("After last sip"))
+                }
+            }
+            .navigationTitle(L10n.text("Reminders"))
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(L10n.text("Cancel")) {
+                        dismiss()
+                    }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(L10n.text("Save")) {
+                        onSave(draft)
+                        dismiss()
+                    }
+                }
+            }
+        }
+        .presentationDetents([.medium])
+    }
+}
+
+#Preview("Container editor · Light") {
+    ContainerEditorSheet(
+        container: Container(
+            name: "Glass",
+            amountMl: 250,
+            isDefault: true,
+            symbolName: "cup.and.saucer.fill"
+        ),
+        title: L10n.text("Edit"),
+        preferredUnit: .milliliters,
+        onSave: { _ in }
+    )
+}
+
+#Preview("Container editor · Dark · XXXL") {
+    ContainerEditorSheet(
+        container: Container(
+            name: "Glass",
+            amountMl: 250,
+            isDefault: true,
+            symbolName: "cup.and.saucer.fill"
+        ),
+        title: L10n.text("Edit"),
+        preferredUnit: .milliliters,
+        onSave: { _ in }
+    )
+    .environment(\.colorScheme, .dark)
+    .environment(\.dynamicTypeSize, .xxxLarge)
+}
+
+#Preview("Reminder editor · Light") {
+    ReminderEditorSheet(reminder: .default) { _ in }
+}
+
+#Preview("Reminder editor · Dark · XXXL") {
+    ReminderEditorSheet(reminder: .default) { _ in }
+        .environment(\.colorScheme, .dark)
+        .environment(\.dynamicTypeSize, .xxxLarge)
 }

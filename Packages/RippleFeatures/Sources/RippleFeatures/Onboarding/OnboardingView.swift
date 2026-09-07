@@ -7,6 +7,7 @@ public struct OnboardingView: View {
     private let onDone: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isCompleting = false
+    @State private var isPerformingAction = false
 
     public init(model: OnboardingViewModel, onDone: @escaping () -> Void) {
         self.model = model
@@ -59,21 +60,17 @@ public struct OnboardingView: View {
                 Spacer(minLength: 0)
 
                 Button(action: advance) {
-                    if isCompleting {
+                    if isBusy {
                         ProgressView()
-                            .accessibilityLabel(L10n.text("Done"))
+                            .accessibilityLabel(L10n.text("Continue"))
                     } else {
-                        Text(
-                            model.page == model.pageCount - 1
-                                ? L10n.text("Done")
-                                : L10n.text("Continue")
-                        )
+                        Text(buttonTitle)
                     }
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(RippleColor.waterLagoon)
                 .controlSize(.large)
-                .disabled(isCompleting)
+                .disabled(isBusy)
             }
         }
         .padding(.horizontal, RippleSpace.xl)
@@ -82,20 +79,50 @@ public struct OnboardingView: View {
         .background(.ultraThinMaterial)
     }
 
-    private func advance() {
-        guard !isCompleting else { return }
+    private var isBusy: Bool {
+        isCompleting
+            || isPerformingAction
+            || model.isRequestingHealthAccess
+            || model.isRequestingNotifications
+            || model.isFinishing
+    }
 
-        if model.page < model.pageCount - 1 {
-            withAnimation(reduceMotion ? nil : RippleMotion.springSnappy) {
-                model.page += 1
+    private var buttonTitle: String {
+        L10n.text("Continue")
+    }
+
+    private func advance() {
+        guard !isBusy else { return }
+
+        if model.page == 2 {
+            isPerformingAction = true
+            Task { @MainActor in
+                defer { isPerformingAction = false }
+                await model.requestHealthAccess()
+                advancePage()
             }
             return
         }
 
-        isCompleting = true
-        Task { @MainActor in
-            await model.finish()
-            onDone()
+        if model.page == model.pageCount - 1 {
+            isCompleting = true
+            isPerformingAction = true
+            Task { @MainActor in
+                defer { isPerformingAction = false }
+                await model.requestNotifications()
+                await model.finish()
+                onDone()
+            }
+            return
+        }
+
+        advancePage()
+    }
+
+    private func advancePage() {
+        guard model.page < model.pageCount - 1 else { return }
+        withAnimation(reduceMotion ? nil : RippleMotion.springSnappy) {
+            model.page += 1
         }
     }
 }
@@ -154,16 +181,20 @@ private struct OnboardingPreview: View {
     OnboardingPreview(page: 0)
 }
 
-#Preview("Onboarding · Health · 70 kg · Dark XXXL") {
-    OnboardingPreview(page: 2, weightKg: 70)
+#Preview("Onboarding · Apple Health") {
+    OnboardingPreview(page: 2)
+}
+
+#Preview("Onboarding · Goal · 70 kg · Dark XXXL") {
+    OnboardingPreview(page: 3, weightKg: 70)
         .preferredColorScheme(.dark)
         .dynamicTypeSize(.xxxLarge)
 }
 
-#Preview("Onboarding · Health · No result") {
-    OnboardingPreview(page: 2)
+#Preview("Onboarding · Goal · No Health weight") {
+    OnboardingPreview(page: 3)
 }
 
 #Preview("Onboarding · Reminders denied") {
-    OnboardingPreview(page: 4, notificationStatus: .denied)
+    OnboardingPreview(page: 5, notificationStatus: .denied)
 }

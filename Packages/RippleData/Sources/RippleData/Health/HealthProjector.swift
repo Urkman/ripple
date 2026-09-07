@@ -32,6 +32,14 @@ public struct HealthAuthorizer: HealthAuthorizing {
         #endif
     }
 
+    public func requestOnboardingAccess() async -> HealthOnboardingAccess {
+        #if canImport(HealthKit) && (os(iOS) || os(watchOS))
+        await HealthKitClient.shared.requestOnboardingAccess()
+        #else
+        HealthOnboardingAccess()
+        #endif
+    }
+
     public func requestBodyMassRead() async -> Bool {
         #if canImport(HealthKit) && (os(iOS) || os(watchOS))
         await HealthKitClient.shared.requestBodyMassRead()

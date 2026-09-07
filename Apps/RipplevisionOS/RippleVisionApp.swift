@@ -1,5 +1,6 @@
 import RippleData
 import RippleFeatures
+import RippleUI
 import SwiftUI
 
 @main
@@ -15,5 +16,10 @@ struct RippleVisionApp: App {
             VisionRootView(useCases: container.useCases)
                 .environment(\.rippleUseCases, container.useCases)
         }
+        .windowResizability(.contentMinSize)
+        .defaultSize(
+            width: RippleLayout.visionWindowIdealWidth,
+            height: RippleLayout.visionWindowIdealHeight
+        )
     }
 }

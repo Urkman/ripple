@@ -7,70 +7,23 @@ struct WaterFillShape: Shape {
     var ripplePosition: CGFloat
     var rippleAmplitude: CGFloat
     @AnimatableIgnored var tilt: CGFloat
+    @AnimatableIgnored var slosh: CGFloat = 0
     @AnimatableIgnored var thickness: CGFloat
     @AnimatableIgnored var inset: CGFloat = GlassMetrics.strokeWidth
 
     func path(in rect: CGRect) -> Path {
-        guard level > 0 else { return Path() }
-
-        let metrics = GlassMetrics(in: rect, inset: inset)
-        let levelY = min(metrics.y(forLevel: level) + thickness, metrics.bottomY)
-        let surface = metrics.clampedSurface(levelY: levelY, tilt: tilt)
-        let depth = RippleMotion.waveAmplitude(requested: pourDepth, level: level)
-        let rippleMagnitude = RippleMotion.waveAmplitude(
-            requested: abs(rippleAmplitude),
-            level: level
-        )
-        let signedRippleAmplitude = rippleAmplitude < 0
-            ? -rippleMagnitude
-            : rippleMagnitude
-        let width = max(surface.right.x - surface.left.x, 1)
-        let isDisturbed = depth > 0.05 || abs(signedRippleAmplitude) > 0.05
-        let steps = isDisturbed ? max(Int(width / 3), 12) : 1
-
-        var path = Path()
-        for index in 0...steps {
-            let t = CGFloat(index) / CGFloat(steps)
-            let x = surface.left.x + width * t
-            let baseY = surface.left.y + (surface.right.y - surface.left.y) * t
-            let contactOffset = RippleMotion.pourSurfaceOffset(
-                x: x,
-                centerX: metrics.centerX,
-                surfaceWidth: width,
-                depth: depth
-            )
-            let rippleOffset = RippleMotion.travellingSurfaceOffset(
-                x: x,
-                centerX: metrics.centerX,
-                surfaceWidth: width,
-                position: ripplePosition,
-                amplitude: signedRippleAmplitude
-            )
-            let y = baseY + contactOffset + rippleOffset
-            let point = CGPoint(
-                x: x,
-                y: min(max(y, metrics.rimBottomY), metrics.bottomY)
-            )
-            if index == 0 {
-                path.move(to: point)
-            } else {
-                path.addLine(to: point)
-            }
-        }
-        path.addLine(
-            to: CGPoint(x: metrics.xMax(atY: metrics.bottomY), y: metrics.bottomY)
-        )
-        path.addLine(
-            to: CGPoint(x: metrics.xMin(atY: metrics.bottomY), y: metrics.bottomY)
-        )
-        path.closeSubpath()
-        return path
+        WaterSurfaceGeometry(
+            metrics: GlassMetrics(in: rect, inset: inset), level: level, tilt: tilt,
+            slosh: slosh, pourDepth: pourDepth, ripplePosition: ripplePosition,
+            rippleAmplitude: rippleAmplitude, thickness: thickness
+        ).path
     }
 }
 
 public struct WaterFill: View {
     public var level: CGFloat
     public var tilt: CGFloat
+    public var slosh: CGFloat
     public var pourDepth: CGFloat
     public var ripplePosition: CGFloat
     public var rippleAmplitude: CGFloat
@@ -78,12 +31,14 @@ public struct WaterFill: View {
     public init(
         level: CGFloat,
         tilt: CGFloat,
+        slosh: CGFloat = 0,
         pourDepth: CGFloat = 0,
         ripplePosition: CGFloat = 0,
         rippleAmplitude: CGFloat = 0
     ) {
         self.level = level
         self.tilt = tilt
+        self.slosh = slosh
         self.pourDepth = pourDepth
         self.ripplePosition = ripplePosition
         self.rippleAmplitude = rippleAmplitude
@@ -97,6 +52,7 @@ public struct WaterFill: View {
                 ripplePosition: ripplePosition,
                 rippleAmplitude: rippleAmplitude,
                 tilt: tilt,
+                slosh: slosh,
                 thickness: 3
             )
             .fill(RippleColor.waterAqua.opacity(0.50))
@@ -106,6 +62,7 @@ public struct WaterFill: View {
                 ripplePosition: ripplePosition,
                 rippleAmplitude: rippleAmplitude,
                 tilt: tilt,
+                slosh: slosh,
                 thickness: 0
             )
             .fill(RippleColor.waterAqua.opacity(0.88))
@@ -113,4 +70,27 @@ public struct WaterFill: View {
         .clipShape(GlassShape(inset: GlassMetrics.strokeWidth))
         .accessibilityHidden(true)
     }
+}
+
+#Preview("Slosh · Light") {
+    WaterFill(level: 0.3, tilt: -.pi / 4, slosh: 0.06)
+        .overlay { GlassShape().stroke(RippleColor.waterLagoon, lineWidth: GlassMetrics.strokeWidth) }
+        .frame(width: RippleMotion.heroWidth, height: RippleMotion.heroHeight)
+        .background(RippleColor.waterFoam)
+}
+
+#Preview("Slosh · Dark XXXL") {
+    WaterFill(level: 0.3, tilt: -.pi / 3, slosh: -0.04)
+        .overlay { GlassShape().stroke(RippleColor.waterLagoon, lineWidth: GlassMetrics.strokeWidth) }
+        .frame(width: RippleMotion.heroWidth, height: RippleMotion.heroHeight)
+        .background(RippleColor.waterFoam)
+        .preferredColorScheme(.dark)
+        .dynamicTypeSize(.accessibility3)
+}
+
+#Preview("Water · Reduce Motion") {
+    WaterFill(level: 0.3, tilt: 0)
+        .overlay { GlassShape().stroke(RippleColor.waterLagoon, lineWidth: GlassMetrics.strokeWidth) }
+        .frame(width: RippleMotion.heroWidth, height: RippleMotion.heroHeight)
+        .background(RippleColor.waterFoam)
 }

@@ -13,15 +13,14 @@ public enum HealthWeightState: Sendable, Equatable {
 @Observable
 public final class OnboardingViewModel {
     public var page = 0
-    public let pageCount = 5
+    public let pageCount = 6
     public var profile: Profile
     public var weightText = ""
     public var healthWeightKg: Double?
     public var healthWeightState: HealthWeightState = .idle
     public var healthWrite = false
     public var notificationStatus: NotificationAuthorizationStatus = .notDetermined
-    public private(set) var isRequestingHealthWeight = false
-    public private(set) var isRequestingWaterWrite = false
+    public private(set) var isRequestingHealthAccess = false
     public private(set) var isRequestingNotifications = false
     public private(set) var isFinishing = false
 
@@ -32,7 +31,13 @@ public final class OnboardingViewModel {
         self.profile = .fresh()
     }
 
-    public var canSkip: Bool { page != 1 }
+    public var canSkip: Bool {
+        page != 1 && page != 2 && page != pageCount - 1
+    }
+
+    public var goalUsesWeight: Bool {
+        parsedWeightKg != nil || healthWeightKg != nil
+    }
 
     public var calculatedGoalMl: Int {
         var candidate = profile
@@ -40,13 +45,16 @@ public final class OnboardingViewModel {
         return useCases.calculateGoal.run(profile: candidate, workoutMinutes: 0).value
     }
 
-    public func requestHealthWeight() async {
-        guard !isRequestingHealthWeight else { return }
-        isRequestingHealthWeight = true
+    public func requestHealthAccess() async {
+        guard !isRequestingHealthAccess else { return }
+        isRequestingHealthAccess = true
         healthWeightState = .loading
-        defer { isRequestingHealthWeight = false }
+        defer { isRequestingHealthAccess = false }
 
-        guard let kilograms = await useCases.requestHealthReadAccess.run() else {
+        let access = await useCases.requestHealthOnboardingAccess.run()
+        healthWrite = access.waterWriteAuthorized
+
+        guard let kilograms = access.bodyMassKg else {
             healthWeightKg = nil
             healthWeightState = .unavailable
             if parsedWeightKg == nil {
@@ -59,13 +67,6 @@ public final class OnboardingViewModel {
         profile.bodyMassKg = kilograms
         weightText = Self.weightString(kilograms)
         healthWeightState = .found
-    }
-
-    public func requestWaterWrite() async {
-        guard !isRequestingWaterWrite else { return }
-        isRequestingWaterWrite = true
-        defer { isRequestingWaterWrite = false }
-        healthWrite = await useCases.requestHealthWaterWrite.run()
     }
 
     public func refreshNotificationStatus() async {

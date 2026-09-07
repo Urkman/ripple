@@ -49,43 +49,6 @@ public struct GlassMetrics: Sendable, Equatable {
         xMax(atY: y) - xMin(atY: y)
     }
 
-    /// Straight surface through `midX` at `levelY` with slope `tan(tilt)`.
-    /// If one side hits the floor or rim, the other side compensates so the midpoint stays.
-    public func clampedSurface(levelY: CGFloat, tilt: CGFloat) -> (left: CGPoint, right: CGPoint) {
-        let midX = centerX
-        let xLeft = xMin(atY: levelY)
-        let xRight = xMax(atY: levelY)
-        let slope = tan(tilt)
-        var yLeft = levelY + (xLeft - midX) * slope
-        var yRight = levelY + (xRight - midX) * slope
-        let floor = bottomY
-        let rim = rimBottomY
-
-        if yLeft > floor {
-            yLeft = floor
-            yRight = 2 * levelY - yLeft
-        }
-        if yRight > floor {
-            yRight = floor
-            yLeft = 2 * levelY - yRight
-        }
-        if yLeft < rim {
-            yLeft = rim
-            yRight = 2 * levelY - yLeft
-        }
-        if yRight < rim {
-            yRight = rim
-            yLeft = 2 * levelY - yRight
-        }
-        yLeft = min(max(yLeft, rim), floor)
-        yRight = min(max(yRight, rim), floor)
-
-        return (
-            left: CGPoint(x: xMin(atY: yLeft), y: yLeft),
-            right: CGPoint(x: xMax(atY: yRight), y: yRight)
-        )
-    }
-
     public var path: Path {
         var path = Path()
         let radius = bottomRadius

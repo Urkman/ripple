@@ -6,14 +6,37 @@ import Testing
 @Suite("Onboarding")
 @MainActor
 struct OnboardingViewModelTests {
+    @Test("Permission pages use only the footer action")
+    func permissionPagesCannotBeSkipped() {
+        let model = OnboardingViewModel(useCases: makeUseCases(bodyMassKg: nil))
+
+        #expect(model.pageCount == 6)
+
+        model.page = 0
+        #expect(model.canSkip)
+        model.page = 1
+        #expect(!model.canSkip)
+        model.page = 2
+        #expect(!model.canSkip)
+        model.page = 3
+        #expect(model.canSkip)
+        model.page = 4
+        #expect(model.canSkip)
+        model.page = 5
+        #expect(!model.canSkip)
+    }
+
     @Test("Health weight populates the profile and calculated goal")
     func healthWeightCalculatesGoal() async {
-        let model = OnboardingViewModel(useCases: makeUseCases(bodyMassKg: 70))
+        let model = OnboardingViewModel(
+            useCases: makeUseCases(bodyMassKg: 70, healthWaterWrite: true)
+        )
 
-        await model.requestHealthWeight()
+        await model.requestHealthAccess()
 
         #expect(model.healthWeightState == .found)
         #expect(model.profile.bodyMassKg == 70)
+        #expect(model.healthWrite)
         #expect(model.calculatedGoalMl == 2300)
     }
 
@@ -21,7 +44,7 @@ struct OnboardingViewModelTests {
     func missingHealthWeightUsesFallback() async {
         let model = OnboardingViewModel(useCases: makeUseCases(bodyMassKg: nil))
 
-        await model.requestHealthWeight()
+        await model.requestHealthAccess()
 
         #expect(model.healthWeightState == .unavailable)
         #expect(model.profile.bodyMassKg == nil)
@@ -52,6 +75,7 @@ struct OnboardingViewModelTests {
 
     private func makeUseCases(
         bodyMassKg: Double?,
+        healthWaterWrite: Bool = false,
         notificationStatus: NotificationAuthorizationStatus = .notDetermined,
         settings: InMemorySettingsRepository = InMemorySettingsRepository()
     ) -> UseCases {
@@ -62,7 +86,10 @@ struct OnboardingViewModelTests {
             health: FakeHealthProjector(),
             reminders: NoOpReminderScheduling(),
             workouts: NoOpWorkoutReading(),
-            healthAuthorizing: NoOpHealthAuthorizing(bodyMassKg: bodyMassKg),
+            healthAuthorizing: NoOpHealthAuthorizing(
+                current: HealthAuthorizationStatus(waterWrite: healthWaterWrite),
+                bodyMassKg: bodyMassKg
+            ),
             notificationAuthorizing: NoOpNotificationAuthorizing(current: notificationStatus)
         )
     }

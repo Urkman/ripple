@@ -54,10 +54,11 @@
 		BA570EBD517DBD2803E8821C /* WatchWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDAC896DCEA7EF8829D2155 /* WatchWidgetsBundle.swift */; };
 		BE6C6711609F25B236E6DFFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD76E300AC85F40BD99B369A /* Assets.xcassets */; };
 		D3728E10FBA8501A1870A364 /* RippleVisionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C04662CBFE6FFCC531AAC3C /* RippleVisionApp.swift */; };
-		DB3F6069C4F0574A169AEA72 /* RipplewatchOS.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 6F82A41F7BC567700B054D3D /* RipplewatchOS.app */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DB3F6069C4F0574A169AEA72 /* Ripple.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 6F82A41F7BC567700B054D3D /* Ripple.app */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DB990EBA9A414048F0F2105F /* RippleData in Frameworks */ = {isa = PBXBuildFile; productRef = BD808E1BC486FEB45DFB21C1 /* RippleData */; };
 		DC26ADF0B70BD34B43F43185 /* RippleData in Frameworks */ = {isa = PBXBuildFile; productRef = 2FAA7A80E356EDDC77FFB43A /* RippleData */; };
 		DD608454BCDAF7500C4BF960 /* RippleWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E472D1CB3E7A0ABA1C82F3 /* RippleWatchApp.swift */; };
+		D9E4A1C7F2B84C55A6D10E3F /* WatchDemoDataGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D1E4C93F5B6A82D0E7C114 /* WatchDemoDataGateView.swift */; };
 		DFEC8D2A9BBF6B8D71D3EADC /* RippleUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5365D287536959F3E0F8CC7D /* RippleUI */; };
 		EA536F59349D65F285CF5EBE /* RippleData in Frameworks */ = {isa = PBXBuildFile; productRef = 8E489339C35024D6C1EC604F /* RippleData */; };
 		EFEDBC8EDB153BB70D518EA3 /* RippleIntentsCore in Frameworks */ = {isa = PBXBuildFile; productRef = A237EDC44E628CF3B9E85348 /* RippleIntentsCore */; };
@@ -110,7 +111,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				DB3F6069C4F0574A169AEA72 /* RipplewatchOS.app in Embed Watch Content */,
+				DB3F6069C4F0574A169AEA72 /* Ripple.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -133,16 +134,16 @@
 		034A51DB6A5123F9D7C75107 /* RippleFeatures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleFeatures; path = Packages/RippleFeatures; sourceTree = SOURCE_ROOT; };
 		060371C6F8D1AF6DD6C7B466 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		06288C8BFF2C32E610C25CE7 /* RippleiOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleiOSApp.swift; sourceTree = "<group>"; };
-		08AF11E70586678494DFC02E /* RippleWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = RippleWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		08AF11E70586678494DFC02E /* RippleWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RippleWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		09022787A52A7EE8B189B499 /* RippleWatchWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RippleWatchWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		09494154CC93881874307CBE /* RippleData */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleData; path = Packages/RippleData; sourceTree = SOURCE_ROOT; };
 		0C04662CBFE6FFCC531AAC3C /* RippleVisionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleVisionApp.swift; sourceTree = "<group>"; };
 		10ABD62A4CD87ABC0EC0742E /* RippleDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleDomain; path = Packages/RippleDomain; sourceTree = SOURCE_ROOT; };
 		111F26BA25349552EBB0154C /* RipplewatchOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RipplewatchOS.entitlements; sourceTree = "<group>"; };
-		1341789B3EC2BEA6B2AFE68A /* RipplemacOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RipplemacOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1341789B3EC2BEA6B2AFE68A /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14EAC041E6FF550EDE7E0ABF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		143B5FEC77544C2E91359919088FAAD5 /* DemoDataGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoDataGateView.swift; sourceTree = "<group>"; };
-		1A8CDE94CE2794848E357B17 /* RipplevisionOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RipplevisionOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A8CDE94CE2794848E357B17 /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DFC24A89FEF18EEDA74F5D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		33ABF1C74E28B8F6EEEBA6C0 /* RippleWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RippleWidgets.entitlements; sourceTree = "<group>"; };
 		38723256C395B0C3B69245F9 /* LockScreenWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgets.swift; sourceTree = "<group>"; };
@@ -150,23 +151,24 @@
 		441F235A190B1454C7CFC09B /* RippleWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleWidgetsBundle.swift; sourceTree = "<group>"; };
 		4AE329549754C703C685E2DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6A3B485130D021E62855CC95 /* RippleiOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RippleiOS.entitlements; sourceTree = "<group>"; };
-		6C39781D353275195FEEA65D /* RippletvOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RippletvOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F82A41F7BC567700B054D3D /* RipplewatchOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RipplewatchOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C39781D353275195FEEA65D /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F82A41F7BC567700B054D3D /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7085764F90926748B3382B80 /* RippleWatchWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RippleWatchWidgets.entitlements; sourceTree = "<group>"; };
 		868A0651C5BB96734A89AEC7 /* LogWaterControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogWaterControl.swift; sourceTree = "<group>"; };
 		8BEFDAC5A6F4CB2590481390 /* RippleIntentsCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleIntentsCore; path = Packages/RippleIntentsCore; sourceTree = SOURCE_ROOT; };
 		8E92F86B7E7651C36E3AD419 /* RippleTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleTVApp.swift; sourceTree = "<group>"; };
 		9CC59DEFB8F7C15FA205A831 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A0EF66DC927AE209E2DB0F57 /* RippleUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleUI; path = Packages/RippleUI; sourceTree = SOURCE_ROOT; };
-		B15E013624132A486B5F3A01 /* RippleiOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RippleiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B15E013624132A486B5F3A01 /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDDAC896DCEA7EF8829D2155 /* WatchWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWidgetsBundle.swift; sourceTree = "<group>"; };
 		C465C143969D818A1D3894F3 /* RipplemacOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RipplemacOS.entitlements; sourceTree = "<group>"; };
 		CACDC0F89084EB14A93750B0 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
 		CD76E300AC85F40BD99B369A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E907C1BCBA3F001DE302C2D3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E907C1BCBA3F001DE302C2D3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		EEA7A3493DB55596CDE1EE73 /* TodayWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayWidget.swift; sourceTree = "<group>"; };
 		F36F649D85E6A9A8C0C781EB /* RippleMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleMacApp.swift; sourceTree = "<group>"; };
 		F7E472D1CB3E7A0ABA1C82F3 /* RippleWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleWatchApp.swift; sourceTree = "<group>"; };
+		A7D1E4C93F5B6A82D0E7C114 /* WatchDemoDataGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDemoDataGateView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -351,11 +353,11 @@
 		A5A0A57FF6E0194FD4126779 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B15E013624132A486B5F3A01 /* RippleiOS.app */,
-				1341789B3EC2BEA6B2AFE68A /* RipplemacOS.app */,
-				6C39781D353275195FEEA65D /* RippletvOS.app */,
-				1A8CDE94CE2794848E357B17 /* RipplevisionOS.app */,
-				6F82A41F7BC567700B054D3D /* RipplewatchOS.app */,
+				B15E013624132A486B5F3A01 /* Ripple.app */,
+				1341789B3EC2BEA6B2AFE68A /* Ripple.app */,
+				6C39781D353275195FEEA65D /* Ripple.app */,
+				1A8CDE94CE2794848E357B17 /* Ripple.app */,
+				6F82A41F7BC567700B054D3D /* Ripple.app */,
 				09022787A52A7EE8B189B499 /* RippleWatchWidgets.appex */,
 				08AF11E70586678494DFC02E /* RippleWidgets.appex */,
 			);
@@ -398,6 +400,7 @@
 			children = (
 				1DFC24A89FEF18EEDA74F5D1 /* Info.plist */,
 				F7E472D1CB3E7A0ABA1C82F3 /* RippleWatchApp.swift */,
+				A7D1E4C93F5B6A82D0E7C114 /* WatchDemoDataGateView.swift */,
 				111F26BA25349552EBB0154C /* RipplewatchOS.entitlements */,
 			);
 			path = RipplewatchOS;
@@ -482,7 +485,7 @@
 				B56EF3575CCEA9693770B49E /* RippleFeatures */,
 			);
 			productName = RipplewatchOS;
-			productReference = 6F82A41F7BC567700B054D3D /* RipplewatchOS.app */;
+			productReference = 6F82A41F7BC567700B054D3D /* Ripple.app */;
 			productType = "com.apple.product-type.application";
 		};
 		8DA5C1BB56841DE47585AE3E /* RipplevisionOS */ = {
@@ -505,7 +508,7 @@
 				B02BECD0DE2CE6BEF84BE395 /* RippleFeatures */,
 			);
 			productName = RipplevisionOS;
-			productReference = 1A8CDE94CE2794848E357B17 /* RipplevisionOS.app */;
+			productReference = 1A8CDE94CE2794848E357B17 /* Ripple.app */;
 			productType = "com.apple.product-type.application";
 		};
 		925ACE0AE7CEAB59F60736EA /* RippleiOS */ = {
@@ -533,7 +536,7 @@
 				6ABFB3BAC778AF6E83F73172 /* RippleFeatures */,
 			);
 			productName = RippleiOS;
-			productReference = B15E013624132A486B5F3A01 /* RippleiOS.app */;
+			productReference = B15E013624132A486B5F3A01 /* Ripple.app */;
 			productType = "com.apple.product-type.application";
 		};
 		92D188A2BE9ED9B7F8ED9C9A /* RippletvOS */ = {
@@ -556,7 +559,7 @@
 				B0D89A1C5D56347F48DFEF7A /* RippleFeatures */,
 			);
 			productName = RippletvOS;
-			productReference = 6C39781D353275195FEEA65D /* RippletvOS.app */;
+			productReference = 6C39781D353275195FEEA65D /* Ripple.app */;
 			productType = "com.apple.product-type.application";
 		};
 		AFF2674DA58DD01C4D16A7AC /* RipplemacOS */ = {
@@ -580,7 +583,7 @@
 				0DF637FF953C6CBF6BC64DBD /* RippleFeatures */,
 			);
 			productName = RipplemacOS;
-			productReference = 1341789B3EC2BEA6B2AFE68A /* RipplemacOS.app */;
+			productReference = 1341789B3EC2BEA6B2AFE68A /* Ripple.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -753,6 +756,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD608454BCDAF7500C4BF960 /* RippleWatchApp.swift in Sources */,
+				D9E4A1C7F2B84C55A6D10E3F /* WatchDemoDataGateView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,6 +859,7 @@
 				CODE_SIGN_ENTITLEMENTS = Apps/RippleiOS/RippleiOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Apps/RippleiOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
@@ -881,6 +886,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -899,6 +905,7 @@
 				CODE_SIGN_ENTITLEMENTS = Apps/RippleiOS/RippleiOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Apps/RippleiOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
@@ -927,6 +934,7 @@
 				CODE_SIGN_ENTITLEMENTS = Apps/RipplemacOS/RipplemacOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Apps/RipplemacOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -941,9 +949,10 @@
 		2CF3B455C1053BB74C2C6388 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -962,6 +971,7 @@
 				CODE_SIGN_ENTITLEMENTS = Apps/RipplemacOS/RipplemacOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Apps/RipplemacOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1049,6 +1059,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Apps/RipplewatchOS/RipplewatchOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Apps/RipplewatchOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads your weight and today's workouts only if you opt in, to calculate a personal water goal. This is not medical advice.";
@@ -1068,6 +1079,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Extensions/RippleWidgets/RippleWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Extensions/RippleWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1087,6 +1099,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Extensions/RippleWidgets/RippleWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Extensions/RippleWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1107,6 +1120,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Apps/RipplewatchOS/RipplewatchOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Apps/RipplewatchOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Ripple reads your weight and today's workouts only if you opt in, to calculate a personal water goal. This is not medical advice.";
@@ -1126,6 +1140,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Extensions/RippleWatchWidgets/RippleWatchWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Extensions/RippleWatchWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1144,9 +1159,10 @@
 		B36AB23E0BDA9CCF6856DA2E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1163,6 +1179,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Extensions/RippleWatchWidgets/RippleWatchWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				INFOPLIST_FILE = Extensions/RippleWatchWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ripple;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1183,6 +1200,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3KX9BGG624;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

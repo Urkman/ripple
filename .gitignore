@@ -14,3 +14,4 @@ Config/Ripple.xcconfig
 .superpowers/
 Docs/ADR/
 Ripple_Handoff/
+.asc/

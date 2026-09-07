@@ -4,7 +4,7 @@ import SwiftUI
 
 #if os(watchOS)
 public struct WatchRootView: View {
-    private enum Page: Hashable {
+    private enum Page: Int, Hashable {
         case today
         case history
         case stats
@@ -18,8 +18,10 @@ public struct WatchRootView: View {
     @State private var historyModel: WatchHistoryViewModel
     @State private var statsModel: WatchStatsViewModel
 
-    public init(useCases: UseCases) {
+    public init(useCases: UseCases, initialPage: Int = 0) {
         self.useCases = useCases
+        let page = Page(rawValue: min(max(initialPage, 0), 2)) ?? .today
+        _selectedPage = State(initialValue: page)
         _todayModel = State(initialValue: WatchTodayViewModel(useCases: useCases))
         _historyModel = State(initialValue: WatchHistoryViewModel(useCases: useCases))
         _statsModel = State(initialValue: WatchStatsViewModel(useCases: useCases))
