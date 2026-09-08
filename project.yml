@@ -134,6 +134,8 @@ targets:
     sources:
       - path: Apps/RipplewatchOS
       - path: Shared
+    resources:
+      - path: Apps/RipplewatchOS/WatchIcons
     entitlements:
       path: Apps/RipplewatchOS/RipplewatchOS.entitlements
       properties:
@@ -147,6 +149,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.stefansturm.ripple.watchkitapp
         PRODUCT_NAME: Ripple
+        ASSETCATALOG_COMPILER_STANDALONE_ICON_BEHAVIOR: all
         INFOPLIST_KEY_CFBundleDisplayName: Ripple
         INFOPLIST_KEY_WKCompanionAppBundleIdentifier: de.stefansturm.ripple
         INFOPLIST_KEY_WKApplication: YES

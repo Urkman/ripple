@@ -39,6 +39,7 @@
 		5FD6EBF6B2614AE6B7F77903 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 405D7C385092BA9AA4F10E63 /* SwiftUI.framework */; };
 		62A196076CAF6223922BC527 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD76E300AC85F40BD99B369A /* Assets.xcassets */; };
 		6CEFC94C557B371CCD7E1910 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060371C6F8D1AF6DD6C7B466 /* WidgetKit.framework */; };
+		74298B9ACFA115FDED8DE7FA /* AppIcon50x50@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1D707C8FC5AB427D081C1B61 /* AppIcon50x50@2x.png */; };
 		742EE3A5A9930A5944097480 /* RippleWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 08AF11E70586678494DFC02E /* RippleWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		779230BEF241FAB9924F4F45 /* RippleData in Frameworks */ = {isa = PBXBuildFile; productRef = B7E6E13360AF275B13BC0515 /* RippleData */; };
 		79AE2684BF4163C4148CA3A9 /* RippleIntentsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7CE4CA278CF939AD39F327E0 /* RippleIntentsCore */; };
@@ -50,6 +51,7 @@
 		9D75C4828E6E9BC451EB05C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD76E300AC85F40BD99B369A /* Assets.xcassets */; };
 		A109743C43A1EEF204CAD0F6 /* RippleFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = 6ABFB3BAC778AF6E83F73172 /* RippleFeatures */; };
 		A3BB31A38ECC0FDB916F5FA3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060371C6F8D1AF6DD6C7B466 /* WidgetKit.framework */; };
+		C7211DF38CDB13388C2288C5 /* AppIcon44x44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EC4433E3BCF852A62846B7D /* AppIcon44x44@2x.png */; };
 		B0FEDDE41D8D90302E3FEA3C /* LogWaterControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868A0651C5BB96734A89AEC7 /* LogWaterControl.swift */; };
 		B37BE9A6C9679B54E1C8B0B7 /* RippleIntentsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2D97794A16AA6CA9ADDC675A /* RippleIntentsCore */; };
 		B6ED41C25E94F42D7AF15A37 /* RippleDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD03F525D8478C6C27DBAFE /* RippleDomain */; };
@@ -151,12 +153,14 @@
 		14EAC041E6FF550EDE7E0ABF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		143B5FEC77544C2E91359919088FAAD5 /* DemoDataGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoDataGateView.swift; sourceTree = "<group>"; };
 		1A8CDE94CE2794848E357B17 /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D707C8FC5AB427D081C1B61 /* AppIcon50x50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon50x50@2x.png"; sourceTree = "<group>"; };
 		1DFC24A89FEF18EEDA74F5D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		33ABF1C74E28B8F6EEEBA6C0 /* RippleWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RippleWidgets.entitlements; sourceTree = "<group>"; };
 		38723256C395B0C3B69245F9 /* LockScreenWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgets.swift; sourceTree = "<group>"; };
 		405D7C385092BA9AA4F10E63 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		441F235A190B1454C7CFC09B /* RippleWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleWidgetsBundle.swift; sourceTree = "<group>"; };
 		4AE329549754C703C685E2DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		4EC4433E3BCF852A62846B7D /* AppIcon44x44@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon44x44@2x.png"; sourceTree = "<group>"; };
 		6A3B485130D021E62855CC95 /* RippleiOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RippleiOS.entitlements; sourceTree = "<group>"; };
 		6C39781D353275195FEEA65D /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F82A41F7BC567700B054D3D /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -412,6 +416,7 @@
 		E9474235B0A274F1CDC6D021 /* RipplewatchOS */ = {
 			isa = PBXGroup;
 			children = (
+				F1941CB3EBD2FB5BF927B0D2 /* WatchIcons */,
 				1DFC24A89FEF18EEDA74F5D1 /* Info.plist */,
 				F7E472D1CB3E7A0ABA1C82F3 /* RippleWatchApp.swift */,
 				A7D1E4C93F5B6A82D0E7C114 /* WatchDemoDataGateView.swift */,
@@ -419,6 +424,15 @@
 				588DBAE744FB47A2BCE17F7E /* WatchRootView.swift */,
 			);
 			path = RipplewatchOS;
+			sourceTree = "<group>";
+		};
+		F1941CB3EBD2FB5BF927B0D2 /* WatchIcons */ = {
+			isa = PBXGroup;
+			children = (
+				4EC4433E3BCF852A62846B7D /* AppIcon44x44@2x.png */,
+				1D707C8FC5AB427D081C1B61 /* AppIcon50x50@2x.png */,
+			);
+			path = WatchIcons;
 			sourceTree = "<group>";
 		};
 		EE10B2B2379573E5759A71E2 /* Extensions */ = {
@@ -696,6 +710,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7211DF38CDB13388C2288C5 /* AppIcon44x44@2x.png in Resources */,
+				74298B9ACFA115FDED8DE7FA /* AppIcon50x50@2x.png in Resources */,
 				62A196076CAF6223922BC527 /* Assets.xcassets in Resources */,
 				5A387FFD3FEEAB40593BDAAD /* PrivacyInfo.xcprivacy in Resources */,
 			);
@@ -1077,6 +1093,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_STANDALONE_ICON_BEHAVIOR = all;
 				CODE_SIGN_ENTITLEMENTS = Apps/RipplewatchOS/RipplewatchOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3KX9BGG624;
@@ -1138,6 +1155,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_STANDALONE_ICON_BEHAVIOR = all;
 				CODE_SIGN_ENTITLEMENTS = Apps/RipplewatchOS/RipplewatchOS.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3KX9BGG624;

@@ -18,10 +18,19 @@
 	<dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>AppIcon</string>
-			</array>
+		<key>CFBundleIconFiles</key>
+		<array>
+			<string>AppIcon</string>
+			<string>AppIcon24x24</string>
+			<string>AppIcon27.5x27.5</string>
+			<string>AppIcon29x29</string>
+			<string>AppIcon40x40</string>
+			<string>AppIcon44x44</string>
+			<string>AppIcon50x50</string>
+			<string>AppIcon86x86</string>
+			<string>AppIcon98x98</string>
+			<string>AppIcon108x108</string>
+		</array>
 		</dict>
 	</dict>
 	<key>CFBundleShortVersionString</key>
