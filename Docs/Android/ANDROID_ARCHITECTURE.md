@@ -7,9 +7,9 @@
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.3.0
+**Document version:** 1.3.1
 
-**Companion document:** [Ripple Architecture](ARCHITECTURE.md)
+**Companion document:** [Ripple Architecture](../ARCHITECTURE.md)
 
 **UI companion:** [Ripple Android UI Specification](ANDROID_UI_SPEC.md)
 
@@ -21,7 +21,7 @@ looking and behaving like a well-designed Android app. It must not copy iOS
 navigation chrome, controls, typography, glass treatment, or platform-specific
 presentation merely to achieve functional parity.
 
-The existing iOS architecture is described in [`Docs/ARCHITECTURE.md`](ARCHITECTURE.md). Android screen composition and state behavior are specified in [`Docs/ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md). Product behavior is specified by the [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md), [hero motion specification](../Ripple_Handoff/Ripple_Hero_Motion.md), and [History/Stats specification](../Ripple_Handoff/Ripple_History_Stats.md). Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
+The existing iOS architecture is described in [`Docs/ARCHITECTURE.md`](../ARCHITECTURE.md). Android screen composition and state behavior are specified in [`Docs/Android/ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md). Product behavior is specified by the [Ripple PRD](../../Ripple_Handoff/Ripple_PRD.md), [hero motion specification](../../Ripple_Handoff/Ripple_Hero_Motion.md), and [History/Stats specification](../../Ripple_Handoff/Ripple_History_Stats.md). Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
 
 ## 1. Product boundary and non-negotiable rules
 
@@ -1160,25 +1160,25 @@ An agent may call the Android port complete only when every item is true:
 
 ## 22. Related documents
 
-- [Shared iOS architecture](ARCHITECTURE.md)
-- [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md)
-- [Hero motion contract](../Ripple_Handoff/Ripple_Hero_Motion.md)
-- [History and Stats contract](../Ripple_Handoff/Ripple_History_Stats.md)
-- [ADR-000: Architecture](ADR/ADR-000-architecture.md)
-- [ADR-001: Persistence](ADR/ADR-001-persistence.md)
-- [ADR-002: HealthKit](ADR/ADR-002-healthkit.md)
+- [Shared iOS architecture](../ARCHITECTURE.md)
+- [Ripple PRD](../../Ripple_Handoff/Ripple_PRD.md)
+- [Hero motion contract](../../Ripple_Handoff/Ripple_Hero_Motion.md)
+- [History and Stats contract](../../Ripple_Handoff/Ripple_History_Stats.md)
+- [ADR-000: Architecture](../ADR/ADR-000-architecture.md)
+- [ADR-001: Persistence](../ADR/ADR-001-persistence.md)
+- [ADR-002: HealthKit](../ADR/ADR-002-healthkit.md)
 - [Android UI specification](ANDROID_UI_SPEC.md)
 
 ## 23. Documentation maintenance
 
-This document and [Ripple Architecture](ARCHITECTURE.md) are maintained as a pair. Android has a separate data boundary and native UI, but it must stay aligned with shared Ripple capabilities, domain semantics, and product specifications.
+This document and [Ripple Architecture](../ARCHITECTURE.md) are maintained as a pair. Android has a separate data boundary and native UI, but it must stay aligned with shared Ripple capabilities, domain semantics, and product specifications.
 
 ### Source-of-truth precedence
 
 When sources disagree, use this order:
 
 1. `AGENTS.md` for repository process, shared architecture constraints, design tokens, and explicit bans.
-2. The authoritative product specifications: [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md), [Ripple Hero Motion](../Ripple_Handoff/Ripple_Hero_Motion.md), and [Ripple History and Stats](../Ripple_Handoff/Ripple_History_Stats.md).
+2. The authoritative product specifications: [Ripple PRD](../../Ripple_Handoff/Ripple_PRD.md), [Ripple Hero Motion](../../Ripple_Handoff/Ripple_Hero_Motion.md), and [Ripple History and Stats](../../Ripple_Handoff/Ripple_History_Stats.md).
 3. An approved ADR or Android decision record for a deliberate platform-specific choice.
 4. This Android document for Android module boundaries, platform mapping, and Android-native workflows.
 5. Android source and tests, which reveal current behavior and must be brought back into agreement when they drift.
@@ -1243,3 +1243,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.1.0 | 2026-09-07 | Added the paired-document maintenance contract, semantic document versioning, synchronized-document checklist, and immutable timeline. | Android architecture changes now require an explicit documentation review and versioned audit entry. |
 | 1.2.0 | 2026-09-07 | Added the Android UI specification companion and linked it as the normative screen/state contract. | Android UI implementation now has explicit wireframes, responsive behavior, state coverage, interaction flows, and screenshot acceptance criteria. |
 | 1.3.0 | 2026-09-08 | Synchronized the Android capability matrix, Today hierarchy, six-page onboarding, History/Day Detail flow, separate Stats contract, full Settings surface, Wear detail behavior, and linked v2 Android UI specification. | Android architecture now preserves the current iOS product screens and flows while keeping Material, adaptive navigation, native permission, and Wear-native presentation. |
+| 1.3.1 | 2026-09-08 | Consolidated the Android architecture, UI specification, and reference pack under `Docs/Android/`; updated companion links without changing the architecture contract. | Android documentation now has one discoverable product-docs root under `Docs/`. |

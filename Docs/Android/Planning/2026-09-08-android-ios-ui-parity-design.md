@@ -8,7 +8,7 @@ not implement Android screens or change iOS behavior.
 
 ## Problem
 
-`Docs/ANDROID_UI_SPEC.md` was created as an Android-native implementation
+`Docs/Android/ANDROID_UI_SPEC.md` was created as an Android-native implementation
 guide, but its screen contracts describe a product that does not match the
 current iOS app. The most visible mismatches are:
 
@@ -63,9 +63,9 @@ The revised documents use this order:
    and Watch behavior.
 5. `Ripple_Handoff/Ripple_PRD.md` for shared product scope, corrected where
    it is stale.
-6. `Docs/ANDROID_UI_SPEC.md` for Android-native presentation and responsive
+6. `Docs/Android/ANDROID_UI_SPEC.md` for Android-native presentation and responsive
    behavior.
-7. `Docs/ANDROID_ARCHITECTURE.md` for Android module and implementation
+7. `Docs/Android/ANDROID_ARCHITECTURE.md` for Android module and implementation
    boundaries.
 
 When a product document contradicts the current implementation, correct the
@@ -217,7 +217,7 @@ remain equivalent.
 
 Keep existing iOS captures under `release/screenshots/` as evidence and link
 them from the Android UI specification. Add lightweight, reviewable SVG
-wireframes under `Docs/AndroidUI/` for:
+wireframes under `Docs/Android/UI/` for:
 
 - compact Today, History, Day Detail, Stats, Settings, and onboarding;
 - expanded/tablet History split and Stats;
@@ -237,11 +237,11 @@ capture name.
 
 The implementation of this design will update, in one documentation change:
 
-- `Docs/ANDROID_UI_SPEC.md`: replace the inaccurate screen contracts,
+- `Docs/Android/ANDROID_UI_SPEC.md`: replace the inaccurate screen contracts,
   remove Recent rows, add the six-page onboarding, complete Settings and
   Stats, make the History pager/Day Detail flow normative, add the Wear
   mapping, reference pack, and acceptance matrix.
-- `Docs/ANDROID_ARCHITECTURE.md`: align the capability matrix, Android UI
+- `Docs/Android/ANDROID_ARCHITECTURE.md`: align the capability matrix, Android UI
   section, onboarding requirements, screen requirements, and timeline with
   the revised UI contract.
 - `Ripple_Handoff/Ripple_PRD.md`: correct the four-tab iPhone shell, current

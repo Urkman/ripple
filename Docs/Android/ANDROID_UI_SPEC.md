@@ -1,14 +1,14 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 2.0.0
+**Document version:** 2.0.1
 **Last verified:** 2026-09-08
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
-**Shared architecture:** [Ripple Architecture](ARCHITECTURE.md)
-**Product contract:** [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md)
-**Detailed hero contract:** [Hero Motion](../Ripple_Handoff/Ripple_Hero_Motion.md)
-**Detailed History/Stats contract:** [History and Stats](../Ripple_Handoff/Ripple_History_Stats.md)
-**Visual reference pack:** [Android UI reference pack](AndroidUI/README.md)
+**Shared architecture:** [Ripple Architecture](../ARCHITECTURE.md)
+**Product contract:** [Ripple PRD](../../Ripple_Handoff/Ripple_PRD.md)
+**Detailed hero contract:** [Hero Motion](../../Ripple_Handoff/Ripple_Hero_Motion.md)
+**Detailed History/Stats contract:** [History and Stats](../../Ripple_Handoff/Ripple_History_Stats.md)
+**Visual reference pack:** [Android UI reference pack](UI/README.md)
 
 This is the normative Android screen, flow, state, accessibility, and visual
 acceptance contract. The current iOS implementation establishes the product
@@ -18,7 +18,7 @@ back/navigation conventions, native permission surfaces, and Compose for Wear
 OS.
 
 The existing iOS screenshots are evidence, not pixel targets. The annotated SVG
-wireframes in `Docs/AndroidUI/` are Android layout contracts. Real Android and
+wireframes in `Docs/Android/UI/` are Android layout contracts. Real Android and
 Wear captures are the final acceptance artifacts. Nothing in this document
 authorizes copying Liquid Glass, an iOS tab bar, SwiftUI navigation chrome, or
 Apple Watch presentation into Android.
@@ -33,7 +33,7 @@ The contract is maintained in layers:
 | Today glass, level, pour, tilt, coalescing, reduced motion | `Ripple_Hero_Motion.md` | Reproduce behavior with Android drawing/animation primitives |
 | History calendar, Day Detail, Stats, Watch behavior | `Ripple_History_Stats.md` | Preserve screens, states, and flow; choose native Android presentation |
 | Current iOS hierarchy and settings/onboarding composition | iOS source and captures listed below | Do not invent a dashboard or omit a screen |
-| Android layout and system substitution | This document and `AndroidUI/*.svg` | Use Android-native components and responsive layouts |
+| Android layout and system substitution | This document and `UI/*.svg` | Use Android-native components and responsive layouts |
 
 The current iOS source inspected for this revision includes:
 
@@ -52,14 +52,14 @@ The current iOS source inspected for this revision includes:
 
 | Current iOS capability | Android destination | Android reference |
 |---|---|---|
-| Today glass hero and daily readout | Today root | [phone Today](AndroidUI/phone-today.svg) |
-| Saved-container quick add and custom amount | Today root; native amount entry | [phone Today](AndroidUI/phone-today.svg) |
-| Calendar-first History | History root | [phone History](AndroidUI/phone-history.svg) |
-| Tap a day to inspect entries | Nested Day Detail; split on expanded windows | [phone Day Detail](AndroidUI/phone-day-detail.svg), [tablet History](AndroidUI/tablet-history-split.svg) |
-| Separate period-based Stats | Stats root | [phone Stats](AndroidUI/phone-stats.svg), [tablet Stats](AndroidUI/tablet-stats.svg) |
-| Full settings surface | Settings root and native sub-destinations | [phone Settings](AndroidUI/phone-settings.svg) |
-| Six-page first-run flow | Onboarding route with native permission handoffs | [phone onboarding](AndroidUI/phone-onboarding.svg) |
-| Watch Today/History/Stats | Wear Today/History/Stats pages | [Wear pack](AndroidUI/README.md) |
+| Today glass hero and daily readout | Today root | [phone Today](UI/phone-today.svg) |
+| Saved-container quick add and custom amount | Today root; native amount entry | [phone Today](UI/phone-today.svg) |
+| Calendar-first History | History root | [phone History](UI/phone-history.svg) |
+| Tap a day to inspect entries | Nested Day Detail; split on expanded windows | [phone Day Detail](UI/phone-day-detail.svg), [tablet History](UI/tablet-history-split.svg) |
+| Separate period-based Stats | Stats root | [phone Stats](UI/phone-stats.svg), [tablet Stats](UI/tablet-stats.svg) |
+| Full settings surface | Settings root and native sub-destinations | [phone Settings](UI/phone-settings.svg) |
+| Six-page first-run flow | Onboarding route with native permission handoffs | [phone onboarding](UI/phone-onboarding.svg) |
+| Watch Today/History/Stats | Wear Today/History/Stats pages | [Wear pack](UI/README.md) |
 
 There is no Android-only Recent list, dashboard home, combined Insights
 destination, month calendar on Wear, or onboarding shortcut that removes one of
@@ -171,7 +171,7 @@ entries.
 
 ### 4.1 Compact layout
 
-See [phone Today wireframe](AndroidUI/phone-today.svg). The hero is the visual
+See [phone Today wireframe](UI/phone-today.svg). The hero is the visual
 center and the three saved-container actions remain reachable without scrolling
 on a typical compact window. Custom amount is a clearly labeled secondary
 primary action, not an unlabeled symbol-only control.
@@ -227,9 +227,9 @@ targets the last own, non-deleted intake; it does not reconstruct a visual list.
 ## 5. History and Day Detail
 
 History is calendar-first. It is not a list of recent entries and is not a
-combined Stats screen. See [phone History](AndroidUI/phone-history.svg),
-[phone Day Detail](AndroidUI/phone-day-detail.svg), and [tablet History
-split](AndroidUI/tablet-history-split.svg).
+combined Stats screen. See [phone History](UI/phone-history.svg),
+[phone Day Detail](UI/phone-day-detail.svg), and [tablet History
+split](UI/tablet-history-split.svg).
 
 ### 5.1 History root
 
@@ -289,7 +289,7 @@ aggregate announcement before the row collection.
 ## 6. Stats
 
 Stats is its own root and remains separate from History. See [phone Stats
-wireframe](AndroidUI/phone-stats.svg) and [tablet Stats wireframe](AndroidUI/tablet-stats.svg).
+wireframe](UI/phone-stats.svg) and [tablet Stats wireframe](UI/tablet-stats.svg).
 
 ```text
 StatsRoute(period)
@@ -328,7 +328,7 @@ History/Insights combination.
 ## 7. Settings
 
 Settings is a full root destination, not a placeholder page. See [phone Settings
-wireframe](AndroidUI/phone-settings.svg).
+wireframe](UI/phone-settings.svg).
 
 Use a scrollable Material settings list with these sections and capabilities:
 
@@ -352,7 +352,7 @@ their use cases; a composable does not write persistence directly.
 
 ## 8. Onboarding
 
-Onboarding is six pages. See [phone onboarding wireframe](AndroidUI/phone-onboarding.svg).
+Onboarding is six pages. See [phone onboarding wireframe](UI/phone-onboarding.svg).
 
 | Page | Content | System handoff |
 |---|---|---|
@@ -380,11 +380,11 @@ Rules:
 ## 9. Wear OS
 
 Wear is a separate Android-native surface with three horizontal pages:
-Today, History, Stats. See [Wear wireframes](AndroidUI/README.md).
+Today, History, Stats. See [Wear wireframes](UI/README.md).
 
 ### 9.1 Wear Today
 
-See [wear Today](AndroidUI/wear-today.svg). Use the full canvas as a flat
+See [wear Today](UI/wear-today.svg). Use the full canvas as a flat
 water-level field with the consumed/remaining readout. Provide predefined
 amount actions and a Crown-equivalent rotary-first custom amount flow. Use Wear
 chips or compact buttons; keep labels short and touch targets safe.
@@ -394,7 +394,7 @@ top-level navigation is used on Wear. The shared write boundary still applies.
 
 ### 9.2 Wear History and Day Detail
 
-See [wear History](AndroidUI/wear-history.svg) and [wear Day Detail](AndroidUI/wear-day-detail.svg).
+See [wear History](UI/wear-history.svg) and [wear Day Detail](UI/wear-day-detail.svg).
 
 - Show today and the six previous elapsed local days, newest first.
 - Empty days remain visible so the seven-day context is stable.
@@ -407,7 +407,7 @@ See [wear History](AndroidUI/wear-history.svg) and [wear Day Detail](AndroidUI/w
 
 ### 9.3 Wear Stats
 
-See [wear Stats](AndroidUI/wear-stats.svg). Show only the current ISO-week
+See [wear Stats](UI/wear-stats.svg). Show only the current ISO-week
 summary: average per elapsed day, goal hits, total, and one compact chart. Do
 not add a period picker, multi-chart dashboard, or month navigation.
 
@@ -534,13 +534,13 @@ Wear tap/rotary amount -> local LogIntake -> outbox while offline
 
 The reference pack links the current iOS evidence:
 
-- [iPhone Today](../release/screenshots/raw/en-US/iphone-69/01-today.png)
-- [iPhone History](../release/screenshots/raw/en-US/iphone-69/02-history.png)
-- [iPhone Stats](../release/screenshots/raw/en-US/iphone-69/03-stats.png)
-- [iPad Settings](../release/screenshots/raw/en-US/ipad-129/04-settings.png)
-- [Watch Today](../release/screenshots/raw/en-US/watch-46/01-today.png)
-- [Watch History](../release/screenshots/raw/en-US/watch-46/02-history.png)
-- [Watch Stats](../release/screenshots/raw/en-US/watch-46/03-stats.png)
+- [iPhone Today](../../release/screenshots/raw/en-US/iphone-69/01-today.png)
+- [iPhone History](../../release/screenshots/raw/en-US/iphone-69/02-history.png)
+- [iPhone Stats](../../release/screenshots/raw/en-US/iphone-69/03-stats.png)
+- [iPad Settings](../../release/screenshots/raw/en-US/ipad-129/04-settings.png)
+- [Watch Today](../../release/screenshots/raw/en-US/watch-46/01-today.png)
+- [Watch History](../../release/screenshots/raw/en-US/watch-46/02-history.png)
+- [Watch Stats](../../release/screenshots/raw/en-US/watch-46/03-stats.png)
 
 Store runtime Android captures under `release/screenshots/android/` with stable
 names:
@@ -615,7 +615,7 @@ directly.
 ## 17. Maintenance and timeline
 
 This document is maintained with [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
-and [Ripple Architecture](ARCHITECTURE.md). When a screen, interaction,
+and [Ripple Architecture](../ARCHITECTURE.md). When a screen, interaction,
 breakpoint, token, state, system surface, or accessibility contract changes,
 update the relevant document in the same change and append an immutable Timeline
 entry. Use semantic versions: MAJOR for incompatible UI/workflow contracts,
@@ -627,3 +627,4 @@ at the bottom.
 |---|---|---|---|
 | 1.0.0 | 2026-09-07 | Initial Android UI companion with Material/Wear guidance, responsive layouts, state matrix, flows, and capture naming. | Established native Android presentation rules. |
 | 2.0.0 | 2026-09-08 | Rebased the Android contract on the current iOS hierarchy: four roots, no Today Recent list, calendar-first History with Day Detail, separate Stats, full Settings, six-page onboarding, and the current Wear flow; added linked SVG reference pack and evidence mapping. | Android implementation now has the same product screens and flows as iOS while retaining native Android components and system surfaces. |
+| 2.0.1 | 2026-09-08 | Consolidated the Android UI specification and SVG reference pack under `Docs/Android/`; updated local evidence and companion links without changing the screen contract. | Android UI documentation now has one discoverable product-docs root under `Docs/`. |

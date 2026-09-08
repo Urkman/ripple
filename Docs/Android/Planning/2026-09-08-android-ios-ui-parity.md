@@ -8,7 +8,7 @@
 
 **Tech Stack:** Markdown documentation, existing PNG reference captures, hand-authored SVG wireframes, shell-based link/consistency checks, and Git. No Swift, Kotlin, Gradle, Xcode project, or Android source changes.
 
-**Spec:** [Android/iOS UI parity contract design](../specs/2026-09-08-android-ios-ui-parity-design.md)
+**Spec:** [Android/iOS UI parity contract design](2026-09-08-android-ios-ui-parity-design.md)
 
 ## Global Constraints
 
@@ -32,11 +32,11 @@
 | `Ripple_Handoff/Ripple_PRD.md` | Correct stale iPhone, iPad, Today, and onboarding product statements. |
 | `Ripple_Handoff/Ripple_Hero_Motion.md` | Read-only authority check; no content change unless the audit finds a factual mismatch. |
 | `Ripple_Handoff/Ripple_History_Stats.md` | Read-only authority check; no content change unless the audit finds a factual mismatch. |
-| `Docs/ANDROID_UI_SPEC.md` | Normative Android screen, flow, state, accessibility, reference, and acceptance contract. |
-| `Docs/ANDROID_ARCHITECTURE.md` | Android capability/module/UI alignment and maintenance timeline. |
+| `Docs/Android/ANDROID_UI_SPEC.md` | Normative Android screen, flow, state, accessibility, reference, and acceptance contract. |
+| `Docs/Android/ANDROID_ARCHITECTURE.md` | Android capability/module/UI alignment and maintenance timeline. |
 | `Docs/ARCHITECTURE.md` | Shared architecture metadata and synchronized-contract timeline entry. |
-| `Docs/AndroidUI/README.md` | Explains the visual reference pack and evidence-versus-contract distinction. |
-| `Docs/AndroidUI/*.svg` | Lightweight annotated Android phone, tablet, onboarding, and Wear wireframes. |
+| `Docs/Android/UI/README.md` | Explains the visual reference pack and evidence-versus-contract distinction. |
+| `Docs/Android/UI/*.svg` | Lightweight annotated Android phone, tablet, onboarding, and Wear wireframes. |
 
 ---
 
@@ -103,27 +103,27 @@
 ### Task 2: Create the visual reference pack
 
 **Files:**
-- Create: `Docs/AndroidUI/README.md`
-- Create: `Docs/AndroidUI/phone-today.svg`
-- Create: `Docs/AndroidUI/phone-history.svg`
-- Create: `Docs/AndroidUI/phone-day-detail.svg`
-- Create: `Docs/AndroidUI/phone-stats.svg`
-- Create: `Docs/AndroidUI/phone-settings.svg`
-- Create: `Docs/AndroidUI/phone-onboarding.svg`
-- Create: `Docs/AndroidUI/tablet-history-split.svg`
-- Create: `Docs/AndroidUI/tablet-stats.svg`
-- Create: `Docs/AndroidUI/wear-today.svg`
-- Create: `Docs/AndroidUI/wear-history.svg`
-- Create: `Docs/AndroidUI/wear-day-detail.svg`
-- Create: `Docs/AndroidUI/wear-stats.svg`
+- Create: `Docs/Android/UI/README.md`
+- Create: `Docs/Android/UI/phone-today.svg`
+- Create: `Docs/Android/UI/phone-history.svg`
+- Create: `Docs/Android/UI/phone-day-detail.svg`
+- Create: `Docs/Android/UI/phone-stats.svg`
+- Create: `Docs/Android/UI/phone-settings.svg`
+- Create: `Docs/Android/UI/phone-onboarding.svg`
+- Create: `Docs/Android/UI/tablet-history-split.svg`
+- Create: `Docs/Android/UI/tablet-stats.svg`
+- Create: `Docs/Android/UI/wear-today.svg`
+- Create: `Docs/Android/UI/wear-history.svg`
+- Create: `Docs/Android/UI/wear-day-detail.svg`
+- Create: `Docs/Android/UI/wear-stats.svg`
 
 **Interfaces:**
 - Consumes: existing iOS captures in `release/screenshots/raw/`, the approved parity design, and corrected product statements from Task 1.
-- Produces: stable vector references linked by `Docs/ANDROID_UI_SPEC.md`; each wireframe labels product content and Android-native component choices without prescribing iOS pixels.
+- Produces: stable vector references linked by `Docs/Android/ANDROID_UI_SPEC.md`; each wireframe labels product content and Android-native component choices without prescribing iOS pixels.
 
 - [ ] **Step 1: Create the reference-pack README**
 
-  Write `Docs/AndroidUI/README.md` with three explicit rules: existing iOS PNGs are evidence, SVGs are Android layout contracts, and real Android captures are final acceptance artifacts. Link the existing iOS Today, History, Stats, Settings, and Watch captures with repository-relative Markdown paths. State that the pack contains no app source and does not authorize copying Liquid Glass or iOS tab-bar chrome.
+  Write `Docs/Android/UI/README.md` with three explicit rules: existing iOS PNGs are evidence, SVGs are Android layout contracts, and real Android captures are final acceptance artifacts. Link the existing iOS Today, History, Stats, Settings, and Watch captures with repository-relative Markdown paths. State that the pack contains no app source and does not authorize copying Liquid Glass or iOS tab-bar chrome.
 
 - [ ] **Step 2: Draw the compact phone wireframes**
 
@@ -138,20 +138,20 @@
   Run:
 
   ```bash
-  xmllint --noout Docs/AndroidUI/*.svg
+  xmllint --noout Docs/Android/UI/*.svg
   test -f release/screenshots/raw/en-US/iphone-69/01-today.png
   test -f release/screenshots/raw/en-US/iphone-69/02-history.png
   test -f release/screenshots/raw/en-US/iphone-69/03-stats.png
   test -f release/screenshots/raw/en-US/ipad-129/04-settings.png
   test -f release/screenshots/raw/en-US/watch-46/01-today.png
   test -f release/screenshots/raw/en-US/watch-46/02-history.png
-  git diff --check -- Docs/AndroidUI
+  git diff --check -- Docs/Android/UI
   ```
 
   Expected result: every SVG parses, every referenced evidence capture exists, and no whitespace errors occur. Commit:
 
   ```bash
-  git add Docs/AndroidUI
+  git add Docs/Android/UI
   git commit -m "docs: add Android UI reference wireframes"
   ```
 
@@ -160,11 +160,11 @@
 ### Task 3: Rewrite the Android UI specification around iOS parity
 
 **Files:**
-- Modify: `Docs/ANDROID_UI_SPEC.md`
-- Consume: `Docs/AndroidUI/README.md`, all SVGs from Task 2, and existing iOS captures
+- Modify: `Docs/Android/ANDROID_UI_SPEC.md`
+- Consume: `Docs/Android/UI/README.md`, all SVGs from Task 2, and existing iOS captures
 
 **Interfaces:**
-- Consumes: corrected product contract from Task 1 and the Android-native component vocabulary in `Docs/ANDROID_ARCHITECTURE.md`.
+- Consumes: corrected product contract from Task 1 and the Android-native component vocabulary in `Docs/Android/ANDROID_ARCHITECTURE.md`.
 - Produces: a single normative Android screen/flow/state/accessibility contract that an Android agent can implement without inferring missing iOS behavior.
 
 - [ ] **Step 1: Update metadata and source-of-truth wording**
@@ -192,15 +192,15 @@
   Append an immutable `2.0.0` Timeline row dated `2026-09-08` explaining that the document now mirrors the current iOS screen hierarchy while retaining Android-native presentation. Run:
 
   ```bash
-  rg -n 'Today|History|Day Detail|Stats|Settings|Onboarding|Wear|Recent|NavigationBar|NavigationRail|phone-today.svg' Docs/ANDROID_UI_SPEC.md
-  ! rg -n 'Recent intake rows|Recent$|short wizard|three top-level|no Day Detail' Docs/ANDROID_UI_SPEC.md
-  git diff --check -- Docs/ANDROID_UI_SPEC.md
+  rg -n 'Today|History|Day Detail|Stats|Settings|Onboarding|Wear|Recent|NavigationBar|NavigationRail|phone-today.svg' Docs/Android/ANDROID_UI_SPEC.md
+  ! rg -n 'Recent intake rows|Recent$|short wizard|three top-level|no Day Detail' Docs/Android/ANDROID_UI_SPEC.md
+  git diff --check -- Docs/Android/ANDROID_UI_SPEC.md
   ```
 
   Expected result: all required contracts are present, the removed Recent/simplified-flow language is absent, and the document has no whitespace errors. Commit:
 
   ```bash
-  git add Docs/ANDROID_UI_SPEC.md
+  git add Docs/Android/ANDROID_UI_SPEC.md
   git commit -m "docs: align Android UI spec with iOS product flow"
   ```
 
@@ -209,7 +209,7 @@
 ### Task 4: Align the Android architecture companion
 
 **Files:**
-- Modify: `Docs/ANDROID_ARCHITECTURE.md`
+- Modify: `Docs/Android/ANDROID_ARCHITECTURE.md`
 - Modify: `Docs/ARCHITECTURE.md`
 
 **Interfaces:**
@@ -218,7 +218,7 @@
 
 - [ ] **Step 1: Update Android architecture metadata and capability matrix**
 
-  Set `Docs/ANDROID_ARCHITECTURE.md` to version `1.3.0` and `Last verified: 2026-09-08`. Remove Today’s `intake list` requirement, add the contained glass hero/no-Recent hierarchy, require the month pager and Day Detail, complete Stats chart families, require all six onboarding pages, and preserve complete Settings coverage.
+  Set `Docs/Android/ANDROID_ARCHITECTURE.md` to version `1.3.0` and `Last verified: 2026-09-08`. Remove Today’s `intake list` requirement, add the contained glass hero/no-Recent hierarchy, require the month pager and Day Detail, complete Stats chart families, require all six onboarding pages, and preserve complete Settings coverage.
 
 - [ ] **Step 2: Align Android UI, onboarding, phone feature, and Wear sections**
 
@@ -237,15 +237,15 @@
   Run:
 
   ```bash
-  rg -n 'Document version|Last verified|Today|History|Day Detail|Stats|Settings|Onboarding|Wear|Timeline' Docs/ANDROID_ARCHITECTURE.md Docs/ARCHITECTURE.md
-  ! rg -n 'intake list|three tabs|five pages|no Day Detail' Docs/ANDROID_ARCHITECTURE.md
-  git diff --check -- Docs/ANDROID_ARCHITECTURE.md Docs/ARCHITECTURE.md
+  rg -n 'Document version|Last verified|Today|History|Day Detail|Stats|Settings|Onboarding|Wear|Timeline' Docs/Android/ANDROID_ARCHITECTURE.md Docs/ARCHITECTURE.md
+  ! rg -n 'intake list|three tabs|five pages|no Day Detail' Docs/Android/ANDROID_ARCHITECTURE.md
+  git diff --check -- Docs/Android/ANDROID_ARCHITECTURE.md Docs/ARCHITECTURE.md
   ```
 
   Expected result: both documents carry current metadata, synchronized capability language, and timeline entries with no whitespace errors. Commit:
 
   ```bash
-  git add Docs/ANDROID_ARCHITECTURE.md Docs/ARCHITECTURE.md
+  git add Docs/Android/ANDROID_ARCHITECTURE.md Docs/ARCHITECTURE.md
   git commit -m "docs: synchronize Android architecture UI contract"
   ```
 
@@ -258,10 +258,10 @@
 - Verify: `Ripple_Handoff/Ripple_PRD.md`
 - Verify: `Ripple_Handoff/Ripple_Hero_Motion.md`
 - Verify: `Ripple_Handoff/Ripple_History_Stats.md`
-- Verify: `Docs/ANDROID_UI_SPEC.md`
-- Verify: `Docs/ANDROID_ARCHITECTURE.md`
+- Verify: `Docs/Android/ANDROID_UI_SPEC.md`
+- Verify: `Docs/Android/ANDROID_ARCHITECTURE.md`
 - Verify: `Docs/ARCHITECTURE.md`
-- Verify: `Docs/AndroidUI/*`
+- Verify: `Docs/Android/UI/*`
 
 **Interfaces:**
 - Consumes: all committed documentation changes from Tasks 1–4.
@@ -283,8 +283,8 @@
   Run:
 
   ```bash
-  rg -n 'Today.*History.*Stats.*Settings|six pages|Welcome|Units|Health|Goal|Containers|Notifications|Day Detail|current ISO week' AGENTS.md Ripple_Handoff/Ripple_PRD.md Ripple_Handoff/Ripple_History_Stats.md Docs/ANDROID_UI_SPEC.md Docs/ANDROID_ARCHITECTURE.md
-  ! rg -n 'Tabs: \*\*Heute \| Verlauf \| Einstellungen\*\*|5 Seiten|TimelineView|RippleRings|DropShape|Recent intake rows|intake list' Ripple_Handoff/Ripple_PRD.md Docs/ANDROID_UI_SPEC.md Docs/ANDROID_ARCHITECTURE.md
+  rg -n 'Today.*History.*Stats.*Settings|six pages|Welcome|Units|Health|Goal|Containers|Notifications|Day Detail|current ISO week' AGENTS.md Ripple_Handoff/Ripple_PRD.md Ripple_Handoff/Ripple_History_Stats.md Docs/Android/ANDROID_UI_SPEC.md Docs/Android/ANDROID_ARCHITECTURE.md
+  ! rg -n 'Tabs: \*\*Heute \| Verlauf \| Einstellungen\*\*|5 Seiten|TimelineView|RippleRings|DropShape|Recent intake rows|intake list' Ripple_Handoff/Ripple_PRD.md Docs/Android/ANDROID_UI_SPEC.md Docs/Android/ANDROID_ARCHITECTURE.md
   ```
 
   Confirm that the only active hero motion description is `Ripple_Hero_Motion.md`, History/Stats remains the detailed authority, and Android adds no Recent/dashboard flow.
@@ -294,8 +294,8 @@
   Run:
 
   ```bash
-  xmllint --noout Docs/AndroidUI/*.svg
-  for path in Docs/ANDROID_UI_SPEC.md Docs/ANDROID_ARCHITECTURE.md Docs/ARCHITECTURE.md Ripple_Handoff/Ripple_PRD.md Ripple_Handoff/Ripple_Hero_Motion.md Ripple_Handoff/Ripple_History_Stats.md; do test -f "$path"; done
+  xmllint --noout Docs/Android/UI/*.svg
+  for path in Docs/Android/ANDROID_UI_SPEC.md Docs/Android/ANDROID_ARCHITECTURE.md Docs/ARCHITECTURE.md Ripple_Handoff/Ripple_PRD.md Ripple_Handoff/Ripple_Hero_Motion.md Ripple_Handoff/Ripple_History_Stats.md; do test -f "$path"; done
   git diff --check HEAD
   ```
 
@@ -310,7 +310,7 @@
   If the acceptance pass finds a documentation-only correction, apply it to the owning Markdown/SVG file, rerun the affected command above, and commit it with:
 
   ```bash
-  git add AGENTS.md Ripple_Handoff Docs/ANDROID_UI_SPEC.md Docs/ANDROID_ARCHITECTURE.md Docs/AndroidUI
+  git add AGENTS.md Ripple_Handoff Docs/Android/ANDROID_UI_SPEC.md Docs/Android/ANDROID_ARCHITECTURE.md Docs/Android/UI
   git commit -m "docs: polish Android UI parity contract"
   ```
 

@@ -8,7 +8,7 @@
 
 **Tech Stack:** Swift 6, SwiftUI, Swift Package Manager, Xcode project targets, `@Observable` view models, SwiftData-backed `UseCases` injection.
 
-**Spec:** `AGENTS.md`, `Docs/ARCHITECTURE.md`, `Docs/ANDROID_ARCHITECTURE.md`
+**Spec:** `AGENTS.md`, `Docs/ARCHITECTURE.md`, `Docs/Android/ANDROID_ARCHITECTURE.md`
 
 ## Global Constraints
 

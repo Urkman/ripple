@@ -8,7 +8,7 @@ This document describes the repository's architecture and current implementation
 
 **Last verified:** 2026-09-08
 
-**Companion document:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
+**Companion document:** [Ripple Android Architecture](Android/ANDROID_ARCHITECTURE.md)
 
 ## 1. Architectural goals and invariants
 
@@ -440,7 +440,7 @@ Do not add a direct `ModelContext` to a view, a second intake writer, a UserDefa
 
 ## 18. Documentation maintenance
 
-This document and [Ripple Android Architecture](ANDROID_ARCHITECTURE.md) are maintained as a pair. They describe separate implementations, but shared product behavior and cross-platform capability changes must not silently diverge.
+This document and [Ripple Android Architecture](Android/ANDROID_ARCHITECTURE.md) are maintained as a pair. They describe separate implementations, but shared product behavior and cross-platform capability changes must not silently diverge.
 
 ### Source-of-truth precedence
 
@@ -510,3 +510,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.1.0 | 2026-09-07 | Added the paired-document maintenance contract, semantic document versioning, synchronized-document checklist, and immutable timeline. | Architecture changes now require an explicit documentation review and versioned audit entry. |
 | 1.2.0 | 2026-09-07 | Moved the iOS, watchOS, macOS, tvOS, and visionOS root SwiftUI shells into their executable app targets; `RippleFeatures` now contains reusable feature screens and view models only. | Platform-specific root APIs are compiled only by their owning Apple target. The Android companion contract is unaffected because this is an Apple repository-boundary refactor with no shared product or domain change. |
 | 1.3.0 | 2026-09-08 | Synchronized the shared architecture record with the current four-root iOS product hierarchy, no-Recent Today surface, six-page onboarding, Day Detail flow, and the v2 Android UI companion; no Swift architecture or runtime code changed. | Keeps the Apple architecture and Android companion aligned on shared screens, flows, and use-case semantics while preserving platform-local presentation. |
+| 1.3.1 | 2026-09-08 | Updated the Android companion links after consolidating Android product documentation under `Docs/Android/`; no shared architecture or runtime behavior changed. | The paired architecture documents remain discoverable while the Android contract has one product-docs root. |

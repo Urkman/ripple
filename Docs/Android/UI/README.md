@@ -8,13 +8,13 @@ This pack separates evidence from the Android presentation contract:
 
 ## iOS evidence
 
-- [iPhone Today](../../release/screenshots/raw/en-US/iphone-69/01-today.png)
-- [iPhone History](../../release/screenshots/raw/en-US/iphone-69/02-history.png)
-- [iPhone Stats](../../release/screenshots/raw/en-US/iphone-69/03-stats.png)
-- [iPad Settings](../../release/screenshots/raw/en-US/ipad-129/04-settings.png)
-- [Watch Today](../../release/screenshots/raw/en-US/watch-46/01-today.png)
-- [Watch History](../../release/screenshots/raw/en-US/watch-46/02-history.png)
-- [Watch Stats](../../release/screenshots/raw/en-US/watch-46/03-stats.png)
+- [iPhone Today](../../../release/screenshots/raw/en-US/iphone-69/01-today.png)
+- [iPhone History](../../../release/screenshots/raw/en-US/iphone-69/02-history.png)
+- [iPhone Stats](../../../release/screenshots/raw/en-US/iphone-69/03-stats.png)
+- [iPad Settings](../../../release/screenshots/raw/en-US/ipad-129/04-settings.png)
+- [Watch Today](../../../release/screenshots/raw/en-US/watch-46/01-today.png)
+- [Watch History](../../../release/screenshots/raw/en-US/watch-46/02-history.png)
+- [Watch Stats](../../../release/screenshots/raw/en-US/watch-46/03-stats.png)
 
 ## Android layout contracts
 
