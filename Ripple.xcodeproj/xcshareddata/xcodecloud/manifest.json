@@ -1,0 +1,9 @@
+{
+  "id" : "9101e131-6da7-4a64-9593-8946a1fde1b0",
+  "targets" : [
+    {
+      "id" : "a6f7b8d5-5ea9-47af-83bd-5759ec63fd43",
+      "name" : "RippleiOS"
+    }
+  ]
+}
