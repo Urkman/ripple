@@ -1,6 +1,12 @@
 # Android UI reference pack
 
+**Reference pack revision:** 2.1.0 (tracks the Android UI specification)
+**Last verified:** 2026-09-08
+
 This pack separates evidence from the Android presentation contract:
+
+- Shared product behavior comes from the [Ripple PRD](../../Product/Ripple_PRD.md), especially Section 22.
+- Android screen behavior comes from the [Android UI specification](../ANDROID_UI_SPEC.md) and architecture from the [Android architecture guide](../ANDROID_ARCHITECTURE.md).
 
 - The existing iOS PNGs are evidence of the current product hierarchy and visual priorities.
 - The SVGs in this directory are normative Android layout wireframes. They name Android-native controls and responsive behavior; they are not pixel-perfect iOS copies.

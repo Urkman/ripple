@@ -5,13 +5,15 @@ No “close enough.” No silent shortcuts.
 
 Conflict order:
 
-1. **This file** for process, architecture, bans, and design tokens  
-2. **`Ripple_Hero_Motion.md`** for glass, level, pour, and tilt  
-3. **`Ripple_History_Stats.md`** for History and Stats  
-4. **`Ripple_PRD.md`** for scope, domain, sync, intents, platforms  
+1. **This file** for process, architecture, bans, and design tokens
+2. **`Docs/Product/Ripple_PRD.md`** for product scope, screens, flows, domain, sync, intents, platforms, and motion
+3. **`Docs/ARCHITECTURE.md`** for shared implementation boundaries and repository architecture
+4. **`Docs/Android/`** for the Android architecture, UI, and reference-pack mapping
 
-The PRD summarizes the Today product hierarchy; `Ripple_Hero_Motion.md` is
-the sole detailed contract for glass, level, pour, tilt, and reduced motion.
+The PRD is the sole versioned product contract. Its detailed Today, History,
+Stats, and motion contracts are in Section 22. Architecture documents define
+implementation boundaries and platform-native mappings, not a second product
+source of truth.
 
 ---
 
@@ -91,7 +93,10 @@ Apps/          RippleiOS, watchOS, macOS, tvOS, visionOS
 Extensions/    RippleWidgets (WidgetKit UI)
 Packages/      RippleDomain, RippleData, RippleIntentsCore, RippleUI, RippleFeatures
 Tests/
-Docs/ADR/
+Docs/
+  Product/Ripple_PRD.md  the single versioned product contract
+  ARCHITECTURE.md        shared implementation architecture
+  Android/               Android architecture, UI, and reference pack
 ```
 
 No business logic in `Apps/` beyond wiring.  
@@ -151,11 +156,11 @@ Every new component: Light/Dark preview, Dynamic Type XXXL, Reduce Motion.
 
 ## 5. Today hero — do not improvise
 
-Full text: `Ripple_Hero_Motion.md` (v1.2+). Non-negotiable short list:
+Full text: `Docs/Product/Ripple_PRD.md` §22.1. Non-negotiable short list:
 
 - Level = stylized **2D glass**. No circular progress. No `ProgressView` as the hero.
 - Idle: **flat** water surface. No `TimelineView` for water.
-- Tilt: screen-aligned Core Motion gravity, full rotation with no 16° cap. Damped motion-driven slosh; preserve visible water area while keeping water contained. See Hero Motion §5.2. No SPH.
+- Tilt: screen-aligned Core Motion gravity, full rotation with no 16° cap. Damped motion-driven slosh; preserve visible water area while keeping water contained. See PRD §22.1.6. No SPH.
 - `level == 0`: no fill, no bottom shimmer.
 - No single drop metaphor. Use one narrow `PourStreamShape` for an active add series.
 - Stream width 7…12 pt and flow duration 0.40…0.70 s follow the series amount.
@@ -170,7 +175,7 @@ Full text: `Ripple_Hero_Motion.md` (v1.2+). Non-negotiable short list:
 
 ## 6. History and Stats — keep them split
 
-Full text: `Ripple_History_Stats.md`.
+Full text: `Docs/Product/Ripple_PRD.md` §22.2.
 
 - Four tabs: Today | History | Stats | Settings.
 - History = Activity-style month grid, **one ring per day**, cap 1.0. Future days not tappable.
@@ -209,7 +214,8 @@ Full text: `Ripple_History_Stats.md`.
 - No force-unwrap on production paths.
 - No `print` as telemetry.
 - Package public API as small as possible.
-- New dependency only with an ADR. Default: no third-party UI libraries.
+- New dependency only after the affected architecture document is updated and
+  the dependency is explicitly justified. Default: no third-party UI libraries.
 
 ---
 
@@ -235,13 +241,13 @@ Full text: `Ripple_History_Stats.md`.
 
 1. Read the spec, then write code. Do not build first and “approximate” the spec.
 2. Extend existing tokens and use cases. Do not invent a parallel path.
-3. UI change to the hero or History/Stats: update the matching `.md` first, then the code.
+3. UI change to the hero or History/Stats: update `Docs/Product/Ripple_PRD.md` first, then the code.
 4. After motion changes, re-check Reduce Motion and `level == 0`.
 5. Do not inflate scope into v1.1.
 6. Re-read this file at session start when unsure.
-7. Treat [`Docs/ARCHITECTURE.md`](Docs/ARCHITECTURE.md), [`Docs/Android/ANDROID_ARCHITECTURE.md`](Docs/Android/ANDROID_ARCHITECTURE.md), and [`Docs/Android/ANDROID_UI_SPEC.md`](Docs/Android/ANDROID_UI_SPEC.md) as maintained contracts. Before changing shared product behavior, domain rules, persistence, platform surfaces, UI/motion, module boundaries, or Android screen behavior, read the applicable documents and affected source specifications.
-8. Update the relevant architecture/UI document in the same change as the implementation or ADR. Shared contract changes require updates to both architecture documents; Android UI changes also require the Android UI specification; platform-only changes must explicitly record why companion documents are unaffected.
-9. Every architecture/UI-document change must update its semantic version and `Last verified` metadata and append an immutable entry to the document's final `Timeline` section. Follow the maintenance contracts in those documents; do not leave code, specs, and architecture documentation silently out of sync.
+7. Treat [`Docs/Product/Ripple_PRD.md`](Docs/Product/Ripple_PRD.md), [`Docs/ARCHITECTURE.md`](Docs/ARCHITECTURE.md), and every file under [`Docs/Android/`](Docs/Android/) as maintained contracts. Before changing product behavior, domain rules, persistence, platform surfaces, UI/motion, module boundaries, or Android screen behavior, read the applicable documents and affected source specifications.
+8. Update the PRD in the same change as any product behavior, screen, flow, or motion change. Update `Docs/ARCHITECTURE.md` for shared implementation-boundary changes. For Android work, review and update every affected file under `Docs/Android/`, including the Android architecture, UI specification, README, and SVG reference pack; do not leave companion files stale.
+9. `Docs/Product/Ripple_PRD.md` and `Docs/ARCHITECTURE.md` are independently semantic-versioned and must update `Last verified` plus their final immutable Timeline entry whenever they change. The Android architecture and UI specification follow the same versioning and Timeline rules; Android reference files must remain consistent with them. Agent task plans/specs are kept outside the maintained contract and remain ignored.
 
 ## 12. Required skills
 

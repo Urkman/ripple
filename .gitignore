@@ -12,9 +12,12 @@ Config/Ripple.xcconfig
 .idea/
 .xcodebuildmcp/
 .superpowers/
+superpowers/
+# Maintained architecture, product, Android, and reference documentation under
+# Docs/ is tracked. Agent-generated task plans/specs and retired decision
+# records remain local and ignored.
 Docs/ADR/
-# Android product contracts, planning records, and reference wireframes are tracked.
-!Docs/Android/
-!Docs/Android/**
+Docs/Android/Planning/
+Docs/superpowers/
 Ripple_Handoff/
 .asc/

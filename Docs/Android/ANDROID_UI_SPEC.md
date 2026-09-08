@@ -1,13 +1,11 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 2.0.1
+**Document version:** 2.1.0
 **Last verified:** 2026-09-08
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 **Shared architecture:** [Ripple Architecture](../ARCHITECTURE.md)
-**Product contract:** [Ripple PRD](../../Ripple_Handoff/Ripple_PRD.md)
-**Detailed hero contract:** [Hero Motion](../../Ripple_Handoff/Ripple_Hero_Motion.md)
-**Detailed History/Stats contract:** [History and Stats](../../Ripple_Handoff/Ripple_History_Stats.md)
+**Product contract:** [Ripple PRD](../Product/Ripple_PRD.md)
 **Visual reference pack:** [Android UI reference pack](UI/README.md)
 
 This is the normative Android screen, flow, state, accessibility, and visual
@@ -29,9 +27,7 @@ The contract is maintained in layers:
 
 | Concern | Authority | Android obligation |
 |---|---|---|
-| Product scope, platforms, domain language | `Ripple_PRD.md` and `AGENTS.md` | Preserve capability and source-of-truth rules |
-| Today glass, level, pour, tilt, coalescing, reduced motion | `Ripple_Hero_Motion.md` | Reproduce behavior with Android drawing/animation primitives |
-| History calendar, Day Detail, Stats, Watch behavior | `Ripple_History_Stats.md` | Preserve screens, states, and flow; choose native Android presentation |
+| Product scope, platforms, domain language, Today, History, Stats, and motion | `Ripple_PRD.md` §22 and `AGENTS.md` | Preserve capability and source-of-truth rules |
 | Current iOS hierarchy and settings/onboarding composition | iOS source and captures listed below | Do not invent a dashboard or omit a screen |
 | Android layout and system substitution | This document and `UI/*.svg` | Use Android-native components and responsive layouts |
 
@@ -178,7 +174,7 @@ primary action, not an unlabeled symbol-only control.
 
 The glass hero must:
 
-- use the contained 2D silhouette and water-level rules from `Ripple_Hero_Motion.md`;
+- use the contained 2D silhouette and water-level rules from `Ripple_PRD.md` §22.1;
 - show consumed amount, unit, percentage, remaining amount, and goal without
   clipping at large text sizes;
 - have a flat idle surface and no circular `ProgressIndicator` as the daily
@@ -310,7 +306,7 @@ Period rules:
 - Month is the current or selected calendar month.
 - Year contains twelve month categories.
 - Averages include elapsed days without an entry, as specified by
-  `Ripple_History_Stats.md`.
+  `Ripple_PRD.md` §22.2.5.
 - Empty periods show a localized zero state; never fabricate chart marks.
 
 The four chart families are:
@@ -628,3 +624,6 @@ at the bottom.
 | 1.0.0 | 2026-09-07 | Initial Android UI companion with Material/Wear guidance, responsive layouts, state matrix, flows, and capture naming. | Established native Android presentation rules. |
 | 2.0.0 | 2026-09-08 | Rebased the Android contract on the current iOS hierarchy: four roots, no Today Recent list, calendar-first History with Day Detail, separate Stats, full Settings, six-page onboarding, and the current Wear flow; added linked SVG reference pack and evidence mapping. | Android implementation now has the same product screens and flows as iOS while retaining native Android components and system surfaces. |
 | 2.0.1 | 2026-09-08 | Consolidated the Android UI specification and SVG reference pack under `Docs/Android/`; updated local evidence and companion links without changing the screen contract. | Android UI documentation now has one discoverable product-docs root under `Docs/`. |
+| 2.0.2 | 2026-09-08 | Updated the product-contract links after moving the maintained PRD, Hero Motion, and History/Stats documents into `Docs/Product/`; no Android screen contract changed. | Android UI implementation now resolves its shared behavior contracts from the maintained `Docs/` tree, while task planning records remain separate and ignored. |
+| 2.0.3 | 2026-09-08 | Updated the Android UI contract to use the consolidated `Docs/Product/Ripple_PRD.md` as its only shared product source; no Android screen behavior changed. | Android layout and state guidance now has one product contract plus the Android-native UI mapping and visual reference pack. |
+| 2.1.0 | 2026-09-08 | Synchronized the Android UI reference pack with the single versioned PRD and removed the retired ADR/document-tree assumptions. | The Android UI specification, README, and SVG pack now point to one current product contract and remain maintainable as one Android documentation set. |

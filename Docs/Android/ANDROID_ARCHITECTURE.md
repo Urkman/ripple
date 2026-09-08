@@ -7,7 +7,7 @@
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.3.1
+**Document version:** 1.4.0
 
 **Companion document:** [Ripple Architecture](../ARCHITECTURE.md)
 
@@ -21,7 +21,7 @@ looking and behaving like a well-designed Android app. It must not copy iOS
 navigation chrome, controls, typography, glass treatment, or platform-specific
 presentation merely to achieve functional parity.
 
-The existing iOS architecture is described in [`Docs/ARCHITECTURE.md`](../ARCHITECTURE.md). Android screen composition and state behavior are specified in [`Docs/Android/ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md). Product behavior is specified by the [Ripple PRD](../../Ripple_Handoff/Ripple_PRD.md), [hero motion specification](../../Ripple_Handoff/Ripple_Hero_Motion.md), and [History/Stats specification](../../Ripple_Handoff/Ripple_History_Stats.md). Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
+The existing iOS architecture is described in [`Docs/ARCHITECTURE.md`](../ARCHITECTURE.md). Android screen composition and state behavior are specified in [`Docs/Android/ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md). Product behavior is specified by the consolidated [Ripple PRD](../Product/Ripple_PRD.md), especially its detailed Today, History, Stats, and motion contracts in Section 22. Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
 
 ## 1. Product boundary and non-negotiable rules
 
@@ -104,7 +104,7 @@ Use current stable Kotlin, Android Gradle Plugin, AndroidX, Compose, Room, Healt
 
 Phone/tablet uses `minSdk 28`, matching the supported Health Connect app baseline. The Wear module uses `minSdk 30` for the first release and targets the current stable Wear OS SDK. Compile/target SDK values are the current stable SDK selected at project bootstrap and recorded in the version catalog.
 
-Do not add Hilt, a chart framework, a UI kit, a navigation abstraction, or a fluid simulation library merely for convenience. Manual composition keeps the Android boundary explicit and matches Ripple's small dependency policy. A new non-AndroidX dependency requires an ADR.
+Do not add Hilt, a chart framework, a UI kit, a navigation abstraction, or a fluid simulation library merely for convenience. Manual composition keeps the Android boundary explicit and matches Ripple's small dependency policy. A new non-AndroidX dependency requires an explicit rationale in this document, a versioned update, and a corresponding test/build review.
 
 ### 3.2 Official platform references
 
@@ -1129,7 +1129,7 @@ Acceptance: all parity requirements pass, no temporary behavior remains, no cros
 - Keep feature modules unaware of concrete persistence/system frameworks.
 - Route every intake through `LogIntake`.
 - Do not make Health Connect, widgets, or Wear the source of truth.
-- Do not add iOS/Android sync, a cloud backend, or account login without a new approved specification and ADR.
+- Do not add iOS/Android sync, a cloud backend, or account login without an approved PRD/architecture change and corresponding versioned documentation update.
 - Do not copy iOS glass, SF Symbols, SwiftUI navigation, or Apple Watch workflows.
 - Use Android-native Material/Wear patterns and system behavior.
 - Test empty, loading, error, denied-permission, offline, stale-sync, large-text, dark-mode, and reduced-motion states.
@@ -1161,12 +1161,7 @@ An agent may call the Android port complete only when every item is true:
 ## 22. Related documents
 
 - [Shared iOS architecture](../ARCHITECTURE.md)
-- [Ripple PRD](../../Ripple_Handoff/Ripple_PRD.md)
-- [Hero motion contract](../../Ripple_Handoff/Ripple_Hero_Motion.md)
-- [History and Stats contract](../../Ripple_Handoff/Ripple_History_Stats.md)
-- [ADR-000: Architecture](../ADR/ADR-000-architecture.md)
-- [ADR-001: Persistence](../ADR/ADR-001-persistence.md)
-- [ADR-002: HealthKit](../ADR/ADR-002-healthkit.md)
+- [Ripple PRD](../Product/Ripple_PRD.md)
 - [Android UI specification](ANDROID_UI_SPEC.md)
 
 ## 23. Documentation maintenance
@@ -1178,9 +1173,9 @@ This document and [Ripple Architecture](../ARCHITECTURE.md) are maintained as a 
 When sources disagree, use this order:
 
 1. `AGENTS.md` for repository process, shared architecture constraints, design tokens, and explicit bans.
-2. The authoritative product specifications: [Ripple PRD](../../Ripple_Handoff/Ripple_PRD.md), [Ripple Hero Motion](../../Ripple_Handoff/Ripple_Hero_Motion.md), and [Ripple History and Stats](../../Ripple_Handoff/Ripple_History_Stats.md).
-3. An approved ADR or Android decision record for a deliberate platform-specific choice.
-4. This Android document for Android module boundaries, platform mapping, and Android-native workflows.
+2. The authoritative product specification: [Ripple PRD](../Product/Ripple_PRD.md), including its detailed Today, History, Stats, and motion contracts in Section 22.
+3. This Android document for Android module boundaries, platform mapping, and Android-native workflows.
+4. The Android UI specification and reference pack for screen-level behavior.
 5. Android source and tests, which reveal current behavior and must be brought back into agreement when they drift.
 
 The Android document must never be used to introduce iOS/Android data sharing or to override a shared product invariant without an approved specification change.
@@ -1204,12 +1199,12 @@ Review the iOS document even for an Android-only change. If the shared contract 
 
 1. Read both architecture documents and the affected source specification before editing Android code or build configuration.
 2. Classify the change as shared, Android-only, iOS-only, or a product-contract change.
-3. Update this document in the same change as Android implementation or an Android ADR.
+3. Update this document in the same change as Android implementation or an Android architecture change.
 4. Update `Document version` and the date metadata in every document that changed.
 5. Append one immutable row to this document's timeline. New rows go at the bottom; historical rows are not rewritten or deleted.
 6. If shared domain behavior or a product contract changed, update both documents and add corresponding timeline rows with the same release/change reference.
 7. Verify Markdown links, Gradle/module examples, permissions, and relevant tests/builds. A documentation-only correction still runs whitespace/link checks.
-8. Commit the documentation with the implementation/ADR, or as a separate documentation commit when no code changed.
+8. Commit the documentation with the implementation, or as a separate documentation commit when no code changed.
 
 ### Documentation versioning
 
@@ -1225,7 +1220,7 @@ The timeline is the audit trail. Each row records the document version, date, ch
 
 Before merging an architecture-affecting change, confirm:
 
-- [ ] The source specification or ADR is updated when required.
+- [ ] The source specification is updated when required.
 - [ ] The iOS document reflects the current Swift implementation.
 - [ ] This Android document reflects the current Android contract or explicitly records that Android is unaffected.
 - [ ] Shared use cases, units, sources, permissions, and feature names mean the same thing in both documents.
@@ -1244,3 +1239,6 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.2.0 | 2026-09-07 | Added the Android UI specification companion and linked it as the normative screen/state contract. | Android UI implementation now has explicit wireframes, responsive behavior, state coverage, interaction flows, and screenshot acceptance criteria. |
 | 1.3.0 | 2026-09-08 | Synchronized the Android capability matrix, Today hierarchy, six-page onboarding, History/Day Detail flow, separate Stats contract, full Settings surface, Wear detail behavior, and linked v2 Android UI specification. | Android architecture now preserves the current iOS product screens and flows while keeping Material, adaptive navigation, native permission, and Wear-native presentation. |
 | 1.3.1 | 2026-09-08 | Consolidated the Android architecture, UI specification, and reference pack under `Docs/Android/`; updated companion links without changing the architecture contract. | Android documentation now has one discoverable product-docs root under `Docs/`. |
+| 1.3.2 | 2026-09-08 | Updated the product-contract links after moving the maintained PRD, Hero Motion, and History/Stats documents into `Docs/Product/`; no Android architecture behavior changed. | Android implementation guidance now resolves entirely through the maintained `Docs/` tree, while task planning records remain separate and ignored. |
+| 1.3.3 | 2026-09-08 | Updated the Android architecture links after consolidating all product behavior, Today motion, History, and Stats requirements into `Docs/Product/Ripple_PRD.md`; no Android architecture behavior changed. | Android implementation has one product source of truth plus a separate Android-native UI/architecture mapping. |
+| 1.4.0 | 2026-09-08 | Removed ADR references and made the PRD, shared architecture, Android architecture, Android UI specification, and reference pack the maintained documentation set. | Android decisions now stay in the versioned architecture/UI documents instead of a separate ADR tree. |

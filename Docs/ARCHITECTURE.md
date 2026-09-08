@@ -2,9 +2,9 @@
 
 Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean MVVM system. The same domain write API serves the main apps, widgets, Siri/App Intents, notification actions, and watch surfaces. SwiftData is the source of truth; CloudKit synchronizes the shared private store when the platform is configured for it, and HealthKit is an optional projection.
 
-This document describes the repository's architecture and current implementation. Product behavior remains defined by the [PRD](../Ripple_Handoff/Ripple_PRD.md), [hero motion specification](../Ripple_Handoff/Ripple_Hero_Motion.md), and [History/Stats specification](../Ripple_Handoff/Ripple_History_Stats.md).
+This document describes the repository's architecture and current implementation. Product behavior remains defined by the [PRD](Product/Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts.
 
-**Document version:** 1.3.0
+**Document version:** 1.4.0
 
 **Last verified:** 2026-09-08
 
@@ -83,8 +83,9 @@ Packages/
 
 Tests/              repository-level test/support area
 Docs/
-  ADR/              architecture decision records
-  ARCHITECTURE.md   this document
+  Product/           the single versioned product PRD
+  Android/           Android architecture, UI, and reference pack
+  ARCHITECTURE.md    this document
 ```
 
 Xcode project generation is defined in [`project.yml`](../project.yml). Package manifests and application targets use Swift 6 and the current OS SDK deployment targets configured by the project.
@@ -238,7 +239,8 @@ CloudKit synchronization is therefore an implementation of the shared store, not
 - No view writes through `@Query`; queries are read-only UI observations where used.
 - UserDefaults is not used as a second intake or settings database. Ephemeral widget state is not authoritative.
 
-The persistence decisions are recorded in [ADR-001](ADR/ADR-001-persistence.md) and the overall layering in [ADR-000](ADR/ADR-000-architecture.md).
+The persistence and layering rules are maintained in this document and the
+authoritative product contract. There is no separate decision-record tree.
 
 ## 8. HealthKit and other projections
 
@@ -250,7 +252,9 @@ Health authorization is split by purpose:
 - read access for body mass;
 - optional workout reads used by goal calculation.
 
-Projection errors are logged/contained at the adapter boundary. The SwiftData intake remains valid if HealthKit is unavailable, denied, or temporarily fails. This behavior is defined in [ADR-002](ADR/ADR-002-healthkit.md).
+Projection errors are logged/contained at the adapter boundary. The SwiftData
+intake remains valid if HealthKit is unavailable, denied, or temporarily fails.
+This behavior is part of the shared architecture and product contract.
 
 Notifications are also adapters. `NotificationAuthorizer` translates system authorization status, while `ReminderScheduler` owns categories, pending-request replacement, wake/sleep bounds, interval calculation, and the default log action. The notification action invokes the same `LogIntake` use case rather than creating a notification-specific write path.
 
@@ -427,16 +431,10 @@ For a new behavior, follow this sequence:
 
 Do not add a direct `ModelContext` to a view, a second intake writer, a UserDefaults source of truth, a global router, or a platform-specific copy of a domain rule.
 
-## 17. Related specifications and decisions
+## 17. Related specifications
 
-- [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md)
-- [Ripple Hero Motion](../Ripple_Handoff/Ripple_Hero_Motion.md)
-- [Ripple History and Stats](../Ripple_Handoff/Ripple_History_Stats.md)
-- [ADR-000: Architecture](ADR/ADR-000-architecture.md)
-- [ADR-001: Persistence](ADR/ADR-001-persistence.md)
-- [ADR-002: HealthKit](ADR/ADR-002-healthkit.md)
-- [ADR-003: Live Activity](ADR/ADR-003-live-activity.md)
-- [ADR-004: Focus Filter](ADR/ADR-004-focus-filter.md)
+- [Ripple PRD](Product/Ripple_PRD.md)
+- [Ripple Android Architecture](Android/ANDROID_ARCHITECTURE.md)
 
 ## 18. Documentation maintenance
 
@@ -447,10 +445,9 @@ This document and [Ripple Android Architecture](Android/ANDROID_ARCHITECTURE.md)
 When sources disagree, use this order:
 
 1. `AGENTS.md` for repository process, architecture boundaries, bans, and shared design constraints.
-2. The authoritative product specifications: [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md), [Ripple Hero Motion](../Ripple_Handoff/Ripple_Hero_Motion.md), and [Ripple History and Stats](../Ripple_Handoff/Ripple_History_Stats.md).
-3. An approved ADR for a deliberate architectural exception or dependency decision.
-4. The relevant platform architecture document.
-5. The implementation and tests, which reveal current behavior and must be brought back into agreement when they drift.
+2. The authoritative product specification: [Ripple PRD](Product/Ripple_PRD.md). Its detailed Today, History, Stats, and motion contracts are in Section 22.
+3. The relevant platform architecture document.
+4. The implementation and tests, which reveal current behavior and must be brought back into agreement when they drift.
 
 If a product or architecture decision changes, update the applicable specification and both architecture documents before considering the implementation change complete.
 
@@ -472,12 +469,12 @@ Platform-only changes still require checking the other document. If the shared c
 
 1. Read both architecture documents and the affected source specification before editing code or architecture.
 2. Identify whether the change is shared, iOS-only, Android-only, or a change to the product contract.
-3. Update the relevant architecture sections in the same change as the implementation or ADR.
+3. Update the relevant architecture sections in the same change as the implementation.
 4. Update `Document version` and `Last verified` in every document that changed.
 5. Append one immutable row to the changed document's timeline. New rows go at the bottom; historical rows are not rewritten or deleted.
 6. If the shared contract changed, update both documents and add corresponding timeline rows with the same release/change reference.
 7. Verify Markdown links, headings, code examples, and relevant tests/builds. A documentation-only correction still runs whitespace/link checks.
-8. Commit the documentation with the implementation/ADR, or as a separate documentation commit when no code changed.
+8. Commit the documentation with the implementation, or as a separate documentation commit when no code changed.
 
 ### Documentation versioning
 
@@ -493,7 +490,7 @@ The timeline is the audit trail. Each row records the document version, date, ch
 
 Before merging an architecture-affecting change, confirm:
 
-- [ ] The source specification or ADR is updated when required.
+- [ ] The source specification is updated when required.
 - [ ] The iOS document reflects the current Swift implementation.
 - [ ] The Android document reflects the current Android contract or explicitly records that Android is unaffected.
 - [ ] Shared use cases, units, sources, permissions, and feature names mean the same thing in both documents.
@@ -511,3 +508,6 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.2.0 | 2026-09-07 | Moved the iOS, watchOS, macOS, tvOS, and visionOS root SwiftUI shells into their executable app targets; `RippleFeatures` now contains reusable feature screens and view models only. | Platform-specific root APIs are compiled only by their owning Apple target. The Android companion contract is unaffected because this is an Apple repository-boundary refactor with no shared product or domain change. |
 | 1.3.0 | 2026-09-08 | Synchronized the shared architecture record with the current four-root iOS product hierarchy, no-Recent Today surface, six-page onboarding, Day Detail flow, and the v2 Android UI companion; no Swift architecture or runtime code changed. | Keeps the Apple architecture and Android companion aligned on shared screens, flows, and use-case semantics while preserving platform-local presentation. |
 | 1.3.1 | 2026-09-08 | Updated the Android companion links after consolidating Android product documentation under `Docs/Android/`; no shared architecture or runtime behavior changed. | The paired architecture documents remain discoverable while the Android contract has one product-docs root. |
+| 1.3.2 | 2026-09-08 | Moved the maintained product specifications and reference captures from the ignored handoff directory into `Docs/Product/`; updated the architecture links. | Product contracts are now tracked with the rest of the maintained documentation, while agent-generated task records remain separate and ignored. |
+| 1.3.3 | 2026-09-08 | Consolidated the Today, History, Stats, and motion specifications into the single versioned `Docs/Product/Ripple_PRD.md`; no Swift architecture or runtime behavior changed. | The architecture document now points to one product source of truth while retaining platform-local implementation boundaries. |
+| 1.4.0 | 2026-09-08 | Removed the ADR document tree and made the PRD plus this architecture document the maintained shared contracts; updated the repository layout and maintenance workflow. | Fewer maintained files are required, with product behavior versioned in the PRD and implementation boundaries versioned here. |
