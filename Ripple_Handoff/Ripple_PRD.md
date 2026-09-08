@@ -486,7 +486,7 @@ Adaptive Plattform-Komposition statt geschrumpftem iPhone-Layout. History verwen
 
 ### 12.3 Apple Watch
 
-Die Watch-App hat drei horizontale Seiten: **Heute | Verlauf | Statistik**. Heute ist eine vollflächige, flache Wasserstand-Darstellung ohne Ring oder Glas und bietet eine einzelne `+`-Aktion. Sie öffnet das Mengen-Sheet mit drei vorkonfigurierten Mengen; die Crown passt den aktuellen Wert in 10-ml-Schritten an und macht ihn bei einer Änderung zu einer eigenen Menge ohne Behälter-ID. Ein separater `+`-Modusschalter ist nicht nötig. Erst die Bestätigung im Sheet schreibt über denselben `LogIntake`-Use-Case mit Quelle `watch`; eine Auswahl allein schreibt nicht. Zum Verwerfen gibt es nur das systemseitige `×` oben, keinen zusätzlichen Cancel-Button. Verlauf und Statistik verwenden jeweils einen lokalen Navigationsstapel für ihr scrollbares Titelverhalten; Heute bleibt für das vollflächige Wasserfeld ohne Navigationsstapel. Die Watch-App bevorzugt die dunkle OLED-Darstellung. Auf einer echten Watch darf eine Handgelenkbewegung eine kurze, gedämpfte Wasseroberflächen-Reaktion auslösen, die im Ruhezustand wieder glatt ausläuft.
+Die Watch-App hat drei horizontale Seiten: **Heute | Verlauf | Statistik**. Heute ist eine vollflächige, flache Wasserstand-Darstellung ohne Ring oder Glas und bietet eine einzelne `+`-Aktion. Sie öffnet das Mengen-Sheet mit drei vorkonfigurierten Mengen; die Crown passt den aktuellen Wert in 10-ml-Schritten an und macht ihn bei einer Änderung zu einer eigenen Menge ohne Behälter-ID. Ein separater `+`-Modusschalter ist nicht nötig. Erst die Bestätigung im Sheet schreibt über denselben `LogIntake`-Use-Case mit Quelle `watch`; eine Auswahl allein schreibt nicht. Zum Verwerfen gibt es nur das systemseitige `×` oben, keinen zusätzlichen Cancel-Button. Verlauf und Statistik verwenden jeweils einen lokalen Navigationsstapel für ihr scrollbares Titelverhalten; Heute bleibt für das vollflächige Wasserfeld ohne Navigationsstapel. Die Watch-App bevorzugt die dunkle OLED-Darstellung. Watch und Komplikationen bleiben ohne Tilt und ohne Oberflächenreaktion; die Wasserfläche bleibt statisch.
 
 Verlauf zeigt die letzten sieben vergangenen bzw. heutigen lokalen Kalendertage als kompakte Liste, sortiert neu nach alt. Ein Tap öffnet ein Tagesdetail mit Summe, Ziel und Einträgen. Einzelne Einträge können dort per Wischaktion über den bestehenden `DeleteIntake`-Use-Case soft-deleted und über eine kurze Undo-Aktion wiederhergestellt werden; Bearbeiten und Hinzufügen bleiben auf iPhone/iPad. Statistik zeigt die aktuelle ISO-Woche mit Durchschnitt pro vergangenem Tag, Zieltreffern, Gesamtmenge und genau einem kompakten Swift-Charts-Diagramm. Kein Monatskalender und kein Perioden-Picker auf der Watch.
 
@@ -535,7 +535,7 @@ Widget muss `fullColor`, `accented`, `vibrant` überleben.
 
 ### 13.3 Komponenten
 
-`RippleProgressView`, `LogButton`, `QuickAddCluster`, `AmountStepper`, `ContainerChip`, `DayHeader`, `RemainingLabel`, `IntakeRow`, `SyncStatusView`, `EmptyState`, `GlassCard`.
+`LogButton`, `QuickAddCluster`, `AmountStepper`, `ContainerChip`, `DayHeader`, `RemainingLabel`, `IntakeRow`, `SyncStatusView`, `EmptyState`, `GlassCard`, `GlassShape`, `WaterFill`, `PourStreamShape`, `DayRing`.
 
 Jede Komponente: Preview Light/Dark, Dynamic Type XXXL, Reduce Motion, Watch-Canvas.
 
@@ -672,7 +672,7 @@ Nicht umdrehen.
 
 ## 19. Definition of Done v1.0
 
-- [ ] Log, Undo, Today, History, Settings, Onboarding auf iPhone und iPad
+- [ ] Log, Undo, Today, History, Stats, Settings, Onboarding auf iPhone und iPad
 - [ ] watchOS-App mit Today, History, Stats, Default-/Custom-Log, Day Detail mit Entry-Delete/Undo und ≥1 Komplikation
 - [ ] Mac-App mit Sidebar und Tastaturkürzeln
 - [ ] Interaktives Medium-Widget und Lock-Screen-Accessory
@@ -714,4 +714,4 @@ Nicht umdrehen.
 
 ---
 
-*Ende PRD 1.4. Grok Build implementiert Abschnitt 18 in dieser Reihenfolge und stoppt bei Abschnitt 19 DoD.*
+*Ende PRD 1.5. Grok Build implementiert Abschnitt 18 in dieser Reihenfolge und stoppt bei Abschnitt 19 DoD.*
