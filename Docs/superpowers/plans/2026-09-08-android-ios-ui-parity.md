@@ -86,7 +86,7 @@
   Run:
 
   ```bash
-  ! rg -n 'Tabs:.*Heute.*Verlauf.*Einstellungen|5 Seiten|TimelineView|RippleRings|DropShape|idle.*6,0 s' Ripple_Handoff/Ripple_PRD.md
+  ! rg -n 'Tabs: \*\*Heute \| Verlauf \| Einstellungen\*\*|5 Seiten|TimelineView|RippleRings|DropShape|idle.*6,0 s' Ripple_Handoff/Ripple_PRD.md
   rg -n 'Heute.*Verlauf.*Stats.*Einstellungen|Welcome|Units|Health|Goal|Containers|Notifications|Hero_Motion' Ripple_Handoff/Ripple_PRD.md AGENTS.md
   git diff --check -- AGENTS.md Ripple_Handoff/Ripple_PRD.md
   ```
@@ -284,7 +284,7 @@
 
   ```bash
   rg -n 'Today.*History.*Stats.*Settings|six pages|Welcome|Units|Health|Goal|Containers|Notifications|Day Detail|current ISO week' AGENTS.md Ripple_Handoff/Ripple_PRD.md Ripple_Handoff/Ripple_History_Stats.md Docs/ANDROID_UI_SPEC.md Docs/ANDROID_ARCHITECTURE.md
-  ! rg -n 'Tabs:.*Heute.*Verlauf.*Einstellungen|5 Seiten|TimelineView|RippleRings|DropShape|Recent intake rows|intake list' Ripple_Handoff/Ripple_PRD.md Docs/ANDROID_UI_SPEC.md Docs/ANDROID_ARCHITECTURE.md
+  ! rg -n 'Tabs: \*\*Heute \| Verlauf \| Einstellungen\*\*|5 Seiten|TimelineView|RippleRings|DropShape|Recent intake rows|intake list' Ripple_Handoff/Ripple_PRD.md Docs/ANDROID_UI_SPEC.md Docs/ANDROID_ARCHITECTURE.md
   ```
 
   Confirm that the only active hero motion description is `Ripple_Hero_Motion.md`, History/Stats remains the detailed authority, and Android adds no Recent/dashboard flow.
