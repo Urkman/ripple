@@ -2,12 +2,12 @@
 
 **Status:** Approved design for implementation
 
-**Last verified:** 2026-09-07
+**Last verified:** 2026-09-08
 
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.2.0
+**Document version:** 1.3.0
 
 **Companion document:** [Ripple Architecture](ARCHITECTURE.md)
 
@@ -15,7 +15,11 @@
 
 This document is the implementation contract for an Android version of Ripple. It defines the functionality that must exist, the Android architecture that should contain it, the platform-native UI behavior, and the verification required before release.
 
-The Android app is a separate product implementation. It must preserve Ripple's domain behavior and feature coverage, but it must look and behave like a well-designed Android app. It must not copy iOS navigation, controls, typography, glass treatment, or workflows merely to achieve functional parity.
+The Android app is a separate product implementation. It must preserve the
+current iOS product screens, information hierarchy, and user flows while
+looking and behaving like a well-designed Android app. It must not copy iOS
+navigation chrome, controls, typography, glass treatment, or platform-specific
+presentation merely to achieve functional parity.
 
 The existing iOS architecture is described in [`Docs/ARCHITECTURE.md`](ARCHITECTURE.md). Android screen composition and state behavior are specified in [`Docs/ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md). Product behavior is specified by the [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md), [hero motion specification](../Ripple_Handoff/Ripple_Hero_Motion.md), and [History/Stats specification](../Ripple_Handoff/Ripple_History_Stats.md). Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
 
@@ -60,19 +64,19 @@ The agent must implement the following Android capabilities. The right-hand colu
 
 | iOS capability | Android implementation | Required behavior |
 | --- | --- | --- |
-| Today | Compose Today destination with Android `Scaffold`, water hero, quick-add controls, FAB, remaining label, intake list | Log, undo, goal progress, pacing, confirmation, errors, and empty states behave equivalently |
+| Today | Compose Today destination with Android `Scaffold`, contained water hero, saved-container quick-add controls, custom amount action, and remaining label | Log, undo, goal progress, pacing, confirmation, errors, and empty states behave equivalently; Today has no Recent/last-entry list |
 | Hero water level | Custom Compose `Canvas`/path rendering | Water level, pour series, containment, zero state, reduced motion, and no-overshoot rules remain; the container and controls are Android-native |
 | Quick logging | Material buttons/chips/FAB and system entry points | Every tap creates its own intake row through `LogIntake` |
-| History | Adaptive month calendar and Android list/detail navigation | One ring per day, future days disabled, Day Detail supports edit/delete/restore, add only today |
-| Stats | Android-native period selector and custom accessible Compose charts | Week/month/year, daily progress, day-part/container breakdown, hit/empty/weak days, best day, current run |
-| Settings | Material list sections, switches, dialogs, permission rows, system settings links | Profile, unit, goal, containers, reminders, Health Connect, haptics, onboarding, sync state, export |
-| Onboarding | Android back-aware Compose flow and native permission contracts | Profile, goal, Health Connect read/write, notifications, completion state |
+| History | Adaptive horizontal month calendar and Android list/detail navigation | One ring per day, future days disabled, tap opens Day Detail, edit/delete/restore, add only today |
+| Stats | Android-native period selector and custom accessible Compose charts | Week/month/year, summary row, actual-vs-goal, hit-rate, day-part, container charts, highlights, and empty states |
+| Settings | Material list sections, switches, dialogs, permission rows, system settings links | Profile, units/activity, daily goal, containers, reminders, Health Connect, sync, export, about, and onboarding reset |
+| Onboarding | Six-step Android back-aware Compose flow and native permission contracts | Welcome, units, Health Connect, goal, containers, reminders, and completion state |
 | HealthKit projection | Health Connect adapter | Write hydration; optionally read weight and exercise; permissions can be revoked; failure does not erase Ripple data |
 | Notifications/reminders | Notification channels, `AlarmManager` for reminder timing, WorkManager for durable projection/retry work | Wake/sleep bounds, replaceable next reminder, default log action, permission-aware scheduling |
 | iOS widgets | Jetpack Glance home-screen widgets | Static level/remaining views with quick logging; no pour stream, tilt, or surface reaction |
 | Control/widget quick log | Android Quick Settings Tile and launcher shortcuts | Default amount routes to `LogIntake`; custom amount launches a small Android screen/dialog |
 | Siri/App Intents | Android intents, launcher shortcuts, Google Assistant/App Actions | Stable parameters and deep links end at the same use cases; direct app/widget paths work without Assistant |
-| Watch app | Wear OS app with Compose for Wear OS | Today, seven-day History, current ISO-week Stats, offline logging, phone replication |
+| Watch app | Wear OS app with Compose for Wear OS | Today, seven-day History with Day Detail, current ISO-week Stats, offline logging, phone replication |
 | Watch complications | Wear complications and Tiles | Focused ring/remaining surfaces; no calendar or Stats chart |
 | Export | Android document/share flow around `ExportData` | User can create/share a complete export without direct database access |
 
@@ -651,24 +655,28 @@ This is a functional mapping, not an iOS tab-bar copy. Use Android top app bars,
 Today should feel like an Android home screen:
 
 - a top app bar with the current day/status affordances;
-- prominent quick-add row and/or FAB;
+- prominent saved-container quick-add row and custom amount action;
 - native Material touch feedback;
 - a snackbar action for undo;
 - the water hero as the visual focus without turning the entire screen into a glass card.
+
+Today deliberately does not render a Recent or last-entry list. Entry
+inspection belongs to History and Day Detail, so Android must not introduce a
+dashboard row that is absent from the current iOS Today hierarchy.
 
 History Day Detail is a normal nested destination. Stats uses a Material segmented button row or exposed dropdown for week/month/year. Settings uses standard Android list sections, switches, permission rows, and system intents.
 
 ### 11.3 Onboarding
 
-Onboarding is an Android back-aware flow with clear progress and skip/continue semantics:
+Onboarding is an Android back-aware six-page flow with clear progress and
+skip/continue semantics:
 
 1. welcome and purpose;
-2. profile/body mass/activity settings;
-3. calculated/manual goal;
-4. Health Connect availability and write permission;
-5. optional weight/workout read permissions;
-6. notification permission and reminder setup;
-7. completion.
+2. units;
+3. Health Connect availability and hydration/optional read permission;
+4. calculated/manual goal;
+5. saved containers;
+6. notification permission and reminder setup, then completion.
 
 Do not embed permission screens inside a fake iOS-style form. Launch the native Health Connect and Android notification permission contracts at the appropriate step, then refresh permission state when the user returns.
 
@@ -727,7 +735,6 @@ consumedMl
 goalMl
 remainingMl
 percent
-intakes
 defaultContainer
 pacing
 sync/health status
@@ -736,6 +743,9 @@ error/confirmation state
 ```
 
 Quick-add taps call `LogIntake(source = APP)`. Rapid taps create multiple rows but one visual pour series. The final confirmation appears after the pour completes. Undo calls `UndoLastIntake`, not a local array mutation.
+
+Today does not expose an entry list. The History calendar and Day Detail
+feature own entry inspection and row actions.
 
 ### 13.2 History
 
@@ -1232,3 +1242,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.0.0 | 2026-09-07 | Initial Android architecture and implementation guide created. | Establishes the separate Android data boundary, native Android UI, phone/tablet/Wear capabilities, system surfaces, and delivery requirements. |
 | 1.1.0 | 2026-09-07 | Added the paired-document maintenance contract, semantic document versioning, synchronized-document checklist, and immutable timeline. | Android architecture changes now require an explicit documentation review and versioned audit entry. |
 | 1.2.0 | 2026-09-07 | Added the Android UI specification companion and linked it as the normative screen/state contract. | Android UI implementation now has explicit wireframes, responsive behavior, state coverage, interaction flows, and screenshot acceptance criteria. |
+| 1.3.0 | 2026-09-08 | Synchronized the Android capability matrix, Today hierarchy, six-page onboarding, History/Day Detail flow, separate Stats contract, full Settings surface, Wear detail behavior, and linked v2 Android UI specification. | Android architecture now preserves the current iOS product screens and flows while keeping Material, adaptive navigation, native permission, and Wear-native presentation. |

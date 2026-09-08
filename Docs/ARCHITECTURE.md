@@ -4,9 +4,9 @@ Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean 
 
 This document describes the repository's architecture and current implementation. Product behavior remains defined by the [PRD](../Ripple_Handoff/Ripple_PRD.md), [hero motion specification](../Ripple_Handoff/Ripple_Hero_Motion.md), and [History/Stats specification](../Ripple_Handoff/Ripple_History_Stats.md).
 
-**Document version:** 1.2.0
+**Document version:** 1.3.0
 
-**Last verified:** 2026-09-07
+**Last verified:** 2026-09-08
 
 **Companion document:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 
@@ -266,6 +266,10 @@ Notifications are also adapters. `NotificationAuthorizer` translates system auth
 - `OnboardingViewModel`: coordinates the staged profile, health, notification, and goal setup flow.
 - Watch-specific models: `WatchTodayViewModel`, `WatchHistoryViewModel`, `WatchDayDetailViewModel`, and `WatchStatsViewModel` adapt the same use cases to the Watch interaction model.
 
+The current Today hierarchy intentionally has no Recent or last-entry list;
+History and Day Detail own entry inspection. Onboarding is six pages in this
+order: Welcome, Units, Health permission, Goal, Containers, and Reminders.
+
 The environment provides use cases and a small amount of layout configuration. It does not provide a global navigation router or a data store.
 
 ### Screen structure
@@ -505,3 +509,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.0.0 | 2026-09-07 | Initial complete Swift/SwiftUI architecture document created from the repository specifications and implementation. | Establishes the iOS layering, persistence, use-case, platform, UI, motion, and testing baseline. |
 | 1.1.0 | 2026-09-07 | Added the paired-document maintenance contract, semantic document versioning, synchronized-document checklist, and immutable timeline. | Architecture changes now require an explicit documentation review and versioned audit entry. |
 | 1.2.0 | 2026-09-07 | Moved the iOS, watchOS, macOS, tvOS, and visionOS root SwiftUI shells into their executable app targets; `RippleFeatures` now contains reusable feature screens and view models only. | Platform-specific root APIs are compiled only by their owning Apple target. The Android companion contract is unaffected because this is an Apple repository-boundary refactor with no shared product or domain change. |
+| 1.3.0 | 2026-09-08 | Synchronized the shared architecture record with the current four-root iOS product hierarchy, no-Recent Today surface, six-page onboarding, Day Detail flow, and the v2 Android UI companion; no Swift architecture or runtime code changed. | Keeps the Apple architecture and Android companion aligned on shared screens, flows, and use-case semantics while preserving platform-local presentation. |
