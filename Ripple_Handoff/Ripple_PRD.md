@@ -3,7 +3,8 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)  
 **Empfänger:** Grok Build (Implementation)  
 **Produkt:** Ripple – Water Tracker  
-**Version:** 1.4 — 31. August 2026
+**Version:** 1.5 — 8. September 2026
+**Last verified:** 2026-09-08
 **Lizenz:** MIT  
 **Sprache UI:** Deutsch + Englisch (String Catalogs)  
 **Code-Sprache:** English identifiers, German + English copy
@@ -473,14 +474,15 @@ Mindestversionen: aktuelles OS zum Bauzeitpunkt (iOS 26 / watchOS 26 / macOS 26 
 
 ### 12.1 iPhone
 
-Tabs: **Heute | Verlauf | Einstellungen**.  
-Heute: siehe Abschnitt 14.  
-Verlauf: Liste nach Tag, Edit/Delete, Wochen-Chart (Swift Charts, schlicht).  
+Tabs: **Heute | Verlauf | Stats | Einstellungen**.
+Heute: siehe Abschnitt 14 und `Ripple_Hero_Motion.md`.
+Verlauf: kalender-first Monatsraster mit einem Ring pro Tag, horizontalem Monats-Pager und Tagesdetail mit Edit/Delete/Restore.
+Stats: eigener Perioden-/Chart-Screen gemäß `Ripple_History_Stats.md`; kein kombinierter Insights-Screen.
 Settings: Profil, Einheiten, Behälter-CRUD, Erinnerungen, Health-Status, Sync-Status, Export, Über, Quelle/Lizenz.
 
 ### 12.2 iPad
 
-`NavigationSplitView`: links Today-Kompakt + Behälter, rechts Verlauf/Insights. Multiwindow erlaubt.
+Adaptive Plattform-Komposition statt geschrumpftem iPhone-Layout. History verwendet einen eigenen Kalender-/Tagesdetail-Split, Stats bleibt der eigenständige Perioden-/Chart-Screen, und Today folgt den Portrait-/Landscape-Kompositionen aus `Ripple_Hero_Motion.md`. Multiwindow bleibt erlaubt.
 
 ### 12.3 Apple Watch
 
@@ -542,129 +544,61 @@ Jede Komponente: Preview Light/Dark, Dynamic Type XXXL, Reduce Motion, Watch-Can
 | Token | Wert |
 |---|---|
 | `ripple.duration.quick` | 0,28 s |
-| `ripple.duration.hero` | 0,90 s |
-| `ripple.duration.confirm` | 1,30 s + 0,30 s Fade |
+| `ripple.duration.hero` | 0,40–0,70 s aktiver Pour |
 | `ripple.spring.snappy` | response 0,28 / damping 0,85 |
 | `ripple.spring.liquid` | response 0,55 / damping 0,72 |
 | `ripple.level.rise` | Strahldauer + 0,14 s Fade, linear, kein Overshoot |
-| `ripple.idle.loop` | 6,0 s, kleine Amplitude |
 | `ripple.coalesce` | neues Delta an laufende Welle |
 | `ripple.undo` | 0,45 s rückwärts |
 
-Reduce Motion: kein Tropfen, keine Ringe, kein Loop. Pegel-Kreuzblende 0,20 s.
+Idle bleibt ohne Wasseranimation. Reduce Motion: kein Strahl, keine Oberflächenreaktion, keine Neigung; Pegel-Kreuzblende 0,20 s.
 
 ---
 
 ## 14. iPhone Heute + Add-Animation (verbindlich, SwiftUI-baubar)
 
-**Keine lineare Progress Bar. Kein fotorealistisches Wasser, kein 3D-Glas, kein Mesh-Shader.**  
-Der Stand ist ein **stilisiertes Trinkglas**, das sich von unten mit zwei Sinus-Wellen füllt. Das ist mit `GlassShape` + `WaveFill` + `TimelineView` + `clipShape(GlassShape())` 1:1 umsetzbar.
+**Keine lineare Progress Bar. Kein fotorealistisches Wasser, kein 3D-Glas, kein Mesh-Shader.** Die verbindliche Geometrie, Wasseroberfläche, Tilt-, Pour-, Coalescing-, Reduce-Motion- und Widget-Regel steht ausschließlich in `Ripple_Hero_Motion.md`.
 
-Referenzszene: Ziel 2000 ml, 1250 → Tap +250 → 1500 ml.
-
-![Today Idle](screens/20-1-today-idle.jpg)
-
-![Add Animation](screens/20-2-add-tap.jpg)
-
-![After Log](screens/20-4-after-log.jpg)
-
-### 14.1 View-Hierarchie (so bauen)
+Die aktuelle iPhone-Komposition ist:
 
 ```
 TodayView
-  VStack
-    header: "Ripple" + Datum
-    RippleHeroView          // Tumbler-Glas ~200×280 pt
-    caption: Rest + Ziel
-    confirmLabel            // nur nach Log, faded
-    QuickAddCluster         // 3 Chips
-    LogButton               // "+ 250 ml"
-    lastEntryLabel
-  TabView: Heute | Verlauf | Einstellungen
+  header: "Ripple" + lokales Datum
+  RippleHeroView              // stilisiertes 2D-Glas, Level + Readout
+  RemainingLabel              // Rest + Ziel
+  confirmation                // nur nach Log, dann Fade
+  QuickAddCluster             // gespeicherte Behälter
+  Custom amount               // untere primäre Aktion
+  TabView: Heute | Verlauf | Stats | Einstellungen
 ```
 
-`RippleHeroView` intern:
+Die Zahlen im Hero zeigen Menge, Einheit und Prozent. Die Oberfläche ist im
+Idle flach. Es gibt keine Recent-Liste, keine Motivationskarte und keinen
+zusätzlichen Last-entry-Block. Die drei Quick-Add-Aktionen verwenden die
+gespeicherten Behälter; die Custom-Amount-Aktion öffnet die Mengeneingabe.
 
-```
-ZStack {
-  WaveFill(level: percent, phase: wavePhase, amplitude: amp)
-    .clipShape(GlassShape())
-  GlassShape()
-    .stroke(lagoon, lineWidth: 3)
-  RippleRings(trigger:)     // Ellipsen auf der Wellenlinie, nur beim Log
-  DropShape()               // ein Tropfen, Größe = f(addedMl), siehe Ripple_Hero_Motion.md
-  VStack { Text(ml); Text("%") }
-}
-.accessibilityElement(children: .ignore)
-.accessibilityLabel(...)
-```
-
-`GlassShape`: 2D-Tumbler, oben weiter als unten (Rim-Breite ≈ 1.35 × Bodenbreite). Pfad: Bodenlinie mit leichter Rundung → rechte Wand nach oben außen → Ellipsenbogen für den Rand vorn → linke Wand nach unten. Kein Stiel, kein 3D, keine Highlights-Bitmap. Höhe der Hero-View ca. 280 pt, Breite ca. 200 pt.
-
-### 14.2 WaveFill — Algorithmus
-
-Zwei `Shape`s, leicht phasenversetzt:
-
-```
-y = levelY + sin(x * 2π / width + phase) * amplitude
-     + sin(x * 4π / width + phase * 1.3) * amplitude * 0.35
-```
-
-Pfad: linke untere Ecke des **Glas-Innenraums** → entlang der Sinuslinie nach rechts → rechte untere Ecke → schließen. Fill Aqua 0.85 und zweite Welle Aqua 0.55, 8 pt horizontal versetzt. Immer mit `clipShape(GlassShape())`, damit die Welle den schrägen Wänden folgt. `level` ist die relative Höhe zwischen Glasboden und unterer Rim-Kante, nicht die View-Höhe.
-
-- `level` = min(consumed / goal, 1.2), animiert mit `ripple.spring.liquid`
-- `phase` im Idle: `TimelineView(.animation)` erhöht phase langsam (volle Periode ~6 s)
-- `amplitude` Idle: 6 pt; während Add: 14 pt für 0,5 s, dann zurück
-- Overshoot: level kurz auf target + 0.04 * deltaPercent, dann Ziel
-- Reduce Motion: amplitude = 0, phase eingefroren, level mit `.easeInOut(0.2)`
-
-Kein SpriteKit, kein Metal, kein Video.
-
-### 14.3 Add-Motion (nur System-APIs)
-
-| Zeit | Was | SwiftUI |
-|---|---|---|
-| 0–80 ms | Button scale 0.96, Haptic `.success` | `.symbolEffect` unnötig; `withAnimation(snappy)` + `UIImpact`/`sensoryFeedback` |
-| 80–180 ms | `DropShape` offset von Button-Mitte zur Wellenkante | `.offset` + opacity |
-| 180–650 ms | 2–3 Ellipsen auf der Wellenlinie, scale + opacity, `level` steigt, Zahl `contentTransition(.numericText())` | |
-| 650–900 ms | amplitude zurück, Confirm-Text | |
-| 0,9–2,2 s | Confirm fade out | |
-
-Drei schnelle Taps: drei Store-Einträge, **eine** Welle (neues `level` während laufender Animation). Tropfen nur beim ersten Tap einer Serie.
-
-Undo: `level` 0,45 s zurück, kein Tropfen.
-
-### 14.4 Copy und Zahlen
-
-- Idle-Caption: `noch 750 ml · Ziel 2 000 ml`
-- Zahl im Glas (oberhalb der Welle): `1250` + `ml` + `62 %` (tabular, `monospacedDigit()`)
-- Nach Log: `+250 ml · schöner Ripple.`
-- Zuletzt: `Zuletzt 10:14 · Glas`
-
-VoiceOver Glas: „1.250 Milliliter von 2.000. 62 Prozent. Noch 750 Milliliter.“  
-Button: „250 Milliliter hinzufügen“.
-
-### 14.5 Was dieser Screen bewusst nicht ist
-
-- Keine horizontale oder ringförmige *ProgressBar*-Komponente als Hauptstand
-- Kein Foto-Wasser, keine Caustic-Bitmap, keine Partikel-Engine
-- Keine Extra-Tabs, keine Motivations-Card, kein Wolkenhintergrund
-
-Widget: **dasselbe Glas** verkleinert, ohne Tropfenflug, ohne Idle-Loop. Nur `level` + Zahl. Quick Add = kurze Ellipse auf der Wellenlinie, 0,28 s.
+Für VoiceOver werden Menge, Ziel, Rest, Prozent und Quelle vollständig
+angesagt. Der gemeinsame `LogIntake`-Use-Case bleibt die einzige Schreib-API.
+Widget und Komplikationen verwenden das Glas statisch ohne Tilt, Strahl oder
+Oberflächenreaktion.
 
 ---
 
 ## 15. Onboarding, Erinnerungen, Export
 
-### Onboarding (5 Seiten, skipbar außer Einheit)
+### Onboarding (6 Seiten)
 
-1. Willkommen / Metapher
-2. Einheit ml oder oz (Locale-Default)
-3. Health + Ziel: Gewicht aus Apple Health explizit anfordern, sonst Gewicht
-   eingeben; Ziel mit bestehender Formel live anzeigen
-4. Standard-Behälter
-5. Erinnerungen erklären und explizit anfordern; Health schreiben optional;
-   iCloud-/Widget-Hinweis
+1. Willkommen und Ripple-Metapher
+2. Einheit ml oder fl oz (Locale-Default)
+3. Apple Health: Gewicht lesen und geloggtes Wasser schreiben, optional
+4. Tagesziel: Health-Gewicht verwenden oder Gewicht manuell eingeben
+5. Standard-Behälter für Quick Add
+6. Erinnerungen erklären und Benachrichtigungen explizit anfordern
+
+Health- und Benachrichtigungszugriff bleiben optionale, wiederherstellbare
+Zustände. Die systemseitige Permission-Fläche folgt erst auf die erklärende
+Onboarding-Seite; Ablehnung blockiert das Loggen nicht. Nach Abschluss öffnet
+die App den Today-Tab.
 
 ### Erinnerungen
 

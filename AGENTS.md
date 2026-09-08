@@ -10,7 +10,8 @@ Conflict order:
 3. **`Ripple_History_Stats.md`** for History and Stats  
 4. **`Ripple_PRD.md`** for scope, domain, sync, intents, platforms  
 
-PRD §14 idle-wave text is stale. The hero follows `Ripple_Hero_Motion.md` only.
+The PRD summarizes the Today product hierarchy; `Ripple_Hero_Motion.md` is
+the sole detailed contract for glass, level, pour, tilt, and reduced motion.
 
 ---
 
