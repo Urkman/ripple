@@ -13,5 +13,8 @@ Config/Ripple.xcconfig
 .xcodebuildmcp/
 .superpowers/
 Docs/ADR/
+# Android product contracts, planning records, and reference wireframes are tracked.
+!Docs/Android/
+!Docs/Android/**
 Ripple_Handoff/
 .asc/
