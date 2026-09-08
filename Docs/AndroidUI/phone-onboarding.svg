@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 780" role="img" aria-labelledby="title desc">
+  <title id="title">Ripple Android phone onboarding wireframe</title>
+  <desc id="desc">Six-page onboarding flow for welcome, units, Health Connect, goal, containers, and reminders.</desc>
+  <rect width="360" height="780" fill="#F4F7F8"/>
+  <rect x="10" y="8" width="340" height="764" rx="28" fill="#FFFFFF" stroke="#B7C7CB" stroke-width="2"/>
+  <text x="28" y="47" font-family="sans-serif" font-size="12" font-weight="700" fill="#1A7A8C">RIPPLE · FIRST RUN</text>
+  <text x="28" y="92" font-family="sans-serif" font-size="24" font-weight="700" fill="#0B3D4A">Set up your flow</text>
+  <text x="28" y="119" font-family="sans-serif" font-size="12" fill="#52666C">Six short pages, with recoverable permissions.</text>
+  <g font-family="sans-serif">
+    <rect x="28" y="151" width="304" height="62" rx="15" fill="#E8F4F6" stroke="#4FB3C6"/><circle cx="53" cy="182" r="15" fill="#1A7A8C"/><text x="53" y="187" text-anchor="middle" font-size="11" fill="#FFFFFF">1</text><text x="80" y="177" font-size="13" font-weight="700" fill="#0B3D4A">Welcome</text><text x="80" y="196" font-size="10" fill="#52666C">Introduce the glass and one shared log.</text>
+    <rect x="28" y="225" width="304" height="62" rx="15" fill="#FFFFFF" stroke="#B7C7CB"/><circle cx="53" cy="256" r="15" fill="#4FB3C6"/><text x="53" y="261" text-anchor="middle" font-size="11" fill="#FFFFFF">2</text><text x="80" y="251" font-size="13" font-weight="700" fill="#0B3D4A">Units</text><text x="80" y="270" font-size="10" fill="#52666C">ml or fl oz · locale-aware default.</text>
+    <rect x="28" y="299" width="304" height="62" rx="15" fill="#FFFFFF" stroke="#B7C7CB"/><circle cx="53" cy="330" r="15" fill="#4FB3C6"/><text x="53" y="335" text-anchor="middle" font-size="11" fill="#FFFFFF">3</text><text x="80" y="325" font-size="13" font-weight="700" fill="#0B3D4A">Health Connect</text><text x="80" y="344" font-size="10" fill="#52666C">Explain, then launch native permission sheet.</text>
+    <rect x="28" y="373" width="304" height="62" rx="15" fill="#FFFFFF" stroke="#B7C7CB"/><circle cx="53" cy="404" r="15" fill="#4FB3C6"/><text x="53" y="409" text-anchor="middle" font-size="11" fill="#FFFFFF">4</text><text x="80" y="399" font-size="13" font-weight="700" fill="#0B3D4A">Daily goal</text><text x="80" y="418" font-size="10" fill="#52666C">Use Health weight or enter a manual weight.</text>
+    <rect x="28" y="447" width="304" height="62" rx="15" fill="#FFFFFF" stroke="#B7C7CB"/><circle cx="53" cy="478" r="15" fill="#4FB3C6"/><text x="53" y="483" text-anchor="middle" font-size="11" fill="#FFFFFF">5</text><text x="80" y="473" font-size="13" font-weight="700" fill="#0B3D4A">Containers</text><text x="80" y="492" font-size="10" fill="#52666C">Choose the quick-add actions.</text>
+    <rect x="28" y="521" width="304" height="62" rx="15" fill="#FFFFFF" stroke="#B7C7CB"/><circle cx="53" cy="552" r="15" fill="#4FB3C6"/><text x="53" y="557" text-anchor="middle" font-size="11" fill="#FFFFFF">6</text><text x="80" y="547" font-size="13" font-weight="700" fill="#0B3D4A">Reminders</text><text x="80" y="566" font-size="10" fill="#52666C">Explain, then launch native notification permission.</text>
+  </g>
+  <rect x="28" y="612" width="304" height="48" rx="16" fill="#1A7A8C"/><text x="180" y="642" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Continue</text>
+  <text x="28" y="688" font-family="sans-serif" font-size="10" fill="#52666C">Back, skip where allowed, retry permissions from Settings; finish on Today.</text>
+  <text x="28" y="730" font-family="sans-serif" font-size="10" fill="#0B3D4A">CONTRACT: six pages, not a short wizard</text>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 780" role="img" aria-labelledby="title desc">
+  <title id="title">Ripple Android phone Today wireframe</title>
+  <desc id="desc">A native Android Today screen with a contained glass hero, quick container actions, custom amount, and no recent list.</desc>
+  <rect width="360" height="780" fill="#F4F7F8"/>
+  <rect x="10" y="8" width="340" height="764" rx="28" fill="#FFFFFF" stroke="#B7C7CB" stroke-width="2"/>
+  <text x="28" y="45" font-family="sans-serif" font-size="13" font-weight="700" fill="#0B3D4A">RIPPLE</text>
+  <text x="28" y="70" font-family="sans-serif" font-size="12" fill="#52666C">Today · Monday, 8 September</text>
+  <circle cx="323" cy="39" r="16" fill="#E8F4F6" stroke="#1A7A8C"/>
+  <text x="323" y="44" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0B3D4A">⋮</text>
+
+  <rect x="74" y="96" width="212" height="286" rx="70" fill="#E8F4F6" stroke="#1A7A8C" stroke-width="4"/>
+  <path d="M78 250 C126 244 147 257 180 249 C215 241 235 255 282 247 L282 362 Q180 390 78 362 Z" fill="#4FB3C6" opacity="0.86"/>
+  <line x1="91" y1="249" x2="269" y2="249" stroke="#1A7A8C" stroke-width="2" opacity="0.65"/>
+  <text x="180" y="172" text-anchor="middle" font-family="sans-serif" font-size="34" font-weight="700" fill="#0B3D4A">1,250</text>
+  <text x="180" y="195" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#0B3D4A">ml · 62%</text>
+  <text x="180" y="329" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#0B3D4A">750 ml remaining</text>
+  <text x="180" y="348" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#52666C">of 2,000 ml goal</text>
+  <text x="180" y="410" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#1A7A8C">+250 ml · schöner Ripple.</text>
+
+  <text x="28" y="457" font-family="sans-serif" font-size="12" font-weight="700" fill="#0B3D4A">Quick add</text>
+  <rect x="28" y="470" width="92" height="52" rx="14" fill="#E8F4F6" stroke="#4FB3C6"/>
+  <rect x="134" y="470" width="92" height="52" rx="14" fill="#E8F4F6" stroke="#4FB3C6"/>
+  <rect x="240" y="470" width="92" height="52" rx="14" fill="#E8F4F6" stroke="#4FB3C6"/>
+  <text x="74" y="492" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#0B3D4A">Glass</text>
+  <text x="74" y="509" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#0B3D4A">+250 ml</text>
+  <text x="180" y="492" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#0B3D4A">Bottle</text>
+  <text x="180" y="509" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#0B3D4A">+500 ml</text>
+  <text x="286" y="492" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#0B3D4A">Large</text>
+  <text x="286" y="509" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#0B3D4A">+750 ml</text>
+  <rect x="28" y="538" width="304" height="48" rx="16" fill="#1A7A8C"/>
+  <text x="180" y="568" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Custom amount</text>
+  <text x="28" y="618" font-family="sans-serif" font-size="11" fill="#52666C">Material 3 NavigationBar · Today selected</text>
+  <line x1="28" y1="637" x2="332" y2="637" stroke="#B7C7CB"/>
+  <text x="63" y="672" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#1A7A8C">Today</text>
+  <text x="145" y="672" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#52666C">History</text>
+  <text x="226" y="672" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#52666C">Stats</text>
+  <text x="304" y="672" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#52666C">Settings</text>
+  <text x="28" y="724" font-family="sans-serif" font-size="10" fill="#0B3D4A">CONTRACT: contained hero, native controls, no Recent rows</text>
+</svg>

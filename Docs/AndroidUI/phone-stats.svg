@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 780" role="img" aria-labelledby="title desc">
+  <title id="title">Ripple Android phone Stats wireframe</title>
+  <desc id="desc">A separate Stats destination with period selection, summaries, four chart families, and highlights.</desc>
+  <rect width="360" height="780" fill="#F4F7F8"/>
+  <rect x="10" y="8" width="340" height="764" rx="28" fill="#FFFFFF" stroke="#B7C7CB" stroke-width="2"/>
+  <text x="28" y="48" font-family="sans-serif" font-size="20" font-weight="700" fill="#0B3D4A">Stats</text>
+  <rect x="28" y="70" width="304" height="42" rx="14" fill="#E8F4F6"/>
+  <rect x="31" y="73" width="98" height="36" rx="11" fill="#1A7A8C"/>
+  <text x="80" y="97" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Week</text><text x="180" y="97" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0B3D4A">Month</text><text x="280" y="97" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0B3D4A">Year</text>
+  <rect x="28" y="133" width="94" height="82" rx="16" fill="#E8F4F6"/><rect x="133" y="133" width="94" height="82" rx="16" fill="#E8F4F6"/><rect x="238" y="133" width="94" height="82" rx="16" fill="#E8F4F6"/>
+  <text x="42" y="158" font-family="sans-serif" font-size="10" fill="#52666C">Average</text><text x="42" y="187" font-family="sans-serif" font-size="20" font-weight="700" fill="#0B3D4A">1.8 L</text>
+  <text x="147" y="158" font-family="sans-serif" font-size="10" fill="#52666C">Goal days</text><text x="147" y="187" font-family="sans-serif" font-size="20" font-weight="700" fill="#0B3D4A">4 / 7</text>
+  <text x="252" y="158" font-family="sans-serif" font-size="10" fill="#52666C">Best day</text><text x="252" y="187" font-family="sans-serif" font-size="20" font-weight="700" fill="#0B3D4A">2.4 L</text>
+  <text x="28" y="249" font-family="sans-serif" font-size="12" font-weight="700" fill="#0B3D4A">Daily intake</text>
+  <rect x="28" y="260" width="304" height="102" rx="16" fill="#FFFFFF" stroke="#B7C7CB"/>
+  <line x1="47" y1="339" x2="316" y2="339" stroke="#D5E2E4"/><line x1="47" y1="280" x2="47" y2="339" stroke="#D5E2E4"/>
+  <g fill="#4FB3C6"><rect x="67" y="304" width="18" height="35" rx="5"/><rect x="104" y="292" width="18" height="47" rx="5"/><rect x="141" y="275" width="18" height="64" rx="5"/><rect x="178" y="300" width="18" height="39" rx="5"/><rect x="215" y="286" width="18" height="53" rx="5"/><rect x="252" y="268" width="18" height="71" rx="5"/></g>
+  <text x="28" y="396" font-family="sans-serif" font-size="12" font-weight="700" fill="#0B3D4A">Patterns</text>
+  <rect x="28" y="408" width="147" height="86" rx="16" fill="#E8F4F6"/><rect x="185" y="408" width="147" height="86" rx="16" fill="#E8F4F6"/>
+  <text x="42" y="433" font-family="sans-serif" font-size="10" fill="#52666C">Goal completion</text><path d="M43 475 L72 459 L101 465 L130 441 L158 449" fill="none" stroke="#1A7A8C" stroke-width="3"/><text x="199" y="433" font-family="sans-serif" font-size="10" fill="#52666C">Weekday average</text><path d="M200 468 Q224 430 248 463 T306 450" fill="none" stroke="#1A7A8C" stroke-width="3"/>
+  <text x="28" y="530" font-family="sans-serif" font-size="12" font-weight="700" fill="#0B3D4A">Highlights</text><rect x="28" y="542" width="304" height="56" rx="14" fill="#FFFFFF" stroke="#B7C7CB"/><text x="46" y="575" font-family="sans-serif" font-size="11" fill="#0B3D4A">Most consistent: Tuesday · strongest morning start</text>
+  <text x="28" y="631" font-family="sans-serif" font-size="11" fill="#52666C">Four chart families: daily intake, goal completion, weekday pattern, cumulative trend.</text>
+  <line x1="28" y1="650" x2="332" y2="650" stroke="#B7C7CB"/><text x="63" y="685" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#52666C">Today</text><text x="145" y="685" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#52666C">History</text><text x="226" y="685" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#1A7A8C">Stats</text><text x="304" y="685" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#52666C">Settings</text>
+  <text x="28" y="730" font-family="sans-serif" font-size="10" fill="#0B3D4A">CONTRACT: separate Stats screen, not an Insights tab</text>
+</svg>
