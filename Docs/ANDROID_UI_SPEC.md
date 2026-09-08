@@ -1,701 +1,629 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-
-**Document version:** 1.0.0
-
-**Last verified:** 2026-09-07
-
+**Document version:** 2.0.0
+**Last verified:** 2026-09-08
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
+**Shared architecture:** [Ripple Architecture](ARCHITECTURE.md)
+**Product contract:** [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md)
+**Detailed hero contract:** [Hero Motion](../Ripple_Handoff/Ripple_Hero_Motion.md)
+**Detailed History/Stats contract:** [History and Stats](../Ripple_Handoff/Ripple_History_Stats.md)
+**Visual reference pack:** [Android UI reference pack](AndroidUI/README.md)
 
-**Product contracts:** [Ripple PRD](../Ripple_Handoff/Ripple_PRD.md), [Hero Motion](../Ripple_Handoff/Ripple_Hero_Motion.md), [History and Stats](../Ripple_Handoff/Ripple_History_Stats.md)
+This is the normative Android screen, flow, state, accessibility, and visual
+acceptance contract. The current iOS implementation establishes the product
+hierarchy and capability baseline. Android preserves those screens and flows,
+then expresses them with Material 3, Android window-size behavior, Android
+back/navigation conventions, native permission surfaces, and Compose for Wear
+OS.
 
-This document removes screen-level ambiguity from the Android port. It defines the Android-native information architecture, layouts, interaction states, responsive behavior, Wear OS surfaces, system surfaces, and visual acceptance captures.
+The existing iOS screenshots are evidence, not pixel targets. The annotated SVG
+wireframes in `Docs/AndroidUI/` are Android layout contracts. Real Android and
+Wear captures are the final acceptance artifacts. Nothing in this document
+authorizes copying Liquid Glass, an iOS tab bar, SwiftUI navigation chrome, or
+Apple Watch presentation into Android.
 
-The Android UI must preserve Ripple's capability and domain behavior while looking and behaving like an Android app. These wireframes are layout contracts, not pixel art. The implementation uses Material 3, Android window-size behavior, Android system navigation, and Compose for Wear OS rather than copying SwiftUI, iOS tabs, Liquid Glass, Apple Watch workflows, or iOS screenshots.
+## 1. Source of truth and parity rule
 
-## 1. Design intent
+The contract is maintained in layers:
 
-### 1.1 The person and the job
+| Concern | Authority | Android obligation |
+|---|---|---|
+| Product scope, platforms, domain language | `Ripple_PRD.md` and `AGENTS.md` | Preserve capability and source-of-truth rules |
+| Today glass, level, pour, tilt, coalescing, reduced motion | `Ripple_Hero_Motion.md` | Reproduce behavior with Android drawing/animation primitives |
+| History calendar, Day Detail, Stats, Watch behavior | `Ripple_History_Stats.md` | Preserve screens, states, and flow; choose native Android presentation |
+| Current iOS hierarchy and settings/onboarding composition | iOS source and captures listed below | Do not invent a dashboard or omit a screen |
+| Android layout and system substitution | This document and `AndroidUI/*.svg` | Use Android-native components and responsive layouts |
 
-The person opens Ripple while moving through an ordinary day: at a desk, between meetings, after exercise, or while reaching for a phone/watch. The primary job is to record an amount in seconds and understand whether the day is on track without reading a dashboard.
+The current iOS source inspected for this revision includes:
 
-The product should feel calm, physical, and measured:
+- `Apps/RippleiOS/RootView.swift` — four roots: Today, History, Stats, Settings;
+- `Packages/RippleFeatures/Sources/RippleFeatures/Today/TodayView.swift` —
+  hero, remaining amount, confirmation, saved-container quick adds, and custom
+  amount, with no Recent section;
+- `HistoryCalendarView.swift` — horizontal month paging, one ring per day, and
+  Day Detail navigation;
+- `SettingsView.swift` — profile, daily goal, containers, reminders, Health,
+  sync, export, and about sections;
+- `OnboardingPages.swift` — six pages: Welcome, Units, Health, Goal,
+  Containers, and Reminders.
 
-- calm enough to use repeatedly;
-- physical enough that water level and pouring explain progress without a chart lesson;
-- measured enough that numbers, goals, and history remain precise;
-- native enough that Android users recognize system navigation, controls, permissions, and back behavior.
+### 1.1 Capability parity matrix
 
-### 1.2 Domain vocabulary
+| Current iOS capability | Android destination | Android reference |
+|---|---|---|
+| Today glass hero and daily readout | Today root | [phone Today](AndroidUI/phone-today.svg) |
+| Saved-container quick add and custom amount | Today root; native amount entry | [phone Today](AndroidUI/phone-today.svg) |
+| Calendar-first History | History root | [phone History](AndroidUI/phone-history.svg) |
+| Tap a day to inspect entries | Nested Day Detail; split on expanded windows | [phone Day Detail](AndroidUI/phone-day-detail.svg), [tablet History](AndroidUI/tablet-history-split.svg) |
+| Separate period-based Stats | Stats root | [phone Stats](AndroidUI/phone-stats.svg), [tablet Stats](AndroidUI/tablet-stats.svg) |
+| Full settings surface | Settings root and native sub-destinations | [phone Settings](AndroidUI/phone-settings.svg) |
+| Six-page first-run flow | Onboarding route with native permission handoffs | [phone onboarding](AndroidUI/phone-onboarding.svg) |
+| Watch Today/History/Stats | Wear Today/History/Stats pages | [Wear pack](AndroidUI/README.md) |
 
-The UI should draw its expression from the product's world:
+There is no Android-only Recent list, dashboard home, combined Insights
+destination, month calendar on Wear, or onboarding shortcut that removes one of
+the six product steps.
 
-1. water level and a contained glass;
-2. a quiet daily rhythm rather than a streak;
-3. measured pours rather than collectible drops;
-4. a personal container on a desk or in a bag;
-5. wake/sleep pacing and gentle reminders;
-6. an activity calendar that records days without turning them into a game board.
+## 2. Android presentation principles
 
-### 1.3 Color world
+### 2.1 Native expression
 
-The palette comes from a cool glass of water in a quiet room:
+- Compact phones use Material `NavigationBar`; medium windows use
+  `NavigationRail`; expanded windows use a persistent rail or adaptive drawer.
+- Root destinations use standard Android top app bars and system back behavior.
+- Nested routes use typed navigation destinations and predictive back. Root
+  destinations do not show a decorative back button.
+- Use Material 3 buttons, chips, list items, dialogs, menus, snackbars, and
+  bottom sheets where their Android semantics fit the interaction.
+- Use Android Health Connect and notification permission surfaces after an
+  explanatory onboarding page. Do not draw permission dialogs inside Ripple.
+- Use Compose for Wear OS components and rotary input on Wear. Do not shrink a
+  phone layout into a round screen.
 
-- deep teal for ink and structure;
-- lagoon teal for action and goal success;
-- clear aqua for water and progress;
-- pale foam for the light canvas;
-- cool anthracite for dark surfaces;
-- desaturated red only for destructive actions and errors.
+### 2.2 Product content versus Android chrome
 
-No orange, purple, neon gradient, or unrelated semantic accent is introduced in v1.
+The glass-shaped water hero is product content and remains a deliberate custom
+contained drawing. It may use Compose `Canvas`, `Path`, clipping, and Material
+tonal surfaces. It must not become a circular progress indicator, a photo, or a
+blurred imitation of iOS Liquid Glass.
 
-### 1.4 Product signature
+The Android navigation surface, settings rows, dialogs, permissions, and system
+surfaces are standard Android UI. A Material component is preferred even when
+its shape differs from the iOS counterpart; the information hierarchy and flow,
+not the platform chrome, are the parity target.
 
-The signature element is the **contained water-level hero with a quick-add action**: the user adds an amount, sees one coherent pour, and then gets a settled readout that explains remaining volume. The signature is an interaction and a hierarchy, not a decorative glass card.
+### 2.3 Product palette and shape tokens
 
-### 1.5 Defaults deliberately rejected
+Use `core:designsystem` for these roles. Values are the Android expression of
+Ripple's shared identity, not a second product palette.
 
-| Common default | Ripple Android replacement |
-| --- | --- |
-| Copy the iOS tab bar and sheets | Material `NavigationBar`, `NavigationRail`, adaptive drawer, Android back stack, and native bottom sheets only when appropriate |
-| Use a circular progress indicator for hydration | A custom contained water-level field with a numeric readout |
-| Build a dashboard of equal metric cards | Lead with the action and water state; expose secondary data through History, Stats, and settings sections |
-| Use screenshots as the specification | Use annotated wireframes, state tables, and real-device acceptance captures |
-| Use glass/blur everywhere | Use Material tonal surfaces, quiet borders, and a single deliberate water surface |
+| Role | Light | Dark | Use |
+|---|---|---|---|
+| `rippleDeep` | `#0B3D4A` | light aqua-tinted text | Primary text and icons |
+| `rippleLagoon` | `#1A7A8C` | `#4FB3C6` | Primary action, selection, success |
+| `rippleAqua` | `#4FB3C6` | brighter aqua | Water fill and progress |
+| `rippleFoam` | `#E8F4F6` | cool anthracite | App canvas |
+| `rippleOutline` | `#B4C9CC` | cool muted outline | Quiet structure |
+| `rippleDanger` | system desaturated red | system desaturated red | Delete and error only |
 
-## 2. Responsive form factors
+Use the Android default sans font, tabular/monospaced digits for numeric
+readouts where supported, a 4dp grid, 12dp controls, 20dp cards, and a 28dp
+hero shape. Minimum touch target is 48dp. Prefer tonal surface changes and
+quiet outlines to heavy elevation. No custom font, decorative gradient, or
+unrelated accent color is allowed in v1.
 
-Use Android Window Size Classes and actual available width, not device-name conditionals.
+## 3. Navigation and responsive behavior
 
-| Window class | Width guidance | Navigation | Content behavior |
-| --- | --- | --- | --- |
-| Compact | `< 600dp` | Material `NavigationBar` | One primary column; nested screens use top app bar and system back |
-| Medium | `600–839dp` | Material `NavigationRail` | Content beside rail; two-column sections where useful |
-| Expanded | `≥ 840dp` | Persistent navigation or `ModalNavigationDrawer` | List/detail panes, responsive chart columns, wider settings layout |
+Use Android Window Size Classes and available width, not device-name or
+`isTablet` conditionals.
+
+| Window class | Navigation | Layout contract |
+|---|---|---|
+| Compact `< 600dp` | Material `NavigationBar` | One primary column; nested routes push with a top app bar |
+| Medium `600–839dp` | Material `NavigationRail` | Rail plus content; two-column sections where useful |
+| Expanded `≥ 840dp` | Persistent rail or adaptive drawer | List/detail panes and responsive chart columns |
+
+The four roots never change:
+
+```text
+Today | History | Stats | Settings
+```
+
+Keep the selected root and nested selection through rotation, resize, fold
+posture changes, and split screen. Apply `WindowInsets`; do not place primary
+actions beneath gesture or system-bar areas. A wide window may show more
+content at once, but it must not introduce a new dashboard or hide the primary
+Today action.
+
+### 3.1 Android component mapping
+
+| Product need | Compact Android | Medium/expanded Android |
+|---|---|---|
+| Root navigation | `NavigationBar` | `NavigationRail` / adaptive drawer |
+| Screen title/back | Material `TopAppBar` | Top app bar in content pane |
+| Month paging | Full-width `HorizontalPager` or equivalent | Calendar pane pager |
+| Day grid | Lazy grid with semantic day cells | Fixed calendar pane with detail beside it |
+| Quick add | Filled/tonal buttons or labeled chips | Same actions in a constrained content row |
+| Custom amount | Filled button or extended FAB plus standard sheet/dialog | Button in the action region; same amount route |
+| Settings | Sectioned list and navigation rows | Constrained settings column or two-pane editor |
+| Short undo | Snackbar with action | Same, anchored to the active content pane |
+| Wear actions | Wear `Chip`/`CompactChip`, rotary input | Wear-native page composition |
+
+## 4. Today
+
+Today is the primary logging surface. The hierarchy is intentionally short:
+
+```text
+Today
+  TopAppBar: Ripple + local date/context
+  RippleHeroView: contained glass silhouette + water level + readout
+  RemainingLabel: remaining amount + goal
+  Confirmation: only after a completed log, then fades
+  QuickAddCluster: saved containers
+  CustomAmountAction: opens amount entry
+  NavigationBar / Rail: Today | History | Stats | Settings
+```
+
+There is no Recent section, no additional motivation card, and no separate
+last-entry block on Today. History and Day Detail are the places for inspecting
+entries.
+
+### 4.1 Compact layout
+
+See [phone Today wireframe](AndroidUI/phone-today.svg). The hero is the visual
+center and the three saved-container actions remain reachable without scrolling
+on a typical compact window. Custom amount is a clearly labeled secondary
+primary action, not an unlabeled symbol-only control.
+
+The glass hero must:
+
+- use the contained 2D silhouette and water-level rules from `Ripple_Hero_Motion.md`;
+- show consumed amount, unit, percentage, remaining amount, and goal without
+  clipping at large text sizes;
+- have a flat idle surface and no circular `ProgressIndicator` as the daily
+  level;
+- keep the water visually contained while applying the specified device tilt
+  behavior only where motion sensors are available;
+- use one active pour stream for a coalesced add series, with the level and
+  stream driven by one clock and no active-pour overshoot;
+- show no fill or bottom shimmer at zero;
+- use the same `LogIntake` write path as every other surface.
+
+Android may draw the silhouette with Compose paths and animate with Compose
+animation primitives, but it must not add a permanent sine loop, particles,
+photoreal water, a single-drop metaphor, or simulated Liquid Glass chrome.
+
+### 4.2 Today states
+
+| State | Required presentation |
+|---|---|
+| First run | Onboarding route gates the app; do not show a fake Today behind it |
+| Zero intake | Empty contained field; no water fill or bottom shimmer; quick adds visible |
+| Ready | True consumed amount, percent, goal, remaining, saved containers, custom amount |
+| Goal reached | Lagoon success semantics; no confetti, streak badge, or medical claim |
+| Over goal | Numeric total remains true; visual level follows the capped domain rule |
+| Active pour | One continuous stream for coalesced taps; numbers and confirmation settle when the pour ends |
+| Save/projection error | Keep the saved log; show a retry/status message for the failed projection |
+| Offline | Log locally and show sync status without disabling the action |
+| Reduced motion | No stream, surface reaction, or tilt; cross-fade level in 0.20s |
+| Large text | Scale the hero readout and wrap controls; never clip the amount or goal |
+
+### 4.3 Today interaction flow
+
+```text
+tap saved container or custom amount
+        -> amount confirmation if needed
+        -> LogIntake(source = app)
+        -> local Today snapshot refresh
+        -> one coalesced pour, if motion is enabled
+        -> final amount/remaining/confirmation update
+        -> snackbar offers UndoLastIntake
+```
+
+Three fast taps create three store rows but one continuous visual pour. Undo
+targets the last own, non-deleted intake; it does not reconstruct a visual list.
+
+## 5. History and Day Detail
+
+History is calendar-first. It is not a list of recent entries and is not a
+combined Stats screen. See [phone History](AndroidUI/phone-history.svg),
+[phone Day Detail](AndroidUI/phone-day-detail.svg), and [tablet History
+split](AndroidUI/tablet-history-split.svg).
+
+### 5.1 History root
+
+```text
+HistoryRoute
+  TopAppBar: History
+  MonthPager: contiguous months from first stored month through current month
+    MonthHeader: month name + previous/next controls
+    WeekdayRow: locale-aware first weekday
+    Seven-column day grid
+      DayCell: one capped progress ring + day number
+  Today-only add action at the calendar/root action region
+```
+
+Required behavior:
+
+- Swipe the complete month page horizontally; header, weekday row, and grid
+  move as one page. Chevron controls operate the same pager and disable at the
+  available month boundaries.
+- Show one progress ring per day, with `min(1, consumed / max(goal, 1))`.
+  A goal snapshot valid for that day is preferred over the current goal.
+- Future days are visible but disabled and never open Day Detail.
+- Past days with no entries are tappable and open an empty Day Detail.
+- Today is identifiable as today and is selectable.
+- Selecting a day opens Day Detail on compact windows. On expanded windows,
+  keep the calendar pane visible and update the adjacent detail pane.
+- The add action is available only for today. It writes the selected local day
+  through the shared intake boundary; it never makes future dates tappable.
+- Empty leading/trailing grid cells are not focusable or tappable.
+- No mini-glass, second ring, streak flame, heatmap, or list-first replacement.
+
+### 5.2 Day Detail route
+
+```text
+DayDetailRoute(localDate)
+  TopAppBar: back + localized weekday/date
+  DaySummary: consumed, goal, percent, remaining/goal reached
+  Entries: time, amount, container, source, deleted state
+  Row actions: edit, soft delete, restore/undo
+  Today-only add action
+```
+
+On a compact phone, Day Detail is a real nested destination with Android back
+behavior. On an expanded window it is the detail pane beside the calendar. A
+past day never shows an enabled add action. Delete is soft delete and can be
+undone or restored; edit changes the existing intake identity and must not make
+a hidden duplicate. Empty past days show a clear empty state; an empty today
+may include the add CTA.
+
+### 5.3 History and detail accessibility
+
+Each day cell announces its full date, amount, percentage, goal status, and
+future/disabled status. Each intake row announces local time, amount, container,
+source, and available edit/delete action. The detail summary is a single
+aggregate announcement before the row collection.
+
+## 6. Stats
+
+Stats is its own root and remains separate from History. See [phone Stats
+wireframe](AndroidUI/phone-stats.svg) and [tablet Stats wireframe](AndroidUI/tablet-stats.svg).
+
+```text
+StatsRoute(period)
+  TopAppBar: Stats
+  Period selector: Week | Month | Year
+  Summary row: average/day, goal days, total
+  Chart: actual vs goal
+  Chart: goal hit rate
+  Chart: daypart distribution
+  Chart: container distribution
+  Highlights: best day, weakest completed day, empty days, qualifying run
+```
+
+Period rules:
+
+- Week is the current ISO week with neighboring periods available through
+  native controls where supported.
+- Month is the current or selected calendar month.
+- Year contains twelve month categories.
+- Averages include elapsed days without an entry, as specified by
+  `Ripple_History_Stats.md`.
+- Empty periods show a localized zero state; never fabricate chart marks.
+
+The four chart families are:
+
+1. actual versus goal: consumed bars plus a goal reference;
+2. goal hit rate: 0–100% values for the selected period;
+3. daypart distribution: morning, midday, afternoon, evening;
+4. container distribution: container share with a bounded “other” group.
+
+Use Android chart primitives or the approved chart library through the feature
+boundary. Every chart has a textual summary and a value-access path for
+TalkBack. Do not turn Stats into a three-ring dashboard, a GitHub heatmap, or a
+History/Insights combination.
+
+## 7. Settings
+
+Settings is a full root destination, not a placeholder page. See [phone Settings
+wireframe](AndroidUI/phone-settings.svg).
+
+Use a scrollable Material settings list with these sections and capabilities:
+
+1. **Profile** — name/profile values and preferred unit;
+2. **Daily goal** — automatic goal from available Health Connect data or manual
+   profile input, with current target visible;
+3. **Containers** — create, edit, reorder/default, and delete saved containers
+   used by Today quick add;
+4. **Reminders** — enable/disable, schedule, wake/sleep boundaries, and
+   permission status;
+5. **Health Connect** — read/write status, explain access, request/revoke or
+   reopen native settings where supported;
+6. **Sync** — current local/cloud/device status and a recoverable retry state;
+7. **Export** — start the documented export flow;
+8. **About** — version, license, privacy/source links.
+
+Use Android switches, list items, menus, dialogs, date/time pickers, and system
+settings intents. Keep destructive actions explicit and reversible where the
+domain supports restoration. Settings changes update the shared domain through
+their use cases; a composable does not write persistence directly.
+
+## 8. Onboarding
+
+Onboarding is six pages. See [phone onboarding wireframe](AndroidUI/phone-onboarding.svg).
+
+| Page | Content | System handoff |
+|---|---|---|
+| 1. Welcome | Ripple, the contained water-level metaphor, and the one shared logging action | None |
+| 2. Units | ml or fl oz with locale-aware default | None |
+| 3. Health | Explain Health Connect reads/writes and optionality | Native Health Connect permission UI |
+| 4. Goal | Use available health data or enter the profile input manually; show the resulting target | Return to page and refresh state |
+| 5. Containers | Seed or choose saved containers for Today quick add | None |
+| 6. Reminders | Explain reminder behavior and scheduling | Native notification permission UI |
 
 Rules:
 
-- Do not use `isTablet` or device model names to choose a layout.
-- Preserve state during resize, fold posture changes, rotation, and split screen.
-- Keep the primary action reachable in compact layouts and visible in expanded layouts.
-- Use a content max width for reading/settings regions so wide tablets do not become stretched forms.
-- Use `WindowInsets` and edge-to-edge correctly; never place controls under system gesture areas.
+- Show an explanatory page before a system permission surface.
+- Permission denial, unavailable Health Connect, and notification denial are
+  recoverable; they never block logging.
+- Back works between pages. Skip is available only where the product allows
+  it; units and required profile choices remain explicit.
+- Returning from system UI re-reads authorization state instead of assuming
+  success.
+- Completing onboarding opens Today with the seeded/default state and four
+  root destinations available.
+- Re-entering onboarding/settings must not silently duplicate containers or
+  reminders.
 
-## 3. Android design tokens
+## 9. Wear OS
 
-All feature UI uses `core:designsystem`. These values are the Android expression of Ripple's identity; they are not copied SwiftUI constants.
+Wear is a separate Android-native surface with three horizontal pages:
+Today, History, Stats. See [Wear wireframes](AndroidUI/README.md).
 
-### 3.1 Color roles
+### 9.1 Wear Today
 
-| Role | Light value | Dark value | Use |
-| --- | --- | --- | --- |
-| `rippleDeep` | `#0B3D4A` | `#D7F1F4` | Primary text/icons; dark-mode text is light aqua-tinted |
-| `rippleLagoon` | `#1A7A8C` | `#4FB3C6` | Primary action, selected state, success |
-| `rippleAqua` | `#4FB3C6` | `#70C9D8` | Water fill, progress, secondary emphasis |
-| `rippleFoam` | `#E8F4F6` | `#18272B` | Light canvas / dark base surface |
-| `rippleSurface1` | `#F2F8F9` | `#203237` | Raised Material surface |
-| `rippleSurface2` | `#FFFFFF` | `#273D43` | Dialog/menu or stronger raised surface |
-| `rippleOutline` | `#B4C9CC` | `#526B70` | Quiet structural border |
-| `rippleDanger` | system desaturated red | system desaturated red | Delete/error only |
+See [wear Today](AndroidUI/wear-today.svg). Use the full canvas as a flat
+water-level field with the consumed/remaining readout. Provide predefined
+amount actions and a Crown-equivalent rotary-first custom amount flow. Use Wear
+chips or compact buttons; keep labels short and touch targets safe.
 
-Map these to Material color roles once in `RippleTheme`. Do not enable uncontrolled Android dynamic colors in v1; the Ripple palette must remain recognizable across devices.
+No idle wave loop, pour stream, surface reaction, motion tilt, or phone-sized
+top-level navigation is used on Wear. The shared write boundary still applies.
 
-### 3.2 Typography
+### 9.2 Wear History and Day Detail
 
-Use the Android default sans font. Do not bundle a custom font or use San Francisco. Numeric values use tabular/monospaced digit features where the platform supports them.
+See [wear History](AndroidUI/wear-history.svg) and [wear Day Detail](AndroidUI/wear-day-detail.svg).
 
-| Role | Size / line height | Weight | Use |
-| --- | --- | --- | --- |
-| Display | 36sp / 40sp | Regular | Today hero amount |
-| Headline | 28sp / 34sp | Medium | Screen title or major summary |
-| Title | 22sp / 28sp | Medium | Section/card title |
-| Body | 16sp / 24sp | Regular | Primary content |
-| Body secondary | 14sp / 20sp | Regular | Supporting content |
-| Label | 14sp / 20sp | Medium | Buttons, navigation, selected controls |
-| Caption | 12sp / 16sp | Medium | Metadata and timestamps |
+- Show today and the six previous elapsed local days, newest first.
+- Empty days remain visible so the seven-day context is stable.
+- Do not show a month calendar or month pager.
+- Tapping a day opens Wear Day Detail with the daily total and individual
+  entries.
+- Individual entries can be deleted with a standard Wear action and restored
+  with the short undo affordance. Edit and add are phone/tablet flows unless
+  the Wear interaction explicitly remains within the supported Today action.
 
-Hero numbers may scale down to prevent clipping, but never below the readable body scale. Text must survive font scale 2.0.
+### 9.3 Wear Stats
 
-### 3.3 Space, shape, and depth
+See [wear Stats](AndroidUI/wear-stats.svg). Show only the current ISO-week
+summary: average per elapsed day, goal hits, total, and one compact chart. Do
+not add a period picker, multi-chart dashboard, or month navigation.
 
-- Base grid: 4dp.
-- Common spacing: 4, 8, 12, 16, 20, 24, 32, 40dp.
-- Minimum touch target: 48dp.
-- Small control shape: 12dp.
-- Card/section shape: 20dp.
-- Hero shape: 28dp.
-- Dialog shape: Material default large shape, visually aligned with the 28dp hero family.
-- Depth strategy: tonal surface shifts first, quiet borders second, minimal elevation third.
-- Suggested tonal elevations: base 0dp, raised 1dp, interactive 3dp, dialog 6dp.
-- No dramatic shadows, thick borders, gradients, decorative blur, or pure-white cards floating over pale foam.
+### 9.4 Wear offline behavior
 
-### 3.4 Iconography
+Wear can commit a local log while disconnected, retain the mutation in the
+outbox, and show a stale/sync status. Reconnection is idempotent by intake
+identity. The UI never rolls back the local log because a Health Connect or
+network projection failed.
 
-Use one Android-native icon family consistently: Material Symbols/Compose Material icons with rounded geometry where available. Icons clarify actions and are paired with labels when meaning is not universally obvious. Do not use SF Symbols or a custom drop icon as the add metaphor.
+## 10. Widgets and Android system surfaces
 
-## 4. Navigation and information architecture
+System surfaces stay focused and do not become alternate app dashboards.
 
-### 4.1 Top-level destinations
+### 10.1 Glance widgets
 
-The Android app has four top-level destinations:
+Provide responsive small, medium, and large layouts with a static contained
+level, amount/remaining readout, and one or more quick actions. Widgets have:
 
-```text
-Today     History     Stats     Settings
-```
+- no motion tilt, pour stream, idle surface animation, calendar, or Stats chart;
+- no direct persistence or Health Connect writes;
+- actions routed through an application pending intent/callback to the shared
+  `LogIntake` boundary;
+- an explicit unavailable/stale state when the snapshot cannot be read.
 
-Compact wireframe:
+### 10.2 Quick Settings, notifications, and shortcuts
 
-```text
-┌────────────────────────────────┐
-│ content for the selected root  │
-│                                │
-│                                │
-├────────────────────────────────┤
-│  Today   History   Stats   ⚙   │  Material NavigationBar
-└────────────────────────────────┘
-```
+- Quick Settings provides one focused logging action; custom amount may open a
+  small standard Android surface.
+- Reminder notifications use the standard Android template, remaining amount,
+  and one default log action.
+- Shortcuts/App Actions deep-link to Today or the supported amount entry and
+  still use the shared write boundary.
+- None of these surfaces renders a month calendar, Stats charts, pour stream,
+  or sensor tilt.
 
-Medium/expanded layouts replace the bottom bar with a rail or drawer. The destinations do not change.
+## 11. State matrix
 
-### 4.2 Nested navigation
+Every screen implements these states and their TalkBack semantics.
 
-Use typed Android navigation destinations owned by the app UI layer:
+| State | Today | History/Day Detail | Stats | Settings/Onboarding | Wear/system surfaces |
+|---|---|---|---|---|---|
+| First run | Six-page onboarding gate | Not required before onboarding completion | Not required before onboarding completion | Setup/permission state | Focused default state |
+| Loading | Quiet hero/snapshot loading; no fake water animation | Calendar/detail skeleton | Summary/chart skeleton | Row/page loading | Last-known snapshot or loading |
+| Empty | Zero fill; quick add visible | Empty month/day message; today can add | Localized empty period; no fake marks | Defaults and setup prompts | Remaining/goal unavailable message |
+| Ready | Hero, readout, quick adds, custom amount | Rings, selected day, entries | Summary and four accessible charts | Current values and native controls | Focused current surface |
+| Goal reached | Success semantics without celebration noise | Day ring caps at 1.0 | Hit data remains visible | No hidden goal mutation | Ring/readout reflects state |
+| Over goal | True numeric total; capped visual rule | Ring remains capped | Over-goal values remain true | No normalization | Numeric state remains true |
+| Save/projection error | Keep local log; show status/retry | Keep local summary; retry projection | Keep local data; explain unavailable projection | Recoverable retry | Stale/error indicator, not a crash |
+| Offline | Local logging remains available | Local history remains available | Local stats remain available | Local changes remain visible | Outbox/stale state |
+| Permission denied | Logging remains enabled | No permission block | Goal fallback is explicit | Reopen/retry native settings | No Health Connect dependency on Wear |
+| Reduced motion | No stream/reaction/tilt; cross-fade only | No ring-spin/page flourish | Disable decorative chart transitions | No decorative motion | No idle motion |
+| Large text | Hero scales and actions wrap | Day cells/rows remain readable | Chart data has text alternative | Rows wrap; no clipping | Scroll and concise labels |
 
-```text
-TodayRoute
-HistoryRoute
-HistoryDayRoute(localDate)
-StatsRoute(period)
-SettingsRoute
-SettingsGoalRoute
-SettingsContainersRoute
-SettingsRemindersRoute
-SettingsHealthRoute
-OnboardingRoute(step)
-```
+## 12. Interaction flows
 
-The domain never receives route strings. A nested destination has a standard Android top app bar and system back/predictive-back behavior. Root destinations do not show an artificial back button.
-
-### 4.3 Android interaction conventions
-
-- Use standard top app bars, Material buttons, chips, FABs, dialogs, menus, snackbars, and bottom sheets.
-- Use snackbar actions for short-lived undo; do not create an iOS-style transient overlay stack.
-- Use dialogs for confirmation/destructive actions and short choices; use a full destination for substantial editing.
-- Use the system back gesture/button for nested screens and preserve predictive-back animation.
-- Keep a single obvious primary action per screen.
-- Do not hide essential logging behind a navigation drawer or overflow menu.
-
-## 5. Phone and tablet wireframes
-
-The diagrams show hierarchy and behavior. Exact pixel dimensions are resolved by Window Size Class and tokens.
-
-### 5.1 Today — compact
+### 12.1 Log, coalesce, undo
 
 ```text
-┌────────────────────────────────┐
-│ Ripple                    ⋮    │  Top app bar / overflow
-│ Tuesday, 7 September            │  Local day context
-│                                │
-│        ┌──────────────┐        │
-│        │              │        │
-│        │  1 250 ml    │        │  WaterLevelHero
-│        │  750 ml left │        │  No circular progress
-│        │ ~~~~~~~~~~~~ │        │  Flat surface when idle
-│        └──────────────┘        │
-│                                │
-│ Quick add                       │
-│ [ +250 ] [ +500 ] [ +750 ]     │  Material buttons/chips
-│                                │
-│ Recent                          │
-│  09:10     500 ml       App    │
-│  07:40     250 ml       Watch  │
-│                                │
-│                         ( + )  │  FAB for custom amount
-├────────────────────────────────┤
-│ Today   History   Stats   ⚙    │
-└────────────────────────────────┘
+Today / Wear / widget / notification / Tile / shortcut
+        -> shared amount input
+        -> LogIntake(amount, source, date)
+        -> local store row with stable identity
+        -> snapshot refresh + outbox/projection work
+        -> Android hero/confirmation settles
+        -> UndoLastIntake when explicitly requested
 ```
 
-Required states:
+Every source calls the same domain boundary. UI state must not invent a second
+amount formula, direct Room write, or local-only undo stack.
 
-- first run: onboarding gate, no empty Today surface behind it;
-- zero intake: empty water field, no fill or bottom shimmer;
-- normal day: water level, remaining, quick actions, recent rows;
-- goal reached: success role and positive copy without confetti or streak language;
-- over goal: cap the visual level according to the domain contract and show the true total numerically;
-- active pour: one continuous stream for coalesced taps, numbers remain stable until pour ends;
-- error: saved log remains visible; projection/system failure appears as status/snackbar;
-- reduced motion: no stream/surface reaction/tilt, cross-fade only.
-
-### 5.2 Today — medium/expanded
+### 12.2 History to Day Detail
 
 ```text
-┌──────────────┬──────────────────────────────────────────────┐
-│ ≡            │ Today                              ⋮           │
-│              ├──────────────────────────────────────────────┤
-│  Today       │             ┌─────────────────┐              │
-│  History     │             │                 │              │
-│  Stats       │             │   water hero    │              │
-│  Settings    │             │                 │              │
-│              │             └─────────────────┘              │
-│              │      [ +250 ] [ +500 ] [ +750 ]   ( + )      │
-│              │──────────────────────────────────────────────│
-│              │ Recent intake rows / sync status             │
-└──────────────┴──────────────────────────────────────────────┘
+History month pager -> tap past/today -> DayDetail(localDate)
+                                      -> inspect entries
+                                      -> edit existing entry
+                                      -> soft delete / undo / restore
+                                      -> add only when localDate is today
 ```
 
-The hero remains the focal point, but secondary rows use the available width. Do not stretch every control to tablet width.
+On compact windows Day Detail is a real nested destination. On expanded windows
+the calendar and detail remain visible together.
 
-### 5.3 History — compact
+### 12.3 Onboarding permissions
 
 ```text
-┌────────────────────────────────┐
-│ History                    ⋮   │
-│ <        September 2026     >  │  Month selector
-│ Mon Tue Wed Thu Fri Sat Sun    │
-│       1   2   3   4   5   6     │
-│  7   8   9  10  11  12  13     │  One ring per day
-│ 14  15  16  17  18  19  20     │  Future days disabled
-│ 21  22  23  24  25  26  27     │
-│ 28  29  30                      │
-│                                │
-│ Selected day                    │
-│ Tue, 8 Sep          1 250 ml    │
-│ Goal reached                    │
-├────────────────────────────────┤
-│ Today   History   Stats   ⚙    │
-└────────────────────────────────┘
+explanation page -> Android system permission surface -> return
+                  -> re-read state -> granted or denied/recoverable
 ```
 
-The calendar uses a Material-friendly grid with accessible day semantics. A future day has no click action and is announced as unavailable.
+The app remains usable when Health Connect or notifications are denied.
 
-### 5.4 Day Detail
+### 12.4 Wear offline/reconnect
 
 ```text
-┌────────────────────────────────┐
-│ ‹  Tuesday, 8 September         │  Standard Android back
-│    1 250 ml of 2 000 ml         │
-│    63%                           │
-│                                │
-│ 09:10     500 ml       App      │
-│ 07:40     250 ml       Watch    │
-│ 06:55     500 ml       Widget   │
-│                                │
-│ [edit]  [delete]                │
-│                                │
-│                         ( + )  │  Only when this is today
-└────────────────────────────────┘
+Wear tap/rotary amount -> local LogIntake -> outbox while offline
+      -> show local result and stale status
+      -> reconnect -> idempotent phone/apply -> refreshed snapshot
 ```
 
-Delete opens an Android confirmation dialog or uses an explicitly reversible snackbar action. Restore returns the same intake identity. Editing never creates a second hidden row.
-
-### 5.5 Stats — compact
-
-```text
-┌────────────────────────────────┐
-│ Stats                          │
-│ [ Week ] [ Month ] [ Year ]     │  Segmented buttons/dropdown
-│                                │
-│ 1 820 ml average     5/7 days │  Summary first
-│                                │
-│        daily progress chart    │  Canvas chart + TalkBack table
-│     ▂ ▆ ▅ ▇ ▃ ▆ ▇              │
-│                                │
-│ Day parts                         │
-│ Morning       38%              │
-│ Afternoon     42%              │
-│ Evening       20%              │
-│                                │
-│ Containers / best day / run    │
-├────────────────────────────────┤
-│ Today   History   Stats   ⚙    │
-└────────────────────────────────┘
-```
-
-The chart is not the only representation. Every visual series has a semantic summary and data values available to TalkBack.
-
-### 5.6 Settings
-
-```text
-┌────────────────────────────────┐
-│ Settings                       │
-│                                │
-│ Profile                        │
-│  Body mass              72 kg  │
-│  Activity level         Normal │
-│  Preferred unit         ml     │
-│                                │
-│ Goal                           │
-│  Daily goal             2 000  │
-│  Goal mode              Auto   │
-│                                │
-│ Reminders                      │
-│  Reminders             On   >  │
-│                                │
-│ Health Connect                 │
-│  Hydration access       On   > │
-│                                │
-│ Containers / Export / About    │
-├────────────────────────────────┤
-│ Today   History   Stats   ⚙    │
-└────────────────────────────────┘
-```
-
-Settings uses Android list rows and system settings intents. Do not reproduce iOS grouped-form styling.
-
-### 5.7 Onboarding
-
-```text
-┌────────────────────────────────┐
-│                         Skip   │
-│                                │
-│       A calm water rhythm      │
-│       short explanation        │
-│                                │
-│       ● ○ ○ ○ ○ ○ ○            │  Progress indicator
-│                                │
-│       [ Continue ]             │
-│                                │
-│       Android system back      │
-└────────────────────────────────┘
-```
-
-Permission steps launch native Health Connect/notification permission UI and refresh state on return. A denied permission is a recoverable state, not a failed onboarding session.
-
-### 5.8 Tablet History split
-
-```text
-┌──────────────────┬───────────────────────────────────────────┐
-│ Navigation rail  │ History                         September │
-│                  ├───────────────────────┬───────────────────┤
-│ Today            │ month grid            │ Day Detail        │
-│ History          │                       │ Tue, 8 Sep        │
-│ Stats            │ one ring/day          │ 1 250 / 2 000 ml  │
-│ Settings         │                       │ intake rows       │
-│                  │                       │ edit/delete       │
-└──────────────────┴───────────────────────┴───────────────────┘
-```
-
-Selecting a day updates the detail pane without replacing the month context. On narrower widths it becomes the nested Day Detail route.
-
-## 6. Wear OS wireframes
-
-Wear is a separate Android surface with Android Wear conventions. It is not a miniature phone app or a copy of Apple Watch pages.
-
-### 6.1 Wear Today
-
-```text
-┌───────────────┐
-│ 09:42          │  TimeText
-│               │
-│   water       │  Full-canvas field
-│  ~~~~~~~~~    │
-│  750 ml left  │
-│               │
-│ [250] [500]   │  Predefined amounts
-│       [750]   │
-│   rotate for  │  Rotary custom amount hint
-│   custom ml   │
-└───────────────┘
-```
-
-Use a Wear `Chip`/`CompactChip` or equivalent for actions, rotary input for custom amount, and a short confirmation. Do not add an always-moving water animation.
-
-### 6.2 Wear History
-
-```text
-┌───────────────┐
-│ History       │
-│ Today  1 250  │
-│ Tue    1 800  │
-│ Mon    2 050  │
-│ Sun      900  │
-│ Sat    2 000  │
-│ Fri    1 450  │
-│ Thu    2 100  │
-└───────────────┘
-```
-
-Show seven elapsed local days. Selecting a day opens a Wear-native Day Detail where individual entries can be deleted/restored. There is no month calendar.
-
-### 6.3 Wear Stats
-
-```text
-┌───────────────┐
-│ Stats          │
-│ ISO week 37    │
-│ Avg 1 820 ml   │
-│ 5 / 7 goals    │
-│               │
-│   ▂ ▆ ▅ ▇ ▃   │  One compact chart
-│               │
-│ Best Tue       │
-└───────────────┘
-```
-
-There is no Wear period picker, month calendar, or multi-chart dashboard.
-
-### 6.4 Wear complications and Tiles
-
-Show only the focused surface:
-
-```text
-ring/level + remaining amount + tap-to-open or default log
-```
-
-Do not render a chart, month grid, pour stream, or sensor tilt in a complication/Tile.
-
-## 7. Widgets and Android system surfaces
-
-### 7.1 Glance widgets
-
-Provide small, medium, and large responsive layouts.
-
-Small:
-
-```text
-┌────────────┐
-│ 1 250 ml   │
-│ 750 left   │
-│   +250     │
-└────────────┘
-```
-
-Medium:
-
-```text
-┌──────────────────────┐
-│ Ripple     63%       │
-│ water level          │
-│ 1 250 / 2 000 ml     │
-│ [ +250 ] [ Today ]   │
-└──────────────────────┘
-```
-
-Large:
-
-```text
-┌──────────────────────────────┐
-│ Today                  63%   │
-│ contained static water field │
-│ 1 250 ml of 2 000 ml         │
-│ remaining 750 ml             │
-│ [ +250 ] [ +500 ] [ Open ]   │
-└──────────────────────────────┘
-```
-
-Widgets are static and glanceable. They have no tilt, pour stream, surface response, Health Connect access, or direct Room mutation. Every action is a pending intent/Glance callback into the application write boundary.
-
-### 7.2 Quick Settings Tile
-
-The default Tile is a single quick-log action with a clear label and current enabled/disabled state. It does not display the full Today screen. Custom amount selection opens a small Activity/dialog.
-
-### 7.3 Notification
-
-The reminder notification has a concise title, current remaining amount, and one default logging action. It uses the standard Android notification template and remains useful when collapsed. No custom iOS-like notification layout is required.
-
-## 8. Interaction flows
-
-### 8.1 Quick log and undo
-
-```text
-User taps quick amount
-        |
-        v
-ViewModel emits LogIntake(APP)
-        |
-        v
-Room commits one UUID-addressed row
-        |
-        +--> Today snapshot refreshes
-        +--> one pour series begins/coalesces
-        +--> projection/outbox work is scheduled
-        +--> snackbar offers Undo
-        |
-        v
-Pour settles; final number/confirmation updates
-```
-
-If Undo is tapped, call `UndoLastIntake`. Do not remove a row from a ViewModel list or infer the last row from visual state.
-
-### 8.2 Onboarding and permissions
-
-```text
-Welcome
-  -> Profile
-  -> Goal mode
-  -> Health Connect availability
-  -> Hydration write permission
-  -> Optional weight/workout read permissions
-  -> Notification permission
-  -> Reminder setup
-  -> Complete
-```
-
-Each permission step has three states: not requested, granted, and denied/recoverable. Returning from system UI always re-reads permission state. Continue remains possible when Health Connect or notifications are unavailable.
-
-### 8.3 History edit/delete/restore
-
-```text
-History month -> select past/today -> Day Detail
-                                      |
-                                      +--> edit -> EditIntake -> refresh
-                                      +--> delete -> soft delete -> undo/restore
-                                      +--> add -> only if local day is today
-```
-
-Future dates have no route/action. A deleted row remains represented when the screen needs to explain undo/restore or export state.
-
-### 8.4 Wear offline/reconnect
-
-```text
-Wear logs locally
-      |
-      +--> Room row committed
-      +--> mutation enters outbox
-      |
-phone unavailable? keep row/outbox and show stale status
-      |
-phone reconnects
-      |
-phone applies UUID/mutation idempotently
-      |
-phone acknowledges after commit
-      |
-watch removes outbox entry and receives refreshed snapshot
-```
-
-### 8.5 Reminder scheduling
-
-```text
-Settings changes reminder rule
-        |
-        v
-RescheduleReminders
-        |
-        +--> cancel/replace next request
-        +--> check notification permission
-        +--> clamp to wake/sleep window
-        +--> schedule next local reminder
-```
-
-Permission denial never prevents logging. Reboot/time-zone changes trigger reconciliation, not duplicate reminder creation.
-
-## 9. State matrix
-
-Every screen must implement the states below. A state is not complete until its TalkBack text and action behavior are defined.
-
-| State | Today | History | Stats | Settings | Wear/system surfaces |
-| --- | --- | --- | --- | --- | --- |
-| First run | Onboarding gate | Not reachable until onboarding policy allows | Not reachable until onboarding policy allows | Onboarding entry | Default static empty state |
-| Loading | Hero skeleton/quiet loading surface; no fake water motion | Month skeleton | Summary/chart skeleton | Row-level loading | Last known snapshot or empty |
-| Empty | Zero fill, quick add visible | Empty month message with current month | Empty period message, no fake chart | Defaults/seed state | Remaining/goal unavailable message |
-| Ready | Hero, quick add, recent rows | Rings and selected-day summary | Summary and accessible charts | Current values and actions | Focused current snapshot |
-| Goal reached | Lagoon success semantics, no celebration noise | Day ring at cap | Hit-day data | No special settings mutation | Ring/remaining reflects true state |
-| Over goal | Numeric total remains true; visual fill follows domain cap | Ring remains capped at 1.0 | Over-goal data remains visible | No hidden normalization | Numeric value remains true |
-| Error after save | Keep intake; show projection/system status | Keep local summary; retry action | Keep local data; explain unavailable projection | Retry/open settings | Show stale/error status, not a crash |
-| Offline | Full local logging | Local history available | Local stats available | Local settings available | Watch outbox/stale indicator |
-| Permission denied | Logging remains enabled | No permission-specific blockage | Health-derived goal falls back | Clear reconnect action | No Health Connect access on watch |
-| Stale Wear sync | Phone unaffected; show sync status | Local phone truth | Local phone truth | Link status/action | Watch shows last sync and offline action |
-| Reduced motion | No stream/surface/tilt; cross-fade | No animated ring flourish | Chart transitions disabled/shortened | No decorative animation | No idle animation |
-| Large text | Hero scales; controls wrap | Calendar labels remain readable | Chart labels expose data separately | Rows wrap, no clipping | Wear uses scroll and concise labels |
-
-## 10. Accessibility and input requirements
-
-### TalkBack semantics
-
-- Today hero announces one aggregate: consumed, goal, remaining, and percentage.
-- Quick-add controls announce their exact amount and action.
-- Intake rows announce local time, amount, source, deleted state, and available actions.
-- Calendar cells announce date, total, percentage, goal-hit state, and future/disabled state.
-- Charts expose a text summary and navigable values; visual marks are not the only data channel.
-- Permission rows announce current state and the action that opens system settings.
-
-### Input and navigation
-
-- All touch targets are at least 48dp.
-- Every action has pressed, focused, disabled, and loading semantics.
-- Hardware keyboard navigation reaches all primary controls on tablets/ChromeOS-compatible environments.
-- System back and predictive back work for nested routes.
-- Wear rotary input changes custom amount in stable increments and announces the current amount.
-- No gesture is the only route to a critical action.
-
-## 11. Screenshot and visual acceptance matrix
-
-Screenshots are generated from the real Android implementation. They are validation artifacts, not the source of layout decisions.
-
-Store implementation captures under `release/screenshots/android/` using stable names:
-
-| Capture | Form factor | State |
-| --- | --- | --- |
-| `phone-compact-today-light` | compact phone | ready, light |
-| `phone-compact-today-dark` | compact phone | ready, dark |
-| `phone-compact-today-empty` | compact phone | zero intake |
-| `phone-compact-today-pour` | compact phone | active coalesced pour |
-| `phone-compact-history` | compact phone | populated month |
-| `phone-compact-day-detail` | compact phone | entries and actions |
-| `phone-compact-stats-week` | compact phone | chart and summaries |
-| `phone-compact-settings` | compact phone | settings sections |
-| `phone-compact-onboarding` | compact phone | permission step |
-| `tablet-history-split` | expanded tablet | month plus Day Detail |
-| `tablet-stats` | expanded tablet | responsive chart layout |
-| `wear-today` | Wear OS | quick logging |
-| `wear-history` | Wear OS | seven-day list |
-| `wear-stats` | Wear OS | ISO-week summary |
-| `widget-small` | launcher | static focused widget |
-| `widget-medium` | launcher | static level and actions |
-| `widget-large` | launcher | full glanceable surface |
-| `notification-reminder` | notification shade | default action |
-| `quick-settings-tile` | Quick Settings | default logging action |
-
-For each screen, compare hierarchy, state, type scale, contrast, touch targets, and system context. Do not compare against the iOS screenshots as a pixel target. A screenshot failure must be classified as one of: content, layout, token, state, accessibility, or platform-behavior mismatch.
-
-## 12. Implementation handoff
-
-Map the UI contract to these Android modules:
-
-| UI responsibility | Module |
-| --- | --- |
+## 13. Accessibility and input
+
+- TalkBack reads the Today hero as consumed amount, goal, remaining amount,
+  percentage, and current state in one coherent aggregate.
+- Quick-add controls announce the exact amount and source action.
+- Calendar cells announce date, amount, percentage, goal status, and disabled
+  future state.
+- Intake rows announce time, amount, container, source, and available row
+  actions.
+- Charts expose a textual summary and navigable values; marks are never the
+  only data channel.
+- Native permission and settings rows expose current authorization and the
+  action that opens the system surface.
+- Touch targets are at least 48dp; keyboard/focus navigation reaches primary
+  actions on tablets and ChromeOS-compatible windows.
+- Wear rotary input changes custom amount in stable increments and announces the
+  current amount.
+- Support light/dark themes, font scale through 2.0, and reduced motion without
+  clipping, disappearing actions, or loss of meaning.
+- Use localized DE and EN copy; do not hardcode English in the German locale.
+
+## 14. Visual reference and acceptance captures
+
+The reference pack links the current iOS evidence:
+
+- [iPhone Today](../release/screenshots/raw/en-US/iphone-69/01-today.png)
+- [iPhone History](../release/screenshots/raw/en-US/iphone-69/02-history.png)
+- [iPhone Stats](../release/screenshots/raw/en-US/iphone-69/03-stats.png)
+- [iPad Settings](../release/screenshots/raw/en-US/ipad-129/04-settings.png)
+- [Watch Today](../release/screenshots/raw/en-US/watch-46/01-today.png)
+- [Watch History](../release/screenshots/raw/en-US/watch-46/02-history.png)
+- [Watch Stats](../release/screenshots/raw/en-US/watch-46/03-stats.png)
+
+Store runtime Android captures under `release/screenshots/android/` with stable
+names:
+
+| Capture | Target/state |
+|---|---|
+| `phone-compact-today-light` | ready Today, light |
+| `phone-compact-today-dark` | ready Today, dark |
+| `phone-compact-today-empty` | zero intake |
+| `phone-compact-today-pour` | active coalesced pour |
+| `phone-compact-history` | populated month |
+| `phone-compact-day-detail` | entries and row actions |
+| `phone-compact-stats-week` | Week summaries and charts |
+| `phone-compact-settings` | full Settings sections |
+| `phone-compact-onboarding` | Health or notification handoff |
+| `tablet-history-split` | expanded month plus Day Detail |
+| `tablet-stats` | expanded responsive charts |
+| `wear-today` | Wear quick logging |
+| `wear-history` | seven-day list |
+| `wear-day-detail` | individual delete |
+| `wear-stats` | current ISO week |
+| `widget-small`, `widget-medium`, `widget-large` | static widgets |
+| `notification-reminder` | notification shade |
+| `quick-settings-tile` | focused Tile action |
+
+Review each capture for hierarchy, content, state, token/contrast, touch target,
+accessibility, and platform behavior. Do not judge Android by pixel equality to
+the iOS evidence. A failure is classified as content, layout, token, state,
+accessibility, or platform-behavior mismatch.
+
+## 15. Implementation handoff
+
+| UI responsibility | Android module |
+|---|---|
 | Theme, dimensions, typography, shapes, semantics | `core:designsystem` |
-| Today screen and hero | `feature:today` + `core:designsystem` |
+| Today hero and logging controls | `feature:today` |
 | Month grid and Day Detail | `feature:history` |
-| Charts and period selection | `feature:stats` + `core:designsystem` |
-| Profile, goal, containers, reminders, health, export | `feature:settings` |
-| Permission/setup flow | `feature:onboarding` |
-| Glance layouts | `system:widgets` |
-| Quick Settings Tile | `system:quicksettings` |
-| Shortcuts/App Actions/deep links | `system:appactions` |
-| Wear screens and complications/Tiles | `wear` |
+| Period selection, summaries, and charts | `feature:stats` |
+| Profile, goal, containers, reminders, Health, sync, export | `feature:settings` |
+| Six-page setup and permission handoffs | `feature:onboarding` |
+| Glance widgets | `system:widgets` |
+| Quick Settings and notification | `system:quicksettings` / `system:notifications` |
+| Shortcuts/App Actions | `system:appactions` |
+| Wear pages, outbox status, complications/Tiles | `wear` |
 
-Every feature screen must have:
+Every feature screen supplies loading/content/error/permission-sensitive state,
+previews or fixtures for empty/ready/error/dark/large-text/reduced-motion
+states, and Compose semantics tests for primary actions. Composables do not
+write Room, Health Connect, AlarmManager, WorkManager, or the Data Layer
+directly.
 
-- a `ScreenState` with loading/content/error/permission-sensitive states;
-- a `ViewModel` that calls domain use cases only;
-- previews/fixtures for empty, ready, error, dark, large-text, and reduced-motion states;
-- Compose semantics tests for the primary actions;
-- no direct Room, Health Connect, AlarmManager, WorkManager, or Data Layer import.
+## 16. Definition of UI complete
 
-## 13. Definition of UI complete
+- [ ] Four Android roots are present: Today, History, Stats, Settings.
+- [ ] Today has the contained hero, saved-container quick adds, and custom
+      amount, with no Recent list or replacement dashboard.
+- [ ] History has horizontal month paging, one ring per day, disabled future
+      days, and a real Day Detail route.
+- [ ] Day Detail exposes entry inspection and edit/delete/restore semantics;
+      add is possible only for today.
+- [ ] Stats is separate and has Week/Month/Year, summaries, four chart
+      families, highlights, empty states, and TalkBack data.
+- [ ] Settings has all eight product sections and native Android controls.
+- [ ] Onboarding has all six pages and recoverable native permission handoffs.
+- [ ] Wear has Today, seven-day History plus Day Detail, and current ISO-week
+      Stats without a month calendar or period picker.
+- [ ] Widgets, notifications, and Quick Settings remain focused and static.
+- [ ] Light/dark mode, large text, TalkBack, reduced motion, offline, empty,
+      and error states are reviewed on representative targets.
+- [ ] Runtime Android captures are stored and reviewed against this contract.
 
-- [ ] Compact, medium, and expanded navigation behave as specified.
-- [ ] Today prioritizes logging and the water state with Android-native controls.
-- [ ] History and Stats remain separate and have all specified states.
-- [ ] Day Detail supports edit/delete/restore and only allows add for today.
-- [ ] Settings and onboarding use native Android permission/system flows.
-- [ ] Wear uses Wear-native navigation, chips/lists, rotary input, and offline status.
-- [ ] Widgets, notification, and Quick Settings layouts are static, focused, and actionable.
-- [ ] All layouts survive dark mode, large text, TalkBack, reduced motion, and empty/error/offline states.
-- [ ] Screenshot matrix is captured on real/emulated Android targets and reviewed against this document.
-- [ ] No UI decision depends on an iOS screenshot or an unrecorded agent preference.
+## 17. Maintenance and timeline
 
-## 14. Maintenance and timeline
-
-This document is maintained with [Ripple Android Architecture](ANDROID_ARCHITECTURE.md). When a screen, interaction, breakpoint, token, state, system surface, or accessibility contract changes, update this document in the same change as the implementation and append a timeline entry. Use semantic document versions: MAJOR for incompatible UI/workflow contracts, MINOR for new screens/states/surfaces, and PATCH for corrections or clarifications.
-
-Newest entries are appended at the bottom. Historical entries are immutable.
+This document is maintained with [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
+and [Ripple Architecture](ARCHITECTURE.md). When a screen, interaction,
+breakpoint, token, state, system surface, or accessibility contract changes,
+update the relevant document in the same change and append an immutable Timeline
+entry. Use semantic versions: MAJOR for incompatible UI/workflow contracts,
+MINOR for new screens/states/surfaces, and PATCH for corrections or
+clarifications. Historical entries are immutable; newest entries are appended
+at the bottom.
 
 | Version | Date | Change | Impact |
-| --- | --- | --- | --- |
-| 1.0.0 | 2026-09-07 | Initial Android UI specification with native Material/Wear wireframes, responsive layouts, state matrix, interaction flows, and screenshot acceptance matrix. | Removes screen-level ambiguity for Android implementation while preserving functional parity without copying iOS UI. |
+|---|---|---|---|
+| 1.0.0 | 2026-09-07 | Initial Android UI companion with Material/Wear guidance, responsive layouts, state matrix, flows, and capture naming. | Established native Android presentation rules. |
+| 2.0.0 | 2026-09-08 | Rebased the Android contract on the current iOS hierarchy: four roots, no Today Recent list, calendar-first History with Day Detail, separate Stats, full Settings, six-page onboarding, and the current Wear flow; added linked SVG reference pack and evidence mapping. | Android implementation now has the same product screens and flows as iOS while retaining native Android components and system surfaces. |
