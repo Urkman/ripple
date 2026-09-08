@@ -25,6 +25,22 @@
       "size" : "1024x1024"
     },
     {
+      "filename" : "AppIconWatch.png",
+      "idiom" : "watch",
+      "scale" : "2x",
+      "size" : "40x40",
+      "subtype" : "38mm",
+      "role" : "appLauncher"
+    },
+    {
+      "filename" : "AppIconWatch.png",
+      "idiom" : "watch",
+      "scale" : "2x",
+      "size" : "40x40",
+      "subtype" : "42mm",
+      "role" : "appLauncher"
+    },
+    {
       "filename" : "AppIcon.png",
       "idiom" : "tv",
       "scale" : "1x",
