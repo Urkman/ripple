@@ -17,7 +17,7 @@ superpowers/
 # Docs/ is tracked. Agent-generated task plans/specs and retired decision
 # records remain local and ignored.
 Docs/ADR/
-Docs/Android/Planning/
+Docs/shared/Android/Planning/
 Docs/superpowers/
 Ripple_Handoff/
 .asc/

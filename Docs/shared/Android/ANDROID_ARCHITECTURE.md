@@ -7,9 +7,7 @@
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.4.0
-
-**Companion document:** [Ripple Architecture](../ARCHITECTURE.md)
+**Document version:** 1.5.1
 
 **UI companion:** [Ripple Android UI Specification](ANDROID_UI_SPEC.md)
 
@@ -21,7 +19,7 @@ looking and behaving like a well-designed Android app. It must not copy iOS
 navigation chrome, controls, typography, glass treatment, or platform-specific
 presentation merely to achieve functional parity.
 
-The existing iOS architecture is described in [`Docs/ARCHITECTURE.md`](../ARCHITECTURE.md). Android screen composition and state behavior are specified in [`Docs/Android/ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md). Product behavior is specified by the consolidated [Ripple PRD](../Product/Ripple_PRD.md), especially its detailed Today, History, Stats, and motion contracts in Section 22. Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
+Android screen composition and state behavior are specified in [`ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md). Product behavior is specified by the consolidated [Ripple PRD](../Ripple_PRD.md), especially its detailed Today, History, Stats, and motion contracts in Section 22. Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
 
 ## 1. Product boundary and non-negotiable rules
 
@@ -1122,7 +1120,7 @@ Acceptance: all parity requirements pass, no temporary behavior remains, no cros
 
 ## 20. Agent working rules
 
-- Read this document and the linked iOS specs before writing Android code.
+- Read this document, the shared PRD, and the Android UI specification before writing Android code.
 - Preserve domain behavior, not iOS presentation code.
 - Put new business behavior in `core:domain` use cases and tests.
 - Put Room, Health Connect, WorkManager, AlarmManager, Data Layer, and Android permission code behind adapters.
@@ -1160,20 +1158,23 @@ An agent may call the Android port complete only when every item is true:
 
 ## 22. Related documents
 
-- [Shared iOS architecture](../ARCHITECTURE.md)
-- [Ripple PRD](../Product/Ripple_PRD.md)
+- [Shared Ripple PRD](../Ripple_PRD.md)
 - [Android UI specification](ANDROID_UI_SPEC.md)
 
 ## 23. Documentation maintenance
 
-This document and [Ripple Architecture](../ARCHITECTURE.md) are maintained as a pair. Android has a separate data boundary and native UI, but it must stay aligned with shared Ripple capabilities, domain semantics, and product specifications.
+This document and [Ripple Android UI Specification](ANDROID_UI_SPEC.md) are
+maintained as the Android implementation contract. The Android project is
+independent from the iOS project: both consume the shared PRD, while Android
+owns its data boundary, native UI, agent instructions, and implementation
+architecture.
 
 ### Source-of-truth precedence
 
 When sources disagree, use this order:
 
-1. `AGENTS.md` for repository process, shared architecture constraints, design tokens, and explicit bans.
-2. The authoritative product specification: [Ripple PRD](../Product/Ripple_PRD.md), including its detailed Today, History, Stats, and motion contracts in Section 22.
+1. The Android project's `AGENTS.md` for Android process, architecture constraints, design tokens, and explicit bans.
+2. The authoritative product specification: [Ripple PRD](../Ripple_PRD.md), including its detailed Today, History, Stats, and motion contracts in Section 22.
 3. This Android document for Android module boundaries, platform mapping, and Android-native workflows.
 4. The Android UI specification and reference pack for screen-level behavior.
 5. Android source and tests, which reveal current behavior and must be brought back into agreement when they drift.
@@ -1182,7 +1183,7 @@ The Android document must never be used to introduce iOS/Android data sharing or
 
 ### Changes that require a documentation review
 
-Review this document and its iOS companion whenever a change affects:
+Review this document, the Android UI specification, and the shared PRD whenever a change affects:
 
 - domain entities, value types, goal formulas, units, use cases, ports, or source attribution;
 - Room tables, migrations, local backup, Wear outbox, mutation ordering, or export;
@@ -1193,16 +1194,16 @@ Review this document and its iOS companion whenever a change affects:
 - Android-only privacy, security, backup, device-transfer, or release requirements;
 - the explicit no-cross-platform-data boundary.
 
-Review the iOS document even for an Android-only change. If the shared contract is unchanged, record that the change is Android-only in this document's timeline and leave the iOS document's version unchanged.
+If the shared product contract is unchanged, record that the change is Android-only in this document's timeline and leave the PRD unchanged.
 
 ### Required update workflow
 
-1. Read both architecture documents and the affected source specification before editing Android code or build configuration.
-2. Classify the change as shared, Android-only, iOS-only, or a product-contract change.
+1. Read this document, the Android UI specification, the shared PRD, and the Android project's `AGENTS.md` before editing Android code or build configuration.
+2. Classify the change as shared, Android-only, or a product-contract change.
 3. Update this document in the same change as Android implementation or an Android architecture change.
 4. Update `Document version` and the date metadata in every document that changed.
 5. Append one immutable row to this document's timeline. New rows go at the bottom; historical rows are not rewritten or deleted.
-6. If shared domain behavior or a product contract changed, update both documents and add corresponding timeline rows with the same release/change reference.
+6. If shared product behavior changed, update the PRD and add a corresponding timeline row; do not modify the iOS architecture document for an Android-only change.
 7. Verify Markdown links, Gradle/module examples, permissions, and relevant tests/builds. A documentation-only correction still runs whitespace/link checks.
 8. Commit the documentation with the implementation, or as a separate documentation commit when no code changed.
 
@@ -1221,9 +1222,8 @@ The timeline is the audit trail. Each row records the document version, date, ch
 Before merging an architecture-affecting change, confirm:
 
 - [ ] The source specification is updated when required.
-- [ ] The iOS document reflects the current Swift implementation.
 - [ ] This Android document reflects the current Android contract or explicitly records that Android is unaffected.
-- [ ] Shared use cases, units, sources, permissions, and feature names mean the same thing in both documents.
+- [ ] Shared product behavior, units, sources, permissions, and feature names remain aligned with the PRD.
 - [ ] Android UI/workflow differences are intentional Android-native choices, not accidental parity gaps.
 - [ ] The no-cross-platform-data boundary remains explicit and intact.
 - [ ] The new timeline entry is present and the version/date metadata is current.
@@ -1242,3 +1242,5 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.3.2 | 2026-09-08 | Updated the product-contract links after moving the maintained PRD, Hero Motion, and History/Stats documents into `Docs/Product/`; no Android architecture behavior changed. | Android implementation guidance now resolves entirely through the maintained `Docs/` tree, while task planning records remain separate and ignored. |
 | 1.3.3 | 2026-09-08 | Updated the Android architecture links after consolidating all product behavior, Today motion, History, and Stats requirements into `Docs/Product/Ripple_PRD.md`; no Android architecture behavior changed. | Android implementation has one product source of truth plus a separate Android-native UI/architecture mapping. |
 | 1.4.0 | 2026-09-08 | Removed ADR references and made the PRD, shared architecture, Android architecture, Android UI specification, and reference pack the maintained documentation set. | Android decisions now stay in the versioned architecture/UI documents instead of a separate ADR tree. |
+| 1.5.0 | 2026-09-08 | Removed the iOS architecture dependency and repointed the product contract to `Docs/shared/`. | The Android project now owns its architecture and agent workflow while consuming only the shared product contract and Android-owned UI/reference documents. |
+| 1.5.1 | 2026-09-08 | Moved the Android architecture into the complete `Docs/shared/` handoff and corrected its PRD link. | The Android project receives its architecture, UI contract, product contract, and visual references as one portable documentation set. |

@@ -6,14 +6,14 @@ No “close enough.” No silent shortcuts.
 Conflict order:
 
 1. **This file** for process, architecture, bans, and design tokens
-2. **`Docs/Product/Ripple_PRD.md`** for product scope, screens, flows, domain, sync, intents, platforms, and motion
-3. **`Docs/ARCHITECTURE.md`** for shared implementation boundaries and repository architecture
-4. **`Docs/Android/`** for the Android architecture, UI, and reference-pack mapping
+2. **`Docs/shared/Ripple_PRD.md`** for shared product scope, screens, flows, domain, sync, intents, platforms, and motion
+3. **`Docs/shared/IOS_ARCHITECTURE.md`** for iOS implementation boundaries and repository architecture
 
 The PRD is the sole versioned product contract. Its detailed Today, History,
 Stats, and motion contracts are in Section 22. Architecture documents define
 implementation boundaries and platform-native mappings, not a second product
-source of truth.
+source of truth. Android is an independent project with its own `AGENTS.md`;
+this file is not the Android project's instruction set.
 
 ---
 
@@ -94,9 +94,11 @@ Extensions/    RippleWidgets (WidgetKit UI)
 Packages/      RippleDomain, RippleData, RippleIntentsCore, RippleUI, RippleFeatures
 Tests/
 Docs/
-  Product/Ripple_PRD.md  the single versioned product contract
-  ARCHITECTURE.md        shared implementation architecture
-  Android/               Android architecture, UI, and reference pack
+  shared/                       Android port handoff and shared product contract
+    Ripple_PRD.md               the single versioned product contract
+    IOS_ARCHITECTURE.md         iOS implementation reference for the port
+    Android/                    Android architecture, UI, and PNG reference pack
+    screens/                    current iOS evidence captures
 ```
 
 No business logic in `Apps/` beyond wiring.  
@@ -156,7 +158,7 @@ Every new component: Light/Dark preview, Dynamic Type XXXL, Reduce Motion.
 
 ## 5. Today hero — do not improvise
 
-Full text: `Docs/Product/Ripple_PRD.md` §22.1. Non-negotiable short list:
+Full text: `Docs/shared/Ripple_PRD.md` §22.1. Non-negotiable short list:
 
 - Level = stylized **2D glass**. No circular progress. No `ProgressView` as the hero.
 - Idle: **flat** water surface. No `TimelineView` for water.
@@ -175,7 +177,7 @@ Full text: `Docs/Product/Ripple_PRD.md` §22.1. Non-negotiable short list:
 
 ## 6. History and Stats — keep them split
 
-Full text: `Docs/Product/Ripple_PRD.md` §22.2.
+Full text: `Docs/shared/Ripple_PRD.md` §22.2.
 
 - Four tabs: Today | History | Stats | Settings.
 - History = Activity-style month grid, **one ring per day**, cap 1.0. Future days not tappable.
@@ -241,13 +243,13 @@ Full text: `Docs/Product/Ripple_PRD.md` §22.2.
 
 1. Read the spec, then write code. Do not build first and “approximate” the spec.
 2. Extend existing tokens and use cases. Do not invent a parallel path.
-3. UI change to the hero or History/Stats: update `Docs/Product/Ripple_PRD.md` first, then the code.
+3. UI change to the hero or History/Stats: update `Docs/shared/Ripple_PRD.md` first, then the code.
 4. After motion changes, re-check Reduce Motion and `level == 0`.
 5. Do not inflate scope into v1.1.
 6. Re-read this file at session start when unsure.
-7. Treat [`Docs/Product/Ripple_PRD.md`](Docs/Product/Ripple_PRD.md), [`Docs/ARCHITECTURE.md`](Docs/ARCHITECTURE.md), and every file under [`Docs/Android/`](Docs/Android/) as maintained contracts. Before changing product behavior, domain rules, persistence, platform surfaces, UI/motion, module boundaries, or Android screen behavior, read the applicable documents and affected source specifications.
-8. Update the PRD in the same change as any product behavior, screen, flow, or motion change. Update `Docs/ARCHITECTURE.md` for shared implementation-boundary changes. For Android work, review and update every affected file under `Docs/Android/`, including the Android architecture, UI specification, README, and SVG reference pack; do not leave companion files stale.
-9. `Docs/Product/Ripple_PRD.md` and `Docs/ARCHITECTURE.md` are independently semantic-versioned and must update `Last verified` plus their final immutable Timeline entry whenever they change. The Android architecture and UI specification follow the same versioning and Timeline rules; Android reference files must remain consistent with them. Agent task plans/specs are kept outside the maintained contract and remain ignored.
+7. Treat the maintained handoff pack under `Docs/shared/` as the source set provided to the independent Android project: the PRD, iOS architecture reference, Android architecture/UI documents, and image references. The Android project has its own `AGENTS.md`, which governs Android implementation work.
+8. Update the shared PRD in the same change as any product behavior, screen, flow, or motion change. Update `Docs/shared/IOS_ARCHITECTURE.md` for iOS implementation-boundary changes. Android architecture/UI changes update the affected documents under `Docs/shared/Android/` and are governed operationally by the Android project's own instructions.
+9. `Docs/shared/Ripple_PRD.md`, `Docs/shared/IOS_ARCHITECTURE.md`, and the Android architecture/UI specifications are independently semantic-versioned and must update `Last verified` plus their final immutable Timeline entry whenever they change. Image references must remain consistent with the UI specifications. Agent task plans/specs remain ignored and outside the handoff pack.
 
 ## 12. Required skills
 

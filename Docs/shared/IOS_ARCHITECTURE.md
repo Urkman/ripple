@@ -1,14 +1,12 @@
-# Ripple Architecture
+# Ripple iOS Architecture
 
 Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean MVVM system. The same domain write API serves the main apps, widgets, Siri/App Intents, notification actions, and watch surfaces. SwiftData is the source of truth; CloudKit synchronizes the shared private store when the platform is configured for it, and HealthKit is an optional projection.
 
-This document describes the repository's architecture and current implementation. Product behavior remains defined by the [PRD](Product/Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts.
+This document describes the iOS repository's architecture and current implementation. Product behavior remains defined by the shared [PRD](Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts.
 
-**Document version:** 1.4.0
+**Document version:** 1.5.1
 
 **Last verified:** 2026-09-08
-
-**Companion document:** [Ripple Android Architecture](Android/ANDROID_ARCHITECTURE.md)
 
 ## 1. Architectural goals and invariants
 
@@ -22,7 +20,7 @@ Ripple is organized around a small set of invariants:
 - Undo means `UndoLastIntake` for the last own, non-deleted intake. There is no distributed undo stack.
 - View models orchestrate domain use cases but do not contain persistence, CloudKit, HealthKit, or notification code.
 - Navigation is platform-local. There is no app-wide router.
-- Business rules are shared across platforms. Platform conditionals belong in apps, UI adapters, or composition code.
+- Product invariants are shared through `Docs/shared/Ripple_PRD.md`; implementation and persistence remain platform-local. Platform conditionals belong in apps, UI adapters, or composition code.
 - The UI uses the tokens and reusable components from `RippleUI`; features do not define parallel colors, typography, or motion systems.
 
 ## 2. System at a glance
@@ -83,12 +81,14 @@ Packages/
 
 Tests/              repository-level test/support area
 Docs/
-  Product/           the single versioned product PRD
-  Android/           Android architecture, UI, and reference pack
-  ARCHITECTURE.md    this document
+  shared/                    the product PRD and Android port handoff
+    Ripple_PRD.md            shared product contract
+    IOS_ARCHITECTURE.md      this iOS architecture reference
+    Android/                 Android architecture, UI, and image references
+    screens/ios/             current iOS evidence captures
 ```
 
-Xcode project generation is defined in [`project.yml`](../project.yml). Package manifests and application targets use Swift 6 and the current OS SDK deployment targets configured by the project.
+Xcode project generation is defined in [`project.yml`](../../project.yml). Package manifests and application targets use Swift 6 and the current OS SDK deployment targets configured by the project.
 
 ## 4. Composition roots and dependency injection
 
@@ -433,46 +433,52 @@ Do not add a direct `ModelContext` to a view, a second intake writer, a UserDefa
 
 ## 17. Related specifications
 
-- [Ripple PRD](Product/Ripple_PRD.md)
-- [Ripple Android Architecture](Android/ANDROID_ARCHITECTURE.md)
+- [Ripple PRD](Ripple_PRD.md)
 
 ## 18. Documentation maintenance
 
-This document and [Ripple Android Architecture](Android/ANDROID_ARCHITECTURE.md) are maintained as a pair. They describe separate implementations, but shared product behavior and cross-platform capability changes must not silently diverge.
+This document is the iOS implementation reference included in the Android
+port handoff. The Android project is independent and has its own `AGENTS.md`,
+architecture document, and UI specification. Both projects consume the PRD;
+Android may use this document to understand the source iOS boundaries, but its
+implementation architecture is not a dependency of the Android project.
 
 ### Source-of-truth precedence
 
 When sources disagree, use this order:
 
 1. `AGENTS.md` for repository process, architecture boundaries, bans, and shared design constraints.
-2. The authoritative product specification: [Ripple PRD](Product/Ripple_PRD.md). Its detailed Today, History, Stats, and motion contracts are in Section 22.
-3. The relevant platform architecture document.
+2. The authoritative product specification: [Ripple PRD](Ripple_PRD.md). Its detailed Today, History, Stats, and motion contracts are in Section 22.
+3. This document for iOS module boundaries and Apple-platform workflows.
 4. The implementation and tests, which reveal current behavior and must be brought back into agreement when they drift.
 
-If a product or architecture decision changes, update the applicable specification and both architecture documents before considering the implementation change complete.
+If a product decision changes, update the shared PRD. If an iOS architecture
+decision changes, update this document. Android documentation is updated in
+the independent Android project when Android-only behavior changes.
 
 ### Changes that require a documentation review
 
-Review the two architecture documents whenever a change affects:
+Review this document and the shared PRD whenever an iOS change affects:
 
 - domain entities, value types, goal formulas, units, use cases, ports, or source attribution;
 - persistence models, migrations, stores, sync/conflict behavior, soft deletion, export, or backup;
-- HealthKit/Health Connect projection, authorization, notification scheduling, or background work;
-- widgets, Watch/Wear surfaces, App Intents/App Actions, shortcuts, or notification actions;
+- HealthKit projection, authorization, notification scheduling, or background work;
+- widgets, Watch surfaces, App Intents, shortcuts, or notification actions;
 - package/module boundaries, composition roots, dependencies, deployment targets, or concurrency rules;
 - Today hero behavior, motion, reduced motion, History, Stats, navigation, accessibility, or localization;
 - platform scope, release requirements, security, privacy, or testing obligations.
 
-Platform-only changes still require checking the other document. If the shared contract is unchanged, record the platform-specific nature in the relevant timeline entry.
+If the shared product contract is unchanged, record the iOS-only nature in this
+document's timeline entry.
 
 ### Required update workflow
 
-1. Read both architecture documents and the affected source specification before editing code or architecture.
-2. Identify whether the change is shared, iOS-only, Android-only, or a change to the product contract.
+1. Read this document, the shared PRD, and the affected source specification before editing iOS code or architecture.
+2. Identify whether the change is shared, iOS-only, or a change to the product contract.
 3. Update the relevant architecture sections in the same change as the implementation.
 4. Update `Document version` and `Last verified` in every document that changed.
 5. Append one immutable row to the changed document's timeline. New rows go at the bottom; historical rows are not rewritten or deleted.
-6. If the shared contract changed, update both documents and add corresponding timeline rows with the same release/change reference.
+6. If the shared product contract changed, update the PRD and record the corresponding timeline row; do not add Android implementation changes to this repository's architecture document.
 7. Verify Markdown links, headings, code examples, and relevant tests/builds. A documentation-only correction still runs whitespace/link checks.
 8. Commit the documentation with the implementation, or as a separate documentation commit when no code changed.
 
@@ -492,9 +498,8 @@ Before merging an architecture-affecting change, confirm:
 
 - [ ] The source specification is updated when required.
 - [ ] The iOS document reflects the current Swift implementation.
-- [ ] The Android document reflects the current Android contract or explicitly records that Android is unaffected.
-- [ ] Shared use cases, units, sources, permissions, and feature names mean the same thing in both documents.
-- [ ] Platform-specific UI/workflow differences are intentional and documented rather than treated as defects.
+- [ ] Shared product behavior, units, sources, and feature names remain aligned with the PRD.
+- [ ] iOS-specific UI/workflow behavior is intentional and documented.
 - [ ] The new timeline entry is present and the version/date metadata is current.
 
 ## 19. Timeline
@@ -511,3 +516,5 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.3.2 | 2026-09-08 | Moved the maintained product specifications and reference captures from the ignored handoff directory into `Docs/Product/`; updated the architecture links. | Product contracts are now tracked with the rest of the maintained documentation, while agent-generated task records remain separate and ignored. |
 | 1.3.3 | 2026-09-08 | Consolidated the Today, History, Stats, and motion specifications into the single versioned `Docs/Product/Ripple_PRD.md`; no Swift architecture or runtime behavior changed. | The architecture document now points to one product source of truth while retaining platform-local implementation boundaries. |
 | 1.4.0 | 2026-09-08 | Removed the ADR document tree and made the PRD plus this architecture document the maintained shared contracts; updated the repository layout and maintenance workflow. | Fewer maintained files are required, with product behavior versioned in the PRD and implementation boundaries versioned here. |
+| 1.5.0 | 2026-09-08 | Clarified that this is the iOS-only architecture document and moved the shared PRD/reference material to `Docs/shared/`; removed the Android companion dependency. | The independent iOS and Android projects now share only the product contract and reference material, while each project owns its implementation architecture and agent instructions. |
+| 1.5.1 | 2026-09-08 | Included the iOS architecture reference in the complete Android port handoff under `Docs/shared/` and corrected its relative links. | Android agents can inspect the source iOS boundaries without treating the iOS implementation as an Android dependency. |

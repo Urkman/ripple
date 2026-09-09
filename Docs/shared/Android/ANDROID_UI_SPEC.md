@@ -1,11 +1,10 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 2.1.0
-**Last verified:** 2026-09-08
+**Document version:** 2.2.0
+**Last verified:** 2026-09-09
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
-**Shared architecture:** [Ripple Architecture](../ARCHITECTURE.md)
-**Product contract:** [Ripple PRD](../Product/Ripple_PRD.md)
+**Product contract:** [Ripple PRD](../Ripple_PRD.md)
 **Visual reference pack:** [Android UI reference pack](UI/README.md)
 
 This is the normative Android screen, flow, state, accessibility, and visual
@@ -15,8 +14,8 @@ then expresses them with Material 3, Android window-size behavior, Android
 back/navigation conventions, native permission surfaces, and Compose for Wear
 OS.
 
-The existing iOS screenshots are evidence, not pixel targets. The annotated SVG
-wireframes in `Docs/Android/UI/` are Android layout contracts. Real Android and
+The existing iOS screenshots are evidence, not pixel targets. The annotated PNG
+image references in `UI/` are Android layout contracts. Real Android and
 Wear captures are the final acceptance artifacts. Nothing in this document
 authorizes copying Liquid Glass, an iOS tab bar, SwiftUI navigation chrome, or
 Apple Watch presentation into Android.
@@ -27,9 +26,9 @@ The contract is maintained in layers:
 
 | Concern | Authority | Android obligation |
 |---|---|---|
-| Product scope, platforms, domain language, Today, History, Stats, and motion | `Ripple_PRD.md` §22 and `AGENTS.md` | Preserve capability and source-of-truth rules |
+| Product scope, platforms, domain language, Today, History, Stats, and motion | `Ripple_PRD.md` §22 and the Android project's `AGENTS.md` | Preserve capability and source-of-truth rules |
 | Current iOS hierarchy and settings/onboarding composition | iOS source and captures listed below | Do not invent a dashboard or omit a screen |
-| Android layout and system substitution | This document and `UI/*.svg` | Use Android-native components and responsive layouts |
+| Android layout and system substitution | This document and `UI/*.png` | Use Android-native components and responsive layouts |
 
 The current iOS source inspected for this revision includes:
 
@@ -48,13 +47,13 @@ The current iOS source inspected for this revision includes:
 
 | Current iOS capability | Android destination | Android reference |
 |---|---|---|
-| Today glass hero and daily readout | Today root | [phone Today](UI/phone-today.svg) |
-| Saved-container quick add and custom amount | Today root; native amount entry | [phone Today](UI/phone-today.svg) |
-| Calendar-first History | History root | [phone History](UI/phone-history.svg) |
-| Tap a day to inspect entries | Nested Day Detail; split on expanded windows | [phone Day Detail](UI/phone-day-detail.svg), [tablet History](UI/tablet-history-split.svg) |
-| Separate period-based Stats | Stats root | [phone Stats](UI/phone-stats.svg), [tablet Stats](UI/tablet-stats.svg) |
-| Full settings surface | Settings root and native sub-destinations | [phone Settings](UI/phone-settings.svg) |
-| Six-page first-run flow | Onboarding route with native permission handoffs | [phone onboarding](UI/phone-onboarding.svg) |
+| Today glass hero and daily readout | Today root | [phone Today](UI/phone-today.png) |
+| Saved-container quick add and custom amount | Today root; native amount entry | [phone Today](UI/phone-today.png) |
+| Calendar-first History | History root | [phone History](UI/phone-history.png) |
+| Tap a day to inspect entries | Nested Day Detail; split on expanded windows | [phone Day Detail](UI/phone-day-detail.png), [tablet History](UI/tablet-history-split.png) |
+| Separate period-based Stats | Stats root | [phone Stats](UI/phone-stats.png), [tablet Stats](UI/tablet-stats.png) |
+| Full settings surface | Settings root and native sub-destinations | [phone Settings](UI/phone-settings.png) |
+| Six-page first-run flow | Onboarding route with native permission handoffs | [phone onboarding](UI/phone-onboarding.png) |
 | Watch Today/History/Stats | Wear Today/History/Stats pages | [Wear pack](UI/README.md) |
 
 There is no Android-only Recent list, dashboard home, combined Insights
@@ -167,7 +166,7 @@ entries.
 
 ### 4.1 Compact layout
 
-See [phone Today wireframe](UI/phone-today.svg). The hero is the visual
+See [phone Today image](UI/phone-today.png). The hero is the visual
 center and the three saved-container actions remain reachable without scrolling
 on a typical compact window. Custom amount is a clearly labeled secondary
 primary action, not an unlabeled symbol-only control.
@@ -220,12 +219,167 @@ tap saved container or custom amount
 Three fast taps create three store rows but one continuous visual pour. Undo
 targets the last own, non-deleted intake; it does not reconstruct a visual list.
 
+### 4.4 Today motion and animation contract
+
+The shared PRD §22.1 defines the product behavior. This section is the
+normative Android rendering and timing mapping. Android uses `dp` for geometry
+and milliseconds for timing; it must preserve the same observable sequence,
+containment, and reduced-motion behavior. The animation is a finite interaction
+state, never a continuously running water simulation.
+
+#### 4.4.1 Motion state and one shared clock
+
+The Today hero has these visual states:
+
+| State | Required behavior |
+|---|---|
+| `Idle` | Flat water surface; no autonomous wave, sine loop, or timeline animation |
+| `Pouring` | One stream, one retargetable level rise, and one active surface-contact profile |
+| `SurfaceSettling` | The single post-pour crest/reflection sequence decays to exactly zero |
+| `ReducedMotion` | No stream, surface reaction, or sensor tilt; level cross-fades in 200 ms |
+
+On every frame of an active pour, sample one `pourProgress` clock and derive
+the stream geometry, stream opacity, contact profile, and level from that same
+sample. Do not create separate `animate*AsState`/`Animatable` timelines for the
+stream and fill: they must not drift apart.
+
+When `LogIntake` succeeds:
+
+1. Start or retarget one `PourSession` from the currently rendered level to
+   the new visual target.
+2. Keep the committed store row and the visual session separate; a failed
+   Health Connect/projection write must not cancel the local log or animation.
+3. Keep the amount, remaining label, percent, and confirmation stable during
+   the active pour. They settle to the store snapshot after the stream has
+   completely disappeared.
+4. After the stream ends, run the one surface-contact sequence and then return
+   to `Idle`.
+
+If another tap arrives while a session is active, commit another store row but
+retarget the same session: use the currently rendered level as the new start,
+sum the active series amount, restart `pourProgress` at zero for that series,
+and keep the stream visibly continuous. Never stack a second stream, level
+animator, or independent ripple.
+
+#### 4.4.2 Pour stream and level fill
+
+For the active series amount `addedMl`, use the following Android mapping:
+
+```text
+amountT             = clamp((addedMl - 50) / 700, 0, 1)
+streamWidth         = 7.dp + 5.dp * amountT       // 7…12 dp
+pourDuration        = 400 ms + 300 ms * amountT   // 400…700 ms
+levelRiseDuration   = pourDuration + 140 ms
+contactDepth        = 5.dp + 4.dp * amountT       // 5…9 dp
+```
+
+- Start the stream at the glass center, `glass.top - 32.dp`, visibly above
+  the rim. It must never begin inside the glass or appear detached from the
+  surface.
+- Establish the stream to the current water surface during the first 140 ms
+  with an `easeOut` curve. The stream then remains continuous for the active
+  pour duration and contracts/fades over the final 140 ms.
+- The linear level rise reaches the actual target exactly when stream opacity
+  reaches zero. There is no level spring, bounce, or overshoot during a pour.
+- Draw order is: stream behind the water/glass stroke and below the readout;
+  the submerged part is clipped into the water rather than drawn as a second
+  line above it.
+- Use the PRD's contained glass path and clip all water geometry to the inner
+  glass. A true amount over goal remains numerically true while the visual fill
+  follows the capped display rule. At `level == 0`, draw no fill and no bottom
+  shimmer.
+
+The Android implementation may use Compose `Canvas`, `Path`, `DrawScope`, and
+`Animatable`/frame sampling, but it must not use a circular or linear
+`ProgressIndicator` as the hero, Lottie, particles, a fluid solver, or a
+photoreal water effect.
+
+#### 4.4.3 Surface contact and settle sequence
+
+The surface response is part of the water boundary, not a separate ripple
+icon, ellipse, or overlay:
+
+| Relative timing | Visual response |
+|---|---|
+| During the stream | A central 5…9 dp depression with two shoulders; it stays stable and does not flap |
+| Stream end + 0…380 ms | Two symmetric crests travel from the contact point toward the walls |
+| Wall contact | Hold the crest for 60 ms, reverse direction once |
+| Reflection + 0…220 ms | One weaker return at no more than 36% of the original amplitude |
+| Final settle + 0…240 ms | Remaining amplitude decays to exactly zero; surface is flat |
+
+The complete surface response is quiet 900 ms after the stream ends. Clip all
+motion to the glass. Keep the response subtle: for a fill below 15%, cap the
+crest amplitude at 4.dp. New taps retarget/restart the existing profile; they
+never add independent wave profiles.
+
+#### 4.4.4 Device motion and contained slosh
+
+On phones and tablets, collect gravity/rotation data through a platform motion
+adapter, not directly from a composable. Collect only while the Today surface
+is resumed and visible, and stop collection when it leaves Today, enters the
+background, or Reduce Motion is enabled.
+
+- Transform gravity into the current display orientation, including rotation
+  lock. The target angle is `atan2(-gravityRight, gravityDown)` with no 16° cap;
+  choose the shortest path across ±π.
+- Apply a damped response around the target (PRD reference: 12 rad/s,
+  damping 0.48). Motion changes may excite a temporary surface deformation
+  (PRD reference: 10 rad/s, damping 0.18, maximum amplitude 6% of glass
+  width). Sensor noise below 0.002 rad must not start a visible response.
+- Build the water boundary in tangent/normal coordinates and clip it to the
+  inner glass path. At 45°, 90°, and inverted orientations, water remains
+  contained and the logged amount never changes.
+- Returning the device upright changes the equilibrium to zero; it does not
+  abruptly cancel velocity or slosh. A normal 45° return should show at least
+  two visibly decaying oscillations before settling over roughly 0.5…1.5 s.
+- Face-up (`abs(gravity.z) > 0.92`) immediately resets angle, velocity, and
+  surface deformation to zero. Simulator, desktop, Wear, widgets, and any
+  surface without supported motion sensors use `tilt = 0`.
+- There is no autonomous idle wave. When sensors stop producing meaningful
+  motion, the deformation decays to exactly zero and remains there.
+
+#### 4.4.5 Reduced motion, system surfaces, and accessibility
+
+- Reduced Motion removes the stream, contact depression, crests, reflection,
+  and sensor tilt. Cross-fade the level to its new value over 200 ms, update
+  the text state without decorative motion, and keep logging fully functional.
+- Wear Today is a flat water-level field with no tilt, stream, or surface
+  reaction. Wear History/Stats and all widgets, notifications, Quick Settings,
+  and shortcuts use static focused surfaces.
+- A button may use the Android quick interaction token (approximately 280 ms)
+  and native haptic feedback, but it must not delay `LogIntake` or alter the
+  hero timing contract.
+- TalkBack must receive semantic amount/goal/remaining updates, not a stream
+  of per-frame announcements. Announce the final committed state once the
+  pour settles; animation is never the only indication of a log.
+- Large text, dark mode, and font-scale changes must not change timing or
+  create clipped readouts. The surface and stream remain behind the readout.
+
+#### 4.4.6 Animation verification
+
+Use a fake frame clock and fake motion source for deterministic Compose tests
+and previews. Verify at minimum:
+
+- zero level has no fill or shimmer;
+- 50 ml, 250 ml, and large adds map to the specified width/duration ranges;
+- the stream starts 32.dp above the rim and reaches the surface in 140 ms;
+- the fill reaches its target exactly when the stream disappears, without
+  spring or overshoot;
+- surface contact, crest, 60 ms reversal, 36%-maximum reflection, and 900 ms
+  settle timing are observable and then exactly flat;
+- coalesced taps produce multiple store rows but one continuous pour and one
+  final surface response;
+- sensor lifecycle, face-up, rotation, and inverted-device behavior remain
+  contained;
+- Reduced Motion, Wear, widgets, and system surfaces never start a stream or
+  sensor animation.
+
 ## 5. History and Day Detail
 
 History is calendar-first. It is not a list of recent entries and is not a
-combined Stats screen. See [phone History](UI/phone-history.svg),
-[phone Day Detail](UI/phone-day-detail.svg), and [tablet History
-split](UI/tablet-history-split.svg).
+combined Stats screen. See [phone History](UI/phone-history.png),
+[phone Day Detail](UI/phone-day-detail.png), and [tablet History
+split](UI/tablet-history-split.png).
 
 ### 5.1 History root
 
@@ -285,7 +439,7 @@ aggregate announcement before the row collection.
 ## 6. Stats
 
 Stats is its own root and remains separate from History. See [phone Stats
-wireframe](UI/phone-stats.svg) and [tablet Stats wireframe](UI/tablet-stats.svg).
+image](UI/phone-stats.png) and [tablet Stats image](UI/tablet-stats.png).
 
 ```text
 StatsRoute(period)
@@ -324,7 +478,7 @@ History/Insights combination.
 ## 7. Settings
 
 Settings is a full root destination, not a placeholder page. See [phone Settings
-wireframe](UI/phone-settings.svg).
+image](UI/phone-settings.png).
 
 Use a scrollable Material settings list with these sections and capabilities:
 
@@ -348,7 +502,7 @@ their use cases; a composable does not write persistence directly.
 
 ## 8. Onboarding
 
-Onboarding is six pages. See [phone onboarding wireframe](UI/phone-onboarding.svg).
+Onboarding is six pages. See [phone onboarding image](UI/phone-onboarding.png).
 
 | Page | Content | System handoff |
 |---|---|---|
@@ -376,11 +530,11 @@ Rules:
 ## 9. Wear OS
 
 Wear is a separate Android-native surface with three horizontal pages:
-Today, History, Stats. See [Wear wireframes](UI/README.md).
+Today, History, Stats. See the [Wear layout images](UI/README.md).
 
 ### 9.1 Wear Today
 
-See [wear Today](UI/wear-today.svg). Use the full canvas as a flat
+See [wear Today](UI/wear-today.png). Use the full canvas as a flat
 water-level field with the consumed/remaining readout. Provide predefined
 amount actions and a Crown-equivalent rotary-first custom amount flow. Use Wear
 chips or compact buttons; keep labels short and touch targets safe.
@@ -390,7 +544,7 @@ top-level navigation is used on Wear. The shared write boundary still applies.
 
 ### 9.2 Wear History and Day Detail
 
-See [wear History](UI/wear-history.svg) and [wear Day Detail](UI/wear-day-detail.svg).
+See [wear History](UI/wear-history.png) and [wear Day Detail](UI/wear-day-detail.png).
 
 - Show today and the six previous elapsed local days, newest first.
 - Empty days remain visible so the seven-day context is stable.
@@ -403,7 +557,7 @@ See [wear History](UI/wear-history.svg) and [wear Day Detail](UI/wear-day-detail
 
 ### 9.3 Wear Stats
 
-See [wear Stats](UI/wear-stats.svg). Show only the current ISO-week
+See [wear Stats](UI/wear-stats.png). Show only the current ISO-week
 summary: average per elapsed day, goal hits, total, and one compact chart. Do
 not add a period picker, multi-chart dashboard, or month navigation.
 
@@ -530,13 +684,13 @@ Wear tap/rotary amount -> local LogIntake -> outbox while offline
 
 The reference pack links the current iOS evidence:
 
-- [iPhone Today](../../release/screenshots/raw/en-US/iphone-69/01-today.png)
-- [iPhone History](../../release/screenshots/raw/en-US/iphone-69/02-history.png)
-- [iPhone Stats](../../release/screenshots/raw/en-US/iphone-69/03-stats.png)
-- [iPad Settings](../../release/screenshots/raw/en-US/ipad-129/04-settings.png)
-- [Watch Today](../../release/screenshots/raw/en-US/watch-46/01-today.png)
-- [Watch History](../../release/screenshots/raw/en-US/watch-46/02-history.png)
-- [Watch Stats](../../release/screenshots/raw/en-US/watch-46/03-stats.png)
+- [iPhone Today](../screens/ios/iphone-today.png)
+- [iPhone History](../screens/ios/iphone-history.png)
+- [iPhone Stats](../screens/ios/iphone-stats.png)
+- [iPad Settings](../screens/ios/ipad-settings.png)
+- [Watch Today](../screens/ios/watch-today.png)
+- [Watch History](../screens/ios/watch-history.png)
+- [Watch Stats](../screens/ios/watch-stats.png)
 
 Store runtime Android captures under `release/screenshots/android/` with stable
 names:
@@ -593,6 +747,8 @@ directly.
 - [ ] Four Android roots are present: Today, History, Stats, Settings.
 - [ ] Today has the contained hero, saved-container quick adds, and custom
       amount, with no Recent list or replacement dashboard.
+- [ ] Today motion implements the single-clock pour/fill contract, contained
+      sensor slosh, surface settle sequence, coalescing, and zero-state rules.
 - [ ] History has horizontal month paging, one ring per day, disabled future
       days, and a real Day Detail route.
 - [ ] Day Detail exposes entry inspection and edit/delete/restore semantics;
@@ -606,12 +762,14 @@ directly.
 - [ ] Widgets, notifications, and Quick Settings remain focused and static.
 - [ ] Light/dark mode, large text, TalkBack, reduced motion, offline, empty,
       and error states are reviewed on representative targets.
+- [ ] Animation tests use a fake clock/sensor source and verify no stream or
+      tilt appears on Wear, widgets, system surfaces, or Reduced Motion.
 - [ ] Runtime Android captures are stored and reviewed against this contract.
 
 ## 17. Maintenance and timeline
 
 This document is maintained with [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
-and [Ripple Architecture](../ARCHITECTURE.md). When a screen, interaction,
+and the shared [Ripple PRD](../Ripple_PRD.md). When a screen, interaction,
 breakpoint, token, state, system surface, or accessibility contract changes,
 update the relevant document in the same change and append an immutable Timeline
 entry. Use semantic versions: MAJOR for incompatible UI/workflow contracts,
@@ -627,3 +785,6 @@ at the bottom.
 | 2.0.2 | 2026-09-08 | Updated the product-contract links after moving the maintained PRD, Hero Motion, and History/Stats documents into `Docs/Product/`; no Android screen contract changed. | Android UI implementation now resolves its shared behavior contracts from the maintained `Docs/` tree, while task planning records remain separate and ignored. |
 | 2.0.3 | 2026-09-08 | Updated the Android UI contract to use the consolidated `Docs/Product/Ripple_PRD.md` as its only shared product source; no Android screen behavior changed. | Android layout and state guidance now has one product contract plus the Android-native UI mapping and visual reference pack. |
 | 2.1.0 | 2026-09-08 | Synchronized the Android UI reference pack with the single versioned PRD and removed the retired ADR/document-tree assumptions. | The Android UI specification, README, and SVG pack now point to one current product contract and remain maintainable as one Android documentation set. |
+| 2.1.1 | 2026-09-08 | Repointed the product contract to `Docs/shared/` and removed the iOS architecture dependency. | The Android UI contract now depends only on the shared product source and Android-owned implementation documents. |
+| 2.1.2 | 2026-09-08 | Moved the complete Android handoff under `Docs/shared/`, replaced SVG wireframes with raster PNG images, and made iOS evidence captures self-contained. | Android agents receive one portable image-based reference pack without relying on the iOS release-assets tree or SVG rendering support. |
+| 2.2.0 | 2026-09-09 | Added the Android-native Today motion contract for pour/fill timing, surface response, sensor-driven contained slosh, coalesced taps, reduced motion, static system surfaces, accessibility, and deterministic animation verification. | Android implementation now has explicit animation behavior instead of relying only on the shared PRD or visual images. |

@@ -3,13 +3,20 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 2.0.0 — 8. September 2026
-**Last verified:** 2026-09-08
+**Version:** 2.0.4 — 9. September 2026
+**Last verified:** 2026-09-09
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
 **Code-Sprache:** English identifiers, German + English copy
 
 Dieses eine Dokument ist die einzige versionierte Produkt-, Screen- und Bewegungs-Spezifikation. Es ersetzt alle vorherigen Teilstände und ist vollständig genug, um das Projekt ohne Chat-Kontext zu bauen. Wo Konzept-Screenshots vom Generator abweichen, gilt der Fließtext.
+
+**Plattform-Hinweis:** Dieses PRD wird an das unabhängige Android-Projekt
+weitergegeben. Produktumfang, Screens, Flows, Domänenregeln, Zustände und
+Motion-Verträge gelten für beide Apps. Swift-, SwiftUI-, Apple- und Xcode-
+Anweisungen beschreiben ausschließlich die iOS-Referenzimplementierung; das
+Android-Projekt folgt zusätzlich `Android/ANDROID_ARCHITECTURE.md`,
+`Android/ANDROID_UI_SPEC.md` und seinem eigenen `AGENTS.md`.
 
 ---
 
@@ -22,13 +29,13 @@ Baue eine **Open-Source-App** namens Ripple ausschließlich in **Swift 6 + Swift
 3. Keine Third-Party-Dependencies.
 4. Keine Accounts, keine Werbung, keine IAP, keine Analytics.
 5. HealthKit gehört zu v1.0. Eine Live Activity gehört bewusst nicht zu v1.0; Widgets, Control Center, Watch, Siri und Benachrichtigungen decken die schnellen Logs ab.
-6. UI folgt Abschnitt 13, Abschnitt 14 und den detaillierten Verträgen in Abschnitt 22. Screenshots in `screens/` sind Richtung, nicht Pixel-Gesetz.
+6. UI folgt Abschnitt 13, Abschnitt 14 und den detaillierten Verträgen in Abschnitt 22. Die aktuellen iOS-Captures in `screens/ios/` sind Referenz, nicht Pixel-Gesetz.
 7. Liefere ein Xcode-Workspace inkl. Packages, das auf einem echten Gerät startet. CloudKit-Container und App Group als Platzhalter + README-Anleitung.
 8. Domain- und Data-Tests müssen ohne App-Target laufen.
 
 Wenn etwas unklar ist: die strengere, kleinere Variante wählen und die
-Entscheidung in diesem PRD oder in `Docs/ARCHITECTURE.md` dokumentieren. Nicht
-den Scope erweitern.
+Entscheidung in diesem PRD oder im Architektur-Dokument der betroffenen
+Plattform dokumentieren. Nicht den Scope erweitern.
 
 ---
 
@@ -215,9 +222,11 @@ Ripple.xcworkspace
     RippleFeatures/
   Tests/                    // oder Package-Tests
   Docs/
-    Product/Ripple_PRD.md
-    ARCHITECTURE.md
-    Android/
+    shared/
+      Ripple_PRD.md
+      IOS_ARCHITECTURE.md
+      Android/
+      screens/ios/               current iOS evidence captures
     CONTRIBUTING.md
   Config/
     Ripple.xcconfig.example
@@ -722,8 +731,8 @@ Nicht umdrehen.
 
 Dieser Abschnitt enthält die früher getrennten Hero- sowie History/Stats-
 Spezifikationen. Er ist zusammen mit dem restlichen PRD verbindlich. Die
-Screenshots in `screens/` sind Referenz für Richtung und Zustand, aber kein
-Pixelgesetz; bei einem Widerspruch gilt der Text dieses PRD.
+Die aktuellen iOS-Captures in `screens/ios/` sind Referenz für Richtung und
+Zustand, aber kein Pixelgesetz; bei einem Widerspruch gilt der Text dieses PRD.
 
 ### 22.1 Today-Hero und Add-Animation
 
@@ -737,12 +746,6 @@ Der Pegel steigt bereits während des Eingießens. Beim Ende des Strahls laufen
 zwei Oberflächenkämme zu den Wänden, werden einmal schwächer reflektiert und
 kommen innerhalb von 0,90 s vollständig zur Ruhe. Es gibt keinen einzelnen
 Symboltropfen und keine darüber gezeichneten Ellipsen.
-
-![Today idle](screens/20-1-today-idle.jpg)
-
-![Today add](screens/20-2-add-tap.jpg)
-
-![Today settled](screens/20-4-after-log.jpg)
 
 #### 22.1.1 Today-Komposition auf iPhone
 
@@ -1352,5 +1355,9 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 |---|---|---|---|
 | 1.5.0 | 2026-09-08 | Letzter Stand vor der Konsolidierung: aktuelle vier iPhone-Roots, Today ohne Recent-Liste, sechsseitiges Onboarding und Watch-Flows. | Diente als gemeinsame Produktbasis für die Android-Paritätsarbeit. |
 | 2.0.0 | 2026-09-08 | PRD, Hero-Motion-Spec und History/Stats-Spec zu diesem einzigen versionierten Produktvertrag zusammengeführt; detaillierte Today-, History-, Day-Detail- und Stats-Verträge ergänzt. | Es gibt nur noch ein maßgebliches Produkt-PRD. Android- und Apple-Implementierungen lesen dieselbe Produktquelle; Plattformausdrücke bleiben in den jeweiligen Architektur/UI-Dokumenten. |
+| 2.0.1 | 2026-09-08 | Das gemeinsame PRD und seine Produktreferenzbilder nach `Docs/shared/` verschoben; plattformspezifische Architektur bleibt bei der jeweiligen App. | Beide unabhängigen Projekte lesen denselben Produktvertrag, ohne die iOS- oder Android-Implementierung an das jeweils andere Projekt zu koppeln. |
+| 2.0.2 | 2026-09-08 | Den vollständigen Android-Portierungshandoff mit iOS-Architekturkontext, Android-Verträgen und Bildreferenzen unter `Docs/shared/` gebündelt. | Das Android-Projekt erhält alle benötigten Spezifikationen und visuellen Referenzen aus einem übertragbaren Dokumentenpaket. |
+| 2.0.3 | 2026-09-08 | Den Plattformumfang des gemeinsamen PRD explizit von den iOS-spezifischen Implementierungsanweisungen getrennt. | Android-Agenten verwenden das PRD für Produktverträge und die Android-Dokumente für native Umsetzung, ohne Swift-Anweisungen fehlzuinterpretieren. |
+| 2.0.4 | 2026-09-09 | Die redundanten Today-Konzeptbilder entfernt; der PRD verweist nur noch auf die aktuellen iOS-Captures und den verbindlichen Text-/Motion-Vertrag. | Der gemeinsame Handoff enthält weniger veraltbare Referenzdateien, ohne die visuellen Android-Layouts oder aktuellen iOS-Evidence-Captures zu verlieren. |
 
-*Ende PRD 2.0.0. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 2.0.4. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
