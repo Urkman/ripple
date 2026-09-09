@@ -167,4 +167,15 @@ struct WaterDynamicsTests {
             #expect(WaterSurfaceGeometry.area(full.polygon) == WaterSurfaceGeometry.area(upright.polygon))
         }
     }
+
+    @Test("upright fill follows the tapered inner walls", arguments: [0.25, 0.5, 0.85])
+    func taperedFill(level: Double) {
+        let water = WaterSurfaceGeometry(metrics: metrics, level: level, tilt: 0)
+        let surfaceY = water.polygon.map(\.y).min() ?? metrics.bottomY
+        let surfacePoints = water.polygon.filter { abs($0.y - surfaceY) < 0.001 }
+        let surfaceWidth = (surfacePoints.map(\.x).max() ?? 0)
+            - (surfacePoints.map(\.x).min() ?? 0)
+        #expect(abs(surfaceY - metrics.y(forLevel: level)) < 0.5)
+        #expect(abs(surfaceWidth - metrics.width(atY: surfaceY)) < GlassMetrics.strokeWidth)
+    }
 }

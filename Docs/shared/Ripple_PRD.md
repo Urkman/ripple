@@ -3,7 +3,7 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 2.0.4 — 9. September 2026
+**Version:** 2.1.0 — 9. September 2026
 **Last verified:** 2026-09-09
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
@@ -860,6 +860,14 @@ bleibt enthalten, auch seitlich oder kopfüber; es gibt kein visuelles
 Verschütten und keine Änderung der geloggten Menge. Das ist eine geschlossene
 2D-Näherung, keine Fluid-Simulation.
 
+Die seitliche Innenkante des Wassers wird aus demselben `GlassMetrics`-Pfad wie
+das Glas abgeleitet. Es gibt keinen festen horizontalen Innenabstand: sichtbar
+bleibt nur der definierte Stroke-/Clip-Inset. Weil sich das Glas nach oben
+öffnet, wird die Wasserfläche mit steigendem Pegel breiter und folgt den
+jeweiligen Innenwänden; die seitliche Lücke darf bei hohen Pegeln nicht als
+zusätzliche, konstante Auffüllung stehen bleiben. Das gilt im aufrechten
+Zustand und während des Schwappens.
+
 Es gibt zwei Aqua-Schichten mit Opazitäten 0,88 / 0,50 und 3 pt
 Oberflächendicke; weiterhin wird `GlassShape` als Clip verwendet. Bei
 `level == 0` gibt es keinen Fill und keinen Schimmer. Der Strahl endet an der
@@ -1219,12 +1227,21 @@ angezeigt. Es ist kein Card-Overlay über dem Kalender.
 ```text
 DayDetailView
   header: Wochentag + Datum
-  hero: „1 250 ml“ / „Ziel 2 000 ml“ / „62 %“
+  hero: statisches Glas mit „1 250 ml“ / „62 %“
+  goal: „Ziel 2 000 ml“
   caption: „noch 750 ml“ oder „Ziel erreicht“
   entriesHeader: „Entries“
   primary action: nur heute; auf iPad „+“ rechts in derselben Überschriftszeile
   List of IntakeRow
 ```
+
+Das Tagesdetail zeigt zusätzlich das bestehende 2D-Glas als ruhige, nicht
+interaktive Visualisierung des ausgewählten Tages. Es wird ohne Pour-Strahl,
+Neigung, Oberflächenreaktion oder `TimelineView` gerendert. Menge und Prozent
+stehen im Readout des Glases; Ziel und Rest bleiben als Text darunter. Die
+Wasserfläche verwendet dieselbe innere Glasgeometrie wie Today: Der seitliche
+Abstand ist nur der Stroke-/Clip-Inset und die Fläche wird beim Ansteigen in
+Richtung der breiteren oberen Wände geöffnet.
 
 `IntakeRow` zeigt Zeit (`15:08`), Menge, Behälter und die Quelle (`App`,
 `Siri`, `Widget`, `Watch`, `Health`). Swipe trailing löscht über den
@@ -1359,5 +1376,6 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 | 2.0.2 | 2026-09-08 | Den vollständigen Android-Portierungshandoff mit iOS-Architekturkontext, Android-Verträgen und Bildreferenzen unter `Docs/shared/` gebündelt. | Das Android-Projekt erhält alle benötigten Spezifikationen und visuellen Referenzen aus einem übertragbaren Dokumentenpaket. |
 | 2.0.3 | 2026-09-08 | Den Plattformumfang des gemeinsamen PRD explizit von den iOS-spezifischen Implementierungsanweisungen getrennt. | Android-Agenten verwenden das PRD für Produktverträge und die Android-Dokumente für native Umsetzung, ohne Swift-Anweisungen fehlzuinterpretieren. |
 | 2.0.4 | 2026-09-09 | Die redundanten Today-Konzeptbilder entfernt; der PRD verweist nur noch auf die aktuellen iOS-Captures und den verbindlichen Text-/Motion-Vertrag. | Der gemeinsame Handoff enthält weniger veraltbare Referenzdateien, ohne die visuellen Android-Layouts oder aktuellen iOS-Evidence-Captures zu verlieren. |
+| 2.1.0 | 2026-09-09 | Das Tagesdetail erhält ein statisches Glas mit dem bestehenden Mengen-/Prozent-Readout; die Wasserfläche folgt beim Ansteigen konsequent dem breiter werdenden inneren Glas und behält nur den definierten Stroke-/Clip-Inset. | History visualisiert den Tagesstand zusätzlich zum Text, ohne neue Interaktion oder Bewegungsquelle; die gemeinsame Wassergeometrie zeigt bei höheren Pegeln keinen künstlichen seitlichen Innenabstand. |
 
-*Ende PRD 2.0.4. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 2.1.0. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*

@@ -8,6 +8,7 @@ public struct DayDetailView: View {
     private let refreshID: Int
     private let onAdd: (() -> Void)?
     @Environment(\.locale) private var locale
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.rippleHistorySplit) private var usesSplit
 
     public init(
@@ -24,24 +25,33 @@ public struct DayDetailView: View {
     public var body: some View {
         let formatter = VolumeFormatter(locale: locale)
         let snapshot = model.snapshot
+        let goalText = L10n.text("Goal") + " " + formatter.string(
+            milliliters: snapshot.goal.value,
+            unit: snapshot.unit
+        )
         List {
             Section {
-                VStack(alignment: .leading, spacing: RippleSpace.sm) {
-                    Text(snapshot.date.formatted(.dateTime.weekday(.wide).day().month(.wide)))
-                        .font(RippleFont.title)
-                        .foregroundStyle(RippleColor.waterDeep)
-                    Text(formatter.string(milliliters: snapshot.consumed.value, unit: snapshot.unit))
-                        .font(RippleFont.display)
-                        .foregroundStyle(RippleColor.waterDeep)
-                    Text("\(L10n.text("Goal")) \(formatter.string(milliliters: snapshot.goal.value, unit: snapshot.unit))")
-                        .font(RippleFont.body.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                    Text(formatter.percentString(snapshot.percent))
-                        .font(RippleFont.title.monospacedDigit())
-                    Text(caption(formatter: formatter, snapshot: snapshot))
-                        .font(RippleFont.callout.monospacedDigit())
-                        .foregroundStyle(RippleColor.waterLagoon)
-                }
+                DayDetailSummaryView(
+                    date: snapshot.date,
+                    consumedMl: snapshot.consumed.value,
+                    goalMl: snapshot.goal.value,
+                    amountText: formatter.valueString(
+                        milliliters: snapshot.consumed.value,
+                        unit: snapshot.unit
+                    ),
+                    unitText: snapshot.unit.symbol,
+                    percentText: formatter.percentString(snapshot.percent),
+                    goalText: goalText,
+                    captionText: caption(formatter: formatter, snapshot: snapshot),
+                    accessibilitySummary: formatter.heroAccessibility(
+                        consumedMl: snapshot.consumed.value,
+                        goalMl: snapshot.goal.value,
+                        remainingMl: snapshot.remaining.value,
+                        percent: snapshot.percent,
+                        unit: snapshot.unit
+                    ),
+                    reduceMotion: reduceMotion
+                )
                 .listRowBackground(Color.clear)
             }
 
@@ -139,5 +149,120 @@ public struct DayDetailView: View {
         }
         return formatter.remainingPhrase(milliliters: snapshot.remaining.value, unit: snapshot.unit)
     }
+}
+
+private struct DayDetailSummaryView: View {
+    let date: Date
+    let consumedMl: Int
+    let goalMl: Int
+    let amountText: String
+    let unitText: String
+    let percentText: String
+    let goalText: String
+    let captionText: String
+    let accessibilitySummary: String
+    let reduceMotion: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: RippleSpace.sm) {
+            Text(date.formatted(.dateTime.weekday(.wide).day().month(.wide)))
+                .font(RippleFont.title)
+                .foregroundStyle(RippleColor.waterDeep)
+
+            RippleHeroView(
+                consumedMl: consumedMl,
+                goalMl: goalMl,
+                phase: .idle,
+                reduceMotion: reduceMotion,
+                animatesPour: false,
+                showsPour: false,
+                expandsToFit: false,
+                tilt: 0,
+                slosh: 0,
+                amountText: amountText,
+                unitText: unitText,
+                percentText: percentText,
+                accessibilitySummary: accessibilitySummary
+            )
+            .frame(maxWidth: .infinity)
+
+            Text(goalText)
+                .font(RippleFont.body.monospacedDigit())
+                .foregroundStyle(.secondary)
+            Text(captionText)
+                .font(RippleFont.callout.monospacedDigit())
+                .foregroundStyle(RippleColor.waterLagoon)
+        }
+    }
+}
+
+#Preview("Day detail summary · Light") {
+    DayDetailSummaryView(
+        date: .now,
+        consumedMl: 1_250,
+        goalMl: 2_000,
+        amountText: "1\u{202F}250",
+        unitText: "ml",
+        percentText: "62\u{00A0}%",
+        goalText: "Goal 2\u{202F}000 ml",
+        captionText: "750 ml left",
+        accessibilitySummary: "1 250 milliliters of 2 000. 62 percent. 750 milliliters left.",
+        reduceMotion: false
+    )
+    .padding()
+    .background(RippleColor.waterFoam)
+}
+
+#Preview("Day detail summary · Dark") {
+    DayDetailSummaryView(
+        date: .now,
+        consumedMl: 1_250,
+        goalMl: 2_000,
+        amountText: "1\u{202F}250",
+        unitText: "ml",
+        percentText: "62\u{00A0}%",
+        goalText: "Goal 2\u{202F}000 ml",
+        captionText: "750 ml left",
+        accessibilitySummary: "1 250 milliliters of 2 000. 62 percent. 750 milliliters left.",
+        reduceMotion: false
+    )
+    .padding()
+    .background(RippleColor.surface)
+    .preferredColorScheme(.dark)
+}
+
+#Preview("Day detail summary · XXXL") {
+    DayDetailSummaryView(
+        date: .now,
+        consumedMl: 1_250,
+        goalMl: 2_000,
+        amountText: "1\u{202F}250",
+        unitText: "ml",
+        percentText: "62\u{00A0}%",
+        goalText: "Goal 2\u{202F}000 ml",
+        captionText: "750 ml left",
+        accessibilitySummary: "1 250 milliliters of 2 000. 62 percent. 750 milliliters left.",
+        reduceMotion: false
+    )
+    .padding()
+    .background(RippleColor.waterFoam)
+    .dynamicTypeSize(.accessibility3)
+}
+
+#Preview("Day detail summary · Reduce Motion") {
+    DayDetailSummaryView(
+        date: .now,
+        consumedMl: 1_250,
+        goalMl: 2_000,
+        amountText: "1\u{202F}250",
+        unitText: "ml",
+        percentText: "62\u{00A0}%",
+        goalText: "Goal 2\u{202F}000 ml",
+        captionText: "750 ml left",
+        accessibilitySummary: "1 250 milliliters of 2 000. 62 percent. 750 milliliters left.",
+        reduceMotion: true
+    )
+    .padding()
+    .background(RippleColor.waterFoam)
 }
 #endif

@@ -8,6 +8,11 @@ struct WaterSurfaceGeometry {
          pourDepth: CGFloat = 0, ripplePosition: CGFloat = 0, rippleAmplitude: CGFloat = 0,
          thickness: CGFloat = 0) {
         let container = Self.container(in: metrics)
+        // The rounded wall/floor joins are slightly non-convex because the
+        // wall is straight while the corner is quadratic. Use the convex
+        // envelope for the half-plane clipping calculation; WaterFill's
+        // final GlassShape clip remains the authoritative visible boundary.
+        let clippingContainer = Self.convexHull(of: container)
         guard level > 0 else { polygon = []; return }
         guard level < 1 else { polygon = container; return }
         let center = CGPoint(x: metrics.centerX, y: (metrics.rimBottomY + metrics.bottomY) / 2)
@@ -20,7 +25,7 @@ struct WaterSurfaceGeometry {
             CGPoint(x: center.x + extent, y: metrics.y(forLevel: level)),
             CGPoint(x: center.x + extent, y: metrics.bottomY + extent),
             CGPoint(x: center.x - extent, y: metrics.bottomY + extent),
-        ], to: container))
+        ], to: clippingContainer))
         let amplitude = min(max(slosh, -RippleMotion.sloshLimit), RippleMotion.sloshLimit) * metrics.rimWidth
         let steps = RippleMotion.surfaceSegments
         // Build the curved surface once; the area search only translates it.
@@ -47,7 +52,7 @@ struct WaterSurfaceGeometry {
                                y: center.y - tangent.y * extent + normal.y * extent * 3))
         func translated(_ offset: CGFloat) -> [CGPoint] {
             Self.clip(surface.map { CGPoint(x: $0.x + normal.x * offset,
-                                            y: $0.y + normal.y * offset) }, to: container)
+                                            y: $0.y + normal.y * offset) }, to: clippingContainer)
         }
         var low = -extent
         var high = extent
@@ -109,6 +114,39 @@ struct WaterSurfaceGeometry {
                                   y: metrics.bottomY - radius * t * t))
         }
         return points
+    }
+
+    private static func convexHull(of points: [CGPoint]) -> [CGPoint] {
+        let sorted = points.sorted {
+            if $0.x == $1.x { return $0.y < $1.y }
+            return $0.x < $1.x
+        }
+        guard sorted.count > 2 else { return sorted }
+
+        func cross(_ origin: CGPoint, _ first: CGPoint, _ second: CGPoint) -> CGFloat {
+            (first.x - origin.x) * (second.y - origin.y)
+                - (first.y - origin.y) * (second.x - origin.x)
+        }
+
+        var lower: [CGPoint] = []
+        for point in sorted {
+            while lower.count >= 2,
+                  cross(lower[lower.count - 2], lower[lower.count - 1], point) <= 0 {
+                lower.removeLast()
+            }
+            lower.append(point)
+        }
+
+        var upper: [CGPoint] = []
+        for point in sorted.reversed() {
+            while upper.count >= 2,
+                  cross(upper[upper.count - 2], upper[upper.count - 1], point) <= 0 {
+                upper.removeLast()
+            }
+            upper.append(point)
+        }
+
+        return Array(lower.dropLast()) + Array(upper.dropLast())
     }
 
     private static func clip(_ polygon: [CGPoint], to container: [CGPoint]) -> [CGPoint] {

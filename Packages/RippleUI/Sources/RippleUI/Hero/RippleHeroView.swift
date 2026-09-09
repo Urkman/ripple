@@ -98,7 +98,7 @@ public struct RippleHeroView: View {
         } action: { size in
             glassSize = size
         }
-        .padding(.top, RippleMotion.pourStartAboveGlass)
+        .padding(.top, showsPour && !reduceMotion ? RippleMotion.pourStartAboveGlass : 0)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilitySummary)
         .onChange(of: consumedMl) { oldValue, newValue in

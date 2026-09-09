@@ -50,7 +50,7 @@ public enum RippleMotion {
     static let sloshLimit: CGFloat = 0.06
     static let sloshRestThreshold: CGFloat = 0.0001
     static let surfaceSegments = 96
-    static let surfaceAreaIterations = 18
+    static let surfaceAreaIterations = 20
     public static let faceUpGravityZ: Double = 0.92
     public static let shallowLevel: CGFloat = 0.15
     public static let shallowAmplitudeCap: CGFloat = 4
