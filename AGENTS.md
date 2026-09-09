@@ -243,13 +243,13 @@ Full text: `Docs/shared/Ripple_PRD.md` §22.2.
 
 1. Read the spec, then write code. Do not build first and “approximate” the spec.
 2. Extend existing tokens and use cases. Do not invent a parallel path.
-3. UI change to the hero or History/Stats: update `Docs/shared/Ripple_PRD.md` first, then the code.
+3. UI change to the hero or History/Stats: update `Docs/shared/Ripple_PRD.md` first, then the code. In the same change, update the affected Android UI handoff under `Docs/shared/Android/` so the independent Android project never receives stale screen guidance.
 4. After motion changes, re-check Reduce Motion and `level == 0`.
 5. Do not inflate scope into v1.1.
 6. Re-read this file at session start when unsure.
 7. Treat the maintained handoff pack under `Docs/shared/` as the source set provided to the independent Android project: the PRD, iOS architecture reference, Android architecture/UI documents, and image references. The Android project has its own `AGENTS.md`, which governs Android implementation work.
-8. Update the shared PRD in the same change as any product behavior, screen, flow, or motion change. Update `Docs/shared/IOS_ARCHITECTURE.md` for iOS implementation-boundary changes. Android architecture/UI changes update the affected documents under `Docs/shared/Android/` and are governed operationally by the Android project's own instructions.
-9. `Docs/shared/Ripple_PRD.md`, `Docs/shared/IOS_ARCHITECTURE.md`, and the Android architecture/UI specifications are independently semantic-versioned and must update `Last verified` plus their final immutable Timeline entry whenever they change. Image references must remain consistent with the UI specifications. Agent task plans/specs remain ignored and outside the handoff pack.
+8. Update the shared PRD in the same change as any product behavior, screen, flow, or motion change. Update `Docs/shared/IOS_ARCHITECTURE.md` for iOS implementation-boundary changes. Every UI change must also review and update the corresponding Android UI contract and reference pack under `Docs/shared/Android/` in the same change, including `ANDROID_UI_SPEC.md`, `UI/README.md`, and any affected image references. This Android documentation update is mandatory even when no Android implementation code changes; the Android project has its own `AGENTS.md` for implementation work.
+9. `Docs/shared/Ripple_PRD.md`, `Docs/shared/IOS_ARCHITECTURE.md`, and the Android architecture/UI specifications are independently semantic-versioned and must update `Last verified` plus their final immutable Timeline entry whenever they change. When a UI change changes the Android contract, bump the Android UI specification version and append its Timeline entry; keep the reference-pack revision and image references consistent with it. Agent task plans/specs remain ignored and outside the handoff pack.
 
 ## 12. Required skills
 

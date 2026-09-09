@@ -1,7 +1,7 @@
 # Android UI reference pack
 
-**Reference pack revision:** 2.1.2 (tracks the Android UI specification)
-**Last verified:** 2026-09-08
+**Reference pack revision:** 2.3.2 (tracks the Android UI specification)
+**Last verified:** 2026-09-09
 
 This pack separates evidence from the Android presentation contract:
 
@@ -28,7 +28,7 @@ This pack separates evidence from the Android presentation contract:
 |---|---|
 | `phone-today.png` | Four-root phone shell; contained glass hero; saved containers; custom amount; no Recent list |
 | `phone-history.png` | Horizontal month pager; weekday grid; one capped ring per day; future days disabled |
-| `phone-day-detail.png` | Nested Day Detail; intake rows; edit/delete/restore; add only for today |
+| `phone-day-detail.png` | Nested Day Detail; localized weekday/date top-app-bar title without a duplicate compact content heading, static contained glass/readout summary, goal and remaining status, intake rows, edit/delete/restore, add only for today |
 | `phone-stats.png` | Week/Month/Year selector; summaries; four chart families; highlights |
 | `phone-settings.png` | Profile, goal, containers, reminders, Health, sync, export, about |
 | `phone-onboarding.png` | Six onboarding pages and native permission handoffs |
@@ -76,7 +76,11 @@ chrome.
 
 ![Wear Stats layout](wear-stats.png)
 
-The pack contains documentation only. It does not authorize copying Liquid Glass,
-an iOS tab bar, or iOS navigation chrome into Android. Android uses Material 3,
-Window Size Classes, standard Android permission surfaces, and Wear-native
-navigation while preserving the same screens, information priority, and flows.
+The pack contains documentation only. The Day Detail summary region is the
+structural reference for the static contained glass/readout; its exact geometry,
+side-inset rule, and accessibility behavior are normative in
+`ANDROID_UI_SPEC.md` §5.2 and §10. The pack does not authorize copying Liquid
+Glass, an iOS tab bar, or iOS navigation chrome into Android. Android uses
+Material 3, Window Size Classes, standard Android permission surfaces, and
+Wear-native navigation while preserving the same screens, information
+priority, and flows.

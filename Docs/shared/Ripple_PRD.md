@@ -3,7 +3,7 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 2.1.0 — 9. September 2026
+**Version:** 2.1.2 — 9. September 2026
 **Last verified:** 2026-09-09
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
@@ -1222,11 +1222,16 @@ und blockiert nicht die Today-Abfrage.
 #### 22.2.4 Tagesdetail
 
 Auf iPhone wird das Tagesdetail gepusht, auf iPad in der rechten Spalte
-angezeigt. Es ist kein Card-Overlay über dem Kalender.
+angezeigt. Es ist kein Card-Overlay über dem Kalender. Auf iPhone zeigt die
+Inline-Navigationsleiste den lokalisierten Wochentag und das Datum des
+ausgewählten Tages und der Detailinhalt wiederholt diese Überschrift nicht; im
+iPad-Detailpaneel bleibt der Titel im Detailinhalt, weil dort keine eigene
+Detail-Navigationsleiste angezeigt wird.
 
 ```text
 DayDetailView
-  header: Wochentag + Datum
+  navigationTitle: Wochentag + Datum (iPhone, inline)
+  header: Wochentag + Datum (iPad-Detailpaneel)
   hero: statisches Glas mit „1 250 ml“ / „62 %“
   goal: „Ziel 2 000 ml“
   caption: „noch 750 ml“ oder „Ziel erreicht“
@@ -1377,5 +1382,7 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 | 2.0.3 | 2026-09-08 | Den Plattformumfang des gemeinsamen PRD explizit von den iOS-spezifischen Implementierungsanweisungen getrennt. | Android-Agenten verwenden das PRD für Produktverträge und die Android-Dokumente für native Umsetzung, ohne Swift-Anweisungen fehlzuinterpretieren. |
 | 2.0.4 | 2026-09-09 | Die redundanten Today-Konzeptbilder entfernt; der PRD verweist nur noch auf die aktuellen iOS-Captures und den verbindlichen Text-/Motion-Vertrag. | Der gemeinsame Handoff enthält weniger veraltbare Referenzdateien, ohne die visuellen Android-Layouts oder aktuellen iOS-Evidence-Captures zu verlieren. |
 | 2.1.0 | 2026-09-09 | Das Tagesdetail erhält ein statisches Glas mit dem bestehenden Mengen-/Prozent-Readout; die Wasserfläche folgt beim Ansteigen konsequent dem breiter werdenden inneren Glas und behält nur den definierten Stroke-/Clip-Inset. | History visualisiert den Tagesstand zusätzlich zum Text, ohne neue Interaktion oder Bewegungsquelle; die gemeinsame Wassergeometrie zeigt bei höheren Pegeln keinen künstlichen seitlichen Innenabstand. |
+| 2.1.1 | 2026-09-09 | Das iPhone-Tagesdetail zeigt den lokalisierten Wochentag und das Datum des ausgewählten Tages als Inline-Navigationstitel; das iPad-Detailpaneel behält den Titel im Detailinhalt. | Der Navigationskontext bleibt beim Zurückkehren und bei langen Detailinhalten sichtbar, ohne eine zusätzliche Navigation oder eine Änderung der iPad-Split-Struktur einzuführen. |
+| 2.1.2 | 2026-09-09 | Die kompakte iPhone-Ansicht wiederholt den Datumstitel nicht mehr im Detailinhalt; das iPad-Detailpaneel behält seine Datumsüberschrift. | Der ausgewählte Tag erscheint auf dem iPhone genau einmal in der Navigationsleiste, während die eigenständige iPad-Detailspalte weiterhin ihren Kontext sichtbar hält. |
 
-*Ende PRD 2.1.0. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 2.1.2. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*

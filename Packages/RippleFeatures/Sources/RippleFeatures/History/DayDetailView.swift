@@ -50,6 +50,7 @@ public struct DayDetailView: View {
                         percent: snapshot.percent,
                         unit: snapshot.unit
                     ),
+                    showsDateHeader: usesSplit,
                     reduceMotion: reduceMotion
                 )
                 .listRowBackground(Color.clear)
@@ -89,7 +90,7 @@ public struct DayDetailView: View {
         }
         .scrollContentBackground(.hidden)
         .background(RippleColor.waterFoam.ignoresSafeArea())
-        .navigationTitle(usesSplit ? "" : L10n.text("History"))
+        .navigationTitle(usesSplit ? "" : detailDateTitle(for: snapshot.date))
         .rippleInlineNavigationTitle()
         .rippleNavigationBarBackground(RippleColor.waterFoam)
         .safeAreaInset(edge: .bottom) {
@@ -149,6 +150,16 @@ public struct DayDetailView: View {
         }
         return formatter.remainingPhrase(milliliters: snapshot.remaining.value, unit: snapshot.unit)
     }
+
+    private func detailDateTitle(for date: Date) -> String {
+        date.formatted(
+            .dateTime
+                .weekday(.wide)
+                .day()
+                .month(.wide)
+                .locale(locale)
+        )
+    }
 }
 
 private struct DayDetailSummaryView: View {
@@ -161,13 +172,16 @@ private struct DayDetailSummaryView: View {
     let goalText: String
     let captionText: String
     let accessibilitySummary: String
+    let showsDateHeader: Bool
     let reduceMotion: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: RippleSpace.sm) {
-            Text(date.formatted(.dateTime.weekday(.wide).day().month(.wide)))
-                .font(RippleFont.title)
-                .foregroundStyle(RippleColor.waterDeep)
+            if showsDateHeader {
+                Text(date.formatted(.dateTime.weekday(.wide).day().month(.wide)))
+                    .font(RippleFont.title)
+                    .foregroundStyle(RippleColor.waterDeep)
+            }
 
             RippleHeroView(
                 consumedMl: consumedMl,
@@ -207,6 +221,7 @@ private struct DayDetailSummaryView: View {
         goalText: "Goal 2\u{202F}000 ml",
         captionText: "750 ml left",
         accessibilitySummary: "1 250 milliliters of 2 000. 62 percent. 750 milliliters left.",
+        showsDateHeader: true,
         reduceMotion: false
     )
     .padding()
@@ -224,6 +239,7 @@ private struct DayDetailSummaryView: View {
         goalText: "Goal 2\u{202F}000 ml",
         captionText: "750 ml left",
         accessibilitySummary: "1 250 milliliters of 2 000. 62 percent. 750 milliliters left.",
+        showsDateHeader: true,
         reduceMotion: false
     )
     .padding()
@@ -242,6 +258,7 @@ private struct DayDetailSummaryView: View {
         goalText: "Goal 2\u{202F}000 ml",
         captionText: "750 ml left",
         accessibilitySummary: "1 250 milliliters of 2 000. 62 percent. 750 milliliters left.",
+        showsDateHeader: true,
         reduceMotion: false
     )
     .padding()
@@ -260,6 +277,7 @@ private struct DayDetailSummaryView: View {
         goalText: "Goal 2\u{202F}000 ml",
         captionText: "750 ml left",
         accessibilitySummary: "1 250 milliliters of 2 000. 62 percent. 750 milliliters left.",
+        showsDateHeader: true,
         reduceMotion: true
     )
     .padding()

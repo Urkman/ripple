@@ -1,7 +1,7 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 2.2.0
+**Document version:** 2.3.2
 **Last verified:** 2026-09-09
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 **Product contract:** [Ripple PRD](../Ripple_PRD.md)
@@ -38,6 +38,8 @@ The current iOS source inspected for this revision includes:
   amount, with no Recent section;
 - `HistoryCalendarView.swift` — horizontal month paging, one ring per day, and
   Day Detail navigation;
+- `DayDetailView.swift` — static contained glass/readout summary, goal and
+  remaining status, and the entry list/actions for the selected day;
 - `SettingsView.swift` — profile, daily goal, containers, reminders, Health,
   sync, export, and about sections;
 - `OnboardingPages.swift` — six pages: Welcome, Units, Health, Goal,
@@ -50,7 +52,7 @@ The current iOS source inspected for this revision includes:
 | Today glass hero and daily readout | Today root | [phone Today](UI/phone-today.png) |
 | Saved-container quick add and custom amount | Today root; native amount entry | [phone Today](UI/phone-today.png) |
 | Calendar-first History | History root | [phone History](UI/phone-history.png) |
-| Tap a day to inspect entries | Nested Day Detail; split on expanded windows | [phone Day Detail](UI/phone-day-detail.png), [tablet History](UI/tablet-history-split.png) |
+| Tap a day to inspect entries | Nested Day Detail with static glass/readout; split on expanded windows | [phone Day Detail](UI/phone-day-detail.png), [tablet History](UI/tablet-history-split.png) |
 | Separate period-based Stats | Stats root | [phone Stats](UI/phone-stats.png), [tablet Stats](UI/tablet-stats.png) |
 | Full settings surface | Settings root and native sub-destinations | [phone Settings](UI/phone-settings.png) |
 | Six-page first-run flow | Onboarding route with native permission handoffs | [phone onboarding](UI/phone-onboarding.png) |
@@ -288,6 +290,10 @@ contactDepth        = 5.dp + 4.dp * amountT       // 5…9 dp
   glass. A true amount over goal remains numerically true while the visual fill
   follows the capped display rule. At `level == 0`, draw no fill and no bottom
   shimmer.
+- At every upright level, derive the water boundary from the tapered inner glass
+  path. Preserve only the defined stroke/clip inset: do not add fixed
+  horizontal padding. As the level rises toward the wider rim, the fill must
+  widen with the glass walls and remain clipped to the inner path.
 
 The Android implementation may use Compose `Canvas`, `Path`, `DrawScope`, and
 `Animatable`/frame sampling, but it must not use a circular or linear
@@ -415,26 +421,46 @@ Required behavior:
 
 ```text
 DayDetailRoute(localDate)
-  TopAppBar: back + localized weekday/date
-  DaySummary: consumed, goal, percent, remaining/goal reached
+  TopAppBar: back + localized weekday/date title on compact windows
+  StaticDayGlass: contained 2D glass + height-based water fill + consumed/unit/percent readout
+  GoalStatus: localized goal + remaining/goal reached text below the glass
   Entries: time, amount, container, source, deleted state
   Row actions: edit, soft delete, restore/undo
   Today-only add action
 ```
 
 On a compact phone, Day Detail is a real nested destination with Android back
-behavior. On an expanded window it is the detail pane beside the calendar. A
-past day never shows an enabled add action. Delete is soft delete and can be
-undone or restored; edit changes the existing intake identity and must not make
-a hidden duplicate. Empty past days show a clear empty state; an empty today
-may include the add CTA.
+behavior, and the top app bar title is the selected day's localized weekday and
+date. Do not repeat that date as a second heading in the compact detail
+content. On an expanded window it is the detail pane beside the calendar,
+where the date remains in the detail content rather than adding a redundant
+pane title. The selected day's summary is a read-only static contained glass:
+consumed amount,
+unit, and percentage live in the glass readout, while goal and remaining (or
+goal-reached) text stay below it. It has no pour stream, sensor tilt, surface
+reaction, `Timeline` animation, or continuous animation. Render the product
+content with Compose `Canvas`/`Path`; this does not authorize copying iOS
+Liquid Glass chrome or replacing the glass with a Material card.
+
+The water fill uses the same inner glass geometry as Today. Keep only the
+stroke/clip inset at the sides. Because the glass walls open toward the rim,
+the water boundary must widen as the level rises; a fixed side padding would
+create an artificial larger gap at high levels and is not allowed. Clip the
+final fill to the inner glass path. A zero level has no fill. A past day never
+shows an enabled add action. Delete is soft delete and can be undone or
+restored; edit changes the existing intake identity and must not make a hidden
+duplicate. Empty past days show a clear empty state; an empty today may
+include the add CTA.
 
 ### 5.3 History and detail accessibility
 
 Each day cell announces its full date, amount, percentage, goal status, and
 future/disabled status. Each intake row announces local time, amount, container,
-source, and available edit/delete action. The detail summary is a single
-aggregate announcement before the row collection.
+source, and available edit/delete action. The detail summary, including the
+static glass, is a single aggregate announcement before the row collection;
+announce date, consumed amount and unit, goal, percentage, and
+remaining/goal-reached status once. Do not expose every water path segment or
+animation frame.
 
 ## 6. Stats
 
@@ -603,13 +629,13 @@ Every screen implements these states and their TalkBack semantics.
 | First run | Six-page onboarding gate | Not required before onboarding completion | Not required before onboarding completion | Setup/permission state | Focused default state |
 | Loading | Quiet hero/snapshot loading; no fake water animation | Calendar/detail skeleton | Summary/chart skeleton | Row/page loading | Last-known snapshot or loading |
 | Empty | Zero fill; quick add visible | Empty month/day message; today can add | Localized empty period; no fake marks | Defaults and setup prompts | Remaining/goal unavailable message |
-| Ready | Hero, readout, quick adds, custom amount | Rings, selected day, entries | Summary and four accessible charts | Current values and native controls | Focused current surface |
+| Ready | Hero, readout, quick adds, custom amount | Rings, selected day, static glass/readout, goal status, entries | Summary and four accessible charts | Current values and native controls | Focused current surface |
 | Goal reached | Success semantics without celebration noise | Day ring caps at 1.0 | Hit data remains visible | No hidden goal mutation | Ring/readout reflects state |
 | Over goal | True numeric total; capped visual rule | Ring remains capped | Over-goal values remain true | No normalization | Numeric state remains true |
 | Save/projection error | Keep local log; show status/retry | Keep local summary; retry projection | Keep local data; explain unavailable projection | Recoverable retry | Stale/error indicator, not a crash |
 | Offline | Local logging remains available | Local history remains available | Local stats remain available | Local changes remain visible | Outbox/stale state |
 | Permission denied | Logging remains enabled | No permission block | Goal fallback is explicit | Reopen/retry native settings | No Health Connect dependency on Wear |
-| Reduced motion | No stream/reaction/tilt; cross-fade only | No ring-spin/page flourish | Disable decorative chart transitions | No decorative motion | No idle motion |
+| Reduced motion | No stream/reaction/tilt; cross-fade only | Static Day Detail glass; no ring-spin/page flourish | Disable decorative chart transitions | No decorative motion | No idle motion |
 | Large text | Hero scales and actions wrap | Day cells/rows remain readable | Chart data has text alternative | Rows wrap; no clipping | Scroll and concise labels |
 
 ## 12. Interaction flows
@@ -749,10 +775,14 @@ directly.
       amount, with no Recent list or replacement dashboard.
 - [ ] Today motion implements the single-clock pour/fill contract, contained
       sensor slosh, surface settle sequence, coalescing, and zero-state rules.
+- [ ] Today and Day Detail water fills follow the tapered inner walls, preserve
+      only the stroke/clip inset, widen toward the rim, and remain clipped to
+      the inner glass path.
 - [ ] History has horizontal month paging, one ring per day, disabled future
       days, and a real Day Detail route.
-- [ ] Day Detail exposes entry inspection and edit/delete/restore semantics;
-      add is possible only for today.
+- [ ] Day Detail exposes the static glass/readout, goal status, entry
+      inspection, and edit/delete/restore semantics; add is possible only for
+      today. Historical detail has no pour stream, tilt, or surface reaction.
 - [ ] Stats is separate and has Week/Month/Year, summaries, four chart
       families, highlights, empty states, and TalkBack data.
 - [ ] Settings has all eight product sections and native Android controls.
@@ -788,3 +818,6 @@ at the bottom.
 | 2.1.1 | 2026-09-08 | Repointed the product contract to `Docs/shared/` and removed the iOS architecture dependency. | The Android UI contract now depends only on the shared product source and Android-owned implementation documents. |
 | 2.1.2 | 2026-09-08 | Moved the complete Android handoff under `Docs/shared/`, replaced SVG wireframes with raster PNG images, and made iOS evidence captures self-contained. | Android agents receive one portable image-based reference pack without relying on the iOS release-assets tree or SVG rendering support. |
 | 2.2.0 | 2026-09-09 | Added the Android-native Today motion contract for pour/fill timing, surface response, sensor-driven contained slosh, coalesced taps, reduced motion, static system surfaces, accessibility, and deterministic animation verification. | Android implementation now has explicit animation behavior instead of relying only on the shared PRD or visual images. |
+| 2.3.0 | 2026-09-09 | Added the static contained glass/readout to Android Day Detail, kept goal and remaining status below it, and specified tapered inner-wall water geometry with only the stroke/clip inset. | Android Day Detail now matches the updated shared History presentation while remaining Android-native: historical detail has no pour stream, tilt, surface reaction, or continuous animation, and higher levels widen toward the rim without an artificial fixed side gap. |
+| 2.3.1 | 2026-09-09 | Clarified that compact Day Detail uses the selected day's localized weekday/date as the nested top-app-bar title, while expanded detail keeps the date in the pane content. | Android navigation context now matches the iPhone Day Detail contract without changing the expanded split layout. |
+| 2.3.2 | 2026-09-09 | Clarified that compact Day Detail must not repeat the top-app-bar date as a second in-content heading, while expanded detail keeps its pane date heading. | Android compact navigation now matches the iPhone presentation without duplicating the selected date; expanded split context remains explicit. |
