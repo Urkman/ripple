@@ -55,6 +55,14 @@ public struct WatchTodayView: View {
             .ignoresSafeArea(.container, edges: [.top, .bottom])
         }
         .background(RippleColor.watchSurface.ignoresSafeArea())
+        .overlay(alignment: .bottom) {
+            RippleToastHost(
+                message: model.confirmation,
+                reduceMotion: reduceMotion
+            )
+            .padding(.horizontal, RippleWatchLayout.pageHorizontalPadding)
+            .padding(.bottom, RippleWatchLayout.todayToastBottomPadding)
+        }
         .sheet(isPresented: amountSheetBinding) {
             WatchCustomAmountView(model: model)
         }

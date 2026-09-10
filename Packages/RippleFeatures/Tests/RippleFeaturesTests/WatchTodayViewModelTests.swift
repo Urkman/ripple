@@ -50,6 +50,13 @@ struct WatchTodayViewModelTests {
         #expect(rows.first?.containerId == container.id)
         #expect(rows.first?.source == .watch)
         #expect(model.successFeedback == 1)
+        let expected = L10n.confirmation(
+            amount: VolumeFormatter.current.string(
+                milliliters: container.amountMl,
+                unit: model.snapshot.unit
+            )
+        )
+        #expect(model.confirmation == expected)
     }
 
     @Test("opening the amount sheet keeps the quick selection")

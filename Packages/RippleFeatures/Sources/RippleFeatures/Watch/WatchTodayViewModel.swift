@@ -13,11 +13,13 @@ public final class WatchTodayViewModel {
     public private(set) var isAmountSheetPresented: Bool
     public private(set) var isLogging: Bool
     public private(set) var successFeedback: Int
+    public private(set) var confirmation: String?
     public private(set) var errorMessage: String?
 
     @ObservationIgnored private let useCases: UseCases
     @ObservationIgnored private let calendar: Calendar
     @ObservationIgnored private var savedSelection: SavedSelection?
+    @ObservationIgnored private var confirmationTask: Task<Void, Never>?
 
     private struct SavedSelection: Sendable {
         var amountMl: Int
@@ -38,6 +40,7 @@ public final class WatchTodayViewModel {
         self.isAmountSheetPresented = false
         self.isLogging = false
         self.successFeedback = 0
+        self.confirmation = nil
         self.errorMessage = nil
     }
 
@@ -147,12 +150,32 @@ public final class WatchTodayViewModel {
 
             await refresh()
             successFeedback += 1
+            showConfirmation(amount: amountMl)
             if isAmountSheetPresented {
                 savedSelection = nil
                 isAmountSheetPresented = false
             }
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    private func showConfirmation(amount: Int) {
+        let formatter = VolumeFormatter.current
+        confirmation = snapshot.isGoalMet
+            ? L10n.inTheFlow
+            : L10n.confirmation(
+                amount: formatter.string(
+                    milliliters: amount,
+                    unit: snapshot.unit
+                )
+            )
+
+        confirmationTask?.cancel()
+        confirmationTask = Task {
+            try? await Task.sleep(for: .seconds(RippleMotion.durationConfirm))
+            guard !Task.isCancelled else { return }
+            confirmation = nil
         }
     }
 
