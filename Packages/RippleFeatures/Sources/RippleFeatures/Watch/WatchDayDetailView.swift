@@ -6,6 +6,7 @@ import SwiftUI
 public struct WatchDayDetailView: View {
     @State private var model: WatchDayDetailViewModel
     @Environment(\.locale) private var locale
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     public init(model: WatchDayDetailViewModel) {
         _model = State(initialValue: model)
@@ -70,23 +71,19 @@ public struct WatchDayDetailView: View {
         }
         .background(RippleColor.watchSurface.ignoresSafeArea())
         .navigationTitle(longDate(for: model.day))
-        .safeAreaInset(edge: .bottom) {
-            if model.undoIntakeID != nil {
-                HStack(spacing: RippleSpace.sm) {
-                    Text(L10n.text("Deleted"))
-                        .font(RippleFont.caption)
-                        .foregroundStyle(RippleColor.watchText)
-
-                    Spacer(minLength: RippleSpace.xs)
-
-                    Button(L10n.text("Undo"), action: undoDelete)
-                        .font(RippleFont.caption.weight(.semibold))
-                        .foregroundStyle(RippleColor.watchAqua)
-                }
-                .padding(.horizontal, RippleWatchLayout.pageHorizontalPadding)
-                .padding(.vertical, RippleSpace.sm)
-                .background(RippleColor.watchSurfaceElevated)
-            }
+        .overlay(alignment: .bottom) {
+            RippleToastHost(
+                message: model.undoIntakeID == nil ? nil : L10n.text("Deleted"),
+                action: model.undoIntakeID == nil
+                    ? nil
+                    : RippleToastAction(
+                        title: L10n.text("Undo"),
+                        action: undoDelete
+                    ),
+                reduceMotion: reduceMotion
+            )
+            .padding(.horizontal, RippleWatchLayout.pageHorizontalPadding)
+            .padding(.bottom, RippleSpace.lg)
         }
         .task {
             await model.refresh()

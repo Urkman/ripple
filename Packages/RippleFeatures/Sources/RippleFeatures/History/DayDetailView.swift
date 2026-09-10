@@ -93,19 +93,19 @@ public struct DayDetailView: View {
         .navigationTitle(usesSplit ? "" : detailDateTitle(for: snapshot.date))
         .rippleInlineNavigationTitle()
         .rippleNavigationBarBackground(RippleColor.waterFoam)
-        .safeAreaInset(edge: .bottom) {
-            if model.undoIntakeID != nil {
-                HStack {
-                    Text(L10n.text("Deleted"))
-                        .font(RippleFont.body)
-                    Spacer()
-                    Button(L10n.text("Undo"), action: undoDelete)
-                }
-                .padding(RippleSpace.lg)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: RippleRadius.control, style: .continuous))
-                .padding(.horizontal, RippleSpace.lg)
-                .padding(.bottom, RippleSpace.sm)
-            }
+        .overlay(alignment: .bottom) {
+            RippleToastHost(
+                message: model.undoIntakeID == nil ? nil : L10n.text("Deleted"),
+                action: model.undoIntakeID == nil
+                    ? nil
+                    : RippleToastAction(
+                        title: L10n.text("Undo"),
+                        action: undoDelete
+                    ),
+                reduceMotion: reduceMotion
+            )
+            .padding(.horizontal, RippleSpace.lg)
+            .padding(.bottom, RippleSpace.xl)
         }
         .task(id: refreshID) { await model.refresh() }
         .sheet(item: $model.editing) { intake in
