@@ -42,6 +42,7 @@ public struct SettingsView: View {
                     ? L10n.text("Edit")
                     : L10n.text("Add container"),
                 preferredUnit: model.profile.preferredUnit,
+                isCurrentDefault: container.isDefault,
                 onSave: { updatedContainer in
                     Task { await model.saveContainer(updatedContainer) }
                 }
@@ -136,12 +137,7 @@ public struct SettingsView: View {
     private var containersCard: some View {
         GlassCard(title: L10n.text("Containers")) {
             VStack(spacing: 0) {
-                ForEach(model.containers) { container in
-                    containerRow(
-                        container,
-                        showsDivider: container.id != model.containers.last?.id
-                    )
-                }
+                containerRows
 
                 Button(action: addContainer) {
                     Label(L10n.text("Add container"), systemImage: "plus")
@@ -153,6 +149,39 @@ public struct SettingsView: View {
             }
         }
     }
+
+    @ViewBuilder
+    private var containerRows: some View {
+        #if os(tvOS)
+        ForEach(model.containers) { container in
+            containerRow(
+                container,
+                showsDivider: container.id != model.containers.last?.id
+            )
+        }
+        #else
+        reorderableContainerRows
+        #endif
+    }
+
+    #if !os(tvOS)
+    private var reorderableContainerRows: some View {
+        VStack(spacing: 0) {
+            ForEach(model.containers) { container in
+                containerRow(
+                    container,
+                    showsDivider: container.id != model.containers.last?.id
+                )
+            }
+            .reorderable()
+        }
+        .reorderContainer(for: Container.self) { difference in
+            var reordered = model.containers
+            difference.apply(to: &reordered)
+            model.reorderContainers(reordered)
+        }
+    }
+    #endif
 
     private var remindersCard: some View {
         GlassCard(title: L10n.text("Reminders")) {
@@ -293,32 +322,48 @@ public struct SettingsView: View {
     }
 
     private func containerRow(_ container: Container, showsDivider: Bool) -> some View {
-        Button {
-            containerEditor = container
-        } label: {
-            HStack(spacing: RippleSpace.md) {
-                Image(systemName: container.symbolName)
-                    .foregroundStyle(RippleColor.waterDeep)
-                    .frame(width: RippleSpace.xl)
-                Text(container.name)
-                    .font(RippleFont.body)
-                    .foregroundStyle(RippleColor.waterDeep)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text(volumeFormatter.string(milliliters: container.amountMl, unit: model.profile.preferredUnit))
+        HStack(spacing: RippleSpace.sm) {
+            Image(systemName: "line.3.horizontal")
+                .foregroundStyle(.tertiary)
+                .frame(
+                    width: RippleLayout.minimumControlDimension,
+                    height: RippleLayout.minimumControlDimension
+                )
+                .accessibilityHidden(true)
+
+            Button {
+                containerEditor = container
+            } label: {
+                HStack(spacing: RippleSpace.md) {
+                    Image(systemName: container.symbolName)
+                        .foregroundStyle(RippleColor.waterDeep)
+                        .frame(width: RippleSpace.xl)
+                    Text(container.name)
+                        .font(RippleFont.body)
+                        .foregroundStyle(RippleColor.waterDeep)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(
+                        volumeFormatter.string(
+                            milliliters: container.amountMl,
+                            unit: model.profile.preferredUnit
+                        )
+                    )
                     .font(RippleFont.body.monospacedDigit())
                     .foregroundStyle(.secondary)
-                if container.isDefault {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(RippleColor.waterLagoon)
+                    if container.isDefault {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(RippleColor.waterLagoon)
+                            .accessibilityLabel(L10n.text("Default container"))
+                    }
+                    Image(systemName: "pencil")
+                        .foregroundStyle(.tertiary)
                         .accessibilityHidden(true)
                 }
-                Image(systemName: "pencil")
-                    .foregroundStyle(.tertiary)
-                    .accessibilityHidden(true)
             }
+            .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
         .padding(.vertical, RippleSpace.md)
+        .contentShape(Rectangle())
         .overlay(alignment: .bottom) {
             if showsDivider {
                 Rectangle()
@@ -339,7 +384,7 @@ public struct SettingsView: View {
         containerEditor = Container(
             name: L10n.text("Glass"),
             amountMl: 250,
-            isDefault: model.containers.isEmpty,
+            isDefault: !model.containers.contains(where: \.isDefault),
             sort: (model.containers.map(\.sort).max() ?? -1) + 1,
             symbolName: "cup.and.saucer.fill"
         )
@@ -362,6 +407,35 @@ public struct SettingsView: View {
         }
     }
 }
+
+#if !os(tvOS)
+private extension ReorderDifference where CollectionID == ReorderableSingleCollectionIdentifier {
+    func apply<C>(to collection: inout C)
+        where C: RangeReplaceableCollection,
+              C.Element: Identifiable,
+              C.Element.ID == ItemID
+    {
+        let moving = Set(sources)
+        guard !moving.isEmpty else { return }
+
+        var moved: [C.Element] = []
+        moved.reserveCapacity(moving.count)
+        collection.removeAll { element in
+            guard moving.contains(element.id) else { return false }
+            moved.append(element)
+            return true
+        }
+
+        switch destination.position {
+        case .before(let id):
+            let index = collection.firstIndex { $0.id == id } ?? collection.endIndex
+            collection.insert(contentsOf: moved, at: index)
+        case .end:
+            collection.append(contentsOf: moved)
+        }
+    }
+}
+#endif
 
 private struct JSONFile: Transferable {
     var data: Data
@@ -386,36 +460,74 @@ private struct ContainerEditorSheet: View {
 
     private let title: String
     private let preferredUnit: VolumeUnit
+    private let isCurrentDefault: Bool
     private let onSave: (Container) -> Void
 
     init(
         container: Container,
         title: String,
         preferredUnit: VolumeUnit,
+        isCurrentDefault: Bool,
         onSave: @escaping (Container) -> Void
     ) {
         _draft = State(initialValue: container)
         self.title = title
         self.preferredUnit = preferredUnit
+        self.isCurrentDefault = isCurrentDefault
         self.onSave = onSave
     }
 
     var body: some View {
         NavigationStack {
-            Form {
-                TextField(L10n.text("Container"), text: $draft.name)
+            ScrollView {
+                VStack(alignment: .leading, spacing: RippleSpace.lg) {
+                    TextField(L10n.text("Container"), text: $draft.name)
+                        .font(RippleFont.body)
+                        .padding(.horizontal, RippleSpace.md)
+                        .padding(.vertical, RippleSpace.sm)
+                        .rippleGlass(cornerRadius: RippleRadius.control)
 
-                Stepper(
-                    volumeFormatter.string(
-                        milliliters: draft.amountMl,
-                        unit: preferredUnit
-                    ),
-                    value: $draft.amountMl,
-                    in: 50...2_000,
-                    step: 10
-                )
-                .accessibilityLabel(L10n.text("Amount"))
+                    ContainerSymbolPicker(
+                        label: L10n.text("Icon"),
+                        selection: $draft.symbolName,
+                        options: symbolOptions
+                    )
+
+                    VStack(alignment: .leading, spacing: RippleSpace.sm) {
+                        HStack(alignment: .firstTextBaseline) {
+                            Text(L10n.text("Amount"))
+                                .font(RippleFont.body)
+                                .foregroundStyle(RippleColor.waterDeep)
+                            Spacer(minLength: RippleSpace.sm)
+                            Text(
+                                volumeFormatter.string(
+                                    milliliters: draft.amountMl,
+                                    unit: preferredUnit
+                                )
+                            )
+                            .font(RippleFont.body.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                        }
+
+                        Slider(value: amountBinding, in: 50...2_000, step: 10)
+                            .tint(RippleColor.waterLagoon)
+                            .accessibilityLabel(L10n.text("Amount"))
+                            .accessibilityValue(
+                                volumeFormatter.string(
+                                    milliliters: draft.amountMl,
+                                    unit: preferredUnit
+                                )
+                            )
+                    }
+
+                    Toggle(L10n.text("Default container"), isOn: defaultBinding)
+                        .tint(RippleColor.waterLagoon)
+                        .disabled(isCurrentDefault)
+                }
+                .padding(.horizontal, RippleSpace.lg)
+                .padding(.vertical, RippleSpace.lg)
             }
+            .background(RippleColor.waterFoam)
             .navigationTitle(title)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -437,10 +549,52 @@ private struct ContainerEditorSheet: View {
                 }
             }
         }
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
+        .presentationBackground(RippleColor.waterFoam)
     }
 
     private var volumeFormatter: VolumeFormatter {
         VolumeFormatter(locale: locale)
+    }
+
+    private var amountBinding: Binding<Double> {
+        Binding(
+            get: { Double(draft.amountMl) },
+            set: { draft.amountMl = Int($0.rounded()) }
+        )
+    }
+
+    private var defaultBinding: Binding<Bool> {
+        Binding(
+            get: { draft.isDefault },
+            set: { draft.isDefault = $0 }
+        )
+    }
+
+    private var symbolOptions: [ContainerSymbolOption] {
+        [
+            ContainerSymbolOption(
+                symbolName: "cup.and.saucer.fill",
+                title: L10n.text("Glass")
+            ),
+            ContainerSymbolOption(
+                symbolName: "mug.fill",
+                title: L10n.text("Cup")
+            ),
+            ContainerSymbolOption(
+                symbolName: "waterbottle.fill",
+                title: L10n.text("Bottle")
+            ),
+            ContainerSymbolOption(
+                symbolName: "takeoutbag.and.cup.and.straw.fill",
+                title: L10n.text("Travel cup")
+            ),
+            ContainerSymbolOption(
+                symbolName: "wineglass.fill",
+                title: L10n.text("Wine glass")
+            ),
+        ]
     }
 }
 
@@ -503,6 +657,7 @@ private struct ReminderEditorSheet: View {
         ),
         title: L10n.text("Edit"),
         preferredUnit: .milliliters,
+        isCurrentDefault: true,
         onSave: { _ in }
     )
 }
@@ -517,6 +672,7 @@ private struct ReminderEditorSheet: View {
         ),
         title: L10n.text("Edit"),
         preferredUnit: .milliliters,
+        isCurrentDefault: true,
         onSave: { _ in }
     )
     .environment(\.colorScheme, .dark)

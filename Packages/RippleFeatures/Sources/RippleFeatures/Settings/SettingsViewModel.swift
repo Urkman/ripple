@@ -15,6 +15,7 @@ public final class SettingsViewModel {
     public var suggestedGoal: Int
 
     @ObservationIgnored private let useCases: UseCases
+    @ObservationIgnored private var reorderTask: Task<Void, Never>?
 
     public init(useCases: UseCases) {
         self.useCases = useCases
@@ -25,6 +26,7 @@ public final class SettingsViewModel {
         self.syncStatus = .unavailable
         self.health = .init()
         self.suggestedGoal = 2000
+        self.reorderTask = nil
     }
 
     public func refresh() async {
@@ -51,8 +53,13 @@ public final class SettingsViewModel {
     }
 
     public func saveContainer(_ container: Container) async {
+        reorderTask?.cancel()
         try? await useCases.upsertContainer.run(container)
         await refresh()
+    }
+
+    public func reorderContainers(_ reordered: [Container]) {
+        persistContainerOrder(reordered)
     }
 
     public func saveReminder(_ updatedReminder: ReminderRule) async {
@@ -66,6 +73,7 @@ public final class SettingsViewModel {
     }
 
     public func deleteContainer(_ container: Container) async {
+        reorderTask?.cancel()
         try? await useCases.deleteContainer.run(id: container.id)
         await refresh()
     }
@@ -84,5 +92,27 @@ public final class SettingsViewModel {
 
     public func export() async {
         exportPayload = try? await useCases.exportData.run()
+    }
+
+    private func persistContainerOrder(_ reordered: [Container]) {
+        containers = reordered.enumerated().map { index, container in
+            var normalized = container
+            normalized.sort = index
+            return normalized
+        }
+
+        let valuesToPersist = containers
+        reorderTask?.cancel()
+        reorderTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+
+            for container in valuesToPersist {
+                guard !Task.isCancelled else { return }
+                try? await self.useCases.upsertContainer.run(container)
+            }
+
+            guard !Task.isCancelled else { return }
+            await self.refresh()
+        }
     }
 }

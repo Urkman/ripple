@@ -1,6 +1,7 @@
 import SwiftUI
 
 public enum RippleLayout {
+    public static let minimumControlDimension: CGFloat = 44
     public static let iPadLayoutMinimumWidth: CGFloat = 500
     public static let iPadLandscapeContentMaxWidth: CGFloat = 960
     public static let iPadLandscapeHeroWidth: CGFloat = 240
@@ -12,6 +13,7 @@ public enum RippleLayout {
     public static let iPadLandscapeColumnSpacing: CGFloat = 32
     public static let onboardingArtworkWidth: CGFloat = 180
     public static let onboardingArtworkHeight: CGFloat = 252
+    public static let customAmountContainerChipMinimumWidth: CGFloat = 156
 
     public static let visionWindowMinWidth: CGFloat = 720
     public static let visionWindowIdealWidth: CGFloat = 820

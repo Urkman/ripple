@@ -5,11 +5,11 @@ let package = Package(
     name: "RippleIntentsCore",
     defaultLocalization: "en",
     platforms: [
-        .iOS("26.0"),
-        .macOS("26.0"),
-        .watchOS("26.0"),
-        .tvOS("26.0"),
-        .visionOS("26.0"),
+        .iOS("27.0"),
+        .macOS("27.0"),
+        .watchOS("27.0"),
+        .tvOS("27.0"),
+        .visionOS("27.0"),
     ],
     products: [
         .library(name: "RippleIntentsCore", targets: ["RippleIntentsCore"]),

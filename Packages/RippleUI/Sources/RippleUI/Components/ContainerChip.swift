@@ -10,6 +10,7 @@ public struct ContainerChip: View {
     public var amount: String
     public var symbolName: String
     public var style: Style
+    public var isSelected: Bool
     public var action: () -> Void
 
     public init(
@@ -17,12 +18,14 @@ public struct ContainerChip: View {
         amount: String,
         symbolName: String,
         style: Style = .glass,
+        isSelected: Bool = false,
         action: @escaping () -> Void
     ) {
         self.name = name
         self.amount = amount
         self.symbolName = symbolName
         self.style = style
+        self.isSelected = isSelected
         self.action = action
     }
 
@@ -32,6 +35,7 @@ public struct ContainerChip: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("\(name), \(amount)")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     @ViewBuilder
@@ -57,12 +61,32 @@ public struct ContainerChip: View {
         case .glass:
             content
                 .rippleGlass(cornerRadius: RippleRadius.control)
+                .overlay {
+                    RoundedRectangle(
+                        cornerRadius: RippleRadius.control,
+                        style: .continuous
+                    )
+                    .stroke(
+                        isSelected ? RippleColor.waterLagoon : .clear,
+                        lineWidth: isSelected ? 2 : 0
+                    )
+                }
         case .flat:
             content
                 .overlay(alignment: .bottom) {
                     Rectangle()
                         .fill(RippleColor.waterLagoon.opacity(0.18))
                         .frame(height: 1)
+                }
+                .overlay {
+                    RoundedRectangle(
+                        cornerRadius: RippleRadius.control,
+                        style: .continuous
+                    )
+                    .stroke(
+                        isSelected ? RippleColor.waterLagoon : .clear,
+                        lineWidth: isSelected ? 2 : 0
+                    )
                 }
         }
     }

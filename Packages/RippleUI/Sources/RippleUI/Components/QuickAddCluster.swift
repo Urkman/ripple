@@ -15,7 +15,7 @@ public struct QuickAddItem: Identifiable, Equatable, Sendable {
 }
 
 public struct QuickAddCluster: View {
-    public enum Layout: Sendable {
+    public enum Layout: Sendable, Equatable {
         case horizontal
         case vertical
     }
@@ -44,6 +44,7 @@ public struct QuickAddCluster: View {
                 HStack(spacing: RippleSpace.sm) {
                     chips
                 }
+                .frame(maxWidth: .infinity)
             case .vertical:
                 VStack(spacing: RippleSpace.sm) {
                     chips
@@ -63,6 +64,7 @@ public struct QuickAddCluster: View {
             ) {
                 onSelect(item)
             }
+            .frame(maxWidth: .infinity)
         }
     }
 }

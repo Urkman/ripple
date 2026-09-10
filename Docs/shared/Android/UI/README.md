@@ -1,6 +1,6 @@
 # Android UI reference pack
 
-**Reference pack revision:** 2.5.1 (tracks the Android UI specification)
+**Reference pack revision:** 2.9.0 (tracks the Android UI specification)
 **Last verified:** 2026-09-10
 
 This pack separates evidence from the Android presentation contract:
@@ -26,7 +26,7 @@ This pack separates evidence from the Android presentation contract:
 
 | Reference | Contract |
 |---|---|
-| `phone-today.png` | Four-root phone shell; contained glass hero; saved containers; custom amount; transient confirmation toast over the lower actions without layout change; no Recent list |
+| `phone-today.png` | Four-root phone shell; contained glass hero; first three saved-container quick adds sharing the full width of a fixed non-scrolling row in Settings order; custom amount with slider followed by a wider, unlabeled all-container selection; transient confirmation toast over the lower actions without layout change; no Recent list |
 | `phone-history.png` | Horizontal month pager; weekday grid; one capped ring per day; future days disabled |
 | `phone-day-detail.png` | Nested Day Detail; localized weekday/date top-app-bar title without a duplicate compact content heading, static contained glass/readout summary, goal and remaining status, intake rows, edit/delete/restore, add only for today; today's add confirms with a transient toast and delete uses a transient Snackbar action for Undo |
 | `phone-stats.png` | Week/Month/Year selector; summaries; four chart families; highlights |
@@ -86,7 +86,10 @@ Wear-native navigation while preserving the same screens, information
 priority, and flows.
 
 The static `phone-today.png` capture intentionally shows the ready state without
-transient feedback. After a completed log, Android Today and Wear Today present
+transient feedback. It is a seeded baseline with three quick-add actions. At
+runtime, Today shows the first three saved containers sharing the full width of
+a fixed, non-scrolling row in Settings order, while the custom amount sheet places a slider before its
+wider, unlabeled selection of every saved container. After a completed log, Android Today and Wear Today present
 the localized confirmation as a centered or content-anchored Snackbar/Toast
 overlay above the lower actions; it never changes the measured hero or quick-add
 layout. Today's Day Detail add uses the same localized transient confirmation;

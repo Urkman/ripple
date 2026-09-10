@@ -4,9 +4,9 @@ Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean 
 
 This document describes the iOS repository's architecture and current implementation. Product behavior remains defined by the shared [PRD](Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts.
 
-**Document version:** 1.5.1
+**Document version:** 1.6.0
 
-**Last verified:** 2026-09-08
+**Last verified:** 2026-09-10
 
 ## 1. Architectural goals and invariants
 
@@ -88,7 +88,7 @@ Docs/
     screens/ios/             current iOS evidence captures
 ```
 
-Xcode project generation is defined in [`project.yml`](../../project.yml). Package manifests and application targets use Swift 6 and the current OS SDK deployment targets configured by the project.
+Xcode project generation is defined in [`project.yml`](../../project.yml). Package manifests and application targets use Swift 6 and 27.0 deployment targets for iOS, watchOS, macOS, tvOS, and visionOS. This permits direct use of SDK 27 APIs; tvOS remains an explicit exception where SwiftUI does not expose a given API, such as `.reorderable()`.
 
 ## 4. Composition roots and dependency injection
 
@@ -518,3 +518,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.4.0 | 2026-09-08 | Removed the ADR document tree and made the PRD plus this architecture document the maintained shared contracts; updated the repository layout and maintenance workflow. | Fewer maintained files are required, with product behavior versioned in the PRD and implementation boundaries versioned here. |
 | 1.5.0 | 2026-09-08 | Clarified that this is the iOS-only architecture document and moved the shared PRD/reference material to `Docs/shared/`; removed the Android companion dependency. | The independent iOS and Android projects now share only the product contract and reference material, while each project owns its implementation architecture and agent instructions. |
 | 1.5.1 | 2026-09-08 | Included the iOS architecture reference in the complete Android port handoff under `Docs/shared/` and corrected its relative links. | Android agents can inspect the source iOS boundaries without treating the iOS implementation as an Android dependency. |
+| 1.6.0 | 2026-09-10 | Raised every Apple deployment target to 27.0 and removed the older-runtime availability branch from the SDK 27 container reorder implementation; tvOS remains excluded because `.reorderable()` is unavailable there. | The Apple targets share one SDK 27 baseline, so supported platforms can use the native reorder API directly while the existing tvOS platform boundary remains explicit. |

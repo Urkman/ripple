@@ -1,7 +1,7 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 2.5.1
+**Document version:** 2.9.0
 **Last verified:** 2026-09-10
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 **Product contract:** [Ripple PRD](../Ripple_PRD.md)
@@ -34,8 +34,8 @@ The current iOS source inspected for this revision includes:
 
 - `Apps/RippleiOS/RootView.swift` — four roots: Today, History, Stats, Settings;
 - `Packages/RippleFeatures/Sources/RippleFeatures/Today/TodayView.swift` —
-  hero, remaining amount, floating confirmation toast, saved-container quick
-  adds, and custom amount, with no Recent section;
+  hero, remaining amount, floating confirmation toast, the first three
+  saved-container quick adds, and custom amount, with no Recent section;
 - `HistoryCalendarView.swift` — horizontal month paging, one ring per day, and
   Day Detail navigation;
 - `DayDetailView.swift` — static contained glass/readout summary, goal and
@@ -147,7 +147,7 @@ Today action.
 | Screen title/back | Material `TopAppBar` | Top app bar in content pane |
 | Month paging | Full-width `HorizontalPager` or equivalent | Calendar pane pager |
 | Day grid | Lazy grid with semantic day cells | Fixed calendar pane with detail beside it |
-| Quick add | Filled/tonal buttons or labeled chips | Same actions in a constrained content row |
+| Quick add | Filled/tonal buttons or labeled chips in a full-width, fixed, non-scrolling row of three | Same actions in a constrained content row |
 | Custom amount | Filled button or extended FAB plus standard sheet/dialog | Button in the action region; same amount route |
 | Settings | Sectioned list and navigation rows | Constrained settings column or two-pane editor |
 | Short undo | Snackbar with action | Same, anchored to the active content pane |
@@ -176,9 +176,13 @@ entries.
 ### 4.1 Compact layout
 
 See [phone Today image](UI/phone-today.png). The hero is the visual
-center and the three saved-container actions remain reachable without scrolling
-on a typical compact window. Custom amount is a clearly labeled secondary
-primary action, not an unlabeled symbol-only control.
+center and the first three saved-container actions, in Settings order, remain
+reachable in a full-width, fixed, non-scrolling horizontal row whose three
+buttons share the available width. Custom amount is a clearly
+labeled secondary primary action, not an unlabeled symbol-only control; its
+sheet places the amount field and a compact slider before a wider, horizontally
+scrollable selection of every saved container. The selection has no visible
+section heading and uses the selected container's amount as the starting value.
 
 The glass hero must:
 
@@ -210,7 +214,7 @@ photoreal water, a single-drop metaphor, or simulated Liquid Glass chrome.
 |---|---|
 | First run | Onboarding route gates the app; do not show a fake Today behind it |
 | Zero intake | Empty contained field; no water fill or bottom shimmer; quick adds visible |
-| Ready | True consumed amount, percent, goal, remaining, saved containers, custom amount |
+| Ready | True consumed amount, percent, goal, remaining, first three saved containers, custom amount with all-container selection |
 | Goal reached | Lagoon success semantics; no confetti, streak badge, or medical claim |
 | Over goal | Numeric total remains true; visual level follows the capped domain rule |
 | Active pour | One continuous stream for coalesced taps; numbers and confirmation settle when the pour ends |
@@ -230,6 +234,11 @@ tap saved container or custom amount
         -> final amount/remaining/toast update
         -> snackbar offers UndoLastIntake
 ```
+
+Today exposes the first three saved containers in Settings order. The custom
+amount sheet exposes every saved container; selecting one fills its saved
+amount, while changing the amount keeps the entry a custom amount. Selecting a
+container or preset alone never writes until the user confirms Add.
 
 Three fast taps create three store rows but one continuous visual pour. Undo
 targets the last own, non-deleted intake; it does not reconstruct a visual list.
@@ -530,7 +539,11 @@ Use a scrollable Material settings list with these sections and capabilities:
 2. **Daily goal** — automatic goal from available Health Connect data or manual
    profile input, with current target visible;
 3. **Containers** — create, edit, reorder/default, and delete saved containers
-   used by Today quick add;
+   used by Today quick add. Today shows the first three saved containers in
+   Settings order, while the custom amount sheet exposes every saved container
+   as a selectable amount preset. The editor exposes name, an icon-only
+   horizontal icon selection, amount, and default-container state through native
+   Material controls, including a compact amount slider;
 4. **Reminders** — enable/disable, schedule, wake/sleep boundaries, and
    permission status;
 5. **Health Connect** — read/write status, explain access, request/revoke or
@@ -793,8 +806,9 @@ directly.
 ## 16. Definition of UI complete
 
 - [ ] Four Android roots are present: Today, History, Stats, Settings.
-- [ ] Today has the contained hero, saved-container quick adds, and custom
-      amount, with no Recent list or replacement dashboard.
+- [ ] Today has the contained hero, the first three saved-container quick adds,
+      and custom amount with access to every saved container, with no Recent
+      list or replacement dashboard.
 - [ ] Today motion implements the single-clock pour/fill contract, contained
       sensor slosh, surface settle sequence, coalescing, and zero-state rules.
 - [ ] Today and Day Detail water fills follow the tapered inner walls, preserve
@@ -846,3 +860,7 @@ at the bottom.
 | 2.4.0 | 2026-09-10 | Changed Today's completed-log confirmation from an inline row to a centered transient toast overlay that reserves no layout space; Android maps the same behavior to a native Snackbar/Toast surface. | Quick-add controls and the hero keep stable measured positions while feedback remains visible and localized; the static phone Today reference remains a ready-state layout capture. |
 | 2.5.0 | 2026-09-10 | Standardized transient feedback across Android app surfaces: Today and Wear Today use localized Snackbar/Toast confirmations, Day Detail delete offers Undo as an action, and sync, permission, loading, and unresolved errors remain inline until resolved or retried. | Phone, tablet, and Wear content keeps stable measured layout while transient feedback is visible; the existing static reference images remain ready-state contracts. |
 | 2.5.1 | 2026-09-10 | Clarified that the transient localized confirmation also appears when a custom amount is added from today's Day Detail, while delete keeps Undo as the Snackbar action and persistent errors remain inline. | Every supported in-app add entry point has the same layout-neutral success feedback without changing the static reference images. |
+| 2.6.0 | 2026-09-10 | Clarified that every saved container is available from Today quick add and that the Settings editor exposes icon, amount, and default-container controls using native Android controls. | Custom containers remain usable after creation, the default amount has an explicit selection flow, and the existing seeded Settings image remains a baseline rather than a limit. |
+| 2.7.0 | 2026-09-10 | Settings container rows are reorderable. Today shows the first three saved containers in that order, while the custom amount sheet exposes every saved container as a selectable preset. The editor uses a horizontal icon-only selection. | The compact Today action row stays limited to three common actions without hiding custom containers; order, icon, amount, and default state remain configurable and localized. |
+| 2.8.0 | 2026-09-10 | Today renders its first three saved-container actions in a fixed, non-scrolling horizontal row. The custom amount sheet puts a compact slider before the wider, unlabeled all-container selector. | The compact action row has stable bounds, while custom logging keeps arbitrary slider values and access to every saved container without an extra section heading. |
+| 2.9.0 | 2026-09-10 | The three fixed Today quick-add buttons now share the full available width of the compact horizontal row. | Quick-add actions use the complete compact Today action region without introducing horizontal scrolling. |

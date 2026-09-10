@@ -2,11 +2,11 @@ name: Ripple
 options:
   bundleIdPrefix: de.stefansturm.ripple
   deploymentTarget:
-    iOS: "26.0"
-    watchOS: "26.0"
-    macOS: "26.0"
-    tvOS: "26.0"
-    visionOS: "26.0"
+    iOS: "27.0"
+    watchOS: "27.0"
+    macOS: "27.0"
+    tvOS: "27.0"
+    visionOS: "27.0"
   createIntermediateGroups: true
   groupSortPosition: top
   generateEmptyDirectories: true

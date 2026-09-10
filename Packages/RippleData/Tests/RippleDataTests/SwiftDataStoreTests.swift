@@ -133,6 +133,28 @@ struct SwiftDataStoreTests {
         #expect(again.count == 3)
     }
 
+    @Test("container CRUD preserves amount, icon, and default state")
+    func containerCRUD() async throws {
+        let shared = SharedContainer.makeInMemory()
+        let store = RippleStore(modelContainer: shared.modelContainer)
+        let container = Container(
+            name: "Large Bottle",
+            amountMl: 700,
+            isDefault: false,
+            sort: 3,
+            symbolName: "waterbottle.fill"
+        )
+
+        try await store.saveContainer(container)
+
+        let saved = try await store.containers()
+        let fetched = saved.first(where: { $0.id == container.id })
+        #expect(fetched?.amountMl == 700)
+        #expect(fetched?.symbolName == "waterbottle.fill")
+        #expect(fetched?.isDefault == false)
+        #expect(fetched?.sort == 3)
+    }
+
     @Test("goal last-writer-wins uses updatedAt")
     func goalConflict() async throws {
         let shared = SharedContainer.makeInMemory()

@@ -3,7 +3,7 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 2.3.1 — 10. September 2026
+**Version:** 3.2.0 — 10. September 2026
 **Last verified:** 2026-09-10
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
@@ -479,7 +479,7 @@ Watch Smart Stack: Relevanz nachmittags/abends höher, wenn Ziel offen (`Relevan
 
 ## 12. Plattformen und Screens
 
-Mindestversionen: aktuelles OS zum Bauzeitpunkt (iOS 26 / watchOS 26 / macOS 26 / tvOS 26 / visionOS 26). Nicht künstlich auf iOS 17 zurückgehen.
+Mindestversionen: iOS 27 / watchOS 27 / macOS 27 / tvOS 27 / visionOS 27. Die Referenzimplementierung darf dadurch das SDK-27-API-Set direkt verwenden; Geräte unter Version 27 werden nicht unterstützt.
 
 ### 12.1 iPhone
 
@@ -487,7 +487,7 @@ Tabs: **Heute | Verlauf | Stats | Einstellungen**.
 Heute: siehe Abschnitt 14 und den detaillierten Today-Hero-Vertrag in Abschnitt 22.1.
 Verlauf: kalender-first Monatsraster mit einem Ring pro Tag, horizontalem Monats-Pager und Tagesdetail mit Edit/Delete/Restore.
 Stats: eigener Perioden-/Chart-Screen gemäß Abschnitt 22.2; kein kombinierter Insights-Screen.
-Settings: Profil, Einheiten, Behälter-CRUD, Erinnerungen, Health-Status, Sync-Status, Export, Über, Quelle/Lizenz.
+Settings: Profil, Einheiten, Behälter-CRUD, Erinnerungen, Health-Status, Sync-Status, Export, Über, Quelle/Lizenz. Die Behälter sind in Settings per Drag-and-drop sortierbar; die ersten drei der gespeicherten Reihenfolge erscheinen als Today-Quick-Adds. Die Custom-Amount-Eingabe bietet zusätzlich alle gespeicherten Behälter zur Auswahl. Der Behälter-Editor bearbeitet Name, Symbol, Menge und den Standardbehälter; genau ein Behälter bleibt als Standard markiert.
 
 ### 12.2 iPad
 
@@ -593,8 +593,12 @@ TodayView
 
 Die Zahlen im Hero zeigen Menge, Einheit und Prozent. Die Oberfläche ist im
 Idle flach. Es gibt keine Recent-Liste, keine Motivationskarte und keinen
-zusätzlichen Last-entry-Block. Die drei Quick-Add-Aktionen verwenden die
-gespeicherten Behälter; die Custom-Amount-Aktion öffnet die Mengeneingabe.
+zusätzlichen Last-entry-Block. Die Quick-Add-Aktionen verwenden die ersten drei
+gespeicherten Behälter in ihrer Settings-Reihenfolge als feste, nicht horizontal
+scrollende HStack, deren drei Quick-Add-Buttons die verfügbare Breite gleichmäßig
+ausfüllen. Die Custom-Amount-Aktion öffnet die Mengeneingabe mit einem
+Slider; darunter liegt ohne sichtbare Abschnittsüberschrift eine horizontal
+scrollbare Auswahl aller gespeicherten Behälter mit breiteren Chips.
 
 Für VoiceOver werden Menge, Ziel, Rest, Prozent und Quelle vollständig
 angesagt. Der gemeinsame `LogIntake`-Use-Case bleibt die einzige Schreib-API.
@@ -768,9 +772,13 @@ Von oben nach unten, Light Mode, Hintergrund `#E8F4F6`:
 3. Caption `noch {rest} ml · Ziel {goal} ml`.
 4. Schwebender Confirm-Toast nur nach einem Log; er liegt über der
    Komposition, reserviert keinen Layoutplatz und blendet danach aus.
-5. Drei Chips: Glas 250 / Tasse 200 / Flasche 500.
+5. Eine feste HStack mit den ersten drei gespeicherten Behältern in der
+   Settings-Reihenfolge, ohne horizontales Scrollen. Die drei Quick-Add-Buttons
+   füllen die verfügbare Breite gleichmäßig aus. Die drei initialen Behälter
+   sind Glas 250 / Tasse 200 / Flasche 500.
 6. Primary-Pille `Eigene Menge` / `Custom amount`; sie öffnet die Eingabe
-   einer Trinkmenge und bleibt als untere Aktion oberhalb der Tab Bar sichtbar.
+   einer Trinkmenge mit einer horizontal scrollbaren Auswahl aller gespeicherten
+   Behälter und bleibt als untere Aktion oberhalb der Tab Bar sichtbar.
 7. Tab Bar: Heute | Verlauf | Stats | Einstellungen.
 
 Farben: Deep `#0B3D4A`, Lagoon `#1A7A8C`, Aqua `#4FB3C6`, Foam `#E8F4F6`.
@@ -792,8 +800,9 @@ Zwei-Spalten-Komposition:
 - in der Mitte links steht ein zentrierter, begrenzter Hero mit unverändertem
   Seitenverhältnis und derselben Motion; er darf bis etwa 240 × 336 pt groß
   werden und wächst nicht bis zur verfügbaren Höhe;
-- in der Mitte rechts stehen die drei Behälter-Aktionen als flache Buttons
-  ohne `GlassCard` oder einzelne Glas-Karten;
+- in der Mitte rechts stehen die ersten drei gespeicherten Behälter-Aktionen in
+  Settings-Reihenfolge als flache Buttons ohne `GlassCard` oder einzelne
+  Glas-Karten;
 - unten bleibt die Primary-Pille `Eigene Menge` / `Custom amount` als CTA im
   Safe-Area-Inset;
 - die obere iPad-Tabbar ist der Kontext für den Tab. Ein zusätzlicher
@@ -1400,5 +1409,10 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 | 2.2.0 | 2026-09-10 | Die Today-Bestätigung wird als schwebender, kompakter Glass-Toast über den unteren Aktionen dargestellt; sie reserviert keinen Platz mehr in der Komposition und verändert dadurch die Hero-/Chip-Position nicht. | Nach einem Log bleibt die Bestätigung sichtbar, ohne dass die Today-Oberfläche ihre Größe oder ihre Layoutpositionen ändert; die Android-UI-Spezifikation erhält die native Snackbar-/Toast-Abbildung. |
 | 2.3.0 | 2026-09-10 | Transientes Feedback wird app-weit als schwebender Toast standardisiert: Today-/Watch-Logs bestätigen sich lokalisiert, Delete bietet Undo als Toast-Aktion, und persistente Sync-, Berechtigungs-, Lade- und ungelöste Fehler bleiben inline. | iOS-, Watch-, visionOS- und tvOS-Kompositionen verwenden eine gemeinsame, layoutneutrale Feedbackfläche; Android übernimmt dieselbe Interaktion mit nativen Snackbar-/Toast-Oberflächen, ohne statische Referenzbilder zu ändern. |
 | 2.3.1 | 2026-09-10 | Der lokalisierte Confirm-Toast bleibt auch sichtbar, wenn eine benutzerdefinierte Menge aus dem heutigen History-Day-Detail geloggt wird; der History-Root hostet dafür denselben Feedbackzustand. | Jeder unterstützte In-App-Add-Einstieg bestätigt einen erfolgreichen Log ohne Layoutverschiebung; die gemeinsame `TodayViewModel`-/`LogIntake`-Logik bleibt erhalten. |
+| 2.4.0 | 2026-09-10 | Gespeicherte Behälter sind auf iPhone und iPad vollständig als Today-Quick-Adds verfügbar. Der Behälter-Editor erhält Symbolauswahl, Mengen-Slider und eine explizite Standardbehälter-Auswahl; der Standard bleibt eindeutig. | Benutzerdefinierte Behälter wie eine große Flasche können direkt geloggt werden, während Default-Aktionen weiterhin eine klar wählbare Standardmenge verwenden. |
+| 2.5.0 | 2026-09-10 | Die Behälterreihenfolge ist in Settings per Drag-and-drop änderbar. Today zeigt die ersten drei Behälter dieser Reihenfolge; die Custom-Amount-Eingabe bietet alle gespeicherten Behälter als auswählbare Mengen-Vorlagen. Der Editor zeigt eine horizontale, icon-only Symbolauswahl. | Die häufigsten drei Behälter bleiben auf Today kompakt erreichbar, weitere Behälter bleiben über Custom amount nutzbar; Reihenfolge, Symbol, Menge und Standardstatus sind weiterhin persistent konfigurierbar. |
+| 3.0.0 | 2026-09-10 | Die Mindestversion für alle Apple-Plattformen wird auf iOS 27, watchOS 27, macOS 27, tvOS 27 und visionOS 27 angehoben. | Geräte unter Version 27 werden nicht mehr unterstützt; die iOS-Referenzimplementierung kann neue SDK-27-APIs ohne ältere Deployment-Fallbacks verwenden. |
+| 3.1.0 | 2026-09-10 | Today zeigt die ersten drei gespeicherten Behälter als feste HStack ohne ScrollView. Die Custom-Amount-Eingabe ersetzt den Stepper durch einen Slider und platziert darunter die breitere, nicht beschriftete Auswahl aller gespeicherten Behälter. | Die drei häufigsten Behälter bleiben direkt erreichbar; beliebige Mengen und alle gespeicherten Behälter bleiben in der Custom-Amount-Eingabe erreichbar. |
+| 3.2.0 | 2026-09-10 | Die drei festen Today-Quick-Add-Buttons füllen die verfügbare Breite ihrer HStack gleichmäßig aus. | Die Schnellaktionen nutzen die gesamte Breite der kompakten Today-Komposition und bleiben ohne horizontales Scrollen erreichbar. |
 
-*Ende PRD 2.3.1. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 3.2.0. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
