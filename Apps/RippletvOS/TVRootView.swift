@@ -41,6 +41,14 @@ public struct TVRootView: View {
         }
         .padding(60)
         .background(RippleColor.surface)
+        .overlay(alignment: .bottom) {
+            RippleToastHost(
+                message: model.confirmation,
+                reduceMotion: reduceMotion
+            )
+            .padding(.horizontal, RippleSpace.xxl)
+            .padding(.bottom, RippleSpace.xxl)
+        }
         .task { await model.refresh() }
     }
 }

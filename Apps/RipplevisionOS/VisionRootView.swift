@@ -232,9 +232,6 @@ private struct VisionTodaySurface: View {
                 )
             )
             .padding(.bottom, RippleSpace.sm)
-
-            VisionConfirmationSection(message: model.confirmation)
-                .padding(.bottom, RippleSpace.sm)
         }
         .padding(.horizontal, RippleSpace.xl)
         .padding(.top, RippleSpace.xl)
@@ -247,6 +244,14 @@ private struct VisionTodaySurface: View {
             idealHeight: RippleLayout.visionWindowIdealHeight,
             maxHeight: .infinity
         )
+        .overlay(alignment: .bottom) {
+            RippleToastHost(
+                message: model.confirmation,
+                reduceMotion: reduceMotion
+            )
+            .padding(.horizontal, RippleSpace.xl)
+            .padding(.bottom, RippleSpace.xxl)
+        }
     }
 }
 
@@ -291,20 +296,6 @@ private struct VisionStatusSection: View {
             remainingText: remainingText,
             goalText: goalText
         )
-    }
-}
-
-private struct VisionConfirmationSection: View {
-    let message: String?
-
-    var body: some View {
-        Text(message ?? "")
-            .font(RippleFont.callout)
-            .foregroundStyle(RippleColor.waterAqua)
-            .opacity(message == nil ? 0 : 1)
-            .frame(maxWidth: .infinity)
-            .frame(height: 22)
-            .accessibilityHidden(message == nil)
     }
 }
 

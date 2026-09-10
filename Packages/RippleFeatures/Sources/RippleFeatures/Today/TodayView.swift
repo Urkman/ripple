@@ -34,6 +34,14 @@ public struct TodayView: View {
         .rippleInlineNavigationTitle()
         .navigationTitle(usesIPadLayout ? "" : "\(L10n.text("Ripple")) · \(formattedDate(snapshot.date))")
         .rippleNavigationBarVisibility(hidden: usesIPadLayout)
+        .overlay(alignment: .bottom) {
+            RippleToastHost(
+                message: model.confirmation,
+                reduceMotion: reduceMotion
+            )
+            .padding(.horizontal, RippleSpace.lg)
+            .padding(.bottom, RippleSpace.xxl)
+        }
         .safeAreaInset(edge: .bottom, spacing: RippleSpace.sm) {
             LogButton(L10n.text("Custom amount"), action: showCustomAmount)
                 .padding(.horizontal, 20)
@@ -56,7 +64,6 @@ public struct TodayView: View {
             await model.refresh()
         }
         .sensoryFeedback(.success, trigger: snapshot.consumed.value)
-        .animation(.easeOut(duration: RippleMotion.confirmFade), value: model.confirmation)
         .onChange(of: snapshot.consumed.value) {
             if reduceMotion {
                 model.presentedSnapshot = snapshot
@@ -94,7 +101,6 @@ public struct TodayView: View {
                 .layoutPriority(1)
 
             remainingLabel(formatter: formatter)
-            confirmationView
             quickAddCluster(
                 snapshot: snapshot,
                 formatter: formatter,
@@ -137,7 +143,6 @@ public struct TodayView: View {
                         layout: .vertical,
                         style: .flat
                     )
-                    confirmationView
                 }
                 .frame(
                     minWidth: RippleLayout.iPadLandscapeActionColumnMinWidth,
@@ -187,16 +192,6 @@ public struct TodayView: View {
             ),
             goalText: goalText
         )
-    }
-
-    private var confirmationView: some View {
-        Text(model.confirmation ?? "")
-            .font(.callout)
-            .foregroundStyle(RippleColor.waterLagoon)
-            .opacity(model.confirmation == nil ? 0 : 1)
-            .frame(maxWidth: .infinity)
-            .frame(height: model.confirmation == nil ? 0 : 22)
-            .accessibilityHidden(model.confirmation == nil)
     }
 
     private func quickAddCluster(
