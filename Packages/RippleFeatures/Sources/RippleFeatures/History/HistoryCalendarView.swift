@@ -24,10 +24,20 @@ public struct HistoryCalendarView: View {
     }
 
     public var body: some View {
-        if usesSplit {
-            iPadHistoryScreen
-        } else {
-            iPhoneHistoryScreen
+        Group {
+            if usesSplit {
+                iPadHistoryScreen
+            } else {
+                iPhoneHistoryScreen
+            }
+        }
+        .overlay(alignment: .bottom) {
+            RippleToastHost(
+                message: todayModel.confirmation,
+                reduceMotion: reduceMotion
+            )
+            .padding(.horizontal, RippleSpace.lg)
+            .padding(.bottom, RippleSpace.xxl)
         }
     }
 

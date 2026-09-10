@@ -1,7 +1,7 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 2.5.0
+**Document version:** 2.5.1
 **Last verified:** 2026-09-10
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 **Product contract:** [Ripple PRD](../Ripple_PRD.md)
@@ -91,7 +91,8 @@ its shape differs from the iOS counterpart; the information hierarchy and flow,
 not the platform chrome, are the parity target.
 
 Transient success feedback uses a centered or content-anchored Snackbar/Toast
-overlay and never changes measured content. Delete / Undo uses a Snackbar action.
+overlay and never changes measured content. Today and today's Day Detail add
+actions use the same localized confirmation. Delete / Undo uses a Snackbar action.
 Sync, permission, loading, and unresolved errors remain visible in their
 inline state surfaces until they are resolved or retried.
 
@@ -438,7 +439,7 @@ DayDetailRoute(localDate)
   GoalStatus: localized goal + remaining/goal reached text below the glass
   Entries: time, amount, container, source, deleted state
   Row actions: edit, soft delete, restore/undo
-  Today-only add action
+  Today-only add action; today's add confirmation uses the transient toast
 ```
 
 On a compact phone, Day Detail is a real nested destination with Android back
@@ -844,3 +845,4 @@ at the bottom.
 | 2.3.2 | 2026-09-09 | Clarified that compact Day Detail must not repeat the top-app-bar date as a second in-content heading, while expanded detail keeps its pane date heading. | Android compact navigation now matches the iPhone presentation without duplicating the selected date; expanded split context remains explicit. |
 | 2.4.0 | 2026-09-10 | Changed Today's completed-log confirmation from an inline row to a centered transient toast overlay that reserves no layout space; Android maps the same behavior to a native Snackbar/Toast surface. | Quick-add controls and the hero keep stable measured positions while feedback remains visible and localized; the static phone Today reference remains a ready-state layout capture. |
 | 2.5.0 | 2026-09-10 | Standardized transient feedback across Android app surfaces: Today and Wear Today use localized Snackbar/Toast confirmations, Day Detail delete offers Undo as an action, and sync, permission, loading, and unresolved errors remain inline until resolved or retried. | Phone, tablet, and Wear content keeps stable measured layout while transient feedback is visible; the existing static reference images remain ready-state contracts. |
+| 2.5.1 | 2026-09-10 | Clarified that the transient localized confirmation also appears when a custom amount is added from today's Day Detail, while delete keeps Undo as the Snackbar action and persistent errors remain inline. | Every supported in-app add entry point has the same layout-neutral success feedback without changing the static reference images. |

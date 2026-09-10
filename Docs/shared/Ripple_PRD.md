@@ -3,7 +3,7 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 2.3.0 — 10. September 2026
+**Version:** 2.3.1 — 10. September 2026
 **Last verified:** 2026-09-10
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
@@ -551,7 +551,7 @@ Widget muss `fullColor`, `accented`, `vibrant` überleben.
 
 Transientes Feedback wird als schwebender Toast über der jeweiligen
 Komposition gerendert und reserviert keinen Layoutplatz. Erfolgreiche
-Today-/Watch-Logs verwenden den lokalisierten Confirm-Toast. Delete zeigt eine
+Today-/Day-Detail-/Watch-Logs verwenden den lokalisierten Confirm-Toast. Delete zeigt eine
 kurze Toast-Aktion mit Undo. Sync-, Berechtigungs-, Lade- und andere ungelöste
 Fehlerzustände bleiben inline sichtbar und werden nicht automatisch
 ausgeblendet.
@@ -1399,5 +1399,6 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 | 2.1.2 | 2026-09-09 | Die kompakte iPhone-Ansicht wiederholt den Datumstitel nicht mehr im Detailinhalt; das iPad-Detailpaneel behält seine Datumsüberschrift. | Der ausgewählte Tag erscheint auf dem iPhone genau einmal in der Navigationsleiste, während die eigenständige iPad-Detailspalte weiterhin ihren Kontext sichtbar hält. |
 | 2.2.0 | 2026-09-10 | Die Today-Bestätigung wird als schwebender, kompakter Glass-Toast über den unteren Aktionen dargestellt; sie reserviert keinen Platz mehr in der Komposition und verändert dadurch die Hero-/Chip-Position nicht. | Nach einem Log bleibt die Bestätigung sichtbar, ohne dass die Today-Oberfläche ihre Größe oder ihre Layoutpositionen ändert; die Android-UI-Spezifikation erhält die native Snackbar-/Toast-Abbildung. |
 | 2.3.0 | 2026-09-10 | Transientes Feedback wird app-weit als schwebender Toast standardisiert: Today-/Watch-Logs bestätigen sich lokalisiert, Delete bietet Undo als Toast-Aktion, und persistente Sync-, Berechtigungs-, Lade- und ungelöste Fehler bleiben inline. | iOS-, Watch-, visionOS- und tvOS-Kompositionen verwenden eine gemeinsame, layoutneutrale Feedbackfläche; Android übernimmt dieselbe Interaktion mit nativen Snackbar-/Toast-Oberflächen, ohne statische Referenzbilder zu ändern. |
+| 2.3.1 | 2026-09-10 | Der lokalisierte Confirm-Toast bleibt auch sichtbar, wenn eine benutzerdefinierte Menge aus dem heutigen History-Day-Detail geloggt wird; der History-Root hostet dafür denselben Feedbackzustand. | Jeder unterstützte In-App-Add-Einstieg bestätigt einen erfolgreichen Log ohne Layoutverschiebung; die gemeinsame `TodayViewModel`-/`LogIntake`-Logik bleibt erhalten. |
 
-*Ende PRD 2.3.0. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 2.3.1. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
