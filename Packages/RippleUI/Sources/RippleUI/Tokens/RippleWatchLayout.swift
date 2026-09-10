@@ -6,6 +6,8 @@ public enum RippleWatchLayout {
     public static let todayContentSpacing: CGFloat = 4
     public static let todayTopInset: CGFloat = 24
     public static let todayBottomInset: CGFloat = pageIndicatorClearance
+    public static let todayToastBottomPadding: CGFloat =
+        controlHeight + (todayDockPadding * 2) + todayBottomInset + RippleSpace.sm
     public static let controlHeight: CGFloat = 44
     public static let quickOptionSpacing: CGFloat = 4
     public static let amountSheetCrownHintWidth: CGFloat = 144
