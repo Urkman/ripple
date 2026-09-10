@@ -1,8 +1,8 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 2.3.2
-**Last verified:** 2026-09-09
+**Document version:** 2.5.0
+**Last verified:** 2026-09-10
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 **Product contract:** [Ripple PRD](../Ripple_PRD.md)
 **Visual reference pack:** [Android UI reference pack](UI/README.md)
@@ -34,8 +34,8 @@ The current iOS source inspected for this revision includes:
 
 - `Apps/RippleiOS/RootView.swift` — four roots: Today, History, Stats, Settings;
 - `Packages/RippleFeatures/Sources/RippleFeatures/Today/TodayView.swift` —
-  hero, remaining amount, confirmation, saved-container quick adds, and custom
-  amount, with no Recent section;
+  hero, remaining amount, floating confirmation toast, saved-container quick
+  adds, and custom amount, with no Recent section;
 - `HistoryCalendarView.swift` — horizontal month paging, one ring per day, and
   Day Detail navigation;
 - `DayDetailView.swift` — static contained glass/readout summary, goal and
@@ -89,6 +89,11 @@ The Android navigation surface, settings rows, dialogs, permissions, and system
 surfaces are standard Android UI. A Material component is preferred even when
 its shape differs from the iOS counterpart; the information hierarchy and flow,
 not the platform chrome, are the parity target.
+
+Transient success feedback uses a centered or content-anchored Snackbar/Toast
+overlay and never changes measured content. Delete / Undo uses a Snackbar action.
+Sync, permission, loading, and unresolved errors remain visible in their
+inline state surfaces until they are resolved or retried.
 
 ### 2.3 Product palette and shape tokens
 
@@ -156,7 +161,8 @@ Today
   TopAppBar: Ripple + local date/context
   RippleHeroView: contained glass silhouette + water level + readout
   RemainingLabel: remaining amount + goal
-  Confirmation: only after a completed log, then fades
+  Confirmation toast: only after a completed log; floats over the lower actions,
+  reserves no layout space, then fades
   QuickAddCluster: saved containers
   CustomAmountAction: opens amount entry
   NavigationBar / Rail: Today | History | Stats | Settings
@@ -187,6 +193,12 @@ The glass hero must:
 - show no fill or bottom shimmer at zero;
 - use the same `LogIntake` write path as every other surface.
 
+The confirmation is a transient centered toast overlay above the lower action
+region. It must not reserve a row, push the quick-add controls, or change the
+hero's measured size. Android may express it with a native Material Snackbar or
+Toast-style surface; if Undo is offered, it remains the Snackbar action rather
+than a second inline confirmation row. The copy remains localized in DE and EN.
+
 Android may draw the silhouette with Compose paths and animate with Compose
 animation primitives, but it must not add a permanent sine loop, particles,
 photoreal water, a single-drop metaphor, or simulated Liquid Glass chrome.
@@ -214,7 +226,7 @@ tap saved container or custom amount
         -> LogIntake(source = app)
         -> local Today snapshot refresh
         -> one coalesced pour, if motion is enabled
-        -> final amount/remaining/confirmation update
+        -> final amount/remaining/toast update
         -> snackbar offers UndoLastIntake
 ```
 
@@ -452,6 +464,11 @@ restored; edit changes the existing intake identity and must not make a hidden
 duplicate. Empty past days show a clear empty state; an empty today may
 include the add CTA.
 
+After a delete, show a short Snackbar with an Undo action over the active
+content pane. It must not reserve a persistent row or move the Day Detail
+summary and entry list. The action restores the last own, non-deleted intake
+through the shared undo use case.
+
 ### 5.3 History and detail accessibility
 
 Each day cell announces its full date, amount, percentage, goal status, and
@@ -567,6 +584,9 @@ chips or compact buttons; keep labels short and touch targets safe.
 
 No idle wave loop, pour stream, surface reaction, motion tilt, or phone-sized
 top-level navigation is used on Wear. The shared write boundary still applies.
+After a completed log, show the localized success confirmation as a transient
+Snackbar/Toast overlay above the action region without reserving layout space.
+Persistent sync, permission, loading, and unresolved errors remain inline.
 
 ### 9.2 Wear History and Day Detail
 
@@ -578,7 +598,8 @@ See [wear History](UI/wear-history.png) and [wear Day Detail](UI/wear-day-detail
 - Tapping a day opens Wear Day Detail with the daily total and individual
   entries.
 - Individual entries can be deleted with a standard Wear action and restored
-  with the short undo affordance. Edit and add are phone/tablet flows unless
+  with a short Snackbar/Toast action overlay; it must not reserve layout space.
+  Edit and add are phone/tablet flows unless
   the Wear interaction explicitly remains within the supported Today action.
 
 ### 9.3 Wear Stats
@@ -821,3 +842,5 @@ at the bottom.
 | 2.3.0 | 2026-09-09 | Added the static contained glass/readout to Android Day Detail, kept goal and remaining status below it, and specified tapered inner-wall water geometry with only the stroke/clip inset. | Android Day Detail now matches the updated shared History presentation while remaining Android-native: historical detail has no pour stream, tilt, surface reaction, or continuous animation, and higher levels widen toward the rim without an artificial fixed side gap. |
 | 2.3.1 | 2026-09-09 | Clarified that compact Day Detail uses the selected day's localized weekday/date as the nested top-app-bar title, while expanded detail keeps the date in the pane content. | Android navigation context now matches the iPhone Day Detail contract without changing the expanded split layout. |
 | 2.3.2 | 2026-09-09 | Clarified that compact Day Detail must not repeat the top-app-bar date as a second in-content heading, while expanded detail keeps its pane date heading. | Android compact navigation now matches the iPhone presentation without duplicating the selected date; expanded split context remains explicit. |
+| 2.4.0 | 2026-09-10 | Changed Today's completed-log confirmation from an inline row to a centered transient toast overlay that reserves no layout space; Android maps the same behavior to a native Snackbar/Toast surface. | Quick-add controls and the hero keep stable measured positions while feedback remains visible and localized; the static phone Today reference remains a ready-state layout capture. |
+| 2.5.0 | 2026-09-10 | Standardized transient feedback across Android app surfaces: Today and Wear Today use localized Snackbar/Toast confirmations, Day Detail delete offers Undo as an action, and sync, permission, loading, and unresolved errors remain inline until resolved or retried. | Phone, tablet, and Wear content keeps stable measured layout while transient feedback is visible; the existing static reference images remain ready-state contracts. |

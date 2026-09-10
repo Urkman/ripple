@@ -3,8 +3,8 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 2.1.2 — 9. September 2026
-**Last verified:** 2026-09-09
+**Version:** 2.3.0 — 10. September 2026
+**Last verified:** 2026-09-10
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
 **Code-Sprache:** English identifiers, German + English copy
@@ -497,6 +497,9 @@ Adaptive Plattform-Komposition statt geschrumpftem iPhone-Layout. History verwen
 
 Die Watch-App hat drei horizontale Seiten: **Heute | Verlauf | Statistik**. Heute ist eine vollflächige, flache Wasserstand-Darstellung ohne Ring oder Glas und bietet eine einzelne `+`-Aktion. Sie öffnet das Mengen-Sheet mit drei vorkonfigurierten Mengen; die Crown passt den aktuellen Wert in 10-ml-Schritten an und macht ihn bei einer Änderung zu einer eigenen Menge ohne Behälter-ID. Ein separater `+`-Modusschalter ist nicht nötig. Erst die Bestätigung im Sheet schreibt über denselben `LogIntake`-Use-Case mit Quelle `watch`; eine Auswahl allein schreibt nicht. Zum Verwerfen gibt es nur das systemseitige `×` oben, keinen zusätzlichen Cancel-Button. Verlauf und Statistik verwenden jeweils einen lokalen Navigationsstapel für ihr scrollbares Titelverhalten; Heute bleibt für das vollflächige Wasserfeld ohne Navigationsstapel. Die Watch-App bevorzugt die dunkle OLED-Darstellung. Watch und Komplikationen bleiben ohne Tilt und ohne Oberflächenreaktion; die Wasserfläche bleibt statisch.
 
+Nach einem erfolgreichen Watch-Log erscheint die lokalisierte Bestätigung als
+schwebender Toast über dem Aktionsbereich und reserviert keinen Layoutplatz.
+
 Verlauf zeigt die letzten sieben vergangenen bzw. heutigen lokalen Kalendertage als kompakte Liste, sortiert neu nach alt. Ein Tap öffnet ein Tagesdetail mit Summe, Ziel und Einträgen. Einzelne Einträge können dort per Wischaktion über den bestehenden `DeleteIntake`-Use-Case soft-deleted und über eine kurze Undo-Aktion wiederhergestellt werden; Bearbeiten und Hinzufügen bleiben auf iPhone/iPad. Statistik zeigt die aktuelle ISO-Woche mit Durchschnitt pro vergangenem Tag, Zieltreffern, Gesamtmenge und genau einem kompakten Swift-Charts-Diagramm. Kein Monatskalender und kein Perioden-Picker auf der Watch.
 
 Komplikationen bleiben fokussiert: circular ring, rectangular remaining. Sie übernehmen nicht die Watch-App-Seiten oder deren Chart.
@@ -544,7 +547,14 @@ Widget muss `fullColor`, `accented`, `vibrant` überleben.
 
 ### 13.3 Komponenten
 
-`LogButton`, `QuickAddCluster`, `AmountStepper`, `ContainerChip`, `DayHeader`, `RemainingLabel`, `IntakeRow`, `SyncStatusView`, `EmptyState`, `GlassCard`, `GlassShape`, `WaterFill`, `PourStreamShape`, `DayRing`.
+`LogButton`, `QuickAddCluster`, `AmountStepper`, `ContainerChip`, `DayHeader`, `RemainingLabel`, `IntakeRow`, `SyncStatusView`, `EmptyState`, `GlassCard`, `GlassShape`, `WaterFill`, `PourStreamShape`, `DayRing`, `RippleToast`.
+
+Transientes Feedback wird als schwebender Toast über der jeweiligen
+Komposition gerendert und reserviert keinen Layoutplatz. Erfolgreiche
+Today-/Watch-Logs verwenden den lokalisierten Confirm-Toast. Delete zeigt eine
+kurze Toast-Aktion mit Undo. Sync-, Berechtigungs-, Lade- und andere ungelöste
+Fehlerzustände bleiben inline sichtbar und werden nicht automatisch
+ausgeblendet.
 
 Jede Komponente: Preview Light/Dark, Dynamic Type XXXL, Reduce Motion, Watch-Canvas.
 
@@ -575,7 +585,7 @@ TodayView
   header: "Ripple" + lokales Datum
   RippleHeroView              // stilisiertes 2D-Glas, Level + Readout
   RemainingLabel              // Rest + Ziel
-  confirmation                // nur nach Log, dann Fade
+  confirmation toast          // nur nach Log, dann Fade; kein Layoutplatz
   QuickAddCluster             // gespeicherte Behälter
   Custom amount               // untere primäre Aktion
   TabView: Heute | Verlauf | Stats | Einstellungen
@@ -756,7 +766,8 @@ Von oben nach unten, Light Mode, Hintergrund `#E8F4F6`:
    Platz zwischen Navigationsleiste und den unteren Aktionen, skaliert bei
    kleiner Höhe herunter und behält das Seitenverhältnis von etwa 200 × 280 pt.
 3. Caption `noch {rest} ml · Ziel {goal} ml`.
-4. Confirm-Zeile nur nach einem Log, dann Fade.
+4. Schwebender Confirm-Toast nur nach einem Log; er liegt über der
+   Komposition, reserviert keinen Layoutplatz und blendet danach aus.
 5. Drei Chips: Glas 250 / Tasse 200 / Flasche 500.
 6. Primary-Pille `Eigene Menge` / `Custom amount`; sie öffnet die Eingabe
    einer Trinkmenge und bleibt als untere Aktion oberhalb der Tab Bar sichtbar.
@@ -1014,8 +1025,8 @@ Beispiel für +250 ml, 1250 → 1500 bei Ziel 2000:
 | 626–766 ms | Strahl verjüngt sich und blendet aus; Pegel erreicht exakt bei 766 ms sein Store-Ziel | UI-Zeilen wechseln zum Store |
 | 626–1006 ms | Auslaufende Kämme erreichen nahe der Wände ihre größte Entfernung | — |
 | 1006–1286 ms | Eine deutlich kleinere Reflexion läuft zurück | — |
-| 1286–1526 ms | Restbewegung → 0; Confirm `+250 ml · schöner Ripple.` | UI = Store |
-| 1,5–2,8 s | Confirm fade | — |
+| 1286–1526 ms | Restbewegung → 0; schwebender Toast `+250 ml · schöner Ripple.` über den unteren Aktionen | UI = Store |
+| 1,5–2,8 s | Toast fade ohne Layoutänderung | — |
 
 Drei schnelle Taps erzeugen drei Store-Einträge, aber einen durchgehenden
 Strahl, einen fortlaufend linear retargeteten Pegelanstieg und eine
@@ -1029,7 +1040,8 @@ Oberflächenreaktion.
 #### 22.1.10 Today-Copy, Accessibility und andere Flächen
 
 - Caption Idle: `noch 750 ml · Ziel 2 000 ml`.
-- Confirm: `+{menge} ml · schöner Ripple.`.
+- Confirm-Toast: `+{menge} ml · schöner Ripple.`; zentriert als kompakte
+  Glass-Pille über den unteren Aktionen, ohne reservierten Layoutplatz.
 - VoiceOver Hero: „1.250 Milliliter von 2.000. 62 Prozent. Noch 750 Milliliter.“
 - Button: `Eigene Menge` / `Custom amount`; öffnet die Eingabe einer Menge.
 - Widget: dasselbe `GlassShape` und eine ebene Fläche, ohne Core Motion, Strahl,
@@ -1255,7 +1267,8 @@ Zeit. Das „+“ ist auf iPhone nicht am gepushten Detail sichtbar. Vergangene
 Einträge bleiben editierbar und löschbar.
 
 Ein leerer Tag zeigt `Keine Einträge` / `No entries` und nur für heute einen
-Button `+ 250 ml`. Nach Delete erscheint eine 5-Sekunden-Undo-Aktion.
+Button `+ 250 ml`. Nach Delete erscheint ein schwebender Toast mit einer
+5-Sekunden-Undo-Aktion; er reserviert keinen Layoutplatz.
 
 VoiceOver nennt für die Zelle Datum, Menge, Zielstatus und für die Zeile Menge,
 Behälter, Zeit und Quelle.
@@ -1384,5 +1397,7 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 | 2.1.0 | 2026-09-09 | Das Tagesdetail erhält ein statisches Glas mit dem bestehenden Mengen-/Prozent-Readout; die Wasserfläche folgt beim Ansteigen konsequent dem breiter werdenden inneren Glas und behält nur den definierten Stroke-/Clip-Inset. | History visualisiert den Tagesstand zusätzlich zum Text, ohne neue Interaktion oder Bewegungsquelle; die gemeinsame Wassergeometrie zeigt bei höheren Pegeln keinen künstlichen seitlichen Innenabstand. |
 | 2.1.1 | 2026-09-09 | Das iPhone-Tagesdetail zeigt den lokalisierten Wochentag und das Datum des ausgewählten Tages als Inline-Navigationstitel; das iPad-Detailpaneel behält den Titel im Detailinhalt. | Der Navigationskontext bleibt beim Zurückkehren und bei langen Detailinhalten sichtbar, ohne eine zusätzliche Navigation oder eine Änderung der iPad-Split-Struktur einzuführen. |
 | 2.1.2 | 2026-09-09 | Die kompakte iPhone-Ansicht wiederholt den Datumstitel nicht mehr im Detailinhalt; das iPad-Detailpaneel behält seine Datumsüberschrift. | Der ausgewählte Tag erscheint auf dem iPhone genau einmal in der Navigationsleiste, während die eigenständige iPad-Detailspalte weiterhin ihren Kontext sichtbar hält. |
+| 2.2.0 | 2026-09-10 | Die Today-Bestätigung wird als schwebender, kompakter Glass-Toast über den unteren Aktionen dargestellt; sie reserviert keinen Platz mehr in der Komposition und verändert dadurch die Hero-/Chip-Position nicht. | Nach einem Log bleibt die Bestätigung sichtbar, ohne dass die Today-Oberfläche ihre Größe oder ihre Layoutpositionen ändert; die Android-UI-Spezifikation erhält die native Snackbar-/Toast-Abbildung. |
+| 2.3.0 | 2026-09-10 | Transientes Feedback wird app-weit als schwebender Toast standardisiert: Today-/Watch-Logs bestätigen sich lokalisiert, Delete bietet Undo als Toast-Aktion, und persistente Sync-, Berechtigungs-, Lade- und ungelöste Fehler bleiben inline. | iOS-, Watch-, visionOS- und tvOS-Kompositionen verwenden eine gemeinsame, layoutneutrale Feedbackfläche; Android übernimmt dieselbe Interaktion mit nativen Snackbar-/Toast-Oberflächen, ohne statische Referenzbilder zu ändern. |
 
-*Ende PRD 2.1.2. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 2.3.0. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*

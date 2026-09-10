@@ -1,7 +1,7 @@
 # Android UI reference pack
 
-**Reference pack revision:** 2.3.2 (tracks the Android UI specification)
-**Last verified:** 2026-09-09
+**Reference pack revision:** 2.5.0 (tracks the Android UI specification)
+**Last verified:** 2026-09-10
 
 This pack separates evidence from the Android presentation contract:
 
@@ -26,9 +26,9 @@ This pack separates evidence from the Android presentation contract:
 
 | Reference | Contract |
 |---|---|
-| `phone-today.png` | Four-root phone shell; contained glass hero; saved containers; custom amount; no Recent list |
+| `phone-today.png` | Four-root phone shell; contained glass hero; saved containers; custom amount; transient confirmation toast over the lower actions without layout change; no Recent list |
 | `phone-history.png` | Horizontal month pager; weekday grid; one capped ring per day; future days disabled |
-| `phone-day-detail.png` | Nested Day Detail; localized weekday/date top-app-bar title without a duplicate compact content heading, static contained glass/readout summary, goal and remaining status, intake rows, edit/delete/restore, add only for today |
+| `phone-day-detail.png` | Nested Day Detail; localized weekday/date top-app-bar title without a duplicate compact content heading, static contained glass/readout summary, goal and remaining status, intake rows, edit/delete/restore, add only for today; delete uses a transient Snackbar action for Undo |
 | `phone-stats.png` | Week/Month/Year selector; summaries; four chart families; highlights |
 | `phone-settings.png` | Profile, goal, containers, reminders, Health, sync, export, about |
 | `phone-onboarding.png` | Six onboarding pages and native permission handoffs |
@@ -36,7 +36,7 @@ This pack separates evidence from the Android presentation contract:
 | `tablet-stats.png` | Expanded Stats with persistent navigation and chart content |
 | `wear-today.png` | Full-canvas water field; predefined actions; Crown-first custom amount |
 | `wear-history.png` | Seven elapsed local days; Wear-native list |
-| `wear-day-detail.png` | Wear Day Detail; individual intake deletion |
+| `wear-day-detail.png` | Wear Day Detail; individual intake deletion with a transient Snackbar/Toast Undo action |
 | `wear-stats.png` | Current ISO-week summary; one compact chart |
 
 ## Layout previews
@@ -84,3 +84,11 @@ Glass, an iOS tab bar, or iOS navigation chrome into Android. Android uses
 Material 3, Window Size Classes, standard Android permission surfaces, and
 Wear-native navigation while preserving the same screens, information
 priority, and flows.
+
+The static `phone-today.png` capture intentionally shows the ready state without
+transient feedback. After a completed log, Android Today and Wear Today present
+the localized confirmation as a centered or content-anchored Snackbar/Toast
+overlay above the lower actions; it never changes the measured hero or quick-add
+layout. Day Detail delete uses the same transient surface with an Undo action.
+Sync, permission, loading, and unresolved errors remain in their inline state
+surfaces until resolved or retried.
