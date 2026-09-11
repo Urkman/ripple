@@ -1,0 +1,4 @@
+interface:
+  display_name: "iOS App Setup"
+  short_description: "Prepare blank or existing iOS apps"
+  default_prompt: "Use $ios-app-setup to prepare this blank or existing iOS app with a shared foundation, DesignSystem, and documentation-sync rules."

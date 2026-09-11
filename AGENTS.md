@@ -277,3 +277,30 @@ Before designing, writing, reviewing, or debugging work in one of these areas, r
 - [asc-cli-usage](/Users/urkman/.agents/skills/asc-cli-usage/SKILL.md): App Store Connect work through `asc`. Discover commands and flags with `--help`/`asc search`, inspect schemas before API-facing commands, use explicit long flags, and require `--confirm` for destructive operations.
 
 Breaking a rule requires changing the spec — not ignoring the rule.
+
+## 13. Project-local reusable skills
+
+The repository ships the reusable Codex skills required for the cross-platform
+workflow under [`skills/`](skills/). These project-local packages are the
+canonical copies; contributors must install them locally before using the
+workflow:
+
+```sh
+mkdir -p ~/.codex/skills
+cp -R skills/cross-platform-product-documentation ~/.codex/skills/
+cp -R skills/android-app-from-documentation ~/.codex/skills/
+cp -R skills/ios-app-setup ~/.codex/skills/
+```
+
+- [`skills/cross-platform-product-documentation/SKILL.md`](skills/cross-platform-product-documentation/SKILL.md)
+  defines the shared product and surface documentation contracts.
+- [`skills/android-app-from-documentation/SKILL.md`](skills/android-app-from-documentation/SKILL.md)
+  implements the Android project from those contracts.
+- [`skills/ios-app-setup/SKILL.md`](skills/ios-app-setup/SKILL.md) prepares a
+  blank or existing iOS project with shared foundations, a DesignSystem, and
+  documentation-synchronization rules. It does not implement product screens
+  from documentation.
+
+When any of these skills changes, update the copy under `skills/`, validate the
+changed package, and reinstall it locally. Do not make a global user skill the
+only copy of project workflow rules.

@@ -59,6 +59,12 @@ swift test --package-path Packages/RippleIntentsCore
 
 CI should run those three plus `xcodebuild test` for `RippleiOS` when a simulator is available.
 
+## Project-local Codex skills
+
+The reusable documentation, Android, and iOS setup skills are included under
+[`skills/`](skills/). See [`skills/README.md`](skills/README.md) for the
+installation commands.
+
 ## Debug vs Release stores
 
 Optional debug App Group: `group.de.stefansturm.ripple.debug`. CloudKit Development vs Production is selected by the signing environment; do not mix them on one device.

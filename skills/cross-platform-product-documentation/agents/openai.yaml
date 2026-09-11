@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cross Platform Product Documentation"
+  short_description: "Structure cross-platform product docs"
+  default_prompt: "Use $cross-platform-product-documentation to audit or create a cross-platform product documentation contract."
