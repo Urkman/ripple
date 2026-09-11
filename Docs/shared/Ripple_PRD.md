@@ -3,13 +3,20 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 3.2.0 — 10. September 2026
-**Last verified:** 2026-09-10
+**Version:** 3.3.0 — 11. September 2026
+**Last verified:** 2026-09-11
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
 **Code-Sprache:** English identifiers, German + English copy
 
-Dieses eine Dokument ist die einzige versionierte Produkt-, Screen- und Bewegungs-Spezifikation. Es ersetzt alle vorherigen Teilstände und ist vollständig genug, um das Projekt ohne Chat-Kontext zu bauen. Wo Konzept-Screenshots vom Generator abweichen, gilt der Fließtext.
+Dieses eine Dokument ist die einzige versionierte Produkt- und Bewegungs-
+Spezifikation sowie die normative Quelle für die Produktbedeutung. Es ersetzt
+alle vorherigen Teilstände und ist vollständig genug, um das Projekt ohne
+Chat-Kontext zu bauen. Der plattformunabhängige
+[Screen-Katalog](Ripple_SCREEN_CATALOG.md) und die verknüpften Design-/Daten-
+Verträge liefern die detaillierte Rebuild-Struktur, ohne eine zweite
+Produktquelle zu bilden. Wo Konzept-Screenshots vom Generator abweichen, gilt
+der Fließtext.
 
 **Plattform-Hinweis:** Dieses PRD wird an das unabhängige Android-Projekt
 weitergegeben. Produktumfang, Screens, Flows, Domänenregeln, Zustände und
@@ -530,7 +537,7 @@ Fenster + Glass. Die systemseitige adaptive Glass-Fläche füllt das resizable F
 | `color.water.deep` | `#0B3D4A` | Text, Icon-Grund |
 | `color.water.lagoon` | `#1A7A8C` | Primary |
 | `color.water.aqua` | `#4FB3C6` | Fortschritt |
-| `color.water.foam` | `#E6F3F5` | Flächen |
+| `color.water.foam` | `#E8F4F6` | Flächen |
 | `color.success` | Lagoon | Ziel erreicht |
 | `color.danger` | System Red entsättigt | Löschen |
 
@@ -571,6 +578,43 @@ Jede Komponente: Preview Light/Dark, Dynamic Type XXXL, Reduce Motion, Watch-Can
 | `ripple.undo` | 0,45 s rückwärts |
 
 Idle bleibt ohne Wasseranimation. Reduce Motion: kein Strahl, keine Oberflächenreaktion, keine Neigung; Pegel-Kreuzblende 0,20 s.
+
+### 13.5 Dokumentationsvertrag und Rebuild-Referenzen
+
+Dieses PRD bleibt der einzige versionierte Produktvertrag. Die folgenden
+Dokumente zerlegen denselben Vertrag in präzise, wiederverwendbare
+Implementierungsreferenzen; sie ersetzen keine Produktentscheidung und dürfen
+keine widersprüchliche Screen-, Daten- oder Motion-Bedeutung einführen:
+
+- [`Ripple_SCREEN_CATALOG.md`](Ripple_SCREEN_CATALOG.md) indexiert jede
+  Plattformoberfläche semantisch und verlinkt genau eine kanonische,
+  plattformunabhängige Markdown-Datei pro Screen oder Sheet; diese Dateien
+  enthalten stabile IDs, Layout-/Funktionsbeschreibung, Zustände,
+  Accessibility und responsive Reihenfolge. Das ist eine
+  Dokumentationsregel, keine Vorgabe für die Produktionsdatei-Struktur.
+- [`Ripple_DESIGN_SYSTEM.md`](Ripple_DESIGN_SYSTEM.md) beschreibt die
+  verbindlichen Farben, Typo-, Raum-, Form- und Motion-Tokens sowie die
+  Verträge für Karten, Chips, Toasts, Hero-/Wasser-Elemente und native
+  System-Controls.
+- [`Ripple_DATA_MODEL.md`](Ripple_DATA_MODEL.md) beschreibt Felder, Defaults,
+  Container-Reihenfolge/Default, Einheiten, lokale Tage, Soft Delete,
+  Use-Cases, Speicherung und Projektionen.
+- [`IOS_ARCHITECTURE.md`](IOS_ARCHITECTURE.md) beschreibt die Swift-/SwiftUI-
+  Dateizuordnung und Grenzen der Apple-Referenzimplementierung.
+- [`Android/ANDROID_ARCHITECTURE.md`](Android/ANDROID_ARCHITECTURE.md) und
+  [`Android/ANDROID_UI_SPEC.md`](Android/ANDROID_UI_SPEC.md) beschreiben die
+  unabhängige native Android-Abbildung; das Android-Projekt hat zusätzlich
+  sein eigenes `AGENTS.md`.
+- [`Android/UI/README.md`](Android/UI/README.md) ist der Index für visuelle
+  Evidence-Captures. Bilder sind Referenzen, nicht die Produktquelle.
+
+Die aktuelle Behälterentscheidung ist damit in allen Rebuild-Referenzen
+eindeutig: Settings speichert Reihenfolge, Icon, Menge und genau einen
+Default-Behälter; Today zeigt die ersten drei Behälter als feste, gleichmäßig
+breite, nicht scrollende Schnellaktionen; Custom amount zeigt alle Behälter
+unter dem Mengen-Slider ohne zusätzliche „Containers“-Überschrift; der
+Behälter-Editor nutzt eine icon-only Auswahl und einen Slider; und alle Logs
+gehen über `LogIntake`.
 
 ---
 
@@ -1414,5 +1458,6 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 | 3.0.0 | 2026-09-10 | Die Mindestversion für alle Apple-Plattformen wird auf iOS 27, watchOS 27, macOS 27, tvOS 27 und visionOS 27 angehoben. | Geräte unter Version 27 werden nicht mehr unterstützt; die iOS-Referenzimplementierung kann neue SDK-27-APIs ohne ältere Deployment-Fallbacks verwenden. |
 | 3.1.0 | 2026-09-10 | Today zeigt die ersten drei gespeicherten Behälter als feste HStack ohne ScrollView. Die Custom-Amount-Eingabe ersetzt den Stepper durch einen Slider und platziert darunter die breitere, nicht beschriftete Auswahl aller gespeicherten Behälter. | Die drei häufigsten Behälter bleiben direkt erreichbar; beliebige Mengen und alle gespeicherten Behälter bleiben in der Custom-Amount-Eingabe erreichbar. |
 | 3.2.0 | 2026-09-10 | Die drei festen Today-Quick-Add-Buttons füllen die verfügbare Breite ihrer HStack gleichmäßig aus. | Die Schnellaktionen nutzen die gesamte Breite der kompakten Today-Komposition und bleiben ohne horizontales Scrollen erreichbar. |
+| 3.3.0 | 2026-09-11 | Die gemeinsame Rebuild-Dokumentation wurde formalisiert: plattformunabhängiger Screen-Katalog, Design-System-/UI-Element-Verträge, detailliertes Datenmodell sowie verknüpfte iOS-/Android-Datei- und Native-Control-Mappings. | Ein neues Team kann die App aus den versionierten Shared-Verträgen rekonstruieren; die Produkt-, Daten- und Motion-Bedeutung bleibt an einer Stelle normativ. |
 
-*Ende PRD 3.2.0. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 3.3.0. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*

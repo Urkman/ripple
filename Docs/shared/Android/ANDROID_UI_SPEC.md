@@ -1,10 +1,13 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 2.9.0
-**Last verified:** 2026-09-10
+**Document version:** 3.1.0
+**Last verified:** 2026-09-11
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 **Product contract:** [Ripple PRD](../Ripple_PRD.md)
+**Screen contract:** [Ripple screen and sheet catalog](../Ripple_SCREEN_CATALOG.md)
+**Design contract:** [Ripple design system](../Ripple_DESIGN_SYSTEM.md)
+**Data contract:** [Ripple data model](../Ripple_DATA_MODEL.md)
 **Visual reference pack:** [Android UI reference pack](UI/README.md)
 
 This is the normative Android screen, flow, state, accessibility, and visual
@@ -20,6 +23,13 @@ Wear captures are the final acceptance artifacts. Nothing in this document
 authorizes copying Liquid Glass, an iOS tab bar, SwiftUI navigation chrome, or
 Apple Watch presentation into Android.
 
+The shared screen catalog owns stable IDs and platform-independent outcomes;
+this document owns the Android expression of those entries. The shared design
+system owns semantic colors, typography, spacing, shape, motion, reusable
+elements, and native-control policy. The shared data model owns fields,
+invariants, storage, and use-case boundaries. This document must link to those
+contracts rather than silently redefine them.
+
 ## 1. Source of truth and parity rule
 
 The contract is maintained in layers:
@@ -27,6 +37,9 @@ The contract is maintained in layers:
 | Concern | Authority | Android obligation |
 |---|---|---|
 | Product scope, platforms, domain language, Today, History, Stats, and motion | `Ripple_PRD.md` §22 and the Android project's `AGENTS.md` | Preserve capability and source-of-truth rules |
+| Stable surface IDs and platform-independent screen/sheet behavior | `Ripple_SCREEN_CATALOG.md` and one file under `../screens/` per ID | Map every canonical description to Android-native implementation and preserve its outcome/state/accessibility contract; source files may follow Android module conventions |
+| Shared tokens and reusable UI elements | `Ripple_DESIGN_SYSTEM.md` | Map roles to Material/Wear/native controls; do not add feature-local styling |
+| Domain fields, invariants, units, and projections | `Ripple_DATA_MODEL.md` | Implement compatible Room/use-case/read-model behavior; do not move domain truth into UI |
 | Current iOS hierarchy and settings/onboarding composition | iOS source and captures listed below | Do not invent a dashboard or omit a screen |
 | Android layout and system substitution | This document and `UI/*.png` | Use Android-native components and responsive layouts |
 
@@ -116,6 +129,35 @@ hero shape. Minimum touch target is 48dp. Prefer tonal surface changes and
 quiet outlines to heavy elevation. No custom font, decorative gradient, or
 unrelated accent color is allowed in v1.
 
+### 2.4 Shared component and native-control rule
+
+Every Android screen and sheet consumes the semantic roles from
+[`Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md). Feature code must not
+invent a local card, toast, chip, color, type scale, spacing scale, radius, or
+motion curve. Reusable elements belong in `core:designsystem` and are mapped
+to the component contracts by the Android architecture document.
+
+Use native Material/Wear controls for ordinary behavior: text fields, sliders,
+switches, pickers, sheets, dialogs, permission prompts, share/document flows,
+keyboard/rotary input, and system navigation. A Ripple wrapper may provide the
+semantic role, localized label, validation, and tokenized surface, but it must
+retain native focus, TalkBack actions, hit targets, keyboard/rotary behavior,
+back handling, and permission affordances.
+
+The container/custom-amount contract is exact:
+
+- Settings persists containers in `sort` order and exposes native reorder
+  interaction, icon-only horizontal selection, a 50–2,000 ml amount slider in
+  10 ml steps, and one effective default container.
+- Today renders only the first three ordered containers in a fixed,
+  non-scrolling, equal-width row.
+- Custom Amount places its amount readout/slider before the wider selection of
+  every saved container and has no visible “Containers” heading.
+- Selecting a container updates the local draft/preset; only Add calls
+  `LogIntake`.
+- All screen and system entry points use the data/use-case contract from
+  [`Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md).
+
 ## 3. Navigation and responsive behavior
 
 Use Android Window Size Classes and available width, not device-name or
@@ -154,6 +196,11 @@ Today action.
 | Wear actions | Wear `Chip`/`CompactChip`, rotary input | Wear-native page composition |
 
 ## 4. Today
+
+**Stable surface IDs:** `today`, `custom-amount`
+
+**Canonical descriptions:** [`today`](../screens/today.md),
+[`custom-amount`](../screens/custom-amount.md)
 
 Today is the primary logging surface. The hierarchy is intentionally short:
 
@@ -404,6 +451,11 @@ and previews. Verify at minimum:
 
 ## 5. History and Day Detail
 
+**Stable surface IDs:** `history`, `day-detail`, `edit-intake`
+
+**Canonical descriptions:** [`history`](../screens/history.md),
+[`day-detail`](../screens/day-detail.md), [`edit-intake`](../screens/edit-intake.md)
+
 History is calendar-first. It is not a list of recent entries and is not a
 combined Stats screen. See [phone History](UI/phone-history.png),
 [phone Day Detail](UI/phone-day-detail.png), and [tablet History
@@ -491,6 +543,10 @@ animation frame.
 
 ## 6. Stats
 
+**Stable surface ID:** `stats`
+
+**Canonical description:** [`stats`](../screens/stats.md)
+
 Stats is its own root and remains separate from History. See [phone Stats
 image](UI/phone-stats.png) and [tablet Stats image](UI/tablet-stats.png).
 
@@ -530,6 +586,13 @@ History/Insights combination.
 
 ## 7. Settings
 
+**Stable surface IDs:** `settings`, `add-container`, `edit-container`, `edit-reminder`
+
+**Canonical descriptions:** [`settings`](../screens/settings.md),
+[`add-container`](../screens/add-container.md),
+[`edit-container`](../screens/edit-container.md),
+[`edit-reminder`](../screens/edit-reminder.md)
+
 Settings is a full root destination, not a placeholder page. See [phone Settings
 image](UI/phone-settings.png).
 
@@ -559,6 +622,10 @@ their use cases; a composable does not write persistence directly.
 
 ## 8. Onboarding
 
+**Stable surface ID:** `onboarding`
+
+**Canonical description:** [`onboarding`](../screens/onboarding.md)
+
 Onboarding is six pages. See [phone onboarding image](UI/phone-onboarding.png).
 
 | Page | Content | System handoff |
@@ -585,6 +652,14 @@ Rules:
   reminders.
 
 ## 9. Wear OS
+
+**Stable surface IDs:** `watch-today`, `watch-custom-amount`, `watch-history`, `watch-day-detail`, `watch-stats`
+
+**Canonical descriptions:** [`watch-today`](../screens/watch-today.md),
+[`watch-custom-amount`](../screens/watch-custom-amount.md),
+[`watch-history`](../screens/watch-history.md),
+[`watch-day-detail`](../screens/watch-day-detail.md),
+[`watch-stats`](../screens/watch-stats.md)
 
 Wear is a separate Android-native surface with three horizontal pages:
 Today, History, Stats. See the [Wear layout images](UI/README.md).
@@ -631,9 +706,20 @@ network projection failed.
 
 ## 10. Widgets and Android system surfaces
 
+**Stable surface IDs:** `widget`, `quick-log-control`, `notification-actions`, `shortcuts-and-intents`, `complication`, `share-export`
+
+**Canonical descriptions:** [`widget`](../screens/widget.md),
+[`quick-log-control`](../screens/quick-log-control.md),
+[`notification-actions`](../screens/notification-actions.md),
+[`shortcuts-and-intents`](../screens/shortcuts-and-intents.md),
+[`complication`](../screens/complication.md),
+[`share-export`](../screens/share-export.md)
+
 System surfaces stay focused and do not become alternate app dashboards.
 
 ### 10.1 Glance widgets
+
+**Stable surface ID:** `widget`
 
 Provide responsive small, medium, and large layouts with a static contained
 level, amount/remaining readout, and one or more quick actions. Widgets have:
@@ -645,6 +731,8 @@ level, amount/remaining readout, and one or more quick actions. Widgets have:
 - an explicit unavailable/stale state when the snapshot cannot be read.
 
 ### 10.2 Quick Settings, notifications, and shortcuts
+
+**Stable surface IDs:** `quick-log-control`, `notification-actions`, `shortcuts-and-intents`
 
 - Quick Settings provides one focused logging action; custom amount may open a
   small standard Android surface.
@@ -834,8 +922,10 @@ directly.
 
 ## 17. Maintenance and timeline
 
-This document is maintained with [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
-and the shared [Ripple PRD](../Ripple_PRD.md). When a screen, interaction,
+This document is maintained with [Ripple Android Architecture](ANDROID_ARCHITECTURE.md),
+the shared [Ripple PRD](../Ripple_PRD.md), [screen catalog](../Ripple_SCREEN_CATALOG.md),
+[design system](../Ripple_DESIGN_SYSTEM.md), and [data model](../Ripple_DATA_MODEL.md).
+When a screen, interaction,
 breakpoint, token, state, system surface, or accessibility contract changes,
 update the relevant document in the same change and append an immutable Timeline
 entry. Use semantic versions: MAJOR for incompatible UI/workflow contracts,
@@ -864,3 +954,5 @@ at the bottom.
 | 2.7.0 | 2026-09-10 | Settings container rows are reorderable. Today shows the first three saved containers in that order, while the custom amount sheet exposes every saved container as a selectable preset. The editor uses a horizontal icon-only selection. | The compact Today action row stays limited to three common actions without hiding custom containers; order, icon, amount, and default state remain configurable and localized. |
 | 2.8.0 | 2026-09-10 | Today renders its first three saved-container actions in a fixed, non-scrolling horizontal row. The custom amount sheet puts a compact slider before the wider, unlabeled all-container selector. | The compact action row has stable bounds, while custom logging keeps arbitrary slider values and access to every saved container without an extra section heading. |
 | 2.9.0 | 2026-09-10 | The three fixed Today quick-add buttons now share the full available width of the compact horizontal row. | Quick-add actions use the complete compact Today action region without introducing horizontal scrolling. |
+| 3.0.0 | 2026-09-11 | Adopted stable shared surface IDs and linked the platform-independent screen, design-system, and data-model contracts. Added explicit Material/native-control mapping for the canonical surface-description structure, container ordering, first-three Today actions, all-container custom selection, slider input, and icon-only editor selection. | Android remains a native Material/Wear expression while its screens, states, tokens, fields, and acceptance behavior are traceable to one shared contract. |
+| 3.1.0 | 2026-09-11 | Linked each Android UI section to the one canonical platform-independent Markdown description for every surface and clarified that Android source-file organization remains native and implementation-local. | Android layout and acceptance guidance now points to the exact screen/sheet contract without prescribing one Kotlin file per surface. |

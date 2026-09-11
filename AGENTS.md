@@ -7,13 +7,37 @@ Conflict order:
 
 1. **This file** for process, architecture, bans, and design tokens
 2. **`Docs/shared/Ripple_PRD.md`** for shared product scope, screens, flows, domain, sync, intents, platforms, and motion
-3. **`Docs/shared/IOS_ARCHITECTURE.md`** for iOS implementation boundaries and repository architecture
+3. **`Docs/shared/Ripple_SCREEN_CATALOG.md` plus `Docs/shared/screens/<stable-id>.md`** for the platform-independent surface index, canonical layout/function descriptions, states, and stable screen/sheet IDs
+4. **`Docs/shared/Ripple_DESIGN_SYSTEM.md`** for shared visual tokens and reusable UI-element contracts
+5. **`Docs/shared/Ripple_DATA_MODEL.md`** for shared domain fields, invariants, persistence, and projection semantics
+6. **`Docs/shared/IOS_ARCHITECTURE.md`** for iOS implementation boundaries and repository architecture
 
 The PRD is the sole versioned product contract. Its detailed Today, History,
 Stats, and motion contracts are in Section 22. Architecture documents define
 implementation boundaries and platform-native mappings, not a second product
 source of truth. Android is an independent project with its own `AGENTS.md`;
 this file is not the Android project's instruction set.
+
+The maintained companion contracts are platform-independent unless their title
+explicitly names a platform:
+
+- [`Docs/shared/Ripple_SCREEN_CATALOG.md`](Docs/shared/Ripple_SCREEN_CATALOG.md)
+  indexes stable screen/sheet IDs and the canonical description schema;
+  [`Docs/shared/screens/`](Docs/shared/screens/) contains one detailed,
+  platform-independent layout/function contract per surface.
+- [`Docs/shared/Ripple_DESIGN_SYSTEM.md`](Docs/shared/Ripple_DESIGN_SYSTEM.md)
+  defines tokens, reusable UI elements, native-control policy, and motion/a11y
+  acceptance.
+- [`Docs/shared/Ripple_DATA_MODEL.md`](Docs/shared/Ripple_DATA_MODEL.md)
+  defines domain fields, invariants, storage semantics, and projections.
+- [`Docs/shared/IOS_ARCHITECTURE.md`](Docs/shared/IOS_ARCHITECTURE.md) maps the
+  shared contracts to Swift/SwiftUI/SwiftData and the iOS repository.
+- [`Docs/shared/Android/ANDROID_ARCHITECTURE.md`](Docs/shared/Android/ANDROID_ARCHITECTURE.md)
+  and [`Docs/shared/Android/ANDROID_UI_SPEC.md`](Docs/shared/Android/ANDROID_UI_SPEC.md)
+  map them to Android-native implementation and UI behavior.
+- [`Docs/shared/Android/UI/README.md`](Docs/shared/Android/UI/README.md) indexes
+  visual evidence and reference captures; images never override the text
+  contracts.
 
 ---
 
@@ -96,13 +120,50 @@ Tests/
 Docs/
   shared/                       Android port handoff and shared product contract
     Ripple_PRD.md               the single versioned product contract
+    Ripple_SCREEN_CATALOG.md    platform-independent screen/sheet contract
+    Ripple_DESIGN_SYSTEM.md     shared design tokens and UI-element contracts
+    Ripple_DATA_MODEL.md        shared domain and persistence contract
     IOS_ARCHITECTURE.md         iOS implementation reference for the port
     Android/                    Android architecture, UI, and PNG reference pack
-    screens/                    current iOS evidence captures
+    screens/                    one canonical Markdown description per screen/sheet; ios/ contains evidence captures
 ```
 
 No business logic in `Apps/` beyond wiring.  
 New UI that needs tokens → `RippleUI`, not copy-paste inside a feature.
+
+### Shared surface and UI ownership rules
+
+- Every navigable screen, presented sheet, wearable surface, and documented
+  system surface has exactly one canonical, platform-independent Markdown
+  description under `Docs/shared/screens/<stable-id>.md`. That file owns the
+  surface's layout, function, read model, actions, states, validation,
+  accessibility, responsive behavior, and forbidden behavior.
+- `Docs/shared/Ripple_SCREEN_CATALOG.md` is the index for stable IDs and the
+  required description schema. It must link every ID to exactly one canonical
+  description file. Platform architecture documents may map that description
+  to native implementation files, modules, routes, and private helpers; they
+  must not create a competing semantic description.
+- The canonical description-file rule is about documentation, not production
+  source-file organization. iOS and Android may split or co-locate private
+  implementation details according to their native architecture. A platform
+  implementation must preserve the one canonical surface contract even when
+  its source structure differs.
+- Every UI element consumes a named token or a reusable component from the
+  design-system contract. Feature-local colors, fonts, spacing, radii, shadows,
+  toasts, cards, and motion systems are prohibited. Raw values are allowed
+  only inside token definitions, documented geometry algorithms, or narrowly
+  scoped platform adapters.
+- Native system controls are preferred for ordinary behavior: text entry,
+  sliders, toggles, pickers, sheets, alerts, permission prompts, keyboard/
+  rotary input, and sharing. Ripple styling may wrap a native control but must
+  preserve its platform affordances, focus, hit target, accessibility actions,
+  and dismissal behavior.
+- The shared PRD remains product authority; the screen catalog, design system,
+  and data model provide detailed companion contracts; platform documents map
+  those contracts and must not redefine them. Product, screen, UI, data, or
+  architecture changes update the affected shared and Android handoff
+  documents in the same change, including `Last verified` and an immutable
+  timeline entry for every versioned document.
 
 ---
 

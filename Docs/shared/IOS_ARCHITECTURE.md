@@ -2,11 +2,11 @@
 
 Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean MVVM system. The same domain write API serves the main apps, widgets, Siri/App Intents, notification actions, and watch surfaces. SwiftData is the source of truth; CloudKit synchronizes the shared private store when the platform is configured for it, and HealthKit is an optional projection.
 
-This document describes the iOS repository's architecture and current implementation. Product behavior remains defined by the shared [PRD](Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts.
+This document describes the iOS repository's architecture and current implementation. Product behavior remains defined by the shared [PRD](Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts. The platform-independent surface, design, and data contracts are maintained in the [screen catalog](Ripple_SCREEN_CATALOG.md), [design system](Ripple_DESIGN_SYSTEM.md), and [data model](Ripple_DATA_MODEL.md); this document maps those contracts to Swift implementation boundaries without redefining them.
 
-**Document version:** 1.6.0
+**Document version:** 1.8.0
 
-**Last verified:** 2026-09-10
+**Last verified:** 2026-09-11
 
 ## 1. Architectural goals and invariants
 
@@ -83,6 +83,9 @@ Tests/              repository-level test/support area
 Docs/
   shared/                    the product PRD and Android port handoff
     Ripple_PRD.md            shared product contract
+    Ripple_SCREEN_CATALOG.md platform-independent screen/sheet contract
+    Ripple_DESIGN_SYSTEM.md  shared tokens and reusable UI contracts
+    Ripple_DATA_MODEL.md     shared domain and persistence contract
     IOS_ARCHITECTURE.md      this iOS architecture reference
     Android/                 Android architecture, UI, and image references
     screens/ios/             current iOS evidence captures
@@ -295,6 +298,106 @@ Platform roots are local to each app target. The root shell is not compiled as p
 - tvOS (`Apps/RippletvOS/TVRootView.swift`): minimal Today surface and predefined logging actions.
 - visionOS (`Apps/RipplevisionOS/VisionRootView.swift`): windowed navigation with ornaments and shared feature screens.
 
+### Screen and sheet documentation contract
+
+The shared catalog gives every surface exactly one canonical,
+platform-independent description file under [`screens/`](screens/). For
+example, [`screens/today.md`](screens/today.md) owns the Today layout and
+function, while [`screens/history.md`](screens/history.md) owns the History
+list/calendar behavior. Those files are the semantic source of truth for
+layout, actions, states, accessibility, and responsive behavior.
+
+This iOS document maps each canonical description to the native implementation
+entry points currently present in the repository. It does **not** require one
+Swift file per screen or sheet. SwiftUI views, view models, chart marks, token
+definitions, platform roots, and private helpers may be split or co-located
+according to feature boundaries and native architecture. A source layout
+change is an implementation refactor, not a change to the shared surface
+contract.
+
+### iOS surface implementation map
+
+The left column is the stable ID from the shared catalog. “Implementation
+entry point(s)” is the source map verified in this repository. Paths are
+repository-relative; the canonical description is linked separately.
+
+| Surface ID | Canonical description | Implementation entry point(s) | Owning feature/use-case boundary |
+|---|---|---|---|
+| `today` | [`screens/today.md`](screens/today.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Today/TodayView.swift` | `TodayViewModel`; `ObserveToday`, `LogIntake`, `UndoLastIntake`. |
+| `custom-amount` | [`screens/custom-amount.md`](screens/custom-amount.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Today/CustomAmountSheet.swift` | Draft amount/container selection; `LogIntake`. |
+| `history` | [`screens/history.md`](screens/history.md) | `Packages/RippleFeatures/Sources/RippleFeatures/History/HistoryCalendarView.swift` | `HistoryViewModel`; `ObserveMonth`/`ObserveHistory`. |
+| `day-detail` | [`screens/day-detail.md`](screens/day-detail.md) | `Packages/RippleFeatures/Sources/RippleFeatures/History/DayDetailView.swift` | `DayDetailViewModel`; `ObserveHistory`, edit/delete/restore. |
+| `edit-intake` | [`screens/edit-intake.md`](screens/edit-intake.md) | `Packages/RippleFeatures/Sources/RippleFeatures/History/EditIntakeSheet.swift` | `EditIntake`; no new-log shortcut. |
+| `stats` | [`screens/stats.md`](screens/stats.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Stats/StatsView.swift` | `StatsViewModel`; `ObserveStats`; chart marks may remain private or separately owned primitives. |
+| `settings` | [`screens/settings.md`](screens/settings.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Settings/SettingsView.swift` | `SettingsViewModel`; profile, goal, container, reminder, sync, permission, export operations. |
+| `add-container` | [`screens/add-container.md`](screens/add-container.md) | Private `ContainerEditorSheet` in `SettingsView.swift` | Local draft; `UpsertContainer`. |
+| `edit-container` | [`screens/edit-container.md`](screens/edit-container.md) | Private `ContainerEditorSheet` in `SettingsView.swift` | Existing ID draft; `UpsertContainer`, `DeleteContainer`. |
+| `edit-reminder` | [`screens/edit-reminder.md`](screens/edit-reminder.md) | Private `ReminderEditorSheet` in `SettingsView.swift` | Local rule draft; `RescheduleReminders`. |
+| `onboarding` | [`screens/onboarding.md`](screens/onboarding.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Onboarding/OnboardingView.swift`; `OnboardingPages.swift` is support | `OnboardingViewModel`; profile/goal/permission use cases. |
+| `watch-today` | [`screens/watch-today.md`](screens/watch-today.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchTodayView.swift` | `WatchTodayViewModel`; `LogIntake` with source `watch`. |
+| `watch-custom-amount` | [`screens/watch-custom-amount.md`](screens/watch-custom-amount.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchCustomAmountView.swift` | `WatchAmountSelection`; `LogIntake` with source `watch`. |
+| `watch-history` | [`screens/watch-history.md`](screens/watch-history.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchHistoryView.swift` | `WatchHistoryViewModel`; recent-seven-day observation. |
+| `watch-day-detail` | [`screens/watch-day-detail.md`](screens/watch-day-detail.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchDayDetailView.swift` | `WatchDayDetailViewModel`; soft-delete/restore. |
+| `watch-stats` | [`screens/watch-stats.md`](screens/watch-stats.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchStatsView.swift` | `WatchStatsViewModel`; current ISO-week `ObserveStats`. |
+| `widget` | [`screens/widget.md`](screens/widget.md) | `Extensions/RippleWidgets/TodayWidget.swift`, `LockScreenWidgets.swift` | Snapshot projection; no direct store mutation. |
+| `quick-log-control` | [`screens/quick-log-control.md`](screens/quick-log-control.md) | `Extensions/RippleWidgets/LogWaterControl.swift` | App/control adapter; shared `LogIntake`. |
+| `shortcuts-and-intents` | [`screens/shortcuts-and-intents.md`](screens/shortcuts-and-intents.md) | `Packages/RippleIntentsCore/Sources/RippleIntentsCore/LogWaterIntent.swift` and related intent files | `RippleIntentsCore`; no second amount logic. |
+| `notification-actions` | [`screens/notification-actions.md`](screens/notification-actions.md) | `Packages/RippleData/Sources/RippleData/Notifications/NotificationAuthorizer.swift` and scheduler/action wiring | `RippleData` adapter; shared `LogIntake`. |
+| `complication` | [`screens/complication.md`](screens/complication.md) | `Extensions/RippleWatchWidgets/` family files | Snapshot projection; no calendar/Stats chart. |
+| `share-export` | [`screens/share-export.md`](screens/share-export.md) | Native platform share/export composition from `ExportData` | `ExportData`; no mutation. |
+
+The Settings editor sheets remain co-located in the current repository. That
+fact is an implementation note only; their canonical layout and function are
+already independent files under `Docs/shared/screens/`, and the shared
+contract does not require a later source split.
+
+### RippleUI component ownership manifest
+
+Every custom element referenced by a feature has one owning file in `RippleUI`.
+Feature screens may compose it and supply domain values; they may not copy its
+visual implementation.
+
+| Design-system element | iOS owner |
+|---|---|
+| `GlassCard`, `GlassCardRow` | `Packages/RippleUI/Sources/RippleUI/Components/GlassCard.swift`, `GlassCardRow.swift` |
+| `LogButton`, `QuickAddCluster` | `Components/LogButton.swift`, `Components/QuickAddCluster.swift` |
+| `ContainerChip`, `ContainerSymbolPicker`, `AmountStepper` | `Components/ContainerChip.swift`, `ContainerSymbolPicker.swift`, `AmountStepper.swift` |
+| `DayHeader`, `RemainingLabel`, `IntakeRow` | `Components/DayHeader.swift`, `RemainingLabel.swift`, `IntakeRow.swift` |
+| `SyncStatusView`, `EmptyState`, `RippleToast`, `DayRing` | `Components/SyncStatusView.swift`, `EmptyState.swift`, `RippleToast.swift`, `DayRing.swift` |
+| `GlassShape`, `WaterFill`, `PourStreamShape`, `GlassReadout`, `RippleHeroView` | `Hero/GlassShape.swift`, `Hero/WaterFill.swift`, `Hero/PourStream.swift`, `Hero/GlassReadout.swift`, `Hero/RippleHeroView.swift` |
+| Watch water/log/action/chart primitives | `Components/WatchWaterBackdrop.swift`, `WatchLogButton.swift`, `WatchQuickAmountRow.swift`, `WatchDayRow.swift`, `WatchStatChart.swift` |
+| Widget glass | `Components/WidgetGlass.swift` |
+
+Token definitions remain in `RippleUI/Tokens`; hero motion algorithms remain in
+`RippleUI/Hero`/`Motion`. A feature-specific chart mark or navigation ornament
+may remain in its feature/app file only when it is not a reusable RippleUI
+element and its styling consumes the shared tokens.
+
+### Native SwiftUI mapping policy
+
+The iOS implementation expresses the semantic catalog with native SwiftUI
+controls and navigation where possible:
+
+| Shared behavior | Native iOS expression | Ripple responsibility |
+|---|---|---|
+| Four app roots | `TabView` in the iPhone root; platform-local split/sidebar roots on larger Apple devices | Preserve four root meanings and no back button on root tabs. |
+| Child navigation | `NavigationStack`/split navigation owned by the platform root | Keep History → Day Detail relationship and selected-date context. |
+| Grouped settings/content | `Form`, `List`, or `GlassCard` composition | Use `RippleUI` tokens/components; views do not write SwiftData. |
+| Text entry | Native `TextField`/text editor | Draft validation, localized labels, integer-ml conversion. |
+| Amount selection | Native `Slider` for Custom Amount and container editor; `AmountStepper` only where explicitly required | Range 50–2,000 ml, step 10, unit-aware value and accessibility. |
+| Boolean setting | Native `Toggle` | One-default invariant and permission/settings use case. |
+| Choice/mode/period | Native picker/menu/segmented control | Localized options and read/use-case update. |
+| Presented sheet | Native sheet presentation with platform detents/drag affordance | One canonical surface description, an appropriate owning feature boundary, explicit cancel/save, and no accidental mutation. |
+| Destructive action | Native alert/confirmation dialog or platform gesture confirmation | Soft delete, consequence copy, undo/restore semantics. |
+| Reorder | SDK 27 reorder API where supported by the target | Persist normalized `sort` through `UpsertContainer`; tvOS uses its documented platform boundary. |
+| Share/permissions | Native system share and permission surfaces | Pre-explanation, adapter result, no impersonation of OS UI. |
+
+`RippleUI` supplies colors, typography, spacing, shapes, motion, custom hero
+geometry, cards, chips, toast, and accessibility wrappers. Native controls keep
+their Apple-standard focus, keyboard, pointer, VoiceOver, dismissal, and hit
+target behavior. `#if os()` is allowed only in apps, UI adapters, and
+composition roots; it must not select different domain rules in a view model.
+
 ## 10. UI system and motion
 
 `RippleUI` owns the visual language used by all features:
@@ -434,6 +537,12 @@ Do not add a direct `ModelContext` to a view, a second intake writer, a UserDefa
 ## 17. Related specifications
 
 - [Ripple PRD](Ripple_PRD.md)
+- [Ripple screen and sheet catalog](Ripple_SCREEN_CATALOG.md)
+- [Ripple design system](Ripple_DESIGN_SYSTEM.md)
+- [Ripple data model](Ripple_DATA_MODEL.md)
+- [Android architecture](Android/ANDROID_ARCHITECTURE.md)
+- [Android UI specification](Android/ANDROID_UI_SPEC.md)
+- [Android UI reference pack](Android/UI/README.md)
 
 ## 18. Documentation maintenance
 
@@ -449,8 +558,9 @@ When sources disagree, use this order:
 
 1. `AGENTS.md` for repository process, architecture boundaries, bans, and shared design constraints.
 2. The authoritative product specification: [Ripple PRD](Ripple_PRD.md). Its detailed Today, History, Stats, and motion contracts are in Section 22.
-3. This document for iOS module boundaries and Apple-platform workflows.
-4. The implementation and tests, which reveal current behavior and must be brought back into agreement when they drift.
+3. The [screen catalog](Ripple_SCREEN_CATALOG.md), [design system](Ripple_DESIGN_SYSTEM.md), and [data model](Ripple_DATA_MODEL.md) for platform-independent surface, UI, and domain detail.
+4. This document for iOS module boundaries, Swift implementation files, and Apple-platform workflows.
+5. The implementation and tests, which reveal current behavior and must be brought back into agreement when they drift.
 
 If a product decision changes, update the shared PRD. If an iOS architecture
 decision changes, update this document. Android documentation is updated in
@@ -479,8 +589,9 @@ document's timeline entry.
 4. Update `Document version` and `Last verified` in every document that changed.
 5. Append one immutable row to the changed document's timeline. New rows go at the bottom; historical rows are not rewritten or deleted.
 6. If the shared product contract changed, update the PRD and record the corresponding timeline row; do not add Android implementation changes to this repository's architecture document.
-7. Verify Markdown links, headings, code examples, and relevant tests/builds. A documentation-only correction still runs whitespace/link checks.
-8. Commit the documentation with the implementation, or as a separate documentation commit when no code changed.
+7. If a UI or data contract changed, update the shared screen/design/data document and the Android UI handoff in the same change, even when no Android source changes.
+8. Verify Markdown links, headings, code examples, and relevant tests/builds. A documentation-only correction still runs whitespace/link checks.
+9. Commit the documentation with the implementation, or as a separate documentation commit when no code changed.
 
 ### Documentation versioning
 
@@ -519,3 +630,5 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.5.0 | 2026-09-08 | Clarified that this is the iOS-only architecture document and moved the shared PRD/reference material to `Docs/shared/`; removed the Android companion dependency. | The independent iOS and Android projects now share only the product contract and reference material, while each project owns its implementation architecture and agent instructions. |
 | 1.5.1 | 2026-09-08 | Included the iOS architecture reference in the complete Android port handoff under `Docs/shared/` and corrected its relative links. | Android agents can inspect the source iOS boundaries without treating the iOS implementation as an Android dependency. |
 | 1.6.0 | 2026-09-10 | Raised every Apple deployment target to 27.0 and removed the older-runtime availability branch from the SDK 27 container reorder implementation; tvOS remains excluded because `.reorderable()` is unavailable there. | The Apple targets share one SDK 27 baseline, so supported platforms can use the native reorder API directly while the existing tvOS platform boundary remains explicit. |
+| 1.7.0 | 2026-09-11 | Added links to the shared screen catalog, design system, and data model; made the one-screen-or-sheet-per-file rule explicit; added current/target iOS surface and RippleUI ownership manifests plus native-control mappings. | iOS implementation files can be mapped one-to-one to shared surface IDs while current Settings sheet co-location remains honestly documented as a migration target. |
+| 1.8.0 | 2026-09-11 | Corrected the surface ownership contract: each screen and sheet now has one canonical platform-independent description file, while iOS source files may be split or co-located according to native feature architecture. Replaced the target one-file manifest with a canonical-description-to-implementation map. | The iOS implementation remains traceable to every shared surface without imposing a production source-file structure that was not requested. |

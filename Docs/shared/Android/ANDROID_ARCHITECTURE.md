@@ -2,14 +2,16 @@
 
 **Status:** Approved design for implementation
 
-**Last verified:** 2026-09-08
+**Last verified:** 2026-09-11
 
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.5.1
+**Document version:** 1.7.0
 
 **UI companion:** [Ripple Android UI Specification](ANDROID_UI_SPEC.md)
+
+**Shared contracts:** [Ripple PRD](../Ripple_PRD.md) · [Screen catalog](../Ripple_SCREEN_CATALOG.md) · [Design system](../Ripple_DESIGN_SYSTEM.md) · [Data model](../Ripple_DATA_MODEL.md) · [iOS architecture](../IOS_ARCHITECTURE.md)
 
 This document is the implementation contract for an Android version of Ripple. It defines the functionality that must exist, the Android architecture that should contain it, the platform-native UI behavior, and the verification required before release.
 
@@ -19,7 +21,7 @@ looking and behaving like a well-designed Android app. It must not copy iOS
 navigation chrome, controls, typography, glass treatment, or platform-specific
 presentation merely to achieve functional parity.
 
-Android screen composition and state behavior are specified in [`ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md). Product behavior is specified by the consolidated [Ripple PRD](../Ripple_PRD.md), especially its detailed Today, History, Stats, and motion contracts in Section 22. Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
+Android screen composition and state behavior are specified in [`ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md) and the platform-independent [screen catalog](../Ripple_SCREEN_CATALOG.md). Product behavior is specified by the consolidated [Ripple PRD](../Ripple_PRD.md), especially its detailed Today, History, Stats, and motion contracts in Section 22. Fields, invariants, storage, and projections are specified in the shared [data model](../Ripple_DATA_MODEL.md); visual roles and reusable elements are specified in the shared [design system](../Ripple_DESIGN_SYSTEM.md). Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
 
 ## 1. Product boundary and non-negotiable rules
 
@@ -248,6 +250,81 @@ Each feature contains Compose screens, screen-specific `ViewModel`s, UI state, e
 ### System modules
 
 Widgets, Quick Settings, and App Actions are separate Android entry-point modules. Each obtains the process `AppContainer` and calls a domain use case. They do not duplicate amount resolution or intake persistence.
+
+### Surface documentation contract and implementation map
+
+The shared catalog gives every surface exactly one canonical,
+platform-independent description under [`../screens/`](../screens/). For
+example, [`../screens/today.md`](../screens/today.md) owns the Today layout
+and function, while [`../screens/history.md`](../screens/history.md) owns the
+History behavior. The canonical files are the semantic source of truth for
+layout, actions, states, accessibility, and responsive behavior.
+
+The Android paths below are recommended native implementation entry points for
+the independent Android project. They are not a requirement that each surface
+be implemented in one Kotlin file. Compose routes, size-specific layouts,
+ViewModels, private helpers, and design-system elements may be split or
+co-located according to Android module conventions. A platform implementation
+must preserve the one canonical description file and must not create a second
+semantic surface contract.
+
+| Stable surface ID | Canonical description | Android implementation module/entry point | Required owner |
+|---|---|---|---|
+| `today` | [`../screens/today.md`](../screens/today.md) | `Android/feature/today/src/main/kotlin/de/stefansturm/ripple/feature/today/TodayScreen.kt` | Today state; `ObserveToday`, `LogIntake`, `UndoLastIntake`. |
+| `custom-amount` | [`../screens/custom-amount.md`](../screens/custom-amount.md) | `Android/feature/today/src/main/kotlin/de/stefansturm/ripple/feature/today/CustomAmountSheet.kt` | Local draft; slider/all-container selection; `LogIntake`. |
+| `history` | [`../screens/history.md`](../screens/history.md) | `Android/feature/history/src/main/kotlin/de/stefansturm/ripple/feature/history/HistoryScreen.kt` | Month observation and day selection. |
+| `day-detail` | [`../screens/day-detail.md`](../screens/day-detail.md) | `Android/feature/history/src/main/kotlin/de/stefansturm/ripple/feature/history/DayDetailScreen.kt` | Day snapshot and entry actions. |
+| `edit-intake` | [`../screens/edit-intake.md`](../screens/edit-intake.md) | `Android/feature/history/src/main/kotlin/de/stefansturm/ripple/feature/history/EditIntakeSheet.kt` | Existing intake draft; `EditIntake`. |
+| `stats` | [`../screens/stats.md`](../screens/stats.md) | `Android/feature/stats/src/main/kotlin/de/stefansturm/ripple/feature/stats/StatsScreen.kt` | Period selection, summaries, and chart composition. |
+| `settings` | [`../screens/settings.md`](../screens/settings.md) | `Android/feature/settings/src/main/kotlin/de/stefansturm/ripple/feature/settings/SettingsScreen.kt` | Settings groups; use-case events only. |
+| `add-container` | [`../screens/add-container.md`](../screens/add-container.md) | `Android/feature/settings/src/main/kotlin/de/stefansturm/ripple/feature/settings/AddContainerSheet.kt` | New container draft; `UpsertContainer`. |
+| `edit-container` | [`../screens/edit-container.md`](../screens/edit-container.md) | `Android/feature/settings/src/main/kotlin/de/stefansturm/ripple/feature/settings/EditContainerSheet.kt` | Existing container draft; `UpsertContainer`, `DeleteContainer`. |
+| `edit-reminder` | [`../screens/edit-reminder.md`](../screens/edit-reminder.md) | `Android/feature/settings/src/main/kotlin/de/stefansturm/ripple/feature/settings/EditReminderSheet.kt` | Reminder draft; `RescheduleReminders`. |
+| `onboarding` | [`../screens/onboarding.md`](../screens/onboarding.md) | `Android/feature/onboarding/src/main/kotlin/de/stefansturm/ripple/feature/onboarding/OnboardingScreen.kt` | Six-page local setup and permission handoff. |
+| `watch-today` | [`../screens/watch-today.md`](../screens/watch-today.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/today/WearTodayScreen.kt` | Wear Today state; `LogIntake(source = WATCH)`. |
+| `watch-custom-amount` | [`../screens/watch-custom-amount.md`](../screens/watch-custom-amount.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/today/WearCustomAmountScreen.kt` | Rotary-first amount draft; `LogIntake(source = WATCH)`. |
+| `watch-history` | [`../screens/watch-history.md`](../screens/watch-history.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/history/WearHistoryScreen.kt` | Seven elapsed days. |
+| `watch-day-detail` | [`../screens/watch-day-detail.md`](../screens/watch-day-detail.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/history/WearDayDetailScreen.kt` | Wear entry detail and soft delete. |
+| `watch-stats` | [`../screens/watch-stats.md`](../screens/watch-stats.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/stats/WearStatsScreen.kt` | Current ISO-week summary and one chart. |
+| `widget` | [`../screens/widget.md`](../screens/widget.md) | `Android/system/widgets/src/main/kotlin/de/stefansturm/ripple/system/widgets/TodayWidget.kt` | Glance snapshot and action adapter; no direct Room write. |
+| `quick-log-control` | [`../screens/quick-log-control.md`](../screens/quick-log-control.md) | `Android/system/quicksettings/src/main/kotlin/de/stefansturm/ripple/system/quicksettings/LogWaterTileService.kt` | Tile adapter; shared `LogIntake`. |
+| `shortcuts-and-intents` | [`../screens/shortcuts-and-intents.md`](../screens/shortcuts-and-intents.md) | `Android/system/appactions/src/main/kotlin/de/stefansturm/ripple/system/appactions/LogWaterAction.kt` | Intent/shortcut parameter adapter. |
+| `notification-actions` | [`../screens/notification-actions.md`](../screens/notification-actions.md) | `Android/core/system/src/main/kotlin/de/stefansturm/ripple/core/system/LogWaterNotificationReceiver.kt` | Notification action adapter. |
+| `complication` | [`../screens/complication.md`](../screens/complication.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/complications/` family entries | Read-only snapshot projection. |
+| `share-export` | [`../screens/share-export.md`](../screens/share-export.md) | `Android/core/system/src/main/kotlin/de/stefansturm/ripple/core/system/ExportDocumentAdapter.kt` | `ExportData` and native share/document handoff. |
+
+If a surface has multiple size-specific layouts, they remain platform-local
+layout functions, variants, or supporting files unless they become an
+independently navigable surface with a new stable ID. If a reusable element is
+used by more than one surface, it belongs in `core:designsystem`, not in the
+first feature that needed it.
+
+### Android-native component mapping
+
+Use Android system and Material/Wear controls for ordinary behavior. The shared
+design system supplies roles, dimensions, semantics, and custom water geometry;
+it does not replace platform interaction models.
+
+| Shared behavior | Android-native expression | Ripple responsibility |
+|---|---|---|
+| Root navigation | Adaptive Material navigation bar/rail/drawer and predictive back | Preserve four roots and nested History → Day Detail semantics. |
+| Grouped content | Material `Card`/surface and list-item patterns | Apply shared color/shape/spacing roles and independent semantics. |
+| Text entry | Material text field | Draft validation, localization, and domain conversion. |
+| Continuous amount | Material slider | 50–2,000 ml range, step 10, amount/unit readout, adjustable semantics. |
+| Boolean setting | Material switch | One-default/permission semantics and use-case boundary. |
+| Mode/period choice | Segmented buttons, menu, or picker | Localized selection and `ObserveStats`/goal operation. |
+| App sheet/dialog | Material bottom sheet/dialog | One canonical surface description, an appropriate feature boundary, explicit cancel/save, no direct Room write. |
+| Destructive confirmation | Material alert/dialog or native back confirmation | Soft-delete consequence, restore/Undo action, no hard wipe. |
+| Transient success/Undo | Snackbar/Toast host | Localized amount/result, layout-neutral feedback, no persistent errors hidden. |
+| Permissions/share | Android permission contract, Health Connect flow, system share/document flow | Explanation before OS prompt and projection failure isolation. |
+| Reorder | Material drag/reorder interaction appropriate to the window size | Persist normalized container `sort`; announce new position. |
+| Wear input | Wear-native chips, rotary input, swipe dismissal, scaling lists | Preserve watch outcomes without phone chrome. |
+| Widget/tile/shortcut | Glance, Quick Settings, launcher/app-action APIs | Snapshot/client adapter calls the same use case. |
+
+Composables consume `core:designsystem` tokens and callbacks. They never open
+Room, call Health Connect, schedule alarms, or mutate an entity. Native focus,
+TalkBack, keyboard, pointer, rotary, system back, and permission affordances
+remain intact.
 
 ## 6. Composition roots and concurrency
 
@@ -1159,7 +1236,12 @@ An agent may call the Android port complete only when every item is true:
 ## 22. Related documents
 
 - [Shared Ripple PRD](../Ripple_PRD.md)
+- [Shared screen and sheet catalog](../Ripple_SCREEN_CATALOG.md)
+- [Shared design system](../Ripple_DESIGN_SYSTEM.md)
+- [Shared data model](../Ripple_DATA_MODEL.md)
+- [iOS architecture reference](../IOS_ARCHITECTURE.md)
 - [Android UI specification](ANDROID_UI_SPEC.md)
+- [Android UI reference pack](UI/README.md)
 
 ## 23. Documentation maintenance
 
@@ -1175,9 +1257,10 @@ When sources disagree, use this order:
 
 1. The Android project's `AGENTS.md` for Android process, architecture constraints, design tokens, and explicit bans.
 2. The authoritative product specification: [Ripple PRD](../Ripple_PRD.md), including its detailed Today, History, Stats, and motion contracts in Section 22.
-3. This Android document for Android module boundaries, platform mapping, and Android-native workflows.
-4. The Android UI specification and reference pack for screen-level behavior.
-5. Android source and tests, which reveal current behavior and must be brought back into agreement when they drift.
+3. The [screen catalog](../Ripple_SCREEN_CATALOG.md), [design system](../Ripple_DESIGN_SYSTEM.md), and [data model](../Ripple_DATA_MODEL.md) for platform-independent screen, UI, and domain detail.
+4. This Android document for Android module boundaries, platform mapping, and Android-native workflows.
+5. The Android UI specification and reference pack for Android expression and evidence.
+6. Android source and tests, which reveal current behavior and must be brought back into agreement when they drift.
 
 The Android document must never be used to introduce iOS/Android data sharing or to override a shared product invariant without an approved specification change.
 
@@ -1204,8 +1287,9 @@ If the shared product contract is unchanged, record that the change is Android-o
 4. Update `Document version` and the date metadata in every document that changed.
 5. Append one immutable row to this document's timeline. New rows go at the bottom; historical rows are not rewritten or deleted.
 6. If shared product behavior changed, update the PRD and add a corresponding timeline row; do not modify the iOS architecture document for an Android-only change.
-7. Verify Markdown links, Gradle/module examples, permissions, and relevant tests/builds. A documentation-only correction still runs whitespace/link checks.
-8. Commit the documentation with the implementation, or as a separate documentation commit when no code changed.
+7. If a shared screen, UI, or data contract changed, update the shared companion document and the Android UI specification/reference index in the same change, even when Android source is not present here.
+8. Verify Markdown links, Gradle/module examples, permissions, and relevant tests/builds. A documentation-only correction still runs whitespace/link checks.
+9. Commit the documentation with the implementation, or as a separate documentation commit when no code changed.
 
 ### Documentation versioning
 
@@ -1244,3 +1328,5 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.4.0 | 2026-09-08 | Removed ADR references and made the PRD, shared architecture, Android architecture, Android UI specification, and reference pack the maintained documentation set. | Android decisions now stay in the versioned architecture/UI documents instead of a separate ADR tree. |
 | 1.5.0 | 2026-09-08 | Removed the iOS architecture dependency and repointed the product contract to `Docs/shared/`. | The Android project now owns its architecture and agent workflow while consuming only the shared product contract and Android-owned UI/reference documents. |
 | 1.5.1 | 2026-09-08 | Moved the Android architecture into the complete `Docs/shared/` handoff and corrected its PRD link. | The Android project receives its architecture, UI contract, product contract, and visual references as one portable documentation set. |
+| 1.6.0 | 2026-09-11 | Added shared screen/design/data contract links, the one-screen-or-sheet-per-file rule, target Kotlin surface manifest, and native Material/Wear/system-control mappings. | Android can map every shared surface ID to one target file/module while preserving native Android interaction and the independent Room/Data Layer boundary. |
+| 1.7.0 | 2026-09-11 | Corrected the surface ownership contract: each screen and sheet now has one canonical platform-independent description file, while Android source files may be split or co-located according to native module conventions. Replaced the target one-file manifest with a canonical-description-to-implementation map. | Android remains traceable to every shared surface without imposing a production source-file structure that was not requested. |

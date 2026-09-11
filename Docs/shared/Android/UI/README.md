@@ -1,15 +1,19 @@
 # Android UI reference pack
 
-**Reference pack revision:** 2.9.0 (tracks the Android UI specification)
-**Last verified:** 2026-09-10
+**Reference pack revision:** 3.1.0 (tracks the Android UI specification)
+**Last verified:** 2026-09-11
 
 This pack separates evidence from the Android presentation contract:
 
 - Shared product behavior comes from the [Ripple PRD](../../Ripple_PRD.md), especially Section 22.
+- Platform-independent surface behavior comes from the [Ripple screen and sheet catalog](../../Ripple_SCREEN_CATALOG.md).
+- Shared tokens and reusable UI contracts come from the [Ripple design system](../../Ripple_DESIGN_SYSTEM.md).
+- Fields, invariants, and source-of-truth boundaries come from the [Ripple data model](../../Ripple_DATA_MODEL.md).
 - Android screen behavior comes from the [Android UI specification](../ANDROID_UI_SPEC.md) and architecture from the [Android architecture guide](../ANDROID_ARCHITECTURE.md).
+- The iOS mapping is documented in the [iOS architecture reference](../../IOS_ARCHITECTURE.md).
 
 - The existing iOS PNGs are evidence of the current product hierarchy and visual priorities.
-- The PNGs in this directory are normative Android layout references. They name Android-native controls and responsive behavior; they are not pixel-perfect iOS copies.
+- The PNGs in this directory are Android layout evidence/reference captures. The text contracts name Android-native controls and responsive behavior; images are not pixel-perfect iOS copies and never override the shared semantic contracts.
 - Real Android emulator and Wear captures are the final acceptance artifacts. These layout images do not replace runtime verification.
 
 ## iOS evidence
@@ -38,6 +42,28 @@ This pack separates evidence from the Android presentation contract:
 | `wear-history.png` | Seven elapsed local days; Wear-native list |
 | `wear-day-detail.png` | Wear Day Detail; individual intake deletion with a transient Snackbar/Toast Undo action |
 | `wear-stats.png` | Current ISO-week summary; one compact chart |
+
+## Stable surface IDs and evidence map
+
+Stable IDs are defined once in [`Ripple_SCREEN_CATALOG.md`](../../Ripple_SCREEN_CATALOG.md),
+and each ID has one canonical platform-independent description under
+[`../../screens/`](../../screens/). The captures below are evidence for the
+listed surfaces; they do not create new screens or change the canonical
+description-file rule.
+
+| Stable ID | Capture(s) | Evidence purpose |
+|---|---|---|
+| `today` | `phone-today.png` | Compact ready-state hierarchy, first three ordered quick adds, full-width action row. |
+| `history` | `phone-history.png`, `tablet-history-split.png` | Compact month grid and expanded calendar/detail context. |
+| `day-detail` | `phone-day-detail.png`, `tablet-history-split.png` | Static summary, selected date, entries, and responsive detail placement. |
+| `stats` | `phone-stats.png`, `tablet-stats.png` | Period selector, summaries, charts, and expanded layout. |
+| `settings` | `phone-settings.png` | Settings groups, native-control placement, and container ordering context. |
+| `onboarding` | `phone-onboarding.png` | Six-page flow and native permission handoff context. |
+| `watch-today` | `wear-today.png` | Wear-native Today logging and full-canvas water level. |
+| `watch-history` | `wear-history.png` | Seven elapsed local days. |
+| `watch-day-detail` | `wear-day-detail.png` | Wear entry detail and individual delete/Undo. |
+| `watch-stats` | `wear-stats.png` | Current ISO-week summary and compact chart. |
+| `custom-amount`, `edit-intake`, `add-container`, `edit-container`, `edit-reminder`, `widget`, `quick-log-control`, `notification-actions`, `shortcuts-and-intents`, `complication`, `share-export` | No static image in this pack | Behavior is defined by the shared catalog and Android UI/architecture documents; add a capture only when it materially improves acceptance coverage. |
 
 ## Layout previews
 
@@ -96,3 +122,18 @@ layout. Today's Day Detail add uses the same localized transient confirmation;
 Day Detail delete uses the same transient surface with an Undo action.
 Sync, permission, loading, and unresolved errors remain in their inline state
 surfaces until resolved or retried.
+
+## Reference-pack maintenance and revision history
+
+Update this index and the affected image references in the same change when a
+screen contract, state, layout breakpoint, design token, or acceptance capture
+changes. Keep image filenames stable when the semantic surface is unchanged;
+replace an image only when it no longer represents the current reference state.
+Every revision updates the header, `Last verified`, the stable-ID map, and the
+Android UI specification's immutable timeline entry. An image is never a
+substitute for the PRD, screen catalog, design system, or data model.
+
+| Revision | Date | Change | Impact |
+|---|---|---|---|
+| 3.0.0 | 2026-09-11 | Synchronized the reference pack with Android UI specification 3.0.0 and added links to the shared screen, design, and data contracts plus stable-ID evidence mapping. | Reference images are traceable to semantic surfaces and remain evidence rather than a competing source of truth. |
+| 3.1.0 | 2026-09-11 | Linked the reference pack to the one canonical description file for each surface and clarified that the rule applies to documentation, not Android source-file organization. | Evidence, Android-native UI guidance, and platform-independent screen descriptions now have an explicit one-to-one map without prescribing a Kotlin file structure. |
