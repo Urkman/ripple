@@ -28,6 +28,21 @@ documentation contract; they do not prove runtime behavior.
 - [ ] Amounts include units, icons have semantic labels, and large text/reduced
       motion behavior is addressed.
 
+## Wireframe coverage and quality
+
+- [ ] Every in-scope screen and sheet has an actual platform-independent PNG
+      wireframe embedded in its canonical file and linked from the index.
+- [ ] Nonvisual entry points explicitly state why a wireframe is not applicable.
+- [ ] Materially different documented layouts/states have image variants.
+- [ ] Image names use stable IDs, states, and semantic viewport names; captions
+      identify the source surface contract version and descriptive alt text exists.
+- [ ] Editable sources and reproducible rendering instructions accompany images.
+- [ ] Every new/changed image was rendered and visually inspected for agreement
+      with the text, legibility, clipping, and unintended platform styling.
+- [ ] Images and source links resolve; previews are nonempty and decodable.
+- [ ] Affected images were regenerated with their contracts; wireframes remain
+      distinct from screenshots and do not override text or native controls.
+
 ## Cross-platform and design/data consistency
 
 - [ ] Shared product behavior, domain operations, source-of-truth rules, and

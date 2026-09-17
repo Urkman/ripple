@@ -1,6 +1,6 @@
 ---
 name: cross-platform-product-documentation
-description: Create or maintain project-neutral documentation contracts for cross-platform apps, with one canonical description file per screen or sheet and separate design, data, and native-platform mappings.
+description: Create or maintain project-neutral documentation contracts for cross-platform apps, with one canonical description and platform-independent wireframe images per screen or sheet, plus design, data, and native-platform mappings.
 ---
 
 # Cross-platform product documentation
@@ -38,6 +38,10 @@ the existing UI. Keep each kind of decision in one place:
   do not replace or contradict them.
 - **Evidence/reference pack:** screenshots or captures that support review but
   never override the written contracts.
+- **Shared wireframes:** actual platform-independent image files for every
+  screen and sheet, embedded in their canonical descriptions and linked from
+  the surface index. They illustrate the written layout; they are not runtime
+  screenshots or a second product authority.
 
 The surface index may define the shared template and vocabulary, but detailed
 screen behavior belongs in the individual surface files. Do not put all screen
@@ -108,7 +112,22 @@ action row”, “modal amount-entry surface”, and “primary action”. Do no
 framework names, platform-specific component types, or source paths in the
 canonical file. Put those in platform documents.
 
-### 4. Separate shared semantics from native expression
+### 4. Create platform-independent wireframe images
+
+Read [`references/wireframes.md`](references/wireframes.md) before generating
+wireframes. Create at least one actual image for every in-scope screen and
+sheet, including onboarding. Include visual wearable/system surfaces when
+they have a documented layout; explicitly mark nonvisual entry points as not
+applicable. A prompt, ASCII sketch, or promised future image does not satisfy
+this deliverable.
+
+Embed each image in its canonical surface file with descriptive alternative
+text, state/viewport identification, and the source contract version. Link the
+primary image from the surface index. During maintenance, regenerate affected
+wireframes in the same change as their layout/state contracts; a full creation
+or audit must check image coverage for the entire in-scope inventory.
+
+### 5. Separate shared semantics from native expression
 
 Prefer system components for ordinary behavior—text entry, sliders, toggles,
 pickers, lists, sheets, alerts, permission prompts, keyboard/rotary input,
@@ -121,7 +140,7 @@ Do not make platform parity mean pixel identity. Keep outcome, information
 priority, state transitions, domain operations, and accessibility equivalent;
 allow native navigation chrome, density, input, and system UI to differ.
 
-### 5. Document design and data contracts
+### 6. Document design and data contracts
 
 For every token, state, reusable element, entity, field, read model, and use
 case, record the name, role, ownership, allowed use, accessibility meaning,
@@ -130,7 +149,7 @@ what is source of truth and which systems are only projections or clients.
 Do not duplicate amount/business logic in widgets, intents, notifications,
 wearable entry points, or view descriptions.
 
-### 6. Synchronize platform handoffs
+### 7. Synchronize platform handoffs
 
 When a shared screen, flow, token, data rule, or accessibility contract
 changes, update the affected platform architecture/UI documents in the same
@@ -139,7 +158,7 @@ semantic description. Keep current implementation paths honest; distinguish
 verified paths from recommended/target paths and never claim code changed when
 the task changed documentation only.
 
-### 7. Version and validate
+### 8. Version and validate
 
 For every versioned document changed:
 
@@ -149,8 +168,9 @@ For every versioned document changed:
 4. check that canonical surface files follow the common schema and contain no
    platform-framework instructions;
 5. run repository-specific documentation checks and inspect the final diff;
-6. keep source changes, generated artifacts, and unrelated user edits outside
-   the documentation change unless explicitly requested.
+6. include required wireframe images and their editable sources in the
+   documentation change; keep unrelated generated artifacts, source changes,
+   and user edits outside it.
 
 Use [`references/validation-checklist.md`](references/validation-checklist.md)
 for a compact audit list. Do not claim runtime behavior was tested when only
@@ -161,7 +181,7 @@ documentation was changed.
 - Product behavior or user outcome changes: update the product contract, the
   affected canonical surface file, and platform handoffs.
 - Surface layout/function/state/accessibility changes: update that surface's
-  file and any affected design/platform contracts.
+  file, affected wireframe images, and any affected design/platform contracts.
 - New or changed reusable visual behavior: update the design-system contract
   and component ownership mapping.
 - Entity, unit, invariant, persistence, or use-case changes: update the data

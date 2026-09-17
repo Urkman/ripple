@@ -2,18 +2,70 @@ import Foundation
 import RippleDomain
 import UserNotifications
 
+struct ScheduledReminderNotification: Sendable {
+    let identifier: String
+    let title: String
+    let body: String
+    let categoryIdentifier: String
+    let fireDate: Date
+}
+
+protocol ReminderNotificationCenter: Sendable {
+    func removePendingNotificationRequests(withIdentifiers identifiers: [String]) async
+    func add(_ notification: ScheduledReminderNotification) async
+}
+
+private struct SystemReminderNotificationCenter: ReminderNotificationCenter {
+    func removePendingNotificationRequests(withIdentifiers identifiers: [String]) async {
+        UNUserNotificationCenter.current()
+            .removePendingNotificationRequests(withIdentifiers: identifiers)
+    }
+
+    func add(_ notification: ScheduledReminderNotification) async {
+        let content = UNMutableNotificationContent()
+        content.title = notification.title
+        content.body = notification.body
+        content.sound = .default
+        content.categoryIdentifier = notification.categoryIdentifier
+
+        let components = Calendar.current.dateComponents(
+            [.year, .month, .day, .hour, .minute],
+            from: notification.fireDate
+        )
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        let request = UNNotificationRequest(
+            identifier: notification.identifier,
+            content: content,
+            trigger: trigger
+        )
+
+        try? await UNUserNotificationCenter.current().add(request)
+    }
+}
+
 public struct ReminderScheduler: ReminderScheduling {
     private let notificationAuthorizing: any NotificationAuthorizing
+    private let notificationCenter: any ReminderNotificationCenter
 
     public init(
         notificationAuthorizing: any NotificationAuthorizing = NotificationAuthorizer()
     ) {
         self.notificationAuthorizing = notificationAuthorizing
+        self.notificationCenter = SystemReminderNotificationCenter()
+    }
+
+    init(
+        notificationAuthorizing: any NotificationAuthorizing,
+        notificationCenter: any ReminderNotificationCenter
+    ) {
+        self.notificationAuthorizing = notificationAuthorizing
+        self.notificationCenter = notificationCenter
     }
 
     public func reschedule(rule: ReminderRule, lastSip: Date?) async {
-        let center = UNUserNotificationCenter.current()
-        center.removePendingNotificationRequests(withIdentifiers: [Self.identifier])
+        await notificationCenter.removePendingNotificationRequests(
+            withIdentifiers: [Self.identifier]
+        )
 
         guard rule.enabled else { return }
 
@@ -24,23 +76,14 @@ public struct ReminderScheduler: ReminderScheduling {
             return
         }
 
-        let content = UNMutableNotificationContent()
-        content.title = String(localized: "Time for a sip")
-        content.body = String(localized: "A small Ripple keeps you in the flow.")
-        content.sound = .default
-        content.categoryIdentifier = Self.category
-
-        let components = Calendar.current.dateComponents(
-            [.year, .month, .day, .hour, .minute],
-            from: fireDate
-        )
-        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-        let request = UNNotificationRequest(
+        let notification = ScheduledReminderNotification(
             identifier: Self.identifier,
-            content: content,
-            trigger: trigger
+            title: String(localized: "Time for a sip"),
+            body: String(localized: "A small Ripple keeps you in the flow."),
+            categoryIdentifier: Self.category,
+            fireDate: fireDate
         )
-        try? await center.add(request)
+        await notificationCenter.add(notification)
     }
 
     public static let identifier = "de.stefansturm.ripple.reminder"

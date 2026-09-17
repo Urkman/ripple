@@ -210,15 +210,34 @@ actor RecordingNotificationAuthorizer: NotificationAuthorizing {
     }
 }
 
+actor RecordingReminderNotificationCenter: ReminderNotificationCenter {
+    private(set) var removedIdentifierLists: [[String]] = []
+    private(set) var addCount = 0
+
+    func removePendingNotificationRequests(withIdentifiers identifiers: [String]) async {
+        removedIdentifierLists.append(identifiers)
+    }
+
+    func add(_ notification: ScheduledReminderNotification) async {
+        addCount += 1
+    }
+}
+
 @Suite("Notification authorization")
 struct NotificationAuthorizationTests {
     @Test("Reminder rescheduling never requests notification authorization")
     func schedulerDoesNotPrompt() async {
         let authorizer = RecordingNotificationAuthorizer(current: .notDetermined)
-        let scheduler = ReminderScheduler(notificationAuthorizing: authorizer)
+        let notificationCenter = RecordingReminderNotificationCenter()
+        let scheduler = ReminderScheduler(
+            notificationAuthorizing: authorizer,
+            notificationCenter: notificationCenter
+        )
 
         await scheduler.reschedule(rule: .default, lastSip: nil)
 
         #expect(await authorizer.requestCount == 0)
+        #expect(await notificationCenter.removedIdentifierLists == [[ReminderScheduler.identifier]])
+        #expect(await notificationCenter.addCount == 0)
     }
 }

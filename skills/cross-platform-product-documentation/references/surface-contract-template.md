@@ -31,6 +31,17 @@ This is the canonical, platform-independent description of [surface].
 
 [Describe hierarchy, sizing intent, and responsive reflow without naming a UI framework.]
 
+## Platform-independent wireframes
+
+![Layout of [surface]: [key regions and primary action]](../wireframes/[stable-id]--ready--compact.png)
+
+[Caption: representative state, semantic viewport and illustrative dimensions,
+surface contract version used to generate or last verify the image.]
+
+[Embed additional images for materially different documented states or
+responsive layouts. Link editable sources. Images illustrate this text and
+do not prescribe platform-native control appearance.]
+
 ## Read model
 
 [Snapshot, settings, entities, permissions, or draft data required to render.]
