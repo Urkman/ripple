@@ -3,8 +3,9 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 3.3.0 — 11. September 2026
-**Last verified:** 2026-09-11
+**Version:** 3.3.1 — 18. September 2026
+**Last verified:** 2026-09-18
+**Reference release baseline:** Apple marketing version 1.1 — 17. September 2026
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
 **Code-Sprache:** English identifiers, German + English copy
@@ -17,6 +18,14 @@ Chat-Kontext zu bauen. Der plattformunabhängige
 Verträge liefern die detaillierte Rebuild-Struktur, ohne eine zweite
 Produktquelle zu bilden. Wo Konzept-Screenshots vom Generator abweichen, gilt
 der Fließtext.
+
+Die Apple-Marketingversion 1.1 ist die aktuelle Referenzimplementierung dieses
+Vertrags. Sie ist von der normativen PRD-Version getrennt: Die 1.1-Baseline
+enthält die bestehende Wasser-Produktbasis mit verbessertem Log-Feedback,
+robusterer Erinnerungsplanung, Undo-Feedback im Verlauf sowie den aktuellen
+Bedienungshilfen- und Oberflächenkorrekturen. Die Android-Dokumentation muss
+diese Ergebnisse und Grenzen übernehmen, aber Android bleibt eine unabhängige
+Implementierung.
 
 **Plattform-Hinweis:** Dieses PRD wird an das unabhängige Android-Projekt
 weitergegeben. Produktumfang, Screens, Flows, Domänenregeln, Zustände und
@@ -90,7 +99,7 @@ Siri: „Alles klar, 250 Milliliter sind drin. Noch 1,1 Liter bis zum Ziel.“
 - Familien-Sharing / Shared CloudKit Zones
 - iMessage / Share Extension
 - CarPlay (nur wenn ohne Extra-Komplexität; sonst weglassen)
-- Getränke-Hydrationsfaktoren, Wetterziel, Streaks (v1.1)
+- Getränke-Hydrationsfaktoren, Wetterziel, Streaks (außerhalb der Release-1.1-Baseline)
 - Mehr als DE + EN in v1
 
 ---
@@ -120,7 +129,10 @@ Siri: „Alles klar, 250 Milliliter sind drin. Noch 1,1 Liter bis zum Ziel.“
 | F20 | tvOS Ambient-Gerüst | P0 (minimal) |
 | F21 | visionOS Fenster-Gerüst | P0 (minimal) |
 
-v1.1 (nicht jetzt): Getränkearten mit Faktor, WeatherKit-Ziel, Streaks, Household-Zone, Workout-aware Activity.
+Die Release-1.1-Baseline bleibt auf die Wasser-Produktbasis dieses Abschnitts
+begrenzt. Zukünftige Produktstufen (nicht Teil dieses Android-Handoffs) können
+Getränkearten mit Faktor, WeatherKit-Ziel, Streaks, Household-Zone und
+Workout-aware Activity ergänzen.
 
 ---
 
@@ -1459,5 +1471,6 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 | 3.1.0 | 2026-09-10 | Today zeigt die ersten drei gespeicherten Behälter als feste HStack ohne ScrollView. Die Custom-Amount-Eingabe ersetzt den Stepper durch einen Slider und platziert darunter die breitere, nicht beschriftete Auswahl aller gespeicherten Behälter. | Die drei häufigsten Behälter bleiben direkt erreichbar; beliebige Mengen und alle gespeicherten Behälter bleiben in der Custom-Amount-Eingabe erreichbar. |
 | 3.2.0 | 2026-09-10 | Die drei festen Today-Quick-Add-Buttons füllen die verfügbare Breite ihrer HStack gleichmäßig aus. | Die Schnellaktionen nutzen die gesamte Breite der kompakten Today-Komposition und bleiben ohne horizontales Scrollen erreichbar. |
 | 3.3.0 | 2026-09-11 | Die gemeinsame Rebuild-Dokumentation wurde formalisiert: plattformunabhängiger Screen-Katalog, Design-System-/UI-Element-Verträge, detailliertes Datenmodell sowie verknüpfte iOS-/Android-Datei- und Native-Control-Mappings. | Ein neues Team kann die App aus den versionierten Shared-Verträgen rekonstruieren; die Produkt-, Daten- und Motion-Bedeutung bleibt an einer Stelle normativ. |
+| 3.3.1 | 2026-09-18 | Die aktuelle Apple-Marketingversion 1.1 als Referenzbaseline dokumentiert, die Release-1.1-Abgrenzung gegenüber zukünftigen Produktstufen klargestellt und den Wireframe-Handoff für iOS und Android vorbereitet; keine neue Produktfunktion ergänzt. | Android erhält einen eindeutigen aktuellen Verhaltensstand für Feedback, Erinnerungen, Verlauf-Undo und Accessibility, ohne die bisher ausgeschlossenen vNext-Funktionen zu übernehmen. |
 
-*Ende PRD 3.3.0. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 3.3.1. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*

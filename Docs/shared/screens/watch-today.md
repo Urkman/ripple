@@ -1,8 +1,8 @@
 # Ripple Surface — Wear Today
 
 **Stable surface ID:** `watch-today`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Wearable root screen  
 **Localized name:** `Heute` / `Today`
 
@@ -31,6 +31,15 @@ surface may offer undo through `UndoLastIntake`.
 
 The water field is a static idle surface with a readable level. It is not a
 phone hero compressed into a smaller rectangle.
+
+## Platform-independent wireframes
+
+![Wear Today ready-state wearable wireframe: full-canvas flat level field, predefined amounts, and custom amount](../wireframes/watch-today--ready--wearable.png)
+
+Editable source: [watch-today--ready--wearable.svg](../wireframes/watch-today--ready--wearable.svg).
+
+Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model
 
@@ -78,11 +87,21 @@ ergonomics, but not the logging outcome.
 - An idle wave loop, pour stream in a system surface, or projection-only log.
 - A second `LogIntake` implementation.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Wear Today description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`today.md`](today.md)
 - [`watch-custom-amount.md`](watch-custom-amount.md)

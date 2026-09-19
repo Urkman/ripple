@@ -1,8 +1,9 @@
 # Ripple Design System
 
 **Document type:** Shared visual, interaction, and reusable-element contract  
-**Version:** 1.0.0 — 11 September 2026  
-**Last verified:** 2026-09-11  
+**Version:** 1.0.1 — 18 September 2026
+**Last verified:** 2026-09-18
+**Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 **Status:** Normative companion to [`Ripple_PRD.md`](Ripple_PRD.md)
 
 Ripple has one design system. The iOS implementation owns its token values in
@@ -575,5 +576,6 @@ feature-local design system. Prior timeline entries are immutable.
 | Version | Date | Change | Impact |
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established canonical Ripple tokens, reusable UI contracts, native-control policy, and accessibility/motion acceptance requirements. | iOS and Android can implement the same visual semantics while retaining platform-native controls and behavior. |
+| 1.0.1 | 2026-09-18 | Re-verified the token/component contract against the Apple 1.1 baseline, including layout-neutral log/delete feedback, reminder status, and accessibility refinements; no new accent or feature-local token was introduced. | Android can finalize its native presentation against the current shared component and accessibility rules without diverging from the released iOS behavior. |
 
-*End of Ripple design system 1.0.0.*
+*End of Ripple design system 1.0.1.*

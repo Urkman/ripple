@@ -1,8 +1,8 @@
 # Ripple Surface — History
 
 **Stable surface ID:** `history`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Root screen  
 **Localized name:** `Verlauf` / `History`
 
@@ -32,6 +32,21 @@ days are visible but inactive. The surface does not edit data directly.
 The calendar is the primary content. A regular or expanded presentation may
 reserve a persistent detail region after a day is selected, but the semantic
 route remains History → Day Detail.
+
+## Platform-independent wireframes
+
+![History ready-state compact wireframe: month navigation, one day ring per date, and selected day context](../wireframes/history--ready--compact.png)
+
+Editable source: [history--ready--compact.svg](../wireframes/history--ready--compact.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
+![History ready-state expanded wireframe: calendar beside the selected day detail region](../wireframes/history--ready--expanded.png)
+
+Editable source: [history--ready--expanded.svg](../wireframes/history--ready--expanded.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model
 
@@ -95,10 +110,20 @@ seven-day surface and never becomes a month grid through scaling.
 - Tappable future days.
 - Chart or day-total truth sourced from a projection instead of the domain.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent History description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframes and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`day-detail.md`](day-detail.md)

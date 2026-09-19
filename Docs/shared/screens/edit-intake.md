@@ -1,8 +1,8 @@
 # Ripple Surface — Edit intake
 
 **Stable surface ID:** `edit-intake`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Sheet  
 **Localized name:** `Eintrag bearbeiten` / `Edit intake`
 
@@ -29,6 +29,15 @@ successful persistence. Delete belongs to Day Detail, not this sheet.
 
 Labels precede values. The original entry identity and relevant context remain
 visible while the draft is edited.
+
+## Platform-independent wireframes
+
+![Edit intake ready-state compact wireframe: entry context, editable fields, Cancel, and Save](../wireframes/edit-intake--ready--compact.png)
+
+Editable source: [edit-intake--ready--compact.svg](../wireframes/edit-intake--ready--compact.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model and draft
 
@@ -91,10 +100,20 @@ expanded displays while preserving context → fields → validation → actions
 - Deleting from this sheet without the Day Detail destructive contract.
 - Using a projection as the source of the editable value.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Edit intake description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`day-detail.md`](day-detail.md)

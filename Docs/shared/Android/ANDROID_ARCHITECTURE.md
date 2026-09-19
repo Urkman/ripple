@@ -2,12 +2,14 @@
 
 **Status:** Approved design for implementation
 
-**Last verified:** 2026-09-11
+**Last verified:** 2026-09-18
+
+**Reference release baseline:** Apple marketing version 1.1 — 2026-09-17
 
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.7.0
+**Document version:** 1.8.0
 
 **UI companion:** [Ripple Android UI Specification](ANDROID_UI_SPEC.md)
 
@@ -20,6 +22,21 @@ current iOS product screens, information hierarchy, and user flows while
 looking and behaving like a well-designed Android app. It must not copy iOS
 navigation chrome, controls, typography, glass treatment, or platform-specific
 presentation merely to achieve functional parity.
+
+## Current release handoff baseline
+
+The Android port is finalized against the Apple marketing release baseline
+1.1. This is a documentation and capability baseline, not a claim that an
+Android build or emulator acceptance run happened in this repository. The
+Android implementation must carry forward the released behavior for
+layout-neutral log confirmation, delete/restore Undo, permission-aware
+reminder scheduling, ordered containers, large-text/TalkBack support, and
+reduced motion while remaining Android-native.
+
+The shared surface descriptions and their neutral PNG/SVG wireframes are the
+semantic layout reference. Android screenshots in [`UI/README.md`](UI/README.md)
+remain implementation evidence and must not be promoted to a cross-platform
+source of truth.
 
 Android screen composition and state behavior are specified in [`ANDROID_UI_SPEC.md`](ANDROID_UI_SPEC.md) and the platform-independent [screen catalog](../Ripple_SCREEN_CATALOG.md). Product behavior is specified by the consolidated [Ripple PRD](../Ripple_PRD.md), especially its detailed Today, History, Stats, and motion contracts in Section 22. Fields, invariants, storage, and projections are specified in the shared [data model](../Ripple_DATA_MODEL.md); visual roles and reusable elements are specified in the shared [design system](../Ripple_DESIGN_SYSTEM.md). Where this document says “parity,” it means equivalent capability and domain result, not identical pixels or gestures.
 
@@ -267,6 +284,10 @@ ViewModels, private helpers, and design-system elements may be split or
 co-located according to Android module conventions. A platform implementation
 must preserve the one canonical description file and must not create a second
 semantic surface contract.
+
+Every canonical row also has a primary shared wireframe in
+[`../wireframes/`](../wireframes/). The wireframe is a neutral layout aid with
+an editable SVG source; it does not prescribe Android control appearance.
 
 | Stable surface ID | Canonical description | Android implementation module/entry point | Required owner |
 |---|---|---|---|
@@ -1330,3 +1351,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.5.1 | 2026-09-08 | Moved the Android architecture into the complete `Docs/shared/` handoff and corrected its PRD link. | The Android project receives its architecture, UI contract, product contract, and visual references as one portable documentation set. |
 | 1.6.0 | 2026-09-11 | Added shared screen/design/data contract links, the one-screen-or-sheet-per-file rule, target Kotlin surface manifest, and native Material/Wear/system-control mappings. | Android can map every shared surface ID to one target file/module while preserving native Android interaction and the independent Room/Data Layer boundary. |
 | 1.7.0 | 2026-09-11 | Corrected the surface ownership contract: each screen and sheet now has one canonical platform-independent description file, while Android source files may be split or co-located according to native module conventions. Replaced the target one-file manifest with a canonical-description-to-implementation map. | Android remains traceable to every shared surface without imposing a production source-file structure that was not requested. |
+| 1.8.0 | 2026-09-18 | Recorded the Apple 1.1 release baseline, linked the shared neutral wireframe pack, and clarified the Android finalization boundary: documentation is current, but runtime Android acceptance still belongs to the independent Android project. | Android implementation has one current capability/layout handoff for feedback, reminders, Undo, accessibility, responsive surfaces, and native expression without claiming unperformed builds or device tests. |

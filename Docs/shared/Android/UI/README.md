@@ -1,7 +1,8 @@
 # Android UI reference pack
 
-**Reference pack revision:** 3.1.0 (tracks the Android UI specification)
-**Last verified:** 2026-09-11
+**Reference pack revision:** 3.2.0 (tracks the Android UI specification)
+**Last verified:** 2026-09-18
+**Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 
 This pack separates evidence from the Android presentation contract:
 
@@ -15,6 +16,16 @@ This pack separates evidence from the Android presentation contract:
 - The existing iOS PNGs are evidence of the current product hierarchy and visual priorities.
 - The PNGs in this directory are Android layout evidence/reference captures. The text contracts name Android-native controls and responsive behavior; images are not pixel-perfect iOS copies and never override the shared semantic contracts.
 - Real Android emulator and Wear captures are the final acceptance artifacts. These layout images do not replace runtime verification.
+
+## Shared semantic wireframes
+
+The 22 canonical surfaces also have platform-independent PNG previews and
+same-stem editable SVG sources in
+[`../../wireframes/README.md`](../../wireframes/README.md). The [shared screen
+catalog](../../Ripple_SCREEN_CATALOG.md) links each primary image. Those
+wireframes are the neutral layout contract; the PNGs in this Android pack
+remain Android-specific evidence and may show native density, controls, and
+navigation.
 
 ## iOS evidence
 
@@ -137,3 +148,4 @@ substitute for the PRD, screen catalog, design system, or data model.
 |---|---|---|---|
 | 3.0.0 | 2026-09-11 | Synchronized the reference pack with Android UI specification 3.0.0 and added links to the shared screen, design, and data contracts plus stable-ID evidence mapping. | Reference images are traceable to semantic surfaces and remain evidence rather than a competing source of truth. |
 | 3.1.0 | 2026-09-11 | Linked the reference pack to the one canonical description file for each surface and clarified that the rule applies to documentation, not Android source-file organization. | Evidence, Android-native UI guidance, and platform-independent screen descriptions now have an explicit one-to-one map without prescribing a Kotlin file structure. |
+| 3.2.0 | 2026-09-18 | Recorded the Apple 1.1 baseline and linked the complete shared semantic wireframe pack while preserving this directory as Android evidence only. | Android implementers can distinguish the portable cross-platform layout contract from native runtime captures during finalization and acceptance review. |

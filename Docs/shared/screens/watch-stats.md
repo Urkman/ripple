@@ -1,8 +1,8 @@
 # Ripple Surface — Wear Stats
 
 **Stable surface ID:** `watch-stats`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Wearable screen  
 **Localized name:** `Statistik` / `Stats`
 
@@ -24,6 +24,15 @@ navigation returns to Wear Today or Wear History.
 2. Summary total, goal/hit context, and relevant highlight.
 3. One compact chart with an accessible textual summary.
 4. Empty/offline/error feedback.
+
+## Platform-independent wireframes
+
+![Wear Stats ready-state wearable wireframe: current ISO-week summary and one compact chart](../wireframes/watch-stats--ready--wearable.png)
+
+Editable source: [watch-stats--ready--wearable.svg](../wireframes/watch-stats--ready--wearable.svg).
+
+Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model
 
@@ -70,10 +79,20 @@ week remains explicit and the period picker remains absent.
 - A chart without a textual summary.
 - Health/projection values replacing the domain snapshot.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Wear Stats description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`watch-history.md`](watch-history.md)

@@ -1,8 +1,8 @@
 # Ripple Surface — Wear custom amount
 
 **Stable surface ID:** `watch-custom-amount`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Wearable sheet  
 **Localized name:** `Menge` / `Custom amount`
 
@@ -29,6 +29,15 @@ persistence.
 
 The amount remains the primary input. The full phone container catalog is not
 required to appear at once.
+
+## Platform-independent wireframes
+
+![Wear custom amount ready-state wearable wireframe: rotary amount, compact presets, confirm, and dismissal](../wireframes/watch-custom-amount--ready--wearable.png)
+
+Editable source: [watch-custom-amount--ready--wearable.svg](../wireframes/watch-custom-amount--ready--wearable.svg).
+
+Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model
 
@@ -76,10 +85,20 @@ selection and Confirm remains discoverable.
 - Logging while only adjusting the draft.
 - A separate wearable persistence or amount-resolution path.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Wear custom amount description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`watch-today.md`](watch-today.md)

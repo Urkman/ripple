@@ -1,8 +1,8 @@
 # Ripple Surface — Stats
 
 **Stable surface ID:** `stats`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Root screen  
 **Localized name:** `Statistik` / `Stats`
 
@@ -34,6 +34,21 @@ lifecycle allows it.
 
 Charts may stack or form columns responsively, but the semantic order and
 separation from History remain clear.
+
+## Platform-independent wireframes
+
+![Stats ready-state compact wireframe: period selector, summaries, chart families, and highlights](../wireframes/stats--ready--compact.png)
+
+Editable source: [stats--ready--compact.svg](../wireframes/stats--ready--compact.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
+![Stats ready-state expanded wireframe: persistent period selector and two-column chart composition](../wireframes/stats--ready--expanded.png)
+
+Editable source: [stats--ready--expanded.svg](../wireframes/stats--ready--expanded.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model
 
@@ -96,9 +111,19 @@ picker or four-chart composition.
 - Health/projection data replacing domain statistics.
 - A chart without a textual/value-accessible alternative.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Stats description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframes and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)

@@ -1,8 +1,8 @@
 # Ripple Surface — Shortcuts and intents
 
 **Stable surface ID:** `shortcuts-and-intents`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** System surface  
 **Localized name:** Localized shortcut/action name
 
@@ -28,6 +28,15 @@ the system supports continuation.
 The system presents a localized action name, supported parameters, confirmation
 or error result, and an optional route into the app. System voice/shortcut
 chrome remains outside Ripple's surface description.
+
+## Platform-independent wireframes
+
+![Shortcut and intent semantic invocation wireframe: amount/container parameters and localized result](../wireframes/shortcuts-and-intents--ready--compact.png)
+
+Editable source: [shortcuts-and-intents--ready--compact.svg](../wireframes/shortcuts-and-intents--ready--compact.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model
 
@@ -78,10 +87,20 @@ contexts; amount → confirmation/error remains the semantic order.
 - Silent success when local persistence failed.
 - A shortcut that exposes Health/projection data as logging truth.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Shortcuts and intents description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`today.md`](today.md)

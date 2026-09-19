@@ -1,8 +1,8 @@
 # Ripple Surface — Quick-log control
 
 **Stable surface ID:** `quick-log-control`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** System surface  
 **Localized name:** Platform-local control name
 
@@ -25,6 +25,15 @@ selection opens the app's custom amount surface when supported.
 
 The system controls the host chrome. Ripple supplies only the localized action
 label, amount/container meaning, state/result, and optional focused icon.
+
+## Platform-independent wireframes
+
+![Quick-log control ready-state compact wireframe: one focused default-amount action](../wireframes/quick-log-control--ready--compact.png)
+
+Editable source: [quick-log-control--ready--compact.svg](../wireframes/quick-log-control--ready--compact.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model
 
@@ -71,10 +80,20 @@ one focused log with an amount and unit.
 - A hidden or ambiguous default amount.
 - A full dashboard, calendar, or Stats chart in the control.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Quick-log control description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`settings.md`](settings.md)

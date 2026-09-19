@@ -1,8 +1,8 @@
 # Ripple Surface — Settings
 
 **Stable surface ID:** `settings`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Root screen  
 **Localized name:** `Einstellungen` / `Settings`
 
@@ -41,6 +41,15 @@ The Containers region shows the complete ordered collection. Each row includes
 icon, localized name, amount, default indicator when applicable, reorder
 affordance, and edit affordance. Direct drag/reorder interaction changes the
 persisted order; it is not a visual-only sort.
+
+## Platform-independent wireframes
+
+![Settings ready-state compact wireframe: profile, goal, containers, reminders, health/sync, and export groups](../wireframes/settings--ready--compact.png)
+
+Editable source: [settings--ready--compact.svg](../wireframes/settings--ready--compact.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model
 
@@ -118,12 +127,22 @@ never silently truncated.
 - Direct persistence writes from a view.
 - A container list that hides available containers without an explicit action.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Settings description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`add-container.md`](add-container.md)
 - [`edit-container.md`](edit-container.md)
 - [`edit-reminder.md`](edit-reminder.md)

@@ -2,8 +2,9 @@
 
 **Document type:** Shared domain, storage, synchronization, and projection
 contract  
-**Version:** 1.0.0 — 11 September 2026  
-**Last verified:** 2026-09-11  
+**Version:** 1.0.1 — 18 September 2026
+**Last verified:** 2026-09-18
+**Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 **Status:** Normative companion to [`Ripple_PRD.md`](Ripple_PRD.md)
 
 This document defines the values Ripple owns, how they are validated, how they
@@ -450,5 +451,6 @@ Prior timeline entries are immutable.
 | Version | Date | Change | Impact |
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the shared domain field contract, container/default/order rules, intake lifecycle, SwiftData/Room mapping, use-case boundary, and projection policy. | iOS and Android can implement compatible source-of-truth storage and read models without copying platform annotations into the domain. |
+| 1.0.1 | 2026-09-18 | Re-verified the intake, reminder-rule, soft-delete, projection, and export contracts against the Apple 1.1 release baseline; no entity, unit, invariant, or use-case semantics changed. | Android finalization remains compatible with the released iOS data behavior and does not add a second source of truth or a release-only mutation path. |
 
-*End of Ripple data model 1.0.0.*
+*End of Ripple data model 1.0.1.*

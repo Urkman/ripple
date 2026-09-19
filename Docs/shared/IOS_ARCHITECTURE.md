@@ -4,9 +4,11 @@ Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean 
 
 This document describes the iOS repository's architecture and current implementation. Product behavior remains defined by the shared [PRD](Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts. The platform-independent surface, design, and data contracts are maintained in the [screen catalog](Ripple_SCREEN_CATALOG.md), [design system](Ripple_DESIGN_SYSTEM.md), and [data model](Ripple_DATA_MODEL.md); this document maps those contracts to Swift implementation boundaries without redefining them.
 
-**Document version:** 1.8.0
+**Document version:** 1.9.0
 
-**Last verified:** 2026-09-11
+**Last verified:** 2026-09-18
+
+**Reference release baseline:** Apple marketing version 1.1 — 2026-09-17
 
 ## 1. Architectural goals and invariants
 
@@ -260,6 +262,13 @@ intake remains valid if HealthKit is unavailable, denied, or temporarily fails.
 This behavior is part of the shared architecture and product contract.
 
 Notifications are also adapters. `NotificationAuthorizer` translates system authorization status, while `ReminderScheduler` owns categories, pending-request replacement, wake/sleep bounds, interval calculation, and the default log action. The notification action invokes the same `LogIntake` use case rather than creating a notification-specific write path.
+
+The current release scheduler removes the previous pending request before each
+reschedule, checks the current authorization status without requesting
+permission, schedules at most the next actionable notification inside the
+configured local window, and quietly cancels when reminders are disabled or
+authorization is unavailable. Scheduling/projection failure never removes a
+locally persisted intake.
 
 ## 9. Feature layer and MVVM
 
@@ -632,3 +641,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.6.0 | 2026-09-10 | Raised every Apple deployment target to 27.0 and removed the older-runtime availability branch from the SDK 27 container reorder implementation; tvOS remains excluded because `.reorderable()` is unavailable there. | The Apple targets share one SDK 27 baseline, so supported platforms can use the native reorder API directly while the existing tvOS platform boundary remains explicit. |
 | 1.7.0 | 2026-09-11 | Added links to the shared screen catalog, design system, and data model; made the one-screen-or-sheet-per-file rule explicit; added current/target iOS surface and RippleUI ownership manifests plus native-control mappings. | iOS implementation files can be mapped one-to-one to shared surface IDs while current Settings sheet co-location remains honestly documented as a migration target. |
 | 1.8.0 | 2026-09-11 | Corrected the surface ownership contract: each screen and sheet now has one canonical platform-independent description file, while iOS source files may be split or co-located according to native feature architecture. Replaced the target one-file manifest with a canonical-description-to-implementation map. | The iOS implementation remains traceable to every shared surface without imposing a production source-file structure that was not requested. |
+| 1.9.0 | 2026-09-18 | Verified the implementation map and notification adapter against the Apple 1.1 release baseline; documented the current permission-aware, replaceable-next-reminder behavior without changing the Swift package boundaries. | The Android handoff can mirror the observable reminder contract while keeping scheduling platform-local and all logging on the shared domain use case. |

@@ -1,8 +1,8 @@
 # Ripple Surface — Today
 
 **Stable surface ID:** `today`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Root screen  
 **Localized name:** `Heute` / `Today`
 
@@ -42,6 +42,14 @@ The hero readout remains above the water. The surface is visually stable while
 confirmation feedback appears; feedback does not reserve a new layout region.
 If fewer than three containers exist, only the available ordered actions are
 shown and the custom action remains available.
+
+## Platform-independent wireframes
+
+![Today ready-state compact wireframe: day header, contained water level, ordered quick adds, and custom amount action](../wireframes/today--ready--compact.png)
+
+Editable source: [today--ready--compact.svg](../wireframes/today--ready--compact.svg).
+
+Caption: Representative ready state in a compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 ## Read model
 
@@ -127,11 +135,19 @@ their own canonical IDs and are not shrunk copies of this surface.
 - A confirmation that shifts the hero, quick-add row, or custom action.
 - A second persistence or amount-resolution path outside `LogIntake`.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Today description. | iOS and Android share one semantic Today outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
 - [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
 - [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)

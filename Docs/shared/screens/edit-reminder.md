@@ -1,8 +1,8 @@
 # Ripple Surface — Edit reminders
 
 **Stable surface ID:** `edit-reminder`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Sheet  
 **Localized name:** `Erinnerungen bearbeiten` / `Edit reminders`
 
@@ -32,6 +32,15 @@ does not delete the rule or history.
 
 The exact control type is platform-native, but labels, current values, units,
 and enabled state remain visible and ordered.
+
+## Platform-independent wireframes
+
+![Edit reminders ready-state compact wireframe: enabled state, local window, interval, permission status, and Save](../wireframes/edit-reminder--ready--compact.png)
+
+Editable source: [edit-reminder--ready--compact.svg](../wireframes/edit-reminder--ready--compact.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model and draft
 
@@ -92,10 +101,20 @@ preserved. System notification settings remain system-owned.
 - Hiding invalid values without actionable explanation.
 - Deleting the reminder rule as a side effect of turning it off.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Edit reminders description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`settings.md`](settings.md)

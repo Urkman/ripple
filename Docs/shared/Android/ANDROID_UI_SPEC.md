@@ -1,8 +1,9 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 3.1.0
-**Last verified:** 2026-09-11
+**Document version:** 3.2.0
+**Last verified:** 2026-09-18
+**Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 **Product contract:** [Ripple PRD](../Ripple_PRD.md)
 **Screen contract:** [Ripple screen and sheet catalog](../Ripple_SCREEN_CATALOG.md)
@@ -22,6 +23,12 @@ image references in `UI/` are Android layout contracts. Real Android and
 Wear captures are the final acceptance artifacts. Nothing in this document
 authorizes copying Liquid Glass, an iOS tab bar, SwiftUI navigation chrome, or
 Apple Watch presentation into Android.
+
+The platform-independent PNG/SVG wireframes in
+[`../wireframes/README.md`](../wireframes/README.md) are the shared semantic
+layout reference for every canonical surface. Android-native controls,
+navigation, permission UI, density, and Wear presentation remain governed by
+this document.
 
 The shared screen catalog owns stable IDs and platform-independent outcomes;
 this document owns the Android expression of those entries. The shared design
@@ -831,6 +838,15 @@ Wear tap/rotary amount -> local LogIntake -> outbox while offline
 
 ## 14. Visual reference and acceptance captures
 
+### 14.1 Shared wireframe coverage
+
+Every stable surface ID in the shared catalog has a primary neutral wireframe
+with a same-stem editable SVG source under
+[`../wireframes/`](../wireframes/). The canonical surface file embeds the
+image and identifies its state, viewport, and contract version. These images
+are layout illustrations, not Android screenshots and not a replacement for
+runtime acceptance.
+
 The reference pack links the current iOS evidence:
 
 - [iPhone Today](../screens/ios/iphone-today.png)
@@ -914,6 +930,9 @@ directly.
 - [ ] Wear has Today, seven-day History plus Day Detail, and current ISO-week
       Stats without a month calendar or period picker.
 - [ ] Widgets, notifications, and Quick Settings remain focused and static.
+- [ ] All 22 shared stable surfaces resolve to a canonical description and a
+      non-empty shared PNG/SVG wireframe; system-owned presentation remains
+      native.
 - [ ] Light/dark mode, large text, TalkBack, reduced motion, offline, empty,
       and error states are reviewed on representative targets.
 - [ ] Animation tests use a fake clock/sensor source and verify no stream or
@@ -956,3 +975,4 @@ at the bottom.
 | 2.9.0 | 2026-09-10 | The three fixed Today quick-add buttons now share the full available width of the compact horizontal row. | Quick-add actions use the complete compact Today action region without introducing horizontal scrolling. |
 | 3.0.0 | 2026-09-11 | Adopted stable shared surface IDs and linked the platform-independent screen, design-system, and data-model contracts. Added explicit Material/native-control mapping for the canonical surface-description structure, container ordering, first-three Today actions, all-container custom selection, slider input, and icon-only editor selection. | Android remains a native Material/Wear expression while its screens, states, tokens, fields, and acceptance behavior are traceable to one shared contract. |
 | 3.1.0 | 2026-09-11 | Linked each Android UI section to the one canonical platform-independent Markdown description for every surface and clarified that Android source-file organization remains native and implementation-local. | Android layout and acceptance guidance now points to the exact screen/sheet contract without prescribing one Kotlin file per surface. |
+| 3.2.0 | 2026-09-18 | Recorded the Apple 1.1 release baseline and linked the complete shared neutral wireframe pack, including the editable-source and coverage acceptance rule. | Android can finish native screen implementation from one current semantic layout contract while keeping Android evidence captures and runtime validation separate. |

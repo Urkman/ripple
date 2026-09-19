@@ -1,8 +1,8 @@
 # Ripple Surface — Wear Day Detail
 
 **Stable surface ID:** `watch-day-detail`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Wearable screen  
 **Localized name:** Localized selected date
 
@@ -27,6 +27,15 @@ confirmation/undo pattern and returns the updated day state.
 4. Empty state when no entries exist.
 5. Row-level edit/delete actions where supported, with delete clearly
    destructive and undoable through the defined feedback.
+
+## Platform-independent wireframes
+
+![Wear Day Detail ready-state wearable wireframe: selected date, total, entries, and soft-delete actions](../wireframes/watch-day-detail--ready--wearable.png)
+
+Editable source: [watch-day-detail--ready--wearable.svg](../wireframes/watch-day-detail--ready--wearable.svg).
+
+Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model
 
@@ -74,11 +83,21 @@ remains the semantic order.
 - Editing by appending a replacement row.
 - Phone History/Stats chrome or a moving historical water hero.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Wear Day Detail description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`watch-history.md`](watch-history.md)
 - [`day-detail.md`](day-detail.md)

@@ -1,8 +1,8 @@
 # Ripple Surface — Custom amount
 
 **Stable surface ID:** `custom-amount`  
-**Surface contract version:** 1.0.0  
-**Last verified:** 2026-09-11  
+**Surface contract version:** 1.1.0
+**Last verified:** 2026-09-18
 **Kind:** Sheet  
 **Localized name:** `Benutzerdefinierte Menge` / `Custom amount`
 
@@ -35,6 +35,15 @@ owning surface shows localized transient confirmation.
 
 The slider appears before the container selection. The all-container region may
 wrap or reflow when needed, but it must not become an unlabeled hidden region.
+
+## Platform-independent wireframes
+
+![Custom amount ready-state compact wireframe: amount readout, slider, all-container selection, and Add action](../wireframes/custom-amount--ready--compact.png)
+
+Editable source: [custom-amount--ready--compact.svg](../wireframes/custom-amount--ready--compact.svg).
+
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
 
 ## Read model and draft
 
@@ -105,10 +114,20 @@ layout while preserving name, icon, amount, and selected state.
 - Storing an intake while merely moving the slider or selecting a container.
 - A full-width action that is hidden below an unannounced overflow region.
 
+## Timeline
+
+| Version | Date | Change | Impact |
+|---|---|---|---|
+| 1.0.0 | 2026-09-11 | Established the canonical platform-independent Custom amount description. | iOS and Android share one semantic surface outcome and action boundary. |
+| 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
 ## Related contracts
 
 - [`../Ripple_PRD.md`](../Ripple_PRD.md)
 - [`../Ripple_SCREEN_CATALOG.md`](../Ripple_SCREEN_CATALOG.md)
 - [`../Ripple_DESIGN_SYSTEM.md`](../Ripple_DESIGN_SYSTEM.md)
 - [`../Ripple_DATA_MODEL.md`](../Ripple_DATA_MODEL.md)
+- [`../IOS_ARCHITECTURE.md`](../IOS_ARCHITECTURE.md)
+- [`../Android/ANDROID_ARCHITECTURE.md`](../Android/ANDROID_ARCHITECTURE.md)
+- [`../Android/ANDROID_UI_SPEC.md`](../Android/ANDROID_UI_SPEC.md)
 - [`today.md`](today.md)

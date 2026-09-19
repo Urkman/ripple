@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">
+  <desc>Ripple quick-log control ready compact wireframe, surface contract 1.1.0.</desc>
+  <style>text{font-family:system-ui,-apple-system,sans-serif;fill:#16333b}.muted{fill:#648087}.surface{fill:#fff;stroke:#a9c7cc;stroke-width:2}.accent{fill:#dceff2;stroke:#348b99;stroke-width:2}</style>
+  <rect width="640" height="420" fill="#f5fafb"/><text x="40" y="48" font-size="16" class="muted">SYSTEM SURFACE · READY · COMPACT</text><rect x="100" y="96" width="440" height="190" rx="28" class="surface"/><text x="320" y="148" text-anchor="middle" font-size="22" font-weight="700">Quick log</text><text x="320" y="190" text-anchor="middle" font-size="34" font-weight="700">+ 250 ml</text><text x="320" y="220" text-anchor="middle" font-size="16" class="muted">default container amount</text><rect x="170" y="242" width="300" height="54" rx="16" class="accent"/><text x="320" y="277" text-anchor="middle" font-size="18" font-weight="600">Log water</text><text x="320" y="352" text-anchor="middle" font-size="15" class="muted">one focused action · shared LogIntake</text>
+</svg>

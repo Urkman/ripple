@@ -1,8 +1,9 @@
 # Ripple Screen and Sheet Catalog
 
 **Document type:** Shared, platform-independent surface index and contract  
-**Version:** 1.1.0 — 11 September 2026  
-**Last verified:** 2026-09-11  
+**Version:** 1.2.0 — 18 September 2026
+**Last verified:** 2026-09-18
+**Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 **Language:** English identifiers; user-visible copy is DE + EN  
 **Status:** Normative companion to [`Ripple_PRD.md`](Ripple_PRD.md)
 
@@ -76,35 +77,37 @@ file. The file is the authoritative place for that surface's layout and
 function. Platform documents may link to it and may add native implementation
 mapping, but they must not create a competing semantic description.
 
-| Stable ID | Surface | Kind | Canonical description |
-|---|---|---|---|
-| `today` | Today | Root screen | [`screens/today.md`](screens/today.md) |
-| `custom-amount` | Custom amount | Sheet | [`screens/custom-amount.md`](screens/custom-amount.md) |
-| `history` | History | Root screen | [`screens/history.md`](screens/history.md) |
-| `day-detail` | Day Detail | Child screen | [`screens/day-detail.md`](screens/day-detail.md) |
-| `edit-intake` | Edit intake | Sheet | [`screens/edit-intake.md`](screens/edit-intake.md) |
-| `stats` | Stats | Root screen | [`screens/stats.md`](screens/stats.md) |
-| `settings` | Settings | Root screen | [`screens/settings.md`](screens/settings.md) |
-| `add-container` | Add container | Sheet | [`screens/add-container.md`](screens/add-container.md) |
-| `edit-container` | Edit container | Sheet | [`screens/edit-container.md`](screens/edit-container.md) |
-| `edit-reminder` | Edit reminders | Sheet | [`screens/edit-reminder.md`](screens/edit-reminder.md) |
-| `onboarding` | Onboarding | Onboarding surface | [`screens/onboarding.md`](screens/onboarding.md) |
-| `watch-today` | Wear Today | Wearable root screen | [`screens/watch-today.md`](screens/watch-today.md) |
-| `watch-custom-amount` | Wear custom amount | Wearable sheet | [`screens/watch-custom-amount.md`](screens/watch-custom-amount.md) |
-| `watch-history` | Wear History | Wearable screen | [`screens/watch-history.md`](screens/watch-history.md) |
-| `watch-day-detail` | Wear Day Detail | Wearable screen | [`screens/watch-day-detail.md`](screens/watch-day-detail.md) |
-| `watch-stats` | Wear Stats | Wearable screen | [`screens/watch-stats.md`](screens/watch-stats.md) |
-| `widget` | Widget | System surface | [`screens/widget.md`](screens/widget.md) |
-| `quick-log-control` | Quick-log control | System surface | [`screens/quick-log-control.md`](screens/quick-log-control.md) |
-| `notification-actions` | Notification actions | System surface | [`screens/notification-actions.md`](screens/notification-actions.md) |
-| `shortcuts-and-intents` | Shortcuts and intents | System surface | [`screens/shortcuts-and-intents.md`](screens/shortcuts-and-intents.md) |
-| `complication` | Complication | System surface | [`screens/complication.md`](screens/complication.md) |
-| `share-export` | Share/export | System surface | [`screens/share-export.md`](screens/share-export.md) |
+| Stable ID | Surface | Kind | Canonical description | Primary shared wireframe |
+|---|---|---|---|---|
+| `today` | Today | Root screen | [`screens/today.md`](screens/today.md) | [`today--ready--compact.png`](wireframes/today--ready--compact.png) |
+| `custom-amount` | Custom amount | Sheet | [`screens/custom-amount.md`](screens/custom-amount.md) | [`custom-amount--ready--compact.png`](wireframes/custom-amount--ready--compact.png) |
+| `history` | History | Root screen | [`screens/history.md`](screens/history.md) | [`history--ready--compact.png`](wireframes/history--ready--compact.png) |
+| `day-detail` | Day Detail | Child screen | [`screens/day-detail.md`](screens/day-detail.md) | [`day-detail--ready--compact.png`](wireframes/day-detail--ready--compact.png) |
+| `edit-intake` | Edit intake | Sheet | [`screens/edit-intake.md`](screens/edit-intake.md) | [`edit-intake--ready--compact.png`](wireframes/edit-intake--ready--compact.png) |
+| `stats` | Stats | Root screen | [`screens/stats.md`](screens/stats.md) | [`stats--ready--compact.png`](wireframes/stats--ready--compact.png) |
+| `settings` | Settings | Root screen | [`screens/settings.md`](screens/settings.md) | [`settings--ready--compact.png`](wireframes/settings--ready--compact.png) |
+| `add-container` | Add container | Sheet | [`screens/add-container.md`](screens/add-container.md) | [`add-container--ready--compact.png`](wireframes/add-container--ready--compact.png) |
+| `edit-container` | Edit container | Sheet | [`screens/edit-container.md`](screens/edit-container.md) | [`edit-container--ready--compact.png`](wireframes/edit-container--ready--compact.png) |
+| `edit-reminder` | Edit reminders | Sheet | [`screens/edit-reminder.md`](screens/edit-reminder.md) | [`edit-reminder--ready--compact.png`](wireframes/edit-reminder--ready--compact.png) |
+| `onboarding` | Onboarding | Onboarding surface | [`screens/onboarding.md`](screens/onboarding.md) | [`onboarding--ready--compact.png`](wireframes/onboarding--ready--compact.png) |
+| `watch-today` | Wear Today | Wearable root screen | [`screens/watch-today.md`](screens/watch-today.md) | [`watch-today--ready--wearable.png`](wireframes/watch-today--ready--wearable.png) |
+| `watch-custom-amount` | Wear custom amount | Wearable sheet | [`screens/watch-custom-amount.md`](screens/watch-custom-amount.md) | [`watch-custom-amount--ready--wearable.png`](wireframes/watch-custom-amount--ready--wearable.png) |
+| `watch-history` | Wear History | Wearable screen | [`screens/watch-history.md`](screens/watch-history.md) | [`watch-history--ready--wearable.png`](wireframes/watch-history--ready--wearable.png) |
+| `watch-day-detail` | Wear Day Detail | Wearable screen | [`screens/watch-day-detail.md`](screens/watch-day-detail.md) | [`watch-day-detail--ready--wearable.png`](wireframes/watch-day-detail--ready--wearable.png) |
+| `watch-stats` | Wear Stats | Wearable screen | [`screens/watch-stats.md`](screens/watch-stats.md) | [`watch-stats--ready--wearable.png`](wireframes/watch-stats--ready--wearable.png) |
+| `widget` | Widget | System surface | [`screens/widget.md`](screens/widget.md) | [`widget--ready--compact.png`](wireframes/widget--ready--compact.png) |
+| `quick-log-control` | Quick-log control | System surface | [`screens/quick-log-control.md`](screens/quick-log-control.md) | [`quick-log-control--ready--compact.png`](wireframes/quick-log-control--ready--compact.png) |
+| `notification-actions` | Notification actions | System surface | [`screens/notification-actions.md`](screens/notification-actions.md) | [`notification-actions--ready--compact.png`](wireframes/notification-actions--ready--compact.png) |
+| `shortcuts-and-intents` | Shortcuts and intents | System surface | [`screens/shortcuts-and-intents.md`](screens/shortcuts-and-intents.md) | [`shortcuts-and-intents--ready--compact.png`](wireframes/shortcuts-and-intents--ready--compact.png) |
+| `complication` | Complication | System surface | [`screens/complication.md`](screens/complication.md) | [`complication--ready--wearable.png`](wireframes/complication--ready--wearable.png) |
+| `share-export` | Share/export | System surface | [`screens/share-export.md`](screens/share-export.md) | [`share-export--ready--compact.png`](wireframes/share-export--ready--compact.png) |
 
 The catalog currently contains 22 stable surface IDs. Renaming a localized
 surface does not change its ID. A new ID is required only when the user
 outcome, lifecycle, or domain responsibility changes; a visual rearrangement
-that preserves the outcome updates the existing file.
+that preserves the outcome updates the existing file. Every row also links the
+primary shared wireframe; expanded variants are linked from the affected
+canonical description.
 
 ## 3. Required structure of every canonical surface file
 
@@ -123,6 +126,7 @@ rebuild the surface without guessing:
 | State matrix | Loading, empty, ready, goal/over-goal, permission, offline/sync, error, success, and reduced motion as applicable. |
 | Validation and destructive behavior | Ranges, disabled states, confirmation, soft delete, undo, and recovery. |
 | Accessibility | Labels, values, traits, focus order, input alternatives, and large-text behavior. |
+| Platform-independent wireframes | A real PNG preview with a same-stem editable source, embedded in the canonical file and linked from this index. |
 | Design contract | Named Ripple tokens and reusable elements; native controls where appropriate. |
 | Responsive/platform behavior | Compact, regular, expanded, wearable, and system-surface adaptation without changing meaning. |
 | Forbidden behavior | Specific implementations that violate the shared contract. |
@@ -201,7 +205,10 @@ surface file.
 
 Every versioned document updates `Last verified` and appends an immutable
 Timeline row. Reference captures are evidence; they do not override the
-canonical text.
+canonical text. Shared wireframes use the naming and source rules in
+[`wireframes/README.md`](wireframes/README.md); their PNGs illustrate the
+canonical text and do not override it. Android evidence captures remain
+separate and do not replace a shared wireframe.
 
 ## 7. Timeline
 
@@ -211,5 +218,6 @@ The history is append-only. Prior entries are not rewritten.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the platform-independent catalog, stable surface IDs, and the shared state/accessibility contract. | iOS and Android can map native surfaces to one semantic surface definition without duplicating product behavior. |
 | 1.1.0 | 2026-09-11 | Converted the catalog into an index and split every screen, sheet, wearable surface, and system surface into one canonical platform-independent Markdown description file. Clarified that this rule applies to documentation, not production source-file organization. | Each surface now has one unambiguous place for its layout and function while iOS and Android remain free to use native implementation structure. |
+| 1.2.0 | 2026-09-18 | Added the Apple 1.1 reference baseline and a primary shared-wireframe link for all 22 stable IDs, with the editable-source/rendering contract under `wireframes/`. | The Android finalization handoff now has a rebuildable, platform-neutral visual reference in addition to the semantic surface descriptions and Android evidence captures. |
 
-*End of Ripple screen and sheet catalog 1.1.0.*
+*End of Ripple screen and sheet catalog 1.2.0.*
