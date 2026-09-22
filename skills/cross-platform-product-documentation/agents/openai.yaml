@@ -1,4 +1,4 @@
 interface:
   display_name: "Cross Platform Product Documentation"
-  short_description: "Create shared product docs and wireframes"
-  default_prompt: "Use $cross-platform-product-documentation to audit or create a cross-platform product documentation contract with platform-independent wireframe images for each screen and sheet."
+  short_description: "Create shared product docs with visual-fidelity audits"
+  default_prompt: "Use $cross-platform-product-documentation to audit or create a cross-platform product documentation contract with evidence-backed visible-element inventories and platform-independent wireframe images for each screen and sheet."

@@ -18,8 +18,13 @@ documentation contract; they do not prove runtime behavior.
 ## Canonical surface files
 
 - [ ] Purpose/outcome, entry/exit, region order, read model, actions, states,
-      validation, accessibility, design contract, responsive behavior, and
-      forbidden behavior are present or explicitly not applicable.
+  validation, accessibility, design contract, responsive behavior, and
+  forbidden behavior are present or explicitly not applicable.
+- [ ] The reference set, state/viewport coverage, and visible-element inventory
+  are recorded for each surface that has reference captures.
+- [ ] Every product-owned visible element is mapped to layout, state, action,
+  accessibility, or design-contract text; noninteractive, clipped, and
+  state-dependent elements are not silently dropped.
 - [ ] The language is platform-independent.
 - [ ] No framework component names, source paths, or platform API instructions
       appear in the canonical semantic description.
@@ -38,7 +43,16 @@ documentation contract; they do not prove runtime behavior.
       identify the source surface contract version and descriptive alt text exists.
 - [ ] Editable sources and reproducible rendering instructions accompany images.
 - [ ] Every new/changed image was rendered and visually inspected for agreement
-      with the text, legibility, clipping, and unintended platform styling.
+  with the text, legibility, clipping, and unintended platform styling.
+- [ ] The wireframe preserves the reference's product-owned region order,
+  grouping, information density, repeated-element counts, and visible controls.
+- [ ] Dependent context/date-range rows, selection and progress indicators,
+  pager/continuation cues, helper/footer content, and chart type/series/axes/
+  legends are represented when visible in the target state.
+- [ ] No product-owned element was removed, merged, reordered, substituted, or
+  materially recomposed under the label of low fidelity or platform neutrality.
+- [ ] Any omitted status bar, device frame, or other system-owned chrome is
+  explicitly classified and covered by the appropriate platform mapping.
 - [ ] Images and source links resolve; previews are nonempty and decodable.
 - [ ] Affected images were regenerated with their contracts; wireframes remain
       distinct from screenshots and do not override text or native controls.
@@ -55,7 +69,15 @@ documentation contract; they do not prove runtime behavior.
       the semantic contract.
 - [ ] Platform-specific navigation/input/system behavior is documented only in
       the relevant platform mapping.
-- [ ] Evidence captures are labeled as evidence and do not override text.
+- [ ] Evidence captures are labeled by role; they do not silently override
+      written behavioral or domain contracts.
+- [ ] Current visual targets, older wireframes, and exploratory images are
+  classified; conflicts are resolved by authority or reported rather than
+  silently choosing the simpler artifact.
+- [ ] Wearable references are audited as their own surfaces, including density,
+  clipping/scrolling, pagination, row-level indicators, and any product-owned
+  status content; system-owned status is classified separately. They are not
+  reduced to a generic phone-derived layout.
 
 ## Versioning and repository hygiene
 

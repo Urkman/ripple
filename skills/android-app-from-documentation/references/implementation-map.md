@@ -4,9 +4,9 @@ Use this template when the Android project needs an explicit traceability
 record. Store it where the repository's architecture documentation expects it;
 do not create a competing product contract.
 
-| Stable surface ID | Canonical description | Android entry point/module | State owner | Domain operations | Design elements | Verification |
-|---|---|---|---|---|---|---|
-| `[id]` | `[path]` | `[route/module/entry]` | `[ViewModel/presenter]` | `[operations]` | `[tokens/components/native controls]` | `[tests/flows]` |
+| Stable surface ID | Canonical description | Android entry point/module | State owner | Domain operations | Documented UI coverage | Design elements | Verification |
+|---|---|---|---|---|---|---|---|
+| `[id]` | `[path]` | `[route/module/entry]` | `[ViewModel/presenter]` | `[operations]` | `[all regions/elements and state/viewport variants accounted for]` | `[tokens/components/native controls]` | `[tests/flows]` |
 
 ## Completion rules
 
@@ -17,6 +17,13 @@ do not create a competing product contract.
   do not label an unimplemented path as complete.
 - State ownership is explicit and UI callbacks do not bypass the domain/data
   boundary.
+- Every product-owned region and visible element in the canonical description's
+  inventory has an Android implementation owner or an explicit documented
+  platform exclusion. Record repeated-element counts, order, and state/viewport
+  variants where they affect coverage.
+- A surface is not complete when a documented selector/context row, chart/list
+  structure, indicator, helper/footer, or wearable continuation cue is missing,
+  merged, reordered, or replaced by an undocumented alternative.
 - System and wearable clients name their source identifier and shared domain
   operation.
 - Verification names the actual test or emulator flow, not an assumed result.

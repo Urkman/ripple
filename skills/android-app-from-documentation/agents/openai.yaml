@@ -1,4 +1,4 @@
 interface:
   display_name: "Android App From Documentation"
-  short_description: "Build Android apps from product docs"
-  default_prompt: "Use $android-app-from-documentation to implement this Android app from its product, surface, design, and data contracts."
+  short_description: "Build Android apps with complete UI traceability"
+  default_prompt: "Use $android-app-from-documentation to implement this Android app from its product, surface, design, and data contracts, preserving every documented product UI element and verifying coverage on Android."

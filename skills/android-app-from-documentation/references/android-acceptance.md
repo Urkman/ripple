@@ -50,14 +50,22 @@ architecture instructions and record the exact command.
 
 For each implemented stable ID, record:
 
-| Surface | Launch/entry | Primary outcome | Cancel/back | Loading/empty/error | Accessibility | Adaptive sizes/theme | Evidence |
-|---|---|---|---|---|---|---|---|
-| `[id]` | `[pass/gap]` | `[pass/gap]` | `[pass/gap]` | `[pass/gap]` | `[pass/gap]` | `[pass/gap]` | `[path or run]` |
+| Surface | Launch/entry | Documented UI coverage | Primary outcome | Cancel/back | Loading/empty/error | Accessibility | Adaptive sizes/theme | Evidence |
+|---|---|---|---|---|---|---|---|---|
+| `[id]` | `[pass/gap]` | `[pass/gap; all regions/elements/states checked]` | `[pass/gap]` | `[pass/gap]` | `[pass/gap]` | `[pass/gap]` | `[pass/gap]` | `[path or run]` |
 
 ## Review rules
 
-- Compare screenshots to written semantic contracts and reference images for
-  hierarchy, state, and interaction—not pixel identity with another platform.
+- Compare screenshots to the complete written element inventory, semantic
+  contracts, and reference images for hierarchy, state, interaction, and
+  product-owned visual structure—not pixel identity with another platform.
+- For the target state and viewport, verify every documented product-owned
+  region and element: labels/values/units, selectors and dependent context or
+  date-range rows, repeated rows/cards, indicators, chart type/series/axes/
+  legends, helper/footer content, and wearable clipping or pagination cues.
+  Missing, merged, reordered, substituted, or materially recomposed elements
+  are acceptance failures unless the documentation explicitly defines the
+  platform variation.
 - Verify stable collection keys, no duplicate writes, correct amount/unit
   formatting, and persistence after relaunch where documented.
 - Check dark theme and font scaling; ensure actions and values remain reachable.

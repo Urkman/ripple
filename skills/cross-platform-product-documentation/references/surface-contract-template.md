@@ -23,13 +23,39 @@ This is the canonical, platform-independent description of [surface].
 
 [Entry points, back/dismissal, completion, cancellation, and mutation boundary.]
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [links to current captures, existing wireframes, or
+“none available”]
+**Reference classification:** [current visual target | supporting evidence |
+exploratory | mixed]
+**States/viewports inspected:** [state and semantic viewport for each reference]
+**System-owned chrome excluded from the shared wireframe:** [list or “none”]
+
+Before finalizing this contract, account for every product-owned visible region
+and element in the reference set. Use one row per distinct element or repeated
+element family, including noninteractive, disabled, clipped, and
+state-dependent elements.
+
+| Reference region or element | Semantic role and visible content | State/condition | Contract location | Native/platform note |
+|---|---|---|---|---|
+| [Example: context row below a selector] | [Meaning, labels/values, units] | [When visible] | [Layout/states/actions/etc.] | [Only if native expression differs] |
+
+If a reference and the contract differ, state whether the difference is caused
+by state, viewport, localization, system-owned chrome, a stale artifact, or an
+unresolved authority conflict. Do not silently omit a visible product-owned
+element or replace it with a simpler control, list, or chart.
+
 ## Layout and region order
 
 1. [Semantic region]
 2. [Semantic region]
 3. [Semantic region]
 
-[Describe hierarchy, sizing intent, and responsive reflow without naming a UI framework.]
+[Describe the complete visible hierarchy, sizing intent, grouping, and
+responsive reflow without naming a UI framework. Preserve the inventory's
+product-owned regions, their order, repeated-element counts, and relationship
+to adjacent controls. System-owned chrome may be mapped separately.]
 
 ## Platform-independent wireframes
 
@@ -39,8 +65,9 @@ This is the canonical, platform-independent description of [surface].
 surface contract version used to generate or last verify the image.]
 
 [Embed additional images for materially different documented states or
-responsive layouts. Link editable sources. Images illustrate this text and
-do not prescribe platform-native control appearance.]
+responsive layouts. Link editable sources. Images illustrate this text and do
+not prescribe platform-native control appearance, but they must still show all
+product-owned regions from the corresponding reference inventory.]
 
 ## Read model
 
