@@ -1,5 +1,6 @@
 import RippleData
 import RippleFeatures
+import RippleUI
 import SwiftUI
 
 @main
@@ -19,7 +20,10 @@ struct RippleMacApp: App {
         WindowGroup {
             MacRootView(useCases: container.useCases, today: today)
                 .environment(\.rippleUseCases, container.useCases)
-                .frame(minWidth: 720, minHeight: 520)
+                .frame(
+                    minWidth: RippleLayout.macWindowMinimumWidth,
+                    minHeight: RippleLayout.macWindowMinimumHeight
+                )
         }
         .commands {
             RippleMacCommands(today: today)

@@ -2,6 +2,7 @@
 import OSLog
 import RippleData
 import RippleDomain
+import RippleUI
 import SwiftUI
 
 struct DemoDataGateView<Content: View>: View {
@@ -37,13 +38,13 @@ struct DemoDataGateView<Content: View>: View {
             case .ready:
                 content()
             case .failed(let error):
-                VStack(spacing: 16) {
+                VStack(spacing: RippleSpace.lg) {
                     Image(systemName: "exclamationmark.triangle")
-                        .font(.title)
+                        .font(RippleFont.symbol)
                     Text("Demo data setup failed")
-                        .font(.headline)
+                        .font(RippleFont.callout.weight(.semibold))
                     Text(error.localizedDescription)
-                        .font(.caption)
+                        .font(RippleFont.caption)
                         .multilineTextAlignment(.center)
                     Button("Retry") {
                         state = .preparing
@@ -51,7 +52,7 @@ struct DemoDataGateView<Content: View>: View {
                     }
                     .buttonStyle(.borderedProminent)
                 }
-                .padding()
+                .padding(RippleSpace.lg)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

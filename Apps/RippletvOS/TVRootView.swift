@@ -13,7 +13,7 @@ public struct TVRootView: View {
 
     public var body: some View {
         let formatter = VolumeFormatter.current
-        VStack(spacing: 40) {
+        VStack(spacing: RippleSpace.xxxl) {
             RippleHeroView(
                 consumedMl: model.snapshot.consumed.value,
                 goalMl: model.snapshot.goal.value,
@@ -30,7 +30,7 @@ public struct TVRootView: View {
                     percent: model.snapshot.percent
                 )
             )
-            HStack(spacing: 24) {
+            HStack(spacing: RippleSpace.xl) {
                 ForEach([250, 500, 750], id: \.self) { amount in
                     Button("+ \(amount) ml") {
                         Task { await model.add(milliliters: amount) }
@@ -39,7 +39,7 @@ public struct TVRootView: View {
                 }
             }
         }
-        .padding(60)
+        .padding(RippleLayout.tvRootContentPadding)
         .background(RippleColor.surface)
         .overlay(alignment: .bottom) {
             RippleToastHost(

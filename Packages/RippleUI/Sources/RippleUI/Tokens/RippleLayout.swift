@@ -44,6 +44,10 @@ public enum RippleLayout {
     public static let visionOrnamentDividerWidth: CGFloat = RippleStroke.standard
     public static let visionOrnamentDividerHeight: CGFloat = 20
 
+    public static let macWindowMinimumWidth: CGFloat = 720
+    public static let macWindowMinimumHeight: CGFloat = 520
+    public static let tvRootContentPadding: CGFloat = 60
+
     public static let iPadHistoryColumnMinWidth: CGFloat = 320
     public static let iPadHistoryColumnIdealWidth: CGFloat = 336
     public static let iPadHistoryColumnMaxWidth: CGFloat = 360
