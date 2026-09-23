@@ -1,0 +1,4 @@
+interface:
+  display_name: "Android Conversion Readiness"
+  short_description: "Audit Android port prerequisites and token coverage"
+  default_prompt: "Use $android-conversion-readiness to audit whether this repository is ready for Android conversion and report blockers with evidence."

@@ -1,9 +1,9 @@
 # Ripple Surface — Wear Day Detail
 
-**Stable surface ID:** `watch-day-detail`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Wearable screen  
+**Stable surface ID:** `watch-day-detail`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** Wearable screen
 **Localized name:** Localized selected date
 
 This is the canonical wearable day-detail contract.
@@ -28,13 +28,28 @@ confirmation/undo pattern and returns the updated day state.
 5. Row-level edit/delete actions where supported, with delete clearly
    destructive and undoable through the defined feedback.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [Android Wear Day Detail](../Android/UI/wear-day-detail.png) and [shared wearable wireframe](../wireframes/watch-day-detail--ready--wearable.png); no Apple runtime capture
+**Reference classification:** Android supporting evidence plus shared semantic wireframe.
+**States/viewports inspected:** Ready selected day, empty, individual delete, and undo feedback.
+**System-owned chrome excluded from the shared wireframe:** Native swipe-back, rotary focus, and destructive confirmation surface.
+
+**Required product-owned composition:** Back/date context; selected-day total/goal/remaining; chronological entry rows with time/amount/source/container; individual soft-delete action; Undo feedback.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#watch-day-detail). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Wear Day Detail ready-state wearable wireframe: selected date, total, entries, and soft-delete actions](../wireframes/watch-day-detail--ready--wearable.png)
 
 Editable source: [watch-day-detail--ready--wearable.svg](../wireframes/watch-day-detail--ready--wearable.svg).
 
-Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -89,6 +104,8 @@ remains the semantic order.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Wear Day Detail description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

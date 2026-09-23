@@ -28,8 +28,8 @@ public struct AmountStepper: View {
             .accessibilityLabel("Decrease")
 
             Text(formatted)
-                .font(.title2.monospacedDigit().weight(.semibold))
-                .frame(minWidth: 120)
+                .font(RippleFont.titleNumeric)
+                .frame(minWidth: RippleLayout.amountStepperValueMinimumWidth)
                 .contentTransition(.numericText())
                 .animation(RippleMotion.springSnappy, value: milliliters)
 
@@ -41,6 +41,6 @@ public struct AmountStepper: View {
             .accessibilityLabel("Increase")
         }
         .foregroundStyle(RippleColor.waterLagoon)
-        .font(.title)
+        .font(RippleFont.control)
     }
 }

@@ -79,7 +79,7 @@ private struct OnboardingUnitsPage: View {
         } label: {
             Text(title)
                 .font(RippleFont.callout.weight(.semibold))
-                .foregroundStyle(isSelected ? Color.white : RippleColor.waterDeep)
+                .foregroundStyle(isSelected ? RippleColor.onAction : RippleColor.waterDeep)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, RippleSpace.md)
                 .background(

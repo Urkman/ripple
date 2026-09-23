@@ -82,7 +82,7 @@ private struct WatchQuickAmountButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .frame(height: RippleWatchLayout.controlHeight)
             .padding(.horizontal, RippleSpace.xs)
-            .foregroundStyle(isSelected ? Color.white : RippleColor.watchText)
+            .foregroundStyle(isSelected ? RippleColor.onAction : RippleColor.watchText)
             .background(
                 RoundedRectangle(cornerRadius: RippleRadius.control, style: .continuous)
                     .fill(isSelected ? RippleColor.watchLagoon : RippleColor.watchSurfaceElevated)

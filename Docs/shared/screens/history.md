@@ -1,9 +1,9 @@
 # Ripple Surface — History
 
-**Stable surface ID:** `history`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Root screen  
+**Stable surface ID:** `history`
+**Surface contract version:** 1.2.1
+**Last verified:** 2026-09-23
+**Kind:** Root screen
 **Localized name:** `Verlauf` / `History`
 
 This is the canonical description of the month-based History surface.
@@ -33,20 +33,41 @@ The calendar is the primary content. A regular or expanded presentation may
 reserve a persistent detail region after a day is selected, but the semantic
 route remains History → Day Detail.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [iPhone History](ios/iphone-history.png), [Android phone History](../Android/UI/phone-history.png), [Android tablet split](../Android/UI/tablet-history-split.png), and [shared compact/expanded/adaptive wireframes](../wireframes/history--ready--compact.png)
+**Reference classification:** Current compact iOS target plus Android compact/expanded supporting evidence and shared semantic wireframes.
+**States/viewports inspected:** Populated month compact, selected-day expanded split, constrained-height, and active-fold regions.
+**System-owned chrome excluded from the shared wireframe:** Status bars, device frames, iOS/Android root navigation, and native split/rail chrome.
+
+**Required product-owned composition:** Today-only plus action; month title and previous/next context; weekday row; one date/ring marker per calendar day with future-disabled and selected states; selected-day context; calendar/detail regions above the documented width threshold.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#history). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![History ready-state compact wireframe: month navigation, one day ring per date, and selected day context](../wireframes/history--ready--compact.png)
 
 Editable source: [history--ready--compact.svg](../wireframes/history--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.2.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 ![History ready-state expanded wireframe: calendar beside the selected day detail region](../wireframes/history--ready--expanded.png)
 
 Editable source: [history--ready--expanded.svg](../wireframes/history--ready--expanded.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the expanded semantic viewport; shared surface contract version 1.2.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
+
+![History responsive wireframe showing usable regions and retained state](../wireframes/history--resize--adaptive.png)
+
+Editable source: [history--resize--adaptive.svg](../wireframes/history--resize--adaptive.svg).
+Caption: Neutral resize/fold illustration, surface contract 1.2.1; not runtime evidence.
+The earlier ready-state images remain representative baseline hierarchy references.
 
 ## Read model
 
@@ -98,9 +119,16 @@ All colors, type, spacing, shapes, and motion come from
 
 ## Responsive/platform-independent behavior
 
-Compact layouts use one month grid. Regular or expanded layouts may show the
-calendar beside a selected detail region. Wearable History is a separate
-seven-day surface and never becomes a month grid through scaling.
+Use the current usable container width, including during resizing and folding.
+Show calendar and detail side by side only when each has at least 320 logical
+units plus the 1-unit divider (641 total); below that, show a single calendar
+and nested detail. In a short container the month content can scroll vertically
+without replacing horizontal month paging. During an active fold use the
+system-provided regions for calendar and detail. Preserve the visible month,
+selected day, open detail, and open custom-amount sheet and draft when the
+presentation expands or collapses. A previously opened detail remains the
+same day after the transition. Wearable History is a separate seven-day
+surface and never becomes a month grid through scaling.
 
 ## Forbidden behavior
 
@@ -116,6 +144,9 @@ seven-day surface and never becomes a month grid through scaling.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent History description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframes and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+| 1.2.0 | 2026-09-19 | Specified container-driven resize/fold composition and preserved presentation state; added an adaptive wireframe. | Compact and expanded windows retain usable content and ongoing interaction. |
+
+| 1.2.1 | 2026-09-23 | Added the visible-element inventory and restored the today-only add affordance in the compact and expanded shared wireframes. | History references now preserve the calendar, selected-day context, add action, and responsive region relationship. |
 
 ## Related contracts
 

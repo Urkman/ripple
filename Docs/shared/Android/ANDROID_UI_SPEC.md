@@ -1,8 +1,8 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 3.2.0
-**Last verified:** 2026-09-18
+**Document version:** 3.4.1
+**Last verified:** 2026-09-23
 **Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 **Product contract:** [Ripple PRD](../Ripple_PRD.md)
@@ -10,6 +10,7 @@
 **Design contract:** [Ripple design system](../Ripple_DESIGN_SYSTEM.md)
 **Data contract:** [Ripple data model](../Ripple_DATA_MODEL.md)
 **Visual reference pack:** [Android UI reference pack](UI/README.md)
+**Visual inventory:** [Ripple visual reference inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md)
 
 This is the normative Android screen, flow, state, accessibility, and visual
 acceptance contract. The current iOS implementation establishes the product
@@ -28,7 +29,10 @@ The platform-independent PNG/SVG wireframes in
 [`../wireframes/README.md`](../wireframes/README.md) are the shared semantic
 layout reference for every canonical surface. Android-native controls,
 navigation, permission UI, density, and Wear presentation remain governed by
-this document.
+this document. The linked [visual reference inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md)
+classifies the evidence set, crops, system-owned chrome, platform expressions,
+and required product-owned visible elements; it is an audit companion rather
+than a competing product contract.
 
 The shared screen catalog owns stable IDs and platform-independent outcomes;
 this document owns the Android expression of those entries. The shared design
@@ -36,6 +40,30 @@ system owns semantic colors, typography, spacing, shape, motion, reusable
 elements, and native-control policy. The shared data model owns fields,
 invariants, storage, and use-case boundaries. This document must link to those
 contracts rather than silently redefine them.
+
+## Container resizing and fold posture
+
+The current [Today](../screens/today.md) and [History](../screens/history.md)
+contracts apply during live window resizing, split screen, and fold changes.
+Retain all four root destinations. Use current usable window/region constraints
+and native window insets, never a handset/tablet name or physical orientation
+as a space proxy. Map the shared layout tokens to logical Android units.
+
+Today uses side-by-side hero/actions only when both regions fit; shrink the
+hero proportionally within its existing maxima and allow vertical scrolling
+when the readable minimum and actions exceed the available height. Keep its
+three-action row fixed without horizontal scrolling. History needs 641 logical
+units for two columns (320 + 1 + 320), otherwise use single-column navigation.
+Use native fold/window information to place the Today and History regions in
+usable panes during an active fold. Other screens keep their native adaptive
+containers. Do not copy an Apple API or invent a fixed hinge inset.
+
+Preserve selected root, month/day, open detail, and custom-amount draft and
+presentation through either transition direction. Test expanded → compact →
+expanded while a detail or sheet is open, plus short windows, large text,
+Reduce Motion, asymmetric insets, and fold posture changes. No domain or water
+motion change is introduced. This handoff adds no Android runtime verification;
+existing captures remain historical baseline evidence.
 
 ## 1. Source of truth and parity rule
 
@@ -47,6 +75,7 @@ The contract is maintained in layers:
 | Stable surface IDs and platform-independent screen/sheet behavior | `Ripple_SCREEN_CATALOG.md` and one file under `../screens/` per ID | Map every canonical description to Android-native implementation and preserve its outcome/state/accessibility contract; source files may follow Android module conventions |
 | Shared tokens and reusable UI elements | `Ripple_DESIGN_SYSTEM.md` | Map roles to Material/Wear/native controls; do not add feature-local styling |
 | Domain fields, invariants, units, and projections | `Ripple_DATA_MODEL.md` | Implement compatible Room/use-case/read-model behavior; do not move domain truth into UI |
+| Visual evidence and visible-element coverage | `Ripple_VISUAL_REFERENCE_INVENTORY.md` and `UI/README.md` | Classify state/viewport/crop/native chrome and preserve every product-owned region in the Android expression and shared wireframe mapping |
 | Current iOS hierarchy and settings/onboarding composition | iOS source and captures listed below | Do not invent a dashboard or omit a screen |
 | Android layout and system substitution | This document and `UI/*.png` | Use Android-native components and responsive layouts |
 
@@ -126,6 +155,7 @@ Ripple's shared identity, not a second product palette.
 | `rippleDeep` | `#0B3D4A` | light aqua-tinted text | Primary text and icons |
 | `rippleLagoon` | `#1A7A8C` | `#4FB3C6` | Primary action, selection, success |
 | `rippleAqua` | `#4FB3C6` | brighter aqua | Water fill and progress |
+| `rippleOnAction` | `#FFFFFF` | `#FFFFFF` | Text and icons on filled Lagoon/Aqua action surfaces |
 | `rippleFoam` | `#E8F4F6` | cool anthracite | App canvas |
 | `rippleOutline` | `#B4C9CC` | cool muted outline | Quiet structure |
 | `rippleDanger` | system desaturated red | system desaturated red | Delete and error only |
@@ -591,6 +621,12 @@ boundary. Every chart has a textual summary and a value-access path for
 TalkBack. Do not turn Stats into a three-ring dashboard, a GitHub heatmap, or a
 History/Insights combination.
 
+On regular and expanded windows, place chart cards in an adaptive grid only
+when each card keeps the shared readable minimum; keep the summary metrics in
+a centered bounded row. Compact windows and large font scales stack the same
+cards in semantic order. The grid follows Android window size and measured
+content width, never a device or fold identity.
+
 ## 7. Settings
 
 **Stable surface IDs:** `settings`, `add-container`, `edit-container`, `edit-reminder`
@@ -626,6 +662,10 @@ Use Android switches, list items, menus, dialogs, date/time pickers, and system
 settings intents. Keep destructive actions explicit and reversible where the
 domain supports restoration. Settings changes update the shared domain through
 their use cases; a composable does not write persistence directly.
+
+Regular and expanded windows may place these groups in an adaptive two-column
+layout when the shared readable minimum fits; compact windows stack them. The
+complete Containers group stays together and retains its persisted order.
 
 ## 8. Onboarding
 
@@ -845,17 +885,28 @@ with a same-stem editable SVG source under
 [`../wireframes/`](../wireframes/). The canonical surface file embeds the
 image and identifies its state, viewport, and contract version. These images
 are layout illustrations, not Android screenshots and not a replacement for
-runtime acceptance.
+runtime acceptance. Review the complete [visual reference inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md)
+with the wireframe set: it is the coverage check for product-owned visible
+elements and explicitly excludes system-owned chrome.
 
 The reference pack links the current iOS evidence:
 
 - [iPhone Today](../screens/ios/iphone-today.png)
+- [iPhone Duo Today, outer display](../screens/ios/iphone-duo-today-outer.png)
 - [iPhone History](../screens/ios/iphone-history.png)
 - [iPhone Stats](../screens/ios/iphone-stats.png)
 - [iPad Settings](../screens/ios/ipad-settings.png)
 - [Watch Today](../screens/ios/watch-today.png)
 - [Watch History](../screens/ios/watch-history.png)
 - [Watch Stats](../screens/ios/watch-stats.png)
+
+The corrected shared wireframes preserve the History today-only add action,
+Stats' dependent period context, four distinct chart families and Highlights,
+Settings' eight separate semantic groups, Day Detail goal/row actions, the
+Edit Container delete action, and all seven elapsed local days in Wear History.
+The Android evidence remains platform-native: the Wear Today predefined chips
+are a native expression of the logging action, and the inventory records that
+no Android runtime resize/fold captures exist yet.
 
 Store runtime Android captures under `release/screenshots/android/` with stable
 names:
@@ -931,7 +982,8 @@ directly.
       Stats without a month calendar or period picker.
 - [ ] Widgets, notifications, and Quick Settings remain focused and static.
 - [ ] All 22 shared stable surfaces resolve to a canonical description and a
-      non-empty shared PNG/SVG wireframe; system-owned presentation remains
+      non-empty shared PNG/SVG wireframe whose product-owned coverage is
+      checked against the visual inventory; system-owned presentation remains
       native.
 - [ ] Light/dark mode, large text, TalkBack, reduced motion, offline, empty,
       and error states are reviewed on representative targets.
@@ -976,3 +1028,7 @@ at the bottom.
 | 3.0.0 | 2026-09-11 | Adopted stable shared surface IDs and linked the platform-independent screen, design-system, and data-model contracts. Added explicit Material/native-control mapping for the canonical surface-description structure, container ordering, first-three Today actions, all-container custom selection, slider input, and icon-only editor selection. | Android remains a native Material/Wear expression while its screens, states, tokens, fields, and acceptance behavior are traceable to one shared contract. |
 | 3.1.0 | 2026-09-11 | Linked each Android UI section to the one canonical platform-independent Markdown description for every surface and clarified that Android source-file organization remains native and implementation-local. | Android layout and acceptance guidance now points to the exact screen/sheet contract without prescribing one Kotlin file per surface. |
 | 3.2.0 | 2026-09-18 | Recorded the Apple 1.1 release baseline and linked the complete shared neutral wireframe pack, including the editable-source and coverage acceptance rule. | Android can finish native screen implementation from one current semantic layout contract while keeping Android evidence captures and runtime validation separate. |
+| 3.3.0 | 2026-09-19 | Mapped adaptive Today/History and fold-region semantics, state preservation, and shared size thresholds to native Android windows. | Independent Android implementation has current resize acceptance requirements; no new Android runtime evidence is claimed. |
+| 3.3.1 | 2026-09-20 | Mapped the shared adaptive Stats/Settings panel rule to Android window-size behavior and large-font fallback. | The Android port can mirror the iPhone Duo composition while retaining Material controls, semantic order, and complete settings groups. |
+| 3.4.0 | 2026-09-23 | Added the evidence-backed visual inventory and reconciled the shared compact, expanded, adaptive, and wearable wireframes to the complete product-owned visible structure. | Android implementers can distinguish crops, native chrome, and platform expressions from required content; known lack of Android runtime resize/fold captures remains explicit. |
+| 3.4.1 | 2026-09-23 | Added the Android mapping for shared `color.on-action` content on filled Lagoon/Aqua actions. | Material and Wear controls can use native `onPrimary` content roles while preserving shared contrast semantics without local white values. |

@@ -7,7 +7,7 @@ public struct TodayView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.locale) private var locale
     @Environment(\.scenePhase) private var scenePhase
-    @Environment(\.rippleIPadLayout) private var usesIPadLayout
+    @Environment(\.rippleExpandedLayout) private var usesExpandedLayout
     @State private var gravityTilt = GravityTiltController()
     @State private var showsCustomAmount = false
 
@@ -20,20 +20,36 @@ public struct TodayView: View {
         let snapshot = model.snapshot
         GeometryReader { proxy in
             Group {
-                if usesIPadLandscapeLayout(for: proxy.size) {
-                    landscapeContent(snapshot: snapshot, formatter: formatter)
+                #if os(iOS)
+                if #available(iOS 27.1, *),
+                   !proxy.reservedRegions(kind: .division).isEmpty {
+                    ArrangementView {
+                        arrangedHero(snapshot: snapshot, formatter: formatter)
+                    } secondary: {
+                        ScrollView {
+                            VStack(spacing: RippleSpace.md) {
+                                remainingLabel(formatter: formatter)
+                                quickAddCluster(snapshot: snapshot, formatter: formatter, layout: .vertical, style: .flat)
+                                LogButton(L10n.text("Custom amount"), action: showCustomAmount)
+                            }
+                            .padding(RippleSpace.lg)
+                        }
+                    }
+                    .arrangementViewStyle(.split)
                 } else {
-                    compactContent(snapshot: snapshot, formatter: formatter)
+                    standardContent(snapshot: snapshot, formatter: formatter)
                 }
+                #else
+                standardContent(snapshot: snapshot, formatter: formatter)
+                #endif
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, RippleLayout.todayContentHorizontalPadding)
         .padding(.bottom, RippleSpace.md)
         .background(RippleColor.waterFoam.ignoresSafeArea())
         .rippleInlineNavigationTitle()
-        .navigationTitle(usesIPadLayout ? "" : "\(L10n.text("Ripple")) · \(formattedDate(snapshot.date))")
-        .rippleNavigationBarVisibility(hidden: usesIPadLayout)
+        .navigationTitle(usesExpandedLayout ? "" : "\(L10n.text("Ripple")) · \(formattedDate(snapshot.date))")
+        .rippleNavigationBarVisibility(hidden: usesExpandedLayout)
         .overlay(alignment: .bottom) {
             RippleToastHost(
                 message: model.confirmation,
@@ -41,12 +57,6 @@ public struct TodayView: View {
             )
             .padding(.horizontal, RippleSpace.lg)
             .padding(.bottom, RippleSpace.xxl)
-        }
-        .safeAreaInset(edge: .bottom, spacing: RippleSpace.sm) {
-            LogButton(L10n.text("Custom amount"), action: showCustomAmount)
-                .padding(.horizontal, 20)
-                .padding(.bottom, RippleSpace.sm)
-                .background(RippleColor.waterFoam)
         }
         .sheet(isPresented: $showsCustomAmount) {
             CustomAmountSheet(
@@ -76,8 +86,35 @@ public struct TodayView: View {
         .onChange(of: reduceMotion) { _, _ in syncGravityTilt() }
     }
 
-    private func usesIPadLandscapeLayout(for size: CGSize) -> Bool {
-        usesIPadLayout && size.width > size.height
+    private func standardContent(snapshot: TodaySnapshot, formatter: VolumeFormatter) -> some View {
+        GeometryReader { viewport in
+            let heroHeight = RippleLayout.todayHeroHeight(for: viewport.size.height)
+            ScrollView {
+                Group {
+                    if usesSideBySideLayout(for: viewport.size) {
+                        landscapeContent(snapshot: snapshot, formatter: formatter)
+                    } else {
+                        compactContent(
+                            snapshot: snapshot,
+                            formatter: formatter,
+                            heroHeight: heroHeight
+                        )
+                    }
+                }
+                .frame(maxWidth: .infinity, minHeight: viewport.size.height, alignment: .top)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+        }
+        .safeAreaInset(edge: .bottom, spacing: RippleSpace.sm) {
+            LogButton(L10n.text("Custom amount"), action: showCustomAmount)
+                .padding(.bottom, RippleSpace.sm)
+                .background(RippleColor.waterFoam)
+        }
+    }
+
+    private func usesSideBySideLayout(for size: CGSize) -> Bool {
+        usesExpandedLayout && size.width > size.height
+            && size.width >= RippleLayout.todaySideBySideMinimumWidth
     }
 
     private func syncGravityTilt() {
@@ -93,33 +130,60 @@ public struct TodayView: View {
     }
 
     @ViewBuilder
-    private func compactContent(snapshot: TodaySnapshot, formatter: VolumeFormatter) -> some View {
+    private func compactContent(
+        snapshot: TodaySnapshot,
+        formatter: VolumeFormatter,
+        heroHeight: CGFloat
+    ) -> some View {
         VStack(alignment: .leading, spacing: RippleSpace.md) {
-            compactHero(snapshot: snapshot, formatter: formatter)
+            compactHero(snapshot: snapshot, formatter: formatter, height: heroHeight)
                 .padding(.vertical, RippleSpace.xxl)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .layoutPriority(1)
+                .frame(maxWidth: .infinity)
 
             remainingLabel(formatter: formatter)
             quickAddCluster(
                 snapshot: snapshot,
                 formatter: formatter,
-                style: usesIPadLayout ? .flat : .glass
+                style: usesExpandedLayout ? .flat : .glass
             )
         }
     }
 
     @ViewBuilder
-    private func compactHero(snapshot: TodaySnapshot, formatter: VolumeFormatter) -> some View {
-        if usesIPadLayout {
+    private func compactHero(
+        snapshot: TodaySnapshot,
+        formatter: VolumeFormatter,
+        height: CGFloat
+    ) -> some View {
+        if usesExpandedLayout {
             hero(snapshot: snapshot, formatter: formatter, expandsToFit: true)
                 .frame(
                     width: RippleLayout.iPadPortraitHeroWidth,
-                    height: RippleLayout.iPadPortraitHeroHeight,
+                    height: min(height, RippleLayout.iPadPortraitHeroHeight),
                     alignment: .center
                 )
         } else {
             hero(snapshot: snapshot, formatter: formatter, expandsToFit: true)
+                .frame(
+                    height: height
+                )
+        }
+    }
+
+    private func arrangedHero(snapshot: TodaySnapshot, formatter: VolumeFormatter) -> some View {
+        GeometryReader { region in
+            let isWideRegion = region.size.width > region.size.height
+            let maxWidth = isWideRegion
+                ? RippleLayout.iPadLandscapeHeroWidth
+                : RippleLayout.iPadPortraitHeroWidth
+            let maxHeight = isWideRegion
+                ? RippleLayout.iPadLandscapeHeroHeight
+                : RippleLayout.iPadPortraitHeroHeight
+
+            hero(snapshot: snapshot, formatter: formatter, expandsToFit: true)
+                .frame(maxWidth: maxWidth, maxHeight: maxHeight, alignment: .center)
+                .padding(RippleSpace.lg)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
     }
 
@@ -131,8 +195,9 @@ public struct TodayView: View {
             HStack(alignment: .center, spacing: RippleLayout.iPadLandscapeColumnSpacing) {
                 hero(snapshot: snapshot, formatter: formatter, expandsToFit: true)
                     .frame(
-                        width: RippleLayout.iPadLandscapeHeroWidth,
-                        height: RippleLayout.iPadLandscapeHeroHeight,
+                        maxWidth: RippleLayout.iPadLandscapeHeroWidth,
+                        minHeight: RippleLayout.todayHeroMinimumHeight,
+                        maxHeight: RippleLayout.iPadLandscapeHeroHeight,
                         alignment: .center
                     )
 
@@ -244,14 +309,14 @@ public struct TodayView: View {
     NavigationStack {
         TodayView(model: TodayViewModel(useCases: RippleRuntime.preview, snapshot: .empty()))
     }
-    .environment(\.rippleIPadLayout, true)
+    .environment(\.rippleExpandedLayout, true)
 }
 
 #Preview("Today iPad · Dark XXXL · Reduce Motion") {
     NavigationStack {
         TodayView(model: TodayViewModel(useCases: RippleRuntime.preview, snapshot: .empty()))
     }
-    .environment(\.rippleIPadLayout, true)
+    .environment(\.rippleExpandedLayout, true)
     .dynamicTypeSize(.accessibility3)
     .preferredColorScheme(.dark)
 }

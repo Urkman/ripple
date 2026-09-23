@@ -1,9 +1,9 @@
 # Ripple Surface — Complication
 
-**Stable surface ID:** `complication`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** System surface  
+**Stable surface ID:** `complication`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** System surface
 **Localized name:** Platform-local complication name
 
 This is the canonical contract for a wearable system complication or equivalent
@@ -29,13 +29,28 @@ Show one focused representation appropriate to the host family:
 2. Optional small localized amount/unit.
 3. Optional explicit action affordance.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [shared complication wireframe](../wireframes/complication--ready--wearable.png); no runtime capture is currently designated
+**Reference classification:** Current shared system-surface illustration.
+**States/viewports inspected:** Ready, stale/unavailable, and action-supported/read-only variants.
+**System-owned chrome excluded from the shared wireframe:** Host family geometry, placement, refresh cadence, and watch-face chrome.
+
+**Required product-owned composition:** Focused remaining/goal or capped progress; actual amount accessible; optional positive amount/unit action; explicit stale state.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#complication). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Complication ready-state wearable wireframe: focused progress/remaining value and optional log action](../wireframes/complication--ready--wearable.png)
 
 Editable source: [complication--ready--wearable.svg](../wireframes/complication--ready--wearable.svg).
 
-Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -89,6 +104,8 @@ or a hidden stale state is forbidden.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Complication description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

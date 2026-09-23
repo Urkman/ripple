@@ -3,8 +3,8 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 3.3.1 — 18. September 2026
-**Last verified:** 2026-09-18
+**Version:** 3.4.1 — 20. September 2026
+**Last verified:** 2026-09-20
 **Reference release baseline:** Apple marketing version 1.1 — 17. September 2026
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
@@ -508,9 +508,25 @@ Verlauf: kalender-first Monatsraster mit einem Ring pro Tag, horizontalem Monats
 Stats: eigener Perioden-/Chart-Screen gemäß Abschnitt 22.2; kein kombinierter Insights-Screen.
 Settings: Profil, Einheiten, Behälter-CRUD, Erinnerungen, Health-Status, Sync-Status, Export, Über, Quelle/Lizenz. Die Behälter sind in Settings per Drag-and-drop sortierbar; die ersten drei der gespeicherten Reihenfolge erscheinen als Today-Quick-Adds. Die Custom-Amount-Eingabe bietet zusätzlich alle gespeicherten Behälter zur Auswahl. Der Behälter-Editor bearbeitet Name, Symbol, Menge und den Standardbehälter; genau ein Behälter bleibt als Standard markiert.
 
+### 12.1.1 Veränderliche Fenster und faltbare Displays
+
+Die vier Tabs bleiben auch auf iPhone Duo und anderen faltbaren Displays erhalten.
+Die aktuelle nutzbare Containergröße entscheidet über die Komposition, nicht
+Gerätename, Gerätekategorie oder physische Orientierung. Jede Größenänderung
+aktualisiert das Layout ohne neue Logs, Daten-Resets oder neue Motion-Regeln.
+Systemseitige Safe Areas gelten für Inhalt und Aktionen unabhängig pro Kante.
+Bei einer aktiven Falte werden Today-Hero und Aktionen beziehungsweise
+History-Kalender und Tagesdetail in die vom System verfügbaren Regionen
+angeordnet; andere Screens behalten ihre nativen, adaptiven Standardcontainer.
+Stats und Settings bleiben dabei eigenständige Scrollflächen: breite Regionen
+gruppieren Summary-/Settings-Karten und Chartflächen in adaptive Spalten mit
+lesbarer Mindestbreite, während kompakte Regionen dieselbe Reihenfolge stapeln.
+Ausgewählter Tab, History-Tag und eine offene Custom-Amount-Eingabe samt
+Entwurf bleiben beim Auf- und Zuklappen erhalten.
+
 ### 12.2 iPad
 
-Adaptive Plattform-Komposition statt geschrumpftem iPhone-Layout. History verwendet einen eigenen Kalender-/Tagesdetail-Split, Stats bleibt der eigenständige Perioden-/Chart-Screen, und Today folgt den Portrait-/Landscape-Kompositionen aus Abschnitt 22.1. Multiwindow bleibt erlaubt.
+Adaptive Plattform-Komposition statt geschrumpftem iPhone-Layout. History verwendet einen eigenen Kalender-/Tagesdetail-Split, Stats bleibt der eigenständige Perioden-/Chart-Screen, und Today folgt den größenabhängigen Kompositionen aus Abschnitt 22.1. Multiwindow bleibt erlaubt.
 
 ### 12.3 Apple Watch
 
@@ -847,10 +863,12 @@ verdeckt die Wasseroberfläche nicht vollständig. Menge mit Einheit bleibt
 oben, Prozent unten; beide bleiben über dem Strahl und folgen den
 Accessibility-Vorgaben.
 
-#### 22.1.2 Today-Komposition auf iPad
+#### 22.1.2 Today-Komposition bei zusätzlichem Platz
 
-Das iPad nutzt die zusätzliche Breite nur im Landscape für eine ruhige
-Zwei-Spalten-Komposition:
+Ab 500 pt nutzbarer Breite gilt die erweiterte Darstellung. Eine ruhige
+Zwei-Spalten-Komposition nutzt nur ein breiteres als hohes Inhaltsrechteck,
+dessen bereits horizontal gepolsterte Breite mindestens 512 pt für
+240 pt Hero, 32 pt Abstand und 240 pt Aktionen bietet:
 
 - oben steht das Status-Label mit verbleibender Menge und Ziel;
 - in der Mitte links steht ein zentrierter, begrenzter Hero mit unverändertem
@@ -865,11 +883,19 @@ Zwei-Spalten-Komposition:
   Today-Titel, eine Wortmarke oder ein Datum in der Navigation werden auf
   iPad nicht angezeigt.
 
-Im Portrait verwendet das iPad die vertikale Today-Komposition. Der Hero
+In allen anderen Containerformen gilt die vertikale Today-Komposition. Der Hero
 bleibt auf etwa 280 × 392 pt begrenzt, damit er nicht den gesamten
 verbleibenden Platz füllt; Status-Label, flache Behälter-Aktionen und CTA
 bleiben in ihrer bisherigen Reihenfolge. Auch im Portrait gibt es für iPad
 keine einzelnen Glas-Karten um die Aktionen.
+
+Der Hero erhält in der vertikalen Komposition 62 Prozent der verfügbaren Höhe
+innerhalb dieser Maximalgrößen. Eine Mindesthöhe von 168 pt sichert seine Lesbarkeit; reicht
+die Höhe für Hero und Aktionen nicht, scrollt der Inhalt vertikal. Die
+Quick-Add-Reihe selbst bleibt nicht horizontal scrollbar. Der horizontale
+Inhaltsabstand beträgt 20 pt; die Custom-Amount-Aktion bleibt im sicheren
+unteren Bereich. Diese Regeln gelten ebenso für schmale Tablet-Fenster und
+faltbare Telefone, ohne den Pour-/Tilt-Vertrag zu verändern.
 
 #### 22.1.3 View-Hierarchie und Zuständigkeit
 
@@ -1164,20 +1190,26 @@ Kein Segmented Control mischt History und Stats. Ein Zurück-Button erscheint
 nur innerhalb von Push-Navigationen wie dem Tagesdetail, nicht auf den
 Tab-Roots.
 
-Das iPad verwendet für History einen eigenen Zwei-Pane-Screen mit plain
-`HStack`; die Paneele werden nicht von `NavigationStack` oder
-`NavigationSplitView` umschlossen. Links liegt das Monatsraster, rechts
+History verwendet ab 641 pt nutzbarer Containerbreite einen Zwei-Pane-Screen
+(320 pt Kalender + 1 pt Trennlinie + mindestens 320 pt Tagesdetail).
+Unterhalb dieser Grenze gilt der kompakte Kalender mit gepushtem Tagesdetail.
+Der Zwei-Pane-Screen bleibt ohne umschließende Sidebar-Navigation. Links liegt das Monatsraster, rechts
 `DayDetailView`. Heute ist beim Öffnen vorausgewählt, daher gibt es keinen
 initialen „Tag wählen“-Zustand. Stats bleibt eine eigene Spalte mit Charts in
 voller Breite.
 
 Beide iPad-Paneele verwenden den Foam-Hintergrund ohne systemseitige
 Sidebar-Farbfläche oder Sidebar-Controller. Zwischen Master und Detail liegt
-eine dezente vertikale Trennlinie. Die Kalender-Masterspalte bleibt immer
-sichtbar. Die primäre „+“-Aktion liegt im oberen Bereich neben der Tabbar; im
-iPad-Detailpaneel wird sie direkt vom plain-HStack-Screen gerendert, im
+eine dezente vertikale Trennlinie. Die Kalender-Masterspalte bleibt im Zwei-Pane-Modus sichtbar. Die primäre „+“-Aktion liegt im oberen Bereich neben der Tabbar; im
+erweiterten Detailpaneel wird sie direkt vom Zwei-Pane-Screen gerendert, im
 kompakten Stack am Kalender-Root. Sie öffnet die Custom-Amount-Sheet und ist
 nur für den heutigen ausgewählten Tag sichtbar.
+
+Beim Wechsel zwischen einem und zwei Paneelen bleibt der ausgewählte Tag
+identisch. Ein geöffnetes Tagesdetail bleibt bei Verkleinerung erreichbar;
+eine offene Custom-Amount-Eingabe wird weder geschlossen noch zurückgesetzt.
+Der Monatskalender darf bei geringer Höhe vertikal scrollen, während das
+horizontale Paging weiterhin den Monat wechselt.
 
 VisionOS verwendet die systemseitige adaptive Glass-Fläche ohne zusätzliches
 schwarzes Innenpanel. Ein führendes vertikales Ornament navigiert zu Today,
@@ -1392,6 +1424,11 @@ Die vier Chart-Familien sind:
 4. **Behälter:** horizontaler Balken je Behälter (Glas, Tasse, Flasche,
    Custom, Unbekannt), maximal sechs Zeilen; der Rest heißt `Sonstiges`.
 
+In breiten iPhone-Duo- und iPad-Containern bleiben die drei Summary-Kacheln in
+einer zentrierten, begrenzten Reihe. Die vier Chartkarten dürfen in ein
+adaptives Zwei-Spalten-Raster wechseln; bei kleinerer Breite oder großer
+Schrift stapeln sie wieder, ohne die Reihenfolge zu ändern.
+
 Chart-Höhe beträgt 180 pt. Kein 3D und kein dekoratives Gradientenspiel.
 Annotationen erscheinen nur nach Tap auf einen Balken. Leere Tage bleiben als
 Kategorie vorhanden. Jede Chart-Ansicht hat eine Textzusammenfassung und einen
@@ -1472,5 +1509,7 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 | 3.2.0 | 2026-09-10 | Die drei festen Today-Quick-Add-Buttons füllen die verfügbare Breite ihrer HStack gleichmäßig aus. | Die Schnellaktionen nutzen die gesamte Breite der kompakten Today-Komposition und bleiben ohne horizontales Scrollen erreichbar. |
 | 3.3.0 | 2026-09-11 | Die gemeinsame Rebuild-Dokumentation wurde formalisiert: plattformunabhängiger Screen-Katalog, Design-System-/UI-Element-Verträge, detailliertes Datenmodell sowie verknüpfte iOS-/Android-Datei- und Native-Control-Mappings. | Ein neues Team kann die App aus den versionierten Shared-Verträgen rekonstruieren; die Produkt-, Daten- und Motion-Bedeutung bleibt an einer Stelle normativ. |
 | 3.3.1 | 2026-09-18 | Die aktuelle Apple-Marketingversion 1.1 als Referenzbaseline dokumentiert, die Release-1.1-Abgrenzung gegenüber zukünftigen Produktstufen klargestellt und den Wireframe-Handoff für iOS und Android vorbereitet; keine neue Produktfunktion ergänzt. | Android erhält einen eindeutigen aktuellen Verhaltensstand für Feedback, Erinnerungen, Verlauf-Undo und Accessibility, ohne die bisher ausgeschlossenen vNext-Funktionen zu übernehmen. |
+| 3.4.0 | 2026-09-19 | Containerabhängige Today-/History-Komposition, Größenwechsel mit Zustandserhalt und Systemregionen bei aktiver Falte spezifiziert. | iPhone Duo und veränderliche Tablet-/Android-Fenster bleiben bedienbar; keine Änderung an Domain oder Wasser-Motion. |
+| 3.4.1 | 2026-09-20 | Breite Stats-/Settings-Regionen dürfen Summary-, Chart- und Einstellungsgruppen adaptiv spalten, während kompakte Regionen stapeln. | iPhone Duo und andere veränderliche Fenster erhalten lesbare Analyse- und Konfigurationsflächen ohne neue Navigation oder Domainlogik. |
 
-*Ende PRD 3.3.1. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 3.4.1. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*

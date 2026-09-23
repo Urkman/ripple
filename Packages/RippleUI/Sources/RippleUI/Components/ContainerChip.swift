@@ -42,14 +42,14 @@ public struct ContainerChip: View {
     private var label: some View {
         let content = HStack(spacing: RippleSpace.sm) {
             Image(systemName: symbolName)
-                .font(.title3)
+                .font(RippleFont.symbol)
                 .foregroundStyle(RippleColor.waterLagoon)
                 .symbolRenderingMode(.hierarchical)
             VStack(alignment: .leading, spacing: 0) {
                 Text(name)
-                    .font(.subheadline.weight(.medium))
+                    .font(RippleFont.subheadlineMedium)
                 Text(amount)
-                    .font(.caption.monospacedDigit())
+                    .font(RippleFont.captionNumeric)
                     .foregroundStyle(.secondary)
             }
         }
@@ -76,7 +76,7 @@ public struct ContainerChip: View {
                 .overlay(alignment: .bottom) {
                     Rectangle()
                         .fill(RippleColor.waterLagoon.opacity(0.18))
-                        .frame(height: 1)
+                        .frame(height: RippleStroke.standard)
                 }
                 .overlay {
                     RoundedRectangle(

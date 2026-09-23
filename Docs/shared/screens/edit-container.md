@@ -1,9 +1,9 @@
 # Ripple Surface — Edit container
 
-**Stable surface ID:** `edit-container`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Sheet  
+**Stable surface ID:** `edit-container`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** Sheet
 **Localized name:** `Behälter bearbeiten` / `Edit container`
 
 This is the canonical description of changing an existing saved container.
@@ -37,13 +37,28 @@ prepopulated with current values:
 The current icon and default state are visible on entry. The sheet does not
 silently remove a container because its default control is off.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [shared edit-container wireframe](../wireframes/edit-container--ready--compact.png); no runtime capture is currently designated
+**Reference classification:** Current shared semantic wireframe.
+**States/viewports inspected:** Ready compact, invalid, delete confirmation, save/delete error, and large-text sheet.
+**System-owned chrome excluded from the shared wireframe:** Native editor sheet, input controls, and destructive confirmation dialog.
+
+**Required product-owned composition:** Existing-container identity/title; name, icon-only selection, amount/readout/slider, and default state; inline validation; Save; separated destructive Delete with consequence explanation.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#edit-container). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Edit container ready-state compact wireframe: editable container fields, default state, and Save action](../wireframes/edit-container--ready--compact.png)
 
 Editable source: [edit-container--ready--compact.svg](../wireframes/edit-container--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model and draft
@@ -113,6 +128,8 @@ native confirmation and dismissal affordances are retained.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Edit container description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added the visible-element inventory and the separated destructive Delete action to the ready-state wireframe. | Container editing references now preserve identity, editable values, Save, Delete, and confirmation semantics. |
 
 ## Related contracts
 

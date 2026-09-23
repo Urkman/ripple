@@ -1,9 +1,9 @@
 # Ripple Surface — Settings
 
-**Stable surface ID:** `settings`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Root screen  
+**Stable surface ID:** `settings`
+**Surface contract version:** 1.1.2
+**Last verified:** 2026-09-23
+**Kind:** Root screen
 **Localized name:** `Einstellungen` / `Settings`
 
 This is the canonical description of configuration and account-independent
@@ -42,13 +42,28 @@ icon, localized name, amount, default indicator when applicable, reorder
 affordance, and edit affordance. Direct drag/reorder interaction changes the
 persisted order; it is not a visual-only sort.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [iPad Settings](ios/ipad-settings.png), [Android phone Settings](../Android/UI/phone-settings.png), and [shared Settings wireframe](../wireframes/settings--ready--compact.png)
+**Reference classification:** Android phone is the fullest current composition; iPad is a vertically cropped expanded reference; shared wireframe is the platform-neutral target.
+**States/viewports inspected:** Ready compact/expanded, no-container, permission, sync-error, and large-text states.
+**System-owned chrome excluded from the shared wireframe:** Status bar, root navigation, native switch/picker/reorder controls, and share destination chrome.
+
+**Required product-owned composition:** Profile/unit; daily goal; complete ordered Containers collection; Reminders; Health; Sync; Export; About/support/version as eight distinct semantic groups.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#settings). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Settings ready-state compact wireframe: profile, goal, containers, reminders, health/sync, and export groups](../wireframes/settings--ready--compact.png)
 
 Editable source: [settings--ready--compact.svg](../wireframes/settings--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.2. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -114,9 +129,10 @@ behavior, wrapped only with Ripple tokens and semantics from
 ## Responsive/platform-independent behavior
 
 Compact layouts stack groups. Regular or expanded layouts may use columns or a
-persistent settings detail region. Reordering remains possible through touch,
-pointer, keyboard, or the platform equivalent. The complete container list is
-never silently truncated.
+persistent settings detail region; each column keeps the minimum readable width
+and the complete container list remains visible inside its group. Reordering
+remains possible through touch, pointer, keyboard, or the platform equivalent.
+The complete container list is never silently truncated.
 
 ## Forbidden behavior
 
@@ -133,6 +149,9 @@ never silently truncated.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Settings description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+| 1.1.1 | 2026-09-20 | Clarified that broad settings containers may form an adaptive group grid while compact containers stack and preserve the complete ordered list. | iPhone Duo and iPad gain a readable multi-column composition without changing settings order, controls, or persistence behavior. |
+
+| 1.1.2 | 2026-09-23 | Added the visible-element inventory and separated Health, Sync, Export, and About in the shared Settings wireframe. | Settings references now preserve all eight semantic groups even when a native platform groups rows visually. |
 
 ## Related contracts
 

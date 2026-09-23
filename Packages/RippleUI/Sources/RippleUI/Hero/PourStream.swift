@@ -103,7 +103,7 @@ public struct PourStreamView: View {
 #Preview("Pour stream · XXXL") {
     VStack {
         Text("500 ml")
-            .font(.body.monospacedDigit())
+            .font(RippleFont.bodyNumeric)
         PourStreamView(addedMl: 500, progress: 1)
             .frame(width: 40, height: 180)
     }

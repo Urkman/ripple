@@ -39,7 +39,7 @@ private struct WatchLogButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundStyle(Color.white)
+            .foregroundStyle(RippleColor.onAction)
             .background(
                 RoundedRectangle(cornerRadius: RippleRadius.control, style: .continuous)
                     .fill(RippleColor.watchLagoon.opacity(isEnabled ? 1 : 0.45))

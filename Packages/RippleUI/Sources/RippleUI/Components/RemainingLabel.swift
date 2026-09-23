@@ -11,7 +11,7 @@ public struct RemainingLabel: View {
 
     public var body: some View {
         Text("\(remainingText) · \(goalText)")
-            .font(.callout.monospacedDigit())
+            .font(RippleFont.calloutNumeric)
             .foregroundStyle(.secondary)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)

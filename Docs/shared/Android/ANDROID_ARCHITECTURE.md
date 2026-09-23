@@ -2,14 +2,14 @@
 
 **Status:** Approved design for implementation
 
-**Last verified:** 2026-09-18
+**Last verified:** 2026-09-23
 
 **Reference release baseline:** Apple marketing version 1.1 — 2026-09-17
 
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.8.0
+**Document version:** 1.8.1
 
 **UI companion:** [Ripple Android UI Specification](ANDROID_UI_SPEC.md)
 
@@ -710,6 +710,7 @@ Create `RippleTheme` in `core/designsystem`. Map the Ripple palette to Material 
 | Water Deep `#0B3D4A` | `onBackground`, `onSurface`, primary text/icon emphasis |
 | Water Lagoon `#1A7A8C` | `primary`, selected controls, goal success |
 | Water Aqua `#4FB3C6` | progress/water fill, secondary emphasis |
+| On-action `#FFFFFF` | `onPrimary`/content color for filled Lagoon/Aqua action surfaces |
 | Water Foam `#E8F4F6` | light background and low-emphasis surfaces |
 | Cool anthracite surfaces | dark background/surface roles |
 | System desaturated red | destructive/error role |
@@ -1352,3 +1353,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.6.0 | 2026-09-11 | Added shared screen/design/data contract links, the one-screen-or-sheet-per-file rule, target Kotlin surface manifest, and native Material/Wear/system-control mappings. | Android can map every shared surface ID to one target file/module while preserving native Android interaction and the independent Room/Data Layer boundary. |
 | 1.7.0 | 2026-09-11 | Corrected the surface ownership contract: each screen and sheet now has one canonical platform-independent description file, while Android source files may be split or co-located according to native module conventions. Replaced the target one-file manifest with a canonical-description-to-implementation map. | Android remains traceable to every shared surface without imposing a production source-file structure that was not requested. |
 | 1.8.0 | 2026-09-18 | Recorded the Apple 1.1 release baseline, linked the shared neutral wireframe pack, and clarified the Android finalization boundary: documentation is current, but runtime Android acceptance still belongs to the independent Android project. | Android implementation has one current capability/layout handoff for feedback, reminders, Undo, accessibility, responsive surfaces, and native expression without claiming unperformed builds or device tests. |
+| 1.8.1 | 2026-09-23 | Mapped the shared `color.on-action` foreground role to Android `onPrimary`/native content colors for filled Lagoon/Aqua actions. | Android action controls can preserve contrast without feature-local white styling while remaining Material/Wear-native. |

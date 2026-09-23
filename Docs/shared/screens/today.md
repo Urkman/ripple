@@ -1,9 +1,9 @@
 # Ripple Surface — Today
 
-**Stable surface ID:** `today`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Root screen  
+**Stable surface ID:** `today`
+**Surface contract version:** 1.2.1
+**Last verified:** 2026-09-23
+**Kind:** Root screen
 **Localized name:** `Heute` / `Today`
 
 This is the canonical, platform-independent description of the Today surface.
@@ -43,13 +43,34 @@ confirmation feedback appears; feedback does not reserve a new layout region.
 If fewer than three containers exist, only the available ordered actions are
 shown and the custom action remains available.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [iPhone Today](ios/iphone-today.png), [iPhone Duo outer display](ios/iphone-duo-today-outer.png), [Android phone Today](../Android/UI/phone-today.png), and [shared compact/adaptive wireframes](../wireframes/today--ready--compact.png)
+**Reference classification:** Mixed current iOS targets, Android supporting evidence, and current shared semantic wireframes.
+**States/viewports inspected:** Ready compact, zero/ready outer-display state, and constrained/expanded/fold-region reflow.
+**System-owned chrome excluded from the shared wireframe:** Status bars, connectivity indicators, device/fold frames, iOS tab bar, and Android NavigationBar/Rail.
+
+**Required product-owned composition:** Ripple/date context; contained glass hero with consumed amount, unit, percentage, and goal; remaining/goal status; exactly three ordered quick-add actions; explicit custom-amount action; layout-neutral success/undo feedback; adaptive hero/action regions with state and draft retention.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#today). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Today ready-state compact wireframe: day header, contained water level, ordered quick adds, and custom amount action](../wireframes/today--ready--compact.png)
 
 Editable source: [today--ready--compact.svg](../wireframes/today--ready--compact.svg).
 
-Caption: Representative ready state in a compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in a compact semantic viewport; shared surface contract version 1.2.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+
+![Today responsive wireframe showing usable regions and retained state](../wireframes/today--resize--adaptive.png)
+
+Editable source: [today--resize--adaptive.svg](../wireframes/today--resize--adaptive.svg).
+Caption: Neutral resize/fold illustration, surface contract 1.2.1; not runtime evidence.
+The earlier ready-state images remain representative baseline hierarchy references.
 
 ## Read model
 
@@ -121,10 +142,18 @@ and ordinary controls retain their platform behavior.
 
 ## Responsive/platform-independent behavior
 
-Compact layouts use the fixed three-action row. Regular or expanded layouts may
-place the hero and action regions side by side, but preserve the reading order
-and never add a fourth primary Today action. Wearable and system surfaces use
-their own canonical IDs and are not shrunk copies of this surface.
+The current usable container size determines the presentation, including while
+resizing or folding; the device category is not a layout input. Compact layouts
+keep the fixed three-action row. Expanded layouts place hero and actions side
+by side only when both regions fit; otherwise they retain the vertical order.
+The hero scales proportionally within the documented maximum dimensions and
+keeps a readable minimum. When height is constrained, the content scrolls
+vertically while the custom amount action remains in the safe action region.
+The quick-add row itself never scrolls horizontally. During an active fold,
+place hero and actions in the system-provided usable regions. Preserve selected
+root, snapshot, active pour, and any open custom-entry draft through reflow.
+Never add a fourth primary action. Wearable and system surfaces use their own
+canonical IDs and are not shrunk copies of this surface.
 
 ## Forbidden behavior
 
@@ -141,6 +170,9 @@ their own canonical IDs and are not shrunk copies of this surface.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Today description. | iOS and Android share one semantic Today outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+| 1.2.0 | 2026-09-19 | Specified container-driven resize/fold composition and preserved presentation state; added an adaptive wireframe. | Compact and expanded windows retain usable content and ongoing interaction. |
+
+| 1.2.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

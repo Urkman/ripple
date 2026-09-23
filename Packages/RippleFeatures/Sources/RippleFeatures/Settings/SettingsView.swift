@@ -5,7 +5,7 @@ import SwiftUI
 public struct SettingsView: View {
     @Bindable var model: SettingsViewModel
     @Environment(\.locale) private var locale
-    @Environment(\.rippleIPadLayout) private var usesIPadLayout
+    @Environment(\.rippleExpandedLayout) private var usesExpandedLayout
     @State private var containerEditor: Container?
     @State private var isReminderEditorPresented = false
 
@@ -15,7 +15,16 @@ public struct SettingsView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: RippleSpace.xl) {
+            LazyVGrid(
+                columns: [
+                    GridItem(
+                        .adaptive(minimum: RippleLayout.adaptivePanelMinimumWidth),
+                        spacing: RippleSpace.xl
+                    ),
+                ],
+                alignment: .leading,
+                spacing: RippleSpace.xl
+            ) {
                 profileCard
                 goalCard
                 containersCard
@@ -25,14 +34,15 @@ public struct SettingsView: View {
                 exportCard
                 aboutCard
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, RippleSpace.lg)
             .padding(.vertical, RippleSpace.lg)
             .frame(maxWidth: RippleLayout.iPadLandscapeContentMaxWidth)
             .frame(maxWidth: .infinity)
         }
         .background(RippleColor.waterFoam.ignoresSafeArea())
-        .navigationTitle(usesIPadLayout ? "" : L10n.text("Settings"))
-        .rippleNavigationBarVisibility(hidden: usesIPadLayout)
+        .navigationTitle(usesExpandedLayout ? "" : L10n.text("Settings"))
+        .rippleNavigationBarVisibility(hidden: usesExpandedLayout)
         .rippleNavigationBarBackground(RippleColor.waterFoam)
         .task { await model.refresh() }
         .sheet(item: $containerEditor) { container in
@@ -232,7 +242,7 @@ public struct SettingsView: View {
                 .overlay(alignment: .bottom) {
                     Rectangle()
                         .fill(RippleColor.waterDeep.opacity(0.10))
-                        .frame(height: 1)
+                        .frame(height: RippleStroke.standard)
                 }
 
                 GlassCardRow(L10n.text("Read workouts for goal"), showsDivider: false) {
@@ -275,7 +285,7 @@ public struct SettingsView: View {
                 if let payload = model.exportPayload {
                     Rectangle()
                         .fill(RippleColor.waterDeep.opacity(0.10))
-                        .frame(height: 1)
+                        .frame(height: RippleStroke.standard)
                     ShareLink(
                         item: JSONFile(data: payload.json, name: payload.suggestedJSONName),
                         preview: SharePreview(payload.suggestedJSONName)
@@ -306,7 +316,7 @@ public struct SettingsView: View {
         GlassCard(title: L10n.text("About")) {
             VStack(alignment: .leading, spacing: RippleSpace.md) {
                 GlassCardRow("Ripple", showsDivider: false) {
-                    Text(verbatim: "1.0")
+                    Text(verbatim: appVersion)
                         .font(RippleFont.body.monospacedDigit())
                         .foregroundStyle(.secondary)
                 }
@@ -319,6 +329,10 @@ public struct SettingsView: View {
 
     private var volumeFormatter: VolumeFormatter {
         VolumeFormatter(locale: locale)
+    }
+
+    private var appVersion: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
     }
 
     private func containerRow(_ container: Container, showsDivider: Bool) -> some View {
@@ -368,7 +382,7 @@ public struct SettingsView: View {
             if showsDivider {
                 Rectangle()
                     .fill(RippleColor.waterDeep.opacity(0.10))
-                    .frame(height: 1)
+                    .frame(height: RippleStroke.standard)
             }
         }
         .swipeActions {

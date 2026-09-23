@@ -1,9 +1,9 @@
 # Ripple Surface — Onboarding
 
-**Stable surface ID:** `onboarding`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Onboarding surface  
+**Stable surface ID:** `onboarding`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** Onboarding surface
 **Localized name:** Localized onboarding copy; no fixed single title required
 
 This is the canonical description of first-run setup.
@@ -35,13 +35,28 @@ Each page uses the same semantic order:
 The six-page sequence is Welcome, Units, Health, Goal, Containers, and
 Reminders. Artwork is subordinate to copy and controls.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [Android phone onboarding](../Android/UI/phone-onboarding.png) and [shared onboarding wireframe](../wireframes/onboarding--ready--compact.png); no Apple runtime capture
+**Reference classification:** Android supporting evidence plus current shared semantic wireframe.
+**States/viewports inspected:** First-run compact six-page sequence, permission pending/denied, and large-text pages.
+**System-owned chrome excluded from the shared wireframe:** Native Health/notification permission dialogs and host status/navigation chrome.
+
+**Required product-owned composition:** Page/progress context; page-specific copy/illustration and unit/health/goal/container/reminder content; permission explanation; Back/Skip where allowed; Next/Finish.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#onboarding). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Onboarding ready-state compact wireframe: optional reminder permission explanation, page progress, Back, and Finish](../wireframes/onboarding--ready--compact.png)
 
 Editable source: [onboarding--ready--compact.svg](../wireframes/onboarding--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -109,6 +124,8 @@ presentation, but the six-page information order and optionality remain.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Onboarding description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

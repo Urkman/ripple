@@ -1,10 +1,10 @@
 # Ripple Screen and Sheet Catalog
 
-**Document type:** Shared, platform-independent surface index and contract  
-**Version:** 1.2.0 — 18 September 2026
-**Last verified:** 2026-09-18
+**Document type:** Shared, platform-independent surface index and contract
+**Version:** 1.3.0 — 23 September 2026
+**Last verified:** 2026-09-23
 **Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
-**Language:** English identifiers; user-visible copy is DE + EN  
+**Language:** English identifiers; user-visible copy is DE + EN
 **Status:** Normative companion to [`Ripple_PRD.md`](Ripple_PRD.md)
 
 This document is the index for Ripple's user-facing surfaces. It owns the
@@ -21,6 +21,11 @@ persistence, and use-case boundaries are in
 [`IOS_ARCHITECTURE.md`](IOS_ARCHITECTURE.md),
 [`Android/ANDROID_ARCHITECTURE.md`](Android/ANDROID_ARCHITECTURE.md), and
 [`Android/ANDROID_UI_SPEC.md`](Android/ANDROID_UI_SPEC.md).
+The visual-reference review note
+[`Ripple_VISUAL_REFERENCE_INVENTORY.md`](Ripple_VISUAL_REFERENCE_INVENTORY.md)
+records the inspected evidence set, state/viewport classification,
+system-owned chrome exclusions, and product-owned visible-element coverage for
+all 22 surfaces. It is a linked audit note, not a competing product authority.
 
 ## 1. Authority and terminology
 
@@ -121,6 +126,7 @@ rebuild the surface without guessing:
 | Purpose and outcome | What the user understands or completes. |
 | Entry and exit | Entry points, dismissal/back behavior, completion, and mutation boundary. |
 | Layout and region order | Semantic reading order, hierarchy, sizing intent, and responsive reflow. |
+| Reference evidence and visible-element inventory | Current references, state/viewport classification, system-owned chrome exclusions, and product-owned visible-element coverage, recorded in the linked [visual reference inventory](Ripple_VISUAL_REFERENCE_INVENTORY.md). |
 | Read model | Snapshot/settings data required to render the surface. |
 | Actions and operations | User action, named domain operation, resulting state, and feedback. |
 | State matrix | Loading, empty, ready, goal/over-goal, permission, offline/sync, error, success, and reduced motion as applicable. |
@@ -208,7 +214,10 @@ Timeline row. Reference captures are evidence; they do not override the
 canonical text. Shared wireframes use the naming and source rules in
 [`wireframes/README.md`](wireframes/README.md); their PNGs illustrate the
 canonical text and do not override it. Android evidence captures remain
-separate and do not replace a shared wireframe.
+separate and do not replace a shared wireframe. Every current capture and
+wireframe must map to the visual-reference inventory; crops, missing states,
+platform-native differences, and stale conflicts are classified there instead
+of being silently treated as product behavior.
 
 ## 7. Timeline
 
@@ -219,5 +228,6 @@ The history is append-only. Prior entries are not rewritten.
 | 1.0.0 | 2026-09-11 | Established the platform-independent catalog, stable surface IDs, and the shared state/accessibility contract. | iOS and Android can map native surfaces to one semantic surface definition without duplicating product behavior. |
 | 1.1.0 | 2026-09-11 | Converted the catalog into an index and split every screen, sheet, wearable surface, and system surface into one canonical platform-independent Markdown description file. Clarified that this rule applies to documentation, not production source-file organization. | Each surface now has one unambiguous place for its layout and function while iOS and Android remain free to use native implementation structure. |
 | 1.2.0 | 2026-09-18 | Added the Apple 1.1 reference baseline and a primary shared-wireframe link for all 22 stable IDs, with the editable-source/rendering contract under `wireframes/`. | The Android finalization handoff now has a rebuildable, platform-neutral visual reference in addition to the semantic surface descriptions and Android evidence captures. |
+| 1.3.0 | 2026-09-23 | Added the evidence-backed visual-reference inventory for all 22 surfaces and reconciled the canonical visible-element coverage against the current compact, expanded, adaptive, and wearable references. | Crops, system-owned chrome, platform expressions, and product-owned omissions are now explicit across the iOS/Android handoff. |
 
-*End of Ripple screen and sheet catalog 1.2.0.*
+*End of Ripple screen and sheet catalog 1.3.0.*

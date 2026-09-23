@@ -22,7 +22,7 @@ public struct WatchHistoryView: View {
                         Text(L10n.text("No entries"))
                             .font(RippleFont.callout)
                             .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity, minHeight: 120)
+                            .frame(maxWidth: .infinity, minHeight: RippleWatchLayout.historyEmptyStateMinimumHeight)
                     }
 
                     ForEach(model.days) { day in

@@ -131,7 +131,10 @@ private struct VisionOrnamentDivider: View {
     var body: some View {
         Rectangle()
             .fill(RippleColor.waterDeep.opacity(0.20))
-            .frame(width: 1, height: 20)
+            .frame(
+                width: RippleLayout.visionOrnamentDividerWidth,
+                height: RippleLayout.visionOrnamentDividerHeight
+            )
             .accessibilityHidden(true)
     }
 }

@@ -7,7 +7,7 @@ public struct StatsView: View {
     @Bindable var model: StatsViewModel
     @Environment(\.locale) private var locale
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.rippleIPadLayout) private var usesIPadLayout
+    @Environment(\.rippleExpandedLayout) private var usesExpandedLayout
 
     public init(model: StatsViewModel) {
         self.model = model
@@ -23,22 +23,7 @@ public struct StatsView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     summaryRow
                     if model.snapshot.hasData {
-                        chartBlock(title: L10n.text("Actual vs goal")) {
-                            GoalVersusActualChart(
-                                points: model.volumeBars,
-                                unitSymbol: model.unit.symbol,
-                                kind: model.kind
-                            )
-                        }
-                        chartBlock(title: L10n.text("Hit rate")) {
-                            HitRateChart(points: model.hitRatePoints, kind: model.kind)
-                        }
-                        chartBlock(title: L10n.text("Time of day")) {
-                            DaypartChart(points: model.daypartPoints, unitSymbol: model.unit.symbol)
-                        }
-                        chartBlock(title: L10n.text("Containers")) {
-                            ContainerShareChart(points: model.containerPoints, unitSymbol: model.unit.symbol)
-                        }
+                        chartGrid
                     } else {
                         GlassCard {
                             Text(L10n.text("No data for this period."))
@@ -56,8 +41,8 @@ public struct StatsView: View {
                 .frame(maxWidth: .infinity)
             }
             .background(RippleColor.waterFoam.ignoresSafeArea())
-            .navigationTitle(usesIPadLayout ? "" : L10n.text("Stats"))
-            .rippleNavigationBarVisibility(hidden: usesIPadLayout)
+            .navigationTitle(usesExpandedLayout ? "" : L10n.text("Stats"))
+            .rippleNavigationBarVisibility(hidden: usesExpandedLayout)
             .rippleNavigationBarBackground(RippleColor.waterFoam)
             .task { await model.refresh() }
             .onChange(of: model.kind) {
@@ -92,27 +77,73 @@ public struct StatsView: View {
         }
     }
 
+    @ViewBuilder
     private var summaryRow: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: RippleSpace.sm) {
+                summaryTiles
+            }
+            .frame(maxWidth: RippleLayout.statsSummaryMaxWidth)
+
+            VStack(spacing: RippleSpace.sm) {
+                summaryTiles
+            }
+            .frame(maxWidth: RippleLayout.statsSummaryMaxWidth)
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
+
+    @ViewBuilder
+    private var summaryTiles: some View {
         let formatter = VolumeFormatter(locale: locale)
         let elapsed = model.elapsedCount
         let hitDays = model.hitDayCount
-        return HStack(spacing: RippleSpace.sm) {
-            summaryTile(
-                title: L10n.text("Avg / day"),
-                value: formatter.valueString(milliliters: model.averageMl, unit: model.unit),
-                unit: model.unit.symbol
-            )
-            summaryTile(
-                title: L10n.text("Goal reached"),
-                value: elapsed == 0 ? "0" : "\(hitDays)/\(elapsed)",
-                unit: nil
-            )
-            summaryTile(
-                title: L10n.text("Total"),
-                value: formatter.valueString(milliliters: model.snapshot.totalMl, unit: model.unit),
-                unit: model.unit.symbol
-            )
+        summaryTile(
+            title: L10n.text("Avg / day"),
+            value: formatter.valueString(milliliters: model.averageMl, unit: model.unit),
+            unit: model.unit.symbol
+        )
+        summaryTile(
+            title: L10n.text("Goal reached"),
+            value: elapsed == 0 ? "0" : "\(hitDays)/\(elapsed)",
+            unit: nil
+        )
+        summaryTile(
+            title: L10n.text("Total"),
+            value: formatter.valueString(milliliters: model.snapshot.totalMl, unit: model.unit),
+            unit: model.unit.symbol
+        )
+    }
+
+    private var chartGrid: some View {
+        LazyVGrid(
+            columns: [
+                GridItem(
+                    .adaptive(minimum: RippleLayout.adaptivePanelMinimumWidth),
+                    spacing: RippleSpace.xl
+                ),
+            ],
+            alignment: .leading,
+            spacing: RippleSpace.xl
+        ) {
+            chartBlock(title: L10n.text("Actual vs goal")) {
+                GoalVersusActualChart(
+                    points: model.volumeBars,
+                    unitSymbol: model.unit.symbol,
+                    kind: model.kind
+                )
+            }
+            chartBlock(title: L10n.text("Hit rate")) {
+                HitRateChart(points: model.hitRatePoints, kind: model.kind)
+            }
+            chartBlock(title: L10n.text("Time of day")) {
+                DaypartChart(points: model.daypartPoints, unitSymbol: model.unit.symbol)
+            }
+            chartBlock(title: L10n.text("Containers")) {
+                ContainerShareChart(points: model.containerPoints, unitSymbol: model.unit.symbol)
+            }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func summaryTile(title: String, value: String, unit: String?) -> some View {

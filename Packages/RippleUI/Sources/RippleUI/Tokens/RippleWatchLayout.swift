@@ -16,4 +16,7 @@ public enum RippleWatchLayout {
     public static let chartHeight: CGFloat = 128
     public static let pageIndicatorClearance: CGFloat = 8
     public static let waterSurfaceSampleCount = 32
+    public static let historyEmptyStateMinimumHeight: CGFloat = 120
+    public static let previewWaterWidth: CGFloat = 184
+    public static let previewWaterHeight: CGFloat = 224
 }

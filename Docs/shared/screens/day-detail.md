@@ -1,9 +1,9 @@
 # Ripple Surface — Day Detail
 
-**Stable surface ID:** `day-detail`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Child screen  
+**Stable surface ID:** `day-detail`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** Child screen
 **Localized name:** `Tagesdetail` / `Day Detail` when a standalone title is needed
 
 This is the canonical description of entry-level detail for one local calendar
@@ -35,19 +35,34 @@ The summary is static historical context: no pour stream, tilt, or continuous
 hero animation is used here. On larger surfaces the summary may sit beside the
 rows, but it remains before the entries in semantic reading order.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [Android phone Day Detail](../Android/UI/phone-day-detail.png), [Android tablet History split](../Android/UI/tablet-history-split.png), and [shared compact/expanded wireframes](../wireframes/day-detail--ready--compact.png)
+**Reference classification:** Android supporting evidence and current shared semantic wireframes; no dedicated Apple capture.
+**States/viewports inspected:** Today with add, past day without add, compact nested detail, and expanded split detail.
+**System-owned chrome excluded from the shared wireframe:** Native top app bar, rail/sidebar, back gesture, and destructive confirmation surface.
+
+**Required product-owned composition:** Selected date context; static contained summary with consumed/unit, goal, and remaining/status; Entries heading; chronological rows with time/amount/container/source and actions; today-only Add; empty/error/undo feedback.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#day-detail). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Day Detail ready-state compact wireframe: selected date, static summary, intake rows, and today-only Add](../wireframes/day-detail--ready--compact.png)
 
 Editable source: [day-detail--ready--compact.svg](../wireframes/day-detail--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 ![Day Detail ready-state expanded wireframe: static summary beside the intake collection](../wireframes/day-detail--ready--expanded.png)
 
 Editable source: [day-detail--ready--expanded.svg](../wireframes/day-detail--ready--expanded.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the expanded semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -125,6 +140,8 @@ reading order remain unchanged.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Day Detail description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframes and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added the visible-element inventory and clarified goal/remaining content in the expanded Day Detail wireframe. | Day Detail references now preserve summary, entries, actions, and compact/expanded state differences. |
 
 ## Related contracts
 

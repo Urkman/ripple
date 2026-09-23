@@ -52,7 +52,7 @@ private struct LockScreenCircularView: View {
         Button(intent: LogWidgetWaterIntent(milliliters: snapshot.defaultAddMl)) {
             VStack(spacing: 0) {
                 Text(verbatim: formatter.percentString(snapshot.percent))
-                    .font(.caption.monospacedDigit())
+                    .font(RippleFont.captionNumeric)
                     .widgetAccentable()
                 Text(verbatim: "+" + formatter.valueString(
                     milliliters: snapshot.defaultAddMl,

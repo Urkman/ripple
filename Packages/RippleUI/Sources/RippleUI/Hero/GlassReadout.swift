@@ -33,7 +33,7 @@ struct GlassReadout: View {
                                 startPoint: .leading,
                                 endPoint: .trailing
                             ),
-                            lineWidth: 1
+                            lineWidth: RippleStroke.standard
                         )
                 }
                 .clipShape(GlassShape(inset: GlassMetrics.strokeWidth))
@@ -48,7 +48,7 @@ struct GlassReadout: View {
                             .contentTransition(.numericText())
                             .id(numberEpoch)
                         Text(unitText)
-                            .font(.title3.weight(.medium))
+                            .font(RippleFont.symbolMedium)
                     }
                 }
                 .padding(.top, RippleSpace.xxl + RippleSpace.xs)
@@ -57,7 +57,7 @@ struct GlassReadout: View {
 
                 GlassReadoutPlate {
                     Text(percentText)
-                        .font(.title2.monospacedDigit())
+                        .font(RippleFont.titleNumericRegular)
                         .contentTransition(.numericText())
                         .id("pct-\(numberEpoch)")
                 }
@@ -101,7 +101,7 @@ private struct GlassReadoutPlate<Content: View>: View {
                 )
                 .stroke(
                     RippleColor.glassHighlight.opacity(0.24),
-                    lineWidth: 1
+                    lineWidth: RippleStroke.standard
                 )
             }
             .rippleGlass(cornerRadius: RippleRadius.control)

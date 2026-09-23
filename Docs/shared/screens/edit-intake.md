@@ -1,9 +1,9 @@
 # Ripple Surface — Edit intake
 
-**Stable surface ID:** `edit-intake`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Sheet  
+**Stable surface ID:** `edit-intake`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** Sheet
 **Localized name:** `Eintrag bearbeiten` / `Edit intake`
 
 This is the canonical description of editing one existing intake.
@@ -30,13 +30,28 @@ successful persistence. Delete belongs to Day Detail, not this sheet.
 Labels precede values. The original entry identity and relevant context remain
 visible while the draft is edited.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [shared edit-intake wireframe](../wireframes/edit-intake--ready--compact.png); no runtime capture is currently designated
+**Reference classification:** Current shared semantic wireframe.
+**States/viewports inspected:** Ready compact, invalid, save-error, and large-text reflow.
+**System-owned chrome excluded from the shared wireframe:** Native sheet, keyboard, picker, and dismissal chrome.
+
+**Required product-owned composition:** Entry date/time and identity context; amount/unit; supported container or metadata fields; field-associated validation; Cancel and primary Save.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#edit-intake). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Edit intake ready-state compact wireframe: entry context, editable fields, Cancel, and Save](../wireframes/edit-intake--ready--compact.png)
 
 Editable source: [edit-intake--ready--compact.svg](../wireframes/edit-intake--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model and draft
@@ -106,6 +121,8 @@ expanded displays while preserving context → fields → validation → actions
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Edit intake description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

@@ -1,9 +1,9 @@
 # Ripple Surface — Edit reminders
 
-**Stable surface ID:** `edit-reminder`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Sheet  
+**Stable surface ID:** `edit-reminder`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** Sheet
 **Localized name:** `Erinnerungen bearbeiten` / `Edit reminders`
 
 This is the canonical description of reminder configuration.
@@ -33,13 +33,28 @@ does not delete the rule or history.
 The exact control type is platform-native, but labels, current values, units,
 and enabled state remain visible and ordered.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [shared edit-reminder wireframe](../wireframes/edit-reminder--ready--compact.png); no runtime capture is currently designated
+**Reference classification:** Current shared semantic wireframe.
+**States/viewports inspected:** Ready compact, permission denied/unavailable, scheduling error, and large-text sheet.
+**System-owned chrome excluded from the shared wireframe:** Native time pickers, toggle, permission surface, and sheet dismissal chrome.
+
+**Required product-owned composition:** Dismiss/title; enabled state; start/end times; interval/after-last-sip value with unit; permission/status; validation; Save/reschedule.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#edit-reminder). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Edit reminders ready-state compact wireframe: enabled state, local window, interval, permission status, and Save](../wireframes/edit-reminder--ready--compact.png)
 
 Editable source: [edit-reminder--ready--compact.svg](../wireframes/edit-reminder--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model and draft
@@ -107,6 +122,8 @@ preserved. System notification settings remain system-owned.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Edit reminders description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

@@ -4,9 +4,9 @@ Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean 
 
 This document describes the iOS repository's architecture and current implementation. Product behavior remains defined by the shared [PRD](Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts. The platform-independent surface, design, and data contracts are maintained in the [screen catalog](Ripple_SCREEN_CATALOG.md), [design system](Ripple_DESIGN_SYSTEM.md), and [data model](Ripple_DATA_MODEL.md); this document maps those contracts to Swift implementation boundaries without redefining them.
 
-**Document version:** 1.9.0
+**Document version:** 1.10.1
 
-**Last verified:** 2026-09-18
+**Last verified:** 2026-09-20
 
 **Reference release baseline:** Apple marketing version 1.1 — 2026-09-17
 
@@ -622,6 +622,39 @@ Before merging an architecture-affecting change, confirm:
 - [ ] iOS-specific UI/workflow behavior is intentional and documented.
 - [ ] The new timeline entry is present and the version/date metadata is current.
 
+## 18.1 Resizable iOS composition and active folds
+
+The [Today](screens/today.md) and [History](screens/history.md) contracts use
+local container geometry. `RootView` retains the four tabs and owns view-model
+lifetimes through resizing. Layout inputs belong to views and `RippleUI`
+adapters, never domain use cases or stored device-wide geometry. The existing
+SwiftUI `App` / `WindowGroup` scene lifecycle remains in place.
+
+Use the design-system thresholds for expanded presentation and History split
+independently. Today measures its padded content region, scales the hero
+within existing maxima, and provides vertical overflow for short windows.
+History retains selected-day navigation and presents custom entry from a
+stable owner outside the changing compact/split branches.
+
+On iOS 27.1 and later, the active-fold path uses native `ArrangementView` for
+Today hero/actions and History calendar/detail. Keep availability checks for
+the iOS 27.0 minimum and ordinary adaptive containers where no fold is active.
+Stats, Settings, onboarding, and sheets retain native standard containers.
+Native safe-area handling owns asymmetric regions; no global screen or device
+idiom lookup and no inferred hinge inset belongs in a feature. The scene-local
+interface orientation in `GravityTiltController` remains necessary for physical
+Core Motion reference rotation and is not an available-space decision.
+
+Stats and Settings keep their native ScrollView containers across those
+regions. Their feature-local content uses the shared adaptive panel minimum:
+wide containers form readable chart/group columns, while compact containers
+stack in semantic order; Stats summary tiles use the shared centered width cap.
+
+This mapping introduces no data, permission, amount, or motion behavior. Runtime
+acceptance must cover compact/expanded transitions, an open day detail and
+custom amount draft, a short window, large text, and Reduce Motion. Wireframes
+are documentation illustrations and do not constitute that runtime evidence.
+
 ## 19. Timeline
 
 Newest entries are appended at the bottom. Historical entries are immutable.
@@ -642,3 +675,5 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.7.0 | 2026-09-11 | Added links to the shared screen catalog, design system, and data model; made the one-screen-or-sheet-per-file rule explicit; added current/target iOS surface and RippleUI ownership manifests plus native-control mappings. | iOS implementation files can be mapped one-to-one to shared surface IDs while current Settings sheet co-location remains honestly documented as a migration target. |
 | 1.8.0 | 2026-09-11 | Corrected the surface ownership contract: each screen and sheet now has one canonical platform-independent description file, while iOS source files may be split or co-located according to native feature architecture. Replaced the target one-file manifest with a canonical-description-to-implementation map. | The iOS implementation remains traceable to every shared surface without imposing a production source-file structure that was not requested. |
 | 1.9.0 | 2026-09-18 | Verified the implementation map and notification adapter against the Apple 1.1 release baseline; documented the current permission-aware, replaceable-next-reminder behavior without changing the Swift package boundaries. | The Android handoff can mirror the observable reminder contract while keeping scheduling platform-local and all logging on the shared domain use case. |
+| 1.10.0 | 2026-09-19 | Mapped container-based Today/History reflow and iOS 27.1 native active-fold arrangement to the existing view/UI boundaries. | Four tabs, scene lifecycle, selection, and entry drafts survive resize; domain and motion remain unchanged. |
+| 1.10.1 | 2026-09-20 | Mapped the shared adaptive panel and Stats summary tokens to StatsView and SettingsView while keeping native scroll containers and the system TabView rail. | iPhone Duo and iPad use readable multi-column analysis/settings regions without device-specific branches or new feature state. |

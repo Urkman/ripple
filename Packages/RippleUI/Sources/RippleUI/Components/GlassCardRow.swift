@@ -29,7 +29,7 @@ public struct GlassCardRow<Content: View>: View {
             if showsDivider {
                 Rectangle()
                     .fill(RippleColor.waterDeep.opacity(0.10))
-                    .frame(height: 1)
+                    .frame(height: RippleStroke.standard)
             }
         }
     }

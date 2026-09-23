@@ -1,17 +1,5 @@
 import SwiftUI
 
-public enum DayRingMetrics {
-    public static let compactDiameter: CGFloat = 36
-    public static let regularDiameter: CGFloat = 36
-    public static let lineWidth: CGFloat = 3
-    public static let todayDot: CGFloat = 1.5
-    public static let selectedHalo: CGFloat = 2
-}
-
-public enum RippleChart {
-    public static let height: CGFloat = 180
-}
-
 public struct DayRing: View {
     public var dayNumber: Int
     public var progress: Double

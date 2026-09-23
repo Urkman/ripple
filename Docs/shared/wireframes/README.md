@@ -1,8 +1,8 @@
 # Ripple shared wireframes
 
 **Document type:** Shared platform-independent wireframe asset and rendering contract
-**Document version:** 1.0.0
-**Last verified:** 2026-09-18
+**Document version:** 1.2.0
+**Last verified:** 2026-09-23
 **Status:** Normative asset companion to the shared surface catalog
 
 These are platform-independent layout illustrations for the 22 canonical
@@ -13,7 +13,10 @@ or any framework's controls or navigation chrome.
 
 The Markdown surface contracts remain authoritative. Android evidence captures
 are maintained separately in [`../Android/UI/README.md`](../Android/UI/README.md)
-and do not replace these shared wireframes.
+and do not replace these shared wireframes. The companion
+[`../Ripple_VISUAL_REFERENCE_INVENTORY.md`](../Ripple_VISUAL_REFERENCE_INVENTORY.md)
+records the evidence classification and visible product-owned elements that
+each wireframe must preserve.
 
 Each PNG has an editable SVG source with the same stem. The previews can be
 regenerated on macOS from this directory with:
@@ -24,6 +27,17 @@ regenerated on macOS from this directory with:
 
 The renderer uses the macOS `sips` SVG renderer. The generated PNGs are
 documentation artifacts, not runtime screenshots.
+
+## Visual audit status
+
+All 22 canonical surfaces have a linked PNG preview and same-stem editable SVG
+source. The 2026-09-23 audit corrected the shared illustrations where the
+visible structure was incomplete: History's today-only add action; Stats'
+dependent period context, four distinct chart families, and Highlights;
+Settings' eight semantic groups; Day Detail row actions and goal context; the
+Edit Container destructive action; and all seven elapsed days in Wear History.
+The adaptive Today/History diagrams remain neutral resize/fold illustrations;
+they are not runtime captures and do not claim Android resize or fold proof.
 
 ## Naming
 
@@ -39,3 +53,14 @@ canonical surface descriptions.
 | Version | Date | Change |
 |---|---|---|
 | 1.0.0 | 2026-09-18 | Established the shared neutral PNG/SVG wireframe pack and deterministic macOS renderer for all canonical surfaces. |
+| 1.1.0 | 2026-09-19 | Added adaptive Today/History diagrams with editable sources; neutral resize/fold illustrations remain distinct from runtime evidence. |
+| 1.2.0 | 2026-09-23 | Audited all 22 surface references against the visual inventory and corrected compact, expanded, and wearable illustrations for visible product-owned coverage; canonical PNG/SVG pairs now expose the required semantic regions while platform chrome and runtime-evidence gaps remain explicit. |
+
+## Adaptive illustrations
+
+- [Today resize/fold regions](today--resize--adaptive.png), [editable source](today--resize--adaptive.svg).
+- [History resize/fold regions](history--resize--adaptive.png), [editable source](history--resize--adaptive.svg).
+
+These 1100 × 650 neutral overview diagrams illustrate the adaptive rules in
+the current Today and History surface contracts. Their captions identify the
+surface contract version; neither image set is runtime verification.

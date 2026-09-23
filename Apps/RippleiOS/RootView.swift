@@ -5,7 +5,6 @@ import SwiftUI
 
 public struct RootView: View {
     @Environment(\.rippleUseCases) private var useCases
-    @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.scenePhase) private var scenePhase
     @State private var today: TodayViewModel
     @State private var history: HistoryViewModel
@@ -29,7 +28,11 @@ public struct RootView: View {
 
     public var body: some View {
         GeometryReader { proxy in
-            let iPadLayout = isIPadLayout(for: proxy.size)
+            let usableWidth = proxy.size.width
+                - proxy.safeAreaInsets.leading
+                - proxy.safeAreaInsets.trailing
+            let expandedLayout = usableWidth >= RippleLayout.expandedLayoutMinimumWidth
+            let historySplit = usableWidth >= RippleLayout.historySplitMinimumWidth
             Group {
                 if showOnboarding {
                     OnboardingView(model: onboarding) {
@@ -37,7 +40,7 @@ public struct RootView: View {
                         Task { await today.refresh() }
                     }
                 } else {
-                    iOSTabs(isIPadLayout: iPadLayout)
+                    iOSTabs(historySplit: historySplit)
                 }
             }
             .task(id: scenePhase) {
@@ -46,17 +49,12 @@ public struct RootView: View {
                 showOnboarding = !(profile?.onboardingCompleted ?? false)
                 await today.refresh()
             }
-            .environment(\.rippleIPadLayout, iPadLayout)
+            .environment(\.rippleExpandedLayout, expandedLayout)
             .tint(RippleColor.waterLagoon)
         }
     }
 
-    private func isIPadLayout(for size: CGSize) -> Bool {
-        // iPhone is portrait-only; the width threshold covers compact iPad windows.
-        sizeClass == .regular || size.width >= RippleLayout.iPadLayoutMinimumWidth
-    }
-
-    private func iOSTabs(isIPadLayout: Bool) -> some View {
+    private func iOSTabs(historySplit: Bool) -> some View {
         TabView(selection: $selected) {
             Tab(L10n.text("Today"), systemImage: "drop.fill", value: .today) {
                 NavigationStack {
@@ -65,7 +63,7 @@ public struct RootView: View {
             }
             Tab(L10n.text("History"), systemImage: "calendar", value: .history) {
                 HistoryCalendarView(model: history, todayModel: today)
-                    .environment(\.rippleHistorySplit, isIPadLayout)
+                    .environment(\.rippleHistorySplit, historySplit)
             }
             Tab(L10n.text("Stats"), systemImage: "chart.bar.xaxis", value: .stats) {
                 StatsView(model: stats)

@@ -1,6 +1,7 @@
 import SwiftUI
 
 public enum RippleMotion {
+    public static let durationInstant: TimeInterval = 0
     public static let durationQuick: TimeInterval = 0.28
     public static let durationHero: TimeInterval = 0.90
     public static let durationConfirm: TimeInterval = 1.30

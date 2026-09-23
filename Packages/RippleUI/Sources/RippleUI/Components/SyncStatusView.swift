@@ -16,7 +16,7 @@ public struct SyncStatusView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                 Text(detail)
-                    .font(.caption)
+                    .font(RippleFont.caption)
                     .foregroundStyle(.secondary)
             }
         } icon: {

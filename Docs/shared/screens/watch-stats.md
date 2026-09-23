@@ -1,9 +1,9 @@
 # Ripple Surface — Wear Stats
 
-**Stable surface ID:** `watch-stats`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Wearable screen  
+**Stable surface ID:** `watch-stats`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** Wearable screen
 **Localized name:** `Statistik` / `Stats`
 
 This is the canonical current-week wearable Stats contract.
@@ -25,13 +25,28 @@ navigation returns to Wear Today or Wear History.
 3. One compact chart with an accessible textual summary.
 4. Empty/offline/error feedback.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [Apple Watch Stats](ios/watch-stats.png), [Android Wear Stats](../Android/UI/wear-stats.png), and [shared wearable wireframe](../wireframes/watch-stats--ready--wearable.png)
+**Reference classification:** Current wearable evidence and shared semantic wireframe.
+**States/viewports inspected:** Current ISO week ready, empty/offline, and reduced motion.
+**System-owned chrome excluded from the shared wireframe:** Watch/Wear time, page indicators, and native chart interaction chrome.
+
+**Required product-owned composition:** Current ISO-week range; average per elapsed day; goal hits; total; exactly one compact chart; textual/value alternative; no period picker.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#watch-stats). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Wear Stats ready-state wearable wireframe: current ISO-week summary and one compact chart](../wireframes/watch-stats--ready--wearable.png)
 
 Editable source: [watch-stats--ready--wearable.svg](../wireframes/watch-stats--ready--wearable.svg).
 
-Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -85,6 +100,8 @@ week remains explicit and the period picker remains absent.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Wear Stats description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

@@ -1,9 +1,9 @@
 # Ripple Surface — Share/export
 
-**Stable surface ID:** `share-export`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** System surface  
+**Stable surface ID:** `share-export`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** System surface
 **Localized name:** Platform-local share/export copy
 
 This is the canonical contract for exporting Ripple data through the operating
@@ -28,13 +28,28 @@ and offer retry.
 3. Primary system share/save action.
 4. Cancel/dismissal owned by the system.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [shared share/export wireframe](../wireframes/share-export--ready--compact.png); no runtime capture is currently designated
+**Reference classification:** Current shared system-handoff illustration.
+**States/viewports inspected:** Ready, preparing, empty-but-valid, error/retry, and success handoff.
+**System-owned chrome excluded from the shared wireframe:** Native save/share destination, file permission prompts, and host picker chrome.
+
+**Required product-owned composition:** Export scope and versioned JSON/CSV formats; preparation/status; primary prepare/export action; native save/share handoff; cancel without mutation.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#share-export). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Share/export ready-state compact wireframe: export scope, preparation, and native save/share handoff](../wireframes/share-export--ready--compact.png)
 
 Editable source: [share-export--ready--compact.svg](../wireframes/share-export--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -90,6 +105,8 @@ with a fake app screen is forbidden.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Share/export description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

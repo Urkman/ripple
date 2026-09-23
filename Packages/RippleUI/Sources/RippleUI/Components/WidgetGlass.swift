@@ -30,14 +30,14 @@ public struct WidgetGlass: View {
 
 #Preview("Widget glass · Light") {
     WidgetGlass(consumedMl: 1250, goalMl: 2000)
-        .frame(width: 80)
+        .frame(width: RippleWidgetMetrics.previewGlassWidth)
         .padding()
         .background(RippleColor.waterFoam)
 }
 
 #Preview("Widget glass · Dark") {
     WidgetGlass(consumedMl: 1250, goalMl: 2000)
-        .frame(width: 80)
+        .frame(width: RippleWidgetMetrics.previewGlassWidth)
         .padding()
         .background(RippleColor.surface)
         .preferredColorScheme(.dark)
@@ -45,7 +45,7 @@ public struct WidgetGlass: View {
 
 #Preview("Widget glass · XXXL") {
     WidgetGlass(consumedMl: 1250, goalMl: 2000)
-        .frame(width: 80)
+        .frame(width: RippleWidgetMetrics.previewGlassWidth)
         .dynamicTypeSize(.accessibility3)
         .padding()
         .background(RippleColor.waterFoam)
@@ -53,7 +53,7 @@ public struct WidgetGlass: View {
 
 #Preview("Widget glass · Reduce Motion") {
     WidgetGlass(consumedMl: 1250, goalMl: 2000)
-        .frame(width: 80)
+        .frame(width: RippleWidgetMetrics.previewGlassWidth)
         .padding()
         .background(RippleColor.waterFoam)
 }

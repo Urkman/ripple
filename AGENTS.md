@@ -350,6 +350,7 @@ workflow:
 mkdir -p ~/.codex/skills
 cp -R skills/cross-platform-product-documentation ~/.codex/skills/
 cp -R skills/android-app-from-documentation ~/.codex/skills/
+cp -R skills/android-conversion-readiness ~/.codex/skills/
 cp -R skills/ios-app-setup ~/.codex/skills/
 ```
 
@@ -357,6 +358,9 @@ cp -R skills/ios-app-setup ~/.codex/skills/
   defines the shared product and surface documentation contracts.
 - [`skills/android-app-from-documentation/SKILL.md`](skills/android-app-from-documentation/SKILL.md)
   implements the Android project from those contracts.
+- [`skills/android-conversion-readiness/SKILL.md`](skills/android-conversion-readiness/SKILL.md)
+  audits the Android handoff, design-system token usage, data boundaries, and
+  acceptance prerequisites before Android implementation begins.
 - [`skills/ios-app-setup/SKILL.md`](skills/ios-app-setup/SKILL.md) prepares a
   blank or existing iOS project with shared foundations, a DesignSystem, and
   documentation-synchronization rules. It does not implement product screens

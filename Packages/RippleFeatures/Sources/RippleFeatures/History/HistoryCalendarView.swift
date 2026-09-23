@@ -25,11 +25,29 @@ public struct HistoryCalendarView: View {
 
     public var body: some View {
         Group {
+            #if os(iOS)
+            GeometryReader { proxy in
+                if #available(iOS 27.1, *),
+                   !proxy.reservedRegions(kind: .division).isEmpty {
+                    iPadHistoryScreen
+                        .environment(\.rippleHistorySplit, true)
+                } else if usesSplit {
+                    iPadHistoryScreen
+                } else {
+                    iPhoneHistoryScreen
+                }
+            }
+            #else
             if usesSplit {
                 iPadHistoryScreen
             } else {
                 iPhoneHistoryScreen
             }
+            #endif
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .sheet(isPresented: $showsCustomAmount, onDismiss: refreshAfterCustomAmount) {
+            customAmountSheet
         }
         .overlay(alignment: .bottom) {
             RippleToastHost(
@@ -50,13 +68,32 @@ public struct HistoryCalendarView: View {
                     DayDetailView(day: day, useCases: useCases, refreshID: detailRefreshID)
                 }
                 .toolbar { calendarToolbar }
-                .sheet(isPresented: $showsCustomAmount, onDismiss: refreshAfterCustomAmount) {
-                    customAmountSheet
-                }
         }
     }
 
     private var iPadHistoryScreen: some View {
+        GeometryReader { proxy in
+            #if os(iOS)
+            if #available(iOS 27.1, *),
+               !proxy.reservedRegions(kind: .division).isEmpty {
+                ArrangementView {
+                    calendar
+                } secondary: {
+                    iPadDetailPane
+                }
+                .arrangementViewStyle(.split)
+            } else {
+                standardSplitHistory
+            }
+            #else
+            standardSplitHistory
+            #endif
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background(RippleColor.waterFoam.ignoresSafeArea())
+    }
+
+    private var standardSplitHistory: some View {
         HStack(spacing: 0) {
             calendar
                 .frame(
@@ -74,11 +111,6 @@ public struct HistoryCalendarView: View {
 
             iPadDetailPane
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .background(RippleColor.waterFoam.ignoresSafeArea())
-        .sheet(isPresented: $showsCustomAmount, onDismiss: refreshAfterCustomAmount) {
-            customAmountSheet
         }
     }
 
@@ -144,9 +176,13 @@ public struct HistoryCalendarView: View {
         return ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(alignment: .top, spacing: 0) {
                 ForEach(model.availableMonths, id: \.self) { month in
-                    monthPage(month: month, diameter: diameter)
-                        .id(month)
-                        .containerRelativeFrame(.horizontal)
+                    ScrollView(.vertical) {
+                        monthPage(month: month, diameter: diameter)
+                            .padding(.bottom, RippleSpace.lg)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    .id(month)
+                    .containerRelativeFrame(.horizontal)
                 }
             }
             .scrollTargetLayout()
@@ -264,9 +300,7 @@ public struct HistoryCalendarView: View {
 
     private func select(_ date: Date) {
         model.select(date)
-        if !usesSplit {
-            compactSelectedDay = date
-        }
+        compactSelectedDay = date
     }
 
     private func showCustomAmount() {

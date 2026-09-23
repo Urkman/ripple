@@ -1,9 +1,9 @@
 # Ripple Surface — Notification actions
 
-**Stable surface ID:** `notification-actions`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** System surface  
+**Stable surface ID:** `notification-actions`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** System surface
 **Localized name:** Localized reminder/action copy
 
 This is the canonical contract for actions attached to a Ripple reminder
@@ -28,13 +28,28 @@ goal context where useful, one clear predefined log action, and an open-app
 action when available. Do not place a calendar, Stats chart, or complex editor
 inside the notification.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [shared notification-action wireframe](../wireframes/notification-actions--ready--compact.png); no runtime capture is currently designated
+**Reference classification:** Current shared system-entry illustration.
+**States/viewports inspected:** Ready, invalid/disabled reminder, success, permission/scheduling, and projection error.
+**System-owned chrome excluded from the shared wireframe:** Notification shade grouping, sound, priority, dismissal, and host action styling.
+
+**Required product-owned composition:** Localized reminder title/body; remaining/goal context where useful; one configured log action with amount/unit; optional open-app action; result/status.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#notification-actions). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Notification action ready-state compact wireframe: reminder context, default log action, and open-app action](../wireframes/notification-actions--ready--compact.png)
 
 Editable source: [notification-actions--ready--compact.svg](../wireframes/notification-actions--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -89,6 +104,8 @@ that requires a hidden app state is allowed.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Notification actions description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

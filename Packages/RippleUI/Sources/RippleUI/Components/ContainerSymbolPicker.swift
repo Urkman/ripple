@@ -36,7 +36,7 @@ public struct ContainerSymbolPicker: View {
                         selection = option.symbolName
                     } label: {
                         Image(systemName: option.symbolName)
-                            .font(.title3)
+                            .font(RippleFont.symbol)
                             .foregroundStyle(
                                 option.symbolName == selection
                                     ? RippleColor.waterLagoon

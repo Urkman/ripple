@@ -11,6 +11,10 @@ for local use.
   platform handoff contracts.
 - [`android-app-from-documentation`](android-app-from-documentation/SKILL.md)
   builds or extends the Android project from those contracts.
+- [`android-conversion-readiness`](android-conversion-readiness/SKILL.md)
+  audits whether the shared handoff, design-system token usage, data
+  boundaries, native mappings, and acceptance prerequisites are ready before
+  Android implementation starts.
 - [`ios-app-setup`](ios-app-setup/SKILL.md) prepares a blank or existing iOS
   project with shared foundations, a DesignSystem, and documentation-sync
   rules. It does not implement product screens from documentation.
@@ -27,6 +31,7 @@ directory:
 mkdir -p ~/.codex/skills
 cp -R skills/cross-platform-product-documentation ~/.codex/skills/
 cp -R skills/android-app-from-documentation ~/.codex/skills/
+cp -R skills/android-conversion-readiness ~/.codex/skills/
 cp -R skills/ios-app-setup ~/.codex/skills/
 ```
 

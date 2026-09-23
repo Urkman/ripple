@@ -1,9 +1,9 @@
 # Ripple Surface — Wear custom amount
 
-**Stable surface ID:** `watch-custom-amount`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Wearable sheet  
+**Stable surface ID:** `watch-custom-amount`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** Wearable sheet
 **Localized name:** `Menge` / `Custom amount`
 
 This is the canonical wearable custom amount contract.
@@ -30,13 +30,28 @@ persistence.
 The amount remains the primary input. The full phone container catalog is not
 required to appear at once.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [shared wearable custom-amount wireframe](../wireframes/watch-custom-amount--ready--wearable.png); no runtime capture is currently designated
+**Reference classification:** Current shared semantic wireframe.
+**States/viewports inspected:** Ready wearable, invalid, offline, and reduced-motion.
+**System-owned chrome excluded from the shared wireframe:** Native crown/rotary input and sheet dismissal chrome.
+
+**Required product-owned composition:** Back/dismiss/title; current amount/unit; adjustable range and step; optional compact presets; explicit Confirm; no logging from selection or adjustment alone.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#watch-custom-amount). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Wear custom amount ready-state wearable wireframe: rotary amount, compact presets, confirm, and dismissal](../wireframes/watch-custom-amount--ready--wearable.png)
 
 Editable source: [watch-custom-amount--ready--wearable.svg](../wireframes/watch-custom-amount--ready--wearable.svg).
 
-Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -91,6 +106,8 @@ selection and Confirm remains discoverable.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Wear custom amount description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

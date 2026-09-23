@@ -19,23 +19,23 @@ public struct IntakeRow: View {
                 .foregroundStyle(RippleColor.waterLagoon)
             VStack(alignment: .leading, spacing: 2) {
                 Text(amount)
-                    .font(.body.monospacedDigit().weight(.medium))
+                    .font(RippleFont.bodyMediumNumeric)
                 if let container, !container.isEmpty {
                     Text(container)
-                        .font(.caption)
+                        .font(RippleFont.caption)
                         .foregroundStyle(.secondary)
                 }
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 2) {
                 Text(time)
-                    .font(.callout.monospacedDigit())
+                    .font(RippleFont.calloutNumeric)
                 Text(source)
-                    .font(.caption)
+                    .font(RippleFont.caption)
                     .foregroundStyle(.secondary)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, RippleSpace.grid)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityText)
     }

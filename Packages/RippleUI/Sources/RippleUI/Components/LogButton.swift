@@ -14,9 +14,9 @@ public struct LogButton: View {
     public var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.title3.weight(.semibold).monospacedDigit())
+                .font(RippleFont.action)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
+                .padding(.vertical, RippleSpace.lg)
         }
         .buttonStyle(RippleLogButtonStyle(isPrimary: isPrimary))
         .accessibilityLabel(title)
@@ -28,13 +28,12 @@ struct RippleLogButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundStyle(isPrimary ? Color.white : RippleColor.waterDeep)
+            .foregroundStyle(isPrimary ? RippleColor.onAction : RippleColor.waterDeep)
             .background(
                 Capsule(style: .continuous)
                     .fill(isPrimary ? RippleColor.waterAqua : RippleColor.waterFoam)
             )
             .scaleEffect(configuration.isPressed ? 0.96 : 1)
-            .shadow(color: isPrimary ? RippleColor.waterAqua.opacity(configuration.isPressed ? 0.45 : 0) : .clear, radius: 18)
             .animation(RippleMotion.springSnappy, value: configuration.isPressed)
     }
 }

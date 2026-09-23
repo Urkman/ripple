@@ -10,12 +10,12 @@ public struct DayHeader: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: RippleSpace.grid) {
             Text(title)
-                .font(.largeTitle.weight(.semibold))
+                .font(RippleFont.sectionTitle)
                 .foregroundStyle(RippleColor.waterDeep)
             Text(subtitle)
-                .font(.body)
+                .font(RippleFont.body)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

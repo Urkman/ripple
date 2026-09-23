@@ -155,7 +155,7 @@ private enum WatchWaterWavePhase: CaseIterable {
     var animation: Animation {
         switch self {
         case .flat:
-            .linear(duration: 0)
+            .linear(duration: RippleMotion.durationInstant)
         case .outward:
             .easeOut(duration: RippleMotion.rippleOutboundDuration)
         case .reflection:
@@ -222,23 +222,23 @@ public struct WatchWaterBackdrop: View {
                 wavePosition: phase.position,
                 waveAmplitude: phase.amplitude
             )
-            .stroke(RippleColor.watchLagoon.opacity(0.92), lineWidth: 1)
+            .stroke(RippleColor.watchLagoon.opacity(0.92), lineWidth: RippleStroke.standard)
         }
     }
 }
 
 #Preview("Watch Water") {
     WatchWaterBackdrop(level: 0.52)
-        .frame(width: 184, height: 224)
+        .frame(width: RippleWatchLayout.previewWaterWidth, height: RippleWatchLayout.previewWaterHeight)
 }
 
 #Preview("Watch Water · Wrist Motion") {
     WatchWaterBackdrop(level: 0.52, motionTrigger: 1)
-        .frame(width: 184, height: 224)
+        .frame(width: RippleWatchLayout.previewWaterWidth, height: RippleWatchLayout.previewWaterHeight)
 }
 
 #Preview("Watch Water · Dark · Reduce Motion") {
     WatchWaterBackdrop(level: 0.52, motionEnabled: false)
-        .frame(width: 184, height: 224)
+        .frame(width: RippleWatchLayout.previewWaterWidth, height: RippleWatchLayout.previewWaterHeight)
         .preferredColorScheme(.dark)
 }

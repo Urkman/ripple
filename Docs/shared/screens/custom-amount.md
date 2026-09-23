@@ -1,9 +1,9 @@
 # Ripple Surface — Custom amount
 
-**Stable surface ID:** `custom-amount`  
-**Surface contract version:** 1.1.0
-**Last verified:** 2026-09-18
-**Kind:** Sheet  
+**Stable surface ID:** `custom-amount`
+**Surface contract version:** 1.1.1
+**Last verified:** 2026-09-23
+**Kind:** Sheet
 **Localized name:** `Benutzerdefinierte Menge` / `Custom amount`
 
 This is the canonical description of the custom amount entry surface.
@@ -36,13 +36,28 @@ owning surface shows localized transient confirmation.
 The slider appears before the container selection. The all-container region may
 wrap or reflow when needed, but it must not become an unlabeled hidden region.
 
+## Reference evidence and visible-element inventory
+
+**Reference set:** [shared custom-amount wireframe](../wireframes/custom-amount--ready--compact.png); no runtime capture is currently designated
+**Reference classification:** Current shared semantic wireframe; native sheet expression is delegated to platform contracts.
+**States/viewports inspected:** Ready compact, invalid/loading, and large-text reflow described by the surface contract.
+**System-owned chrome excluded from the shared wireframe:** Native sheet drag handle, keyboard/rotary chrome, and platform dismissal affordances.
+
+**Required product-owned composition:** Dismiss/title; amount readout and unit; min/max/step amount control; every saved container with icon/name/amount and selected state; full-width Add action.
+
+The complete element-by-element inventory, reference identity, crop/state notes,
+and reconciliation decisions are maintained in the [Ripple visual reference
+inventory](../Ripple_VISUAL_REFERENCE_INVENTORY.md#custom-amount). The linked
+review note is part of this surface contract; it does not authorize behavior
+outside the PRD or replace the native platform mapping.
+
 ## Platform-independent wireframes
 
 ![Custom amount ready-state compact wireframe: amount readout, slider, all-container selection, and Add action](../wireframes/custom-amount--ready--compact.png)
 
 Editable source: [custom-amount--ready--compact.svg](../wireframes/custom-amount--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.0. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model and draft
@@ -120,6 +135,8 @@ layout while preserving name, icon, amount, and selected state.
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established the canonical platform-independent Custom amount description. | iOS and Android share one semantic surface outcome and action boundary. |
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
+
+| 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
 
 ## Related contracts
 

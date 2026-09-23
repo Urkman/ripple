@@ -1,8 +1,8 @@
 # Ripple Design System
 
 **Document type:** Shared visual, interaction, and reusable-element contract  
-**Version:** 1.0.1 — 18 September 2026
-**Last verified:** 2026-09-18
+**Version:** 1.2.1 — 23 September 2026
+**Last verified:** 2026-09-23
 **Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 **Status:** Normative companion to [`Ripple_PRD.md`](Ripple_PRD.md)
 
@@ -74,6 +74,7 @@ representation. Colors are roles, not decoration.
 | `color.surface.elevated` | `#F7FCFD` | `#152026` | Card/control surface; preserve separation with stroke/material, not heavy shadow. |
 | `color.surface.selected` | `#D9EEF1` | `#1E3A42` | Selected chip/control background; must remain distinguishable without color alone. |
 | `color.icon.muted` | System secondary label role | System secondary label role | Supporting icons and disabled states; never the only encoding of a required action. |
+| `color.on-action` | `#FFFFFF` | `#FFFFFF` | Text and icons on Lagoon/Aqua action surfaces when Deep does not meet contrast. |
 
 `color.success` aliases `color.water.lagoon`. `color.danger` uses the
 platform's desaturated system red role with sufficient contrast; it is not a
@@ -90,6 +91,8 @@ accent families in v1.
   for long paragraphs or small text on light backgrounds.
 - Lagoon is the action/selection/success role. Pair it with a label, stroke,
   shape, or state text so color is never the sole state indicator.
+- On-action is reserved for content placed on a filled Lagoon/Aqua action
+  surface; it is not a general-purpose accent or decorative highlight.
 - Glass highlights use restrained white/material reflection. They never become
   a second accent palette.
 - Alpha is a component-state decision, not a feature-local color. Disabled
@@ -170,6 +173,7 @@ amount or outcome.
 | Token | Value | Use |
 |---|---:|---|
 | `motion.duration.quick` | 0.28 s | Button, chip, selection, and small control transitions. |
+| `motion.duration.instant` | 0 s | Static phase transition where no visible motion is required. |
 | `motion.duration.hero.pour` | 0.40–0.70 s | Active stream and level rise, derived from the series amount. |
 | `motion.duration.hero.lead-in` | 0.14 s | Stream travels from above the vessel to the water surface. |
 | `motion.duration.hero.settle` | 0.90 s maximum reference | Surface response/settle after contact; not an idle loop. |
@@ -571,11 +575,37 @@ The corresponding platform source file and platform architecture/UI document
 must be updated in the same change. Do not fix a one-off feature by adding a
 feature-local design system. Prior timeline entries are immutable.
 
+## 11.1 Adaptive container tokens
+
+`RippleUI` owns these layout values; Android maps logical points to native
+logical layout units, never physical pixels. Measure the content container
+inside system safe areas; do not infer insets from a device or a fold angle.
+
+| Token | Value | Purpose |
+|---|---|---|
+| `expandedLayoutMinimumWidth` | 500 | Rename of `iPadLayoutMinimumWidth`; expanded presentation depends on usable width. |
+| `historySplitMinimumWidth` | 641 = 320 + 1 + 320 | Calendar minimum, divider, and detail minimum before enabling two panes. |
+| `todayHeroMinimumHeight` | 168 | Readable minimum before vertical overflow scrolls. |
+| `todayHeroAvailableHeightFraction` | 0.62 | Vertical layouts allocate this share of available height to the hero, clamped by the hero minimum and maximum. |
+| `todayContentHorizontalPadding` | 20 | Designed margin within the current safe content region. |
+| `todaySideBySideMinimumWidth` | 512 = 240 + 32 + 240 | Hero, column spacing, and action minimum, measured after content padding. |
+| `adaptivePanelMinimumWidth` | 320 | Minimum logical width for a readable Stats chart or Settings group before the adaptive grid stacks it. |
+| `statsSummaryMaxWidth` | 720 | Maximum width of the three Stats summary tiles so a broad container keeps the metrics grouped and centered. |
+
+Existing hero maxima remain 240 × 336 for side-by-side composition and
+280 × 392 for expanded vertical composition. Preserve aspect ratio when
+shrinking. Insets can change asymmetrically without a size change; native
+containers and safe-area placement remain responsible for those edges.
+These are layout tokens only; water geometry and motion tokens are unchanged.
+
 ## 12. Timeline
 
 | Version | Date | Change | Impact |
 |---|---|---|---|
 | 1.0.0 | 2026-09-11 | Established canonical Ripple tokens, reusable UI contracts, native-control policy, and accessibility/motion acceptance requirements. | iOS and Android can implement the same visual semantics while retaining platform-native controls and behavior. |
 | 1.0.1 | 2026-09-18 | Re-verified the token/component contract against the Apple 1.1 baseline, including layout-neutral log/delete feedback, reminder status, and accessibility refinements; no new accent or feature-local token was introduced. | Android can finalize its native presentation against the current shared component and accessibility rules without diverging from the released iOS behavior. |
+| 1.1.0 | 2026-09-19 | Added container-based responsive tokens, derived two-pane thresholds, and readable hero overflow behavior. | Both platforms can adapt to live window and fold changes without feature-local geometry constants. |
+| 1.2.0 | 2026-09-20 | Added shared minimum-width and summary-width tokens for responsive Stats and Settings panels. | Broad iPhone Duo and iPad regions use readable adaptive grids while compact containers continue to stack without feature-local geometry. |
+| 1.2.1 | 2026-09-23 | Added the shared `color.on-action` role for readable content on filled Lagoon/Aqua actions and aligned the iOS reference token implementation with the documented stroke, typography, metric, and motion ownership. | iOS and Android can map action foreground contrast to native `onPrimary`/content roles without feature-local white values or undocumented visual ownership. |
 
-*End of Ripple design system 1.0.1.*
+*End of Ripple design system 1.2.1.*

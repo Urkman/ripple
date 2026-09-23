@@ -6,6 +6,7 @@ public enum RippleColor {
     public static let waterAqua = Color("RippleWaterAqua", bundle: .module)
     public static let waterFoam = Color("RippleWaterFoam", bundle: .module)
     public static let glassHighlight = Color.white
+    public static let onAction = Color.white
     public static let surface = Color("RippleSurface", bundle: .module)
 
     // These values mirror the dark variants in RippleColors.xcassets. The
