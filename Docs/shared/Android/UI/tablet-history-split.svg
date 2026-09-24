@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768">
+  <desc>Android expanded History layout illustration with all 30 September dates, seven weekday columns, selected-today detail, and today-only add. Not a runtime capture.</desc>
+  <style>
+    text{font-family:Arial,sans-serif;fill:#16333b}.muted{fill:#617a80}.white{fill:#fff}.surface{fill:#fff;stroke:#b9cbd0;stroke-width:1.3}.soft{fill:#f1f6f7;stroke:#b9cbd0;stroke-width:1.2}.track{fill:none;stroke:#d5e2e4;stroke-width:3}.progress{fill:none;stroke:#1a7a8c;stroke-width:3;stroke-dasharray:43 100;transform-box:fill-box;transform-origin:center;transform:rotate(-90deg)}.complete{fill:none;stroke:#4fb3c6;stroke-width:3}.future{opacity:.38}
+  </style>
+  <rect width="1024" height="768" fill="#f5f8f9"/>
+  <rect x="18" y="18" width="128" height="732" rx="20" fill="#e7f1f3"/>
+  <text x="82" y="58" text-anchor="middle" font-size="14" font-weight="700">RIPPLE</text>
+  <text x="82" y="116" text-anchor="middle" font-size="14">Today</text>
+  <rect x="32" y="141" width="100" height="48" rx="14" fill="#1a7a8c"/>
+  <text x="82" y="171" text-anchor="middle" font-size="14" font-weight="700" style="fill:#fff">History</text>
+  <text x="82" y="222" text-anchor="middle" font-size="14">Stats</text>
+  <text x="82" y="273" text-anchor="middle" font-size="14">Settings</text>
+  <line x1="163" y1="34" x2="163" y2="734" stroke="#cbdadd" stroke-width="1.5"/>
+
+  <text x="188" y="59" font-size="27" font-weight="700">History</text>
+  <text x="188" y="82" font-size="12" class="muted">Calendar remains visible beside the selected day</text>
+  <rect x="188" y="98" width="402" height="46" rx="14" fill="#e4f2f4"/>
+  <text x="211" y="127" text-anchor="middle" font-size="17">‹</text>
+  <text x="389" y="127" text-anchor="middle" font-size="15" font-weight="700">September 2026</text>
+  <text x="567" y="127" text-anchor="middle" font-size="17" class="muted">›</text>
+  <rect x="188" y="154" width="402" height="280" rx="16" class="surface"/>
+  <g text-anchor="middle" font-size="9" class="muted">
+    <text x="210" y="179">MON</text><text x="266" y="179">TUE</text><text x="322" y="179">WED</text><text x="378" y="179">THU</text><text x="434" y="179">FRI</text><text x="490" y="179">SAT</text><text x="546" y="179">SUN</text>
+  </g>
+
+  <!-- Week 1: September 1–6, with an empty Monday cell. -->
+  <g text-anchor="middle" font-size="9">
+    <g><circle cx="266" cy="205" r="15" class="track"/><text x="266" y="208">1</text></g>
+    <g><circle cx="322" cy="205" r="15" class="track"/><circle cx="322" cy="205" r="15" class="progress"/><text x="322" y="208">2</text></g>
+    <g><circle cx="378" cy="205" r="15" class="track"/><text x="378" y="208">3</text></g>
+    <g><circle cx="434" cy="205" r="15" class="track"/><text x="434" y="208">4</text></g>
+    <g><circle cx="490" cy="205" r="15" class="track"/><circle cx="490" cy="205" r="15" class="complete"/><text x="490" y="208">5</text></g>
+    <g><circle cx="546" cy="205" r="15" class="track"/><text x="546" y="208">6</text></g>
+  </g>
+  <!-- Week 2: September 7–13. -->
+  <g text-anchor="middle" font-size="9">
+    <g><circle cx="210" cy="250" r="15" class="track"/><text x="210" y="253">7</text></g>
+    <g><circle cx="266" cy="250" r="15" class="track"/><circle cx="266" cy="250" r="15" class="progress"/><text x="266" y="253">8</text></g>
+    <g><circle cx="322" cy="250" r="15" class="track"/><text x="322" y="253">9</text></g>
+    <g><circle cx="378" cy="250" r="15" class="track"/><text x="378" y="253">10</text></g>
+    <g><circle cx="434" cy="250" r="15" class="track"/><text x="434" y="253">11</text></g>
+    <g><circle cx="490" cy="250" r="15" class="track"/><text x="490" y="253">12</text></g>
+    <g><circle cx="546" cy="250" r="15" class="track"/><text x="546" y="253">13</text></g>
+  </g>
+  <!-- Week 3: September 14–20. -->
+  <g text-anchor="middle" font-size="9">
+    <g><circle cx="210" cy="295" r="15" class="track"/><text x="210" y="298">14</text></g>
+    <g><circle cx="266" cy="295" r="15" class="track"/><circle cx="266" cy="295" r="15" class="complete"/><text x="266" y="298">15</text></g>
+    <g><circle cx="322" cy="295" r="15" class="track"/><text x="322" y="298">16</text></g>
+    <g><circle cx="378" cy="295" r="15" class="track"/><circle cx="378" cy="295" r="15" class="progress"/><text x="378" y="298">17</text></g>
+    <g><circle cx="434" cy="295" r="15" class="track"/><text x="434" y="298">18</text></g>
+    <g><circle cx="490" cy="295" r="15" class="track"/><text x="490" y="298">19</text></g>
+    <g><circle cx="546" cy="295" r="15" class="track"/><text x="546" y="298">20</text></g>
+  </g>
+  <!-- Week 4: September 21–27. -->
+  <g text-anchor="middle" font-size="9">
+    <g><circle cx="210" cy="340" r="15" class="track"/><text x="210" y="343">21</text></g>
+    <g><circle cx="266" cy="340" r="15" class="track"/><circle cx="266" cy="340" r="15" class="progress"/><text x="266" y="343">22</text></g>
+    <g><circle cx="322" cy="340" r="19" fill="none" stroke="#1a7a8c" stroke-width="1.4"/><circle cx="322" cy="340" r="15" class="track"/><circle cx="322" cy="340" r="15" class="progress" style="stroke-dasharray:58.1 100"/><text x="322" y="343" font-weight="700">23</text><circle cx="322" cy="363" r="2" fill="#0b3d4a"/></g>
+    <g class="future"><circle cx="378" cy="340" r="15" class="track"/><text x="378" y="343">24</text></g>
+    <g class="future"><circle cx="434" cy="340" r="15" class="track"/><text x="434" y="343">25</text></g>
+    <g class="future"><circle cx="490" cy="340" r="15" class="track"/><text x="490" y="343">26</text></g>
+    <g class="future"><circle cx="546" cy="340" r="15" class="track"/><text x="546" y="343">27</text></g>
+  </g>
+  <!-- Week 5: September 28–30. -->
+  <g text-anchor="middle" font-size="9" class="future">
+    <g><circle cx="210" cy="385" r="15" class="track"/><text x="210" y="388">28</text></g>
+    <g><circle cx="266" cy="385" r="15" class="track"/><text x="266" y="388">29</text></g>
+    <g><circle cx="322" cy="385" r="15" class="track"/><text x="322" y="388">30</text></g>
+  </g>
+  <text x="188" y="462" font-size="10" class="muted">One day ring per date · future dates are disabled</text>
+
+  <rect x="622" y="41" width="352" height="686" rx="20" class="soft"/>
+  <text x="650" y="77" font-size="21" font-weight="700">Day Detail</text>
+  <text x="650" y="101" font-size="12" class="muted">Wednesday, 23 September · Today</text>
+  <rect x="650" y="119" width="296" height="128" rx="16" fill="#e4f2f4"/>
+  <path d="M671 139 L714 139 L709 228 L676 228 Z" fill="#fff" stroke="#1a7a8c" stroke-width="2"/>
+  <path d="M674 173 L711 173 L709 226 L676 226 Z" fill="#9ed9e1"/>
+  <text x="731" y="162" font-size="19" font-weight="700">1,250 ml</text>
+  <text x="731" y="185" font-size="11" class="muted">62% of 2,000 ml goal</text>
+  <text x="731" y="207" font-size="11" class="muted">750 ml remaining</text>
+  <rect x="650" y="261" width="296" height="44" rx="13" fill="#1a7a8c"/>
+  <text x="798" y="288" text-anchor="middle" font-size="14" font-weight="700" style="fill:#fff">+  Add intake</text>
+  <text x="650" y="337" font-size="13" font-weight="700">Entries</text>
+  <rect x="650" y="348" width="296" height="53" rx="11" class="surface"/>
+  <text x="663" y="370" font-size="11" font-weight="600">10:14 · Glass · 250 ml</text><text x="663" y="389" font-size="10" class="muted">Source · App</text>
+  <rect x="650" y="409" width="296" height="53" rx="11" class="surface"/>
+  <text x="663" y="431" font-size="11" font-weight="600">09:02 · Bottle · 500 ml</text><text x="663" y="450" font-size="10" class="muted">Source · Watch</text>
+  <rect x="650" y="470" width="296" height="53" rx="11" class="surface"/>
+  <text x="663" y="492" font-size="11" font-weight="600">07:45 · Custom · 500 ml</text><text x="663" y="511" font-size="10" class="muted">Source · Siri</text>
+  <text x="650" y="563" font-size="11" class="muted">Add is shown only while today is selected.</text>
+  <text x="650" y="584" font-size="11" class="muted">Expanded layout keeps calendar and detail together.</text>
+  <text x="188" y="733" font-size="11" class="muted">Android layout illustration · complete month · not a device capture</text>
+</svg>

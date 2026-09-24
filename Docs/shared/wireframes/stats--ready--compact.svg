@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="640" height="1510" viewBox="0 0 640 1510">
-  <desc>Ripple Stats ready compact wireframe, surface contract 1.1.2.</desc>
+  <desc>Ripple Stats ready compact wireframe, surface contract 1.1.3.</desc>
   <style>text{font-family:system-ui,-apple-system,sans-serif;fill:#16333b}.muted{fill:#648087}.surface{fill:#fff;stroke:#a9c7cc;stroke-width:2}.accent{fill:#dceff2;stroke:#348b99;stroke-width:2}.bar{fill:#9ed9e1}.goal{stroke:#348b99;stroke-width:3;stroke-dasharray:8 7}.line{fill:none;stroke:#1a7a8c;stroke-width:4}</style>
   <rect width="640" height="1510" fill="#f5fafb"/>
   <text x="40" y="48" font-size="16" class="muted">SHARED WIREFRAME · READY · COMPACT</text>

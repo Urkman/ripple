@@ -1,7 +1,7 @@
 # Ripple Surface — Today
 
 **Stable surface ID:** `today`
-**Surface contract version:** 1.2.1
+**Surface contract version:** 1.2.2
 **Last verified:** 2026-09-23
 **Kind:** Root screen
 **Localized name:** `Heute` / `Today`
@@ -69,7 +69,7 @@ Caption: Representative ready state in a compact semantic viewport; shared surfa
 ![Today responsive wireframe showing usable regions and retained state](../wireframes/today--resize--adaptive.png)
 
 Editable source: [today--resize--adaptive.svg](../wireframes/today--resize--adaptive.svg).
-Caption: Neutral resize/fold illustration, surface contract 1.2.1; not runtime evidence.
+Caption: Neutral resize/fold illustration, surface contract 1.2.2; not runtime evidence.
 The earlier ready-state images remain representative baseline hierarchy references.
 
 ## Read model
@@ -173,6 +173,7 @@ canonical IDs and are not shrunk copies of this surface.
 | 1.2.0 | 2026-09-19 | Specified container-driven resize/fold composition and preserved presentation state; added an adaptive wireframe. | Compact and expanded windows retain usable content and ongoing interaction. |
 
 | 1.2.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
+| 1.2.2 | 2026-09-23 | Reconciled the ready-state illustration with the flat idle-water rule and 62% fill level, corrected the seeded Cup amount to 200 ml, and removed a feedback placeholder that implied reserved layout. | The shared baseline now matches the PRD and data-model seed values while keeping transient feedback outside the measured Today layout. |
 
 ## Related contracts
 

@@ -1,5 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="520" height="520" viewBox="0 0 520 520">
-  <desc>Ripple Wear custom amount ready wireframe, surface contract 1.1.0.</desc>
+  <desc>Ripple Wear custom amount ready wireframe, surface contract 1.1.2.</desc>
   <style>text{font-family:system-ui,-apple-system,sans-serif;fill:#f2fbfc}.muted{fill:#a9c7cc}.surface{fill:#17262b;stroke:#5caab4;stroke-width:2}.accent{fill:#2d6570;stroke:#9ed9e1;stroke-width:2}</style>
-  <rect width="520" height="520" rx="70" fill="#0f1b1f"/><rect x="22" y="22" width="476" height="476" rx="58" class="surface"/><text x="54" y="64" font-size="15" class="muted">×</text><text x="260" y="68" text-anchor="middle" font-size="20" font-weight="700">Amount</text><text x="260" y="164" text-anchor="middle" font-size="46" font-weight="700">420 ml</text><text x="260" y="208" text-anchor="middle" font-size="16" class="muted">Crown / rotary adjusts by 10 ml</text><rect x="80" y="250" width="360" height="62" rx="20" class="accent"/><text x="260" y="289" text-anchor="middle" font-size="18">Glas · Tasse · Flasche</text><rect x="80" y="366" width="360" height="64" rx="22" class="accent"/><text x="260" y="407" text-anchor="middle" font-size="20" font-weight="700">Log 420 ml</text><text x="260" y="466" text-anchor="middle" font-size="15" class="muted">selection alone does not log</text>
+  <rect width="520" height="520" rx="70" fill="#0f1b1f"/>
+  <rect x="22" y="22" width="476" height="476" rx="58" class="surface"/>
+  <text x="54" y="64" font-size="15" class="muted">×</text>
+  <text x="260" y="68" text-anchor="middle" font-size="20" font-weight="700">Amount</text>
+  <text x="260" y="136" text-anchor="middle" font-size="42" font-weight="700">250 ml</text>
+  <text x="260" y="166" text-anchor="middle" font-size="15" class="muted">Crown / rotary adjusts by 10 ml</text>
+  <rect x="34" y="202" width="142" height="82" rx="16" class="accent"/>
+  <rect x="189" y="202" width="142" height="82" rx="16" class="surface"/>
+  <rect x="344" y="202" width="142" height="82" rx="16" class="surface"/>
+  <text x="105" y="236" text-anchor="middle" font-size="15">Glas</text>
+  <text x="105" y="260" text-anchor="middle" font-size="17" font-weight="700">250 ml</text>
+  <text x="260" y="236" text-anchor="middle" font-size="15">Tasse</text>
+  <text x="260" y="260" text-anchor="middle" font-size="17" font-weight="700">200 ml</text>
+  <text x="415" y="236" text-anchor="middle" font-size="15">Flasche</text>
+  <text x="415" y="260" text-anchor="middle" font-size="17" font-weight="700">500 ml</text>
+  <rect x="80" y="330" width="360" height="68" rx="22" class="accent"/>
+  <text x="260" y="373" text-anchor="middle" font-size="20" font-weight="700">Confirm 250 ml</text>
+  <text x="260" y="438" text-anchor="middle" font-size="14" class="muted">preset / adjustment changes draft only</text>
+  <text x="260" y="462" text-anchor="middle" font-size="14" class="muted">confirm to log · × dismisses</text>
 </svg>

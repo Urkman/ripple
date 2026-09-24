@@ -1,7 +1,7 @@
 # Ripple Surface — Wear Stats
 
 **Stable surface ID:** `watch-stats`
-**Surface contract version:** 1.1.1
+**Surface contract version:** 1.1.2
 **Last verified:** 2026-09-23
 **Kind:** Wearable screen
 **Localized name:** `Statistik` / `Stats`
@@ -46,7 +46,7 @@ outside the PRD or replace the native platform mapping.
 
 Editable source: [watch-stats--ready--wearable.svg](../wireframes/watch-stats--ready--wearable.svg).
 
-Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the wearable semantic viewport; shared surface contract version 1.1.2. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -102,6 +102,7 @@ week remains explicit and the period picker remains absent.
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
 
 | 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
+| 1.1.2 | 2026-09-23 | Made the required weekly total visible alongside average/day and goal hits in the wearable wireframe and Android layout target. | The compact chart remains the sole chart while all three PRD summary values are present. |
 
 ## Related contracts
 

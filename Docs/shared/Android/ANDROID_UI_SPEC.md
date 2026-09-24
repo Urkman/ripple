@@ -1,7 +1,7 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 3.4.1
+**Document version:** 3.4.3
 **Last verified:** 2026-09-23
 **Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
@@ -19,9 +19,10 @@ then expresses them with Material 3, Android window-size behavior, Android
 back/navigation conventions, native permission surfaces, and Compose for Wear
 OS.
 
-The existing iOS screenshots are evidence, not pixel targets. The annotated PNG
-image references in `UI/` are Android layout contracts. Real Android and
-Wear captures are the final acceptance artifacts. Nothing in this document
+The existing iOS screenshots are evidence, not pixel targets. The PNG
+illustrations in `UI/` are Android layout references, not runtime captures or
+independent semantic contracts. Real Android and Wear captures are the final
+acceptance artifacts. Nothing in this document
 authorizes copying Liquid Glass, an iOS tab bar, SwiftUI navigation chrome, or
 Apple Watch presentation into Android.
 
@@ -714,15 +715,25 @@ Today, History, Stats. See the [Wear layout images](UI/README.md).
 ### 9.1 Wear Today
 
 See [wear Today](UI/wear-today.png). Use the full canvas as a flat
-water-level field with the consumed/remaining readout. Provide predefined
-amount actions and a Crown-equivalent rotary-first custom amount flow. Use Wear
-chips or compact buttons; keep labels short and touch targets safe.
+water-level field with consumed amount, goal, remaining amount, and percentage.
+Provide one explicit `+` action that opens Wear custom amount; the Today page
+does not directly log from preset chips.
 
 No idle wave loop, pour stream, surface reaction, motion tilt, or phone-sized
 top-level navigation is used on Wear. The shared write boundary still applies.
 After a completed log, show the localized success confirmation as a transient
 Snackbar/Toast overlay above the action region without reserving layout space.
 Persistent sync, permission, loading, and unresolved errors remain inline.
+
+### 9.1.1 Wear custom amount
+
+The amount sheet presents the three configured amount presets, current amount
+and unit, rotary adjustment in 10 ml steps within the shared 50–2,000 ml range,
+and one explicit confirm action. Selecting a preset or rotating changes only
+the draft. Adjustment resolves it as a custom amount without a container ID;
+only confirmation calls `LogIntake(source = WATCH)`. System back/dismissal
+discards the draft; do not add a second in-content Cancel action. Preserve
+native rotary, focus, hit-target, and accessible-value behavior.
 
 ### 9.2 Wear History and Day Detail
 
@@ -733,10 +744,11 @@ See [wear History](UI/wear-history.png) and [wear Day Detail](UI/wear-day-detail
 - Do not show a month calendar or month pager.
 - Tapping a day opens Wear Day Detail with the daily total and individual
   entries.
-- Individual entries can be deleted with a standard Wear action and restored
-  with a short Snackbar/Toast action overlay; it must not reserve layout space.
-  Edit and add are phone/tablet flows unless
-  the Wear interaction explicitly remains within the supported Today action.
+- Individual entries can be deleted with a row-level Wear action and restored
+  with a short Snackbar/Toast Undo action; it must not reserve layout space.
+  The soft delete is immediate and does not add a second confirmation surface.
+  Editing and adding entries remain phone/tablet flows; Today logging is handled
+  by its separate amount-entry sheet.
 
 ### 9.3 Wear Stats
 
@@ -904,9 +916,10 @@ The corrected shared wireframes preserve the History today-only add action,
 Stats' dependent period context, four distinct chart families and Highlights,
 Settings' eight separate semantic groups, Day Detail goal/row actions, the
 Edit Container delete action, and all seven elapsed local days in Wear History.
-The Android evidence remains platform-native: the Wear Today predefined chips
-are a native expression of the logging action, and the inventory records that
-no Android runtime resize/fold captures exist yet.
+The Android layout illustrations remain platform-specific and are not runtime
+captures. Wear Today uses one entry point and the Wear amount sheet contains
+the preset choices; the inventory records that no Android runtime resize/fold
+captures exist yet.
 
 Store runtime Android captures under `release/screenshots/android/` with stable
 names:
@@ -1032,3 +1045,5 @@ at the bottom.
 | 3.3.1 | 2026-09-20 | Mapped the shared adaptive Stats/Settings panel rule to Android window-size behavior and large-font fallback. | The Android port can mirror the iPhone Duo composition while retaining Material controls, semantic order, and complete settings groups. |
 | 3.4.0 | 2026-09-23 | Added the evidence-backed visual inventory and reconciled the shared compact, expanded, adaptive, and wearable wireframes to the complete product-owned visible structure. | Android implementers can distinguish crops, native chrome, and platform expressions from required content; known lack of Android runtime resize/fold captures remains explicit. |
 | 3.4.1 | 2026-09-23 | Added the Android mapping for shared `color.on-action` content on filled Lagoon/Aqua actions. | Material and Wear controls can use native `onPrimary` content roles while preserving shared contrast semantics without local white values. |
+| 3.4.2 | 2026-09-23 | Aligned Wear Today, amount presets, and Wear Day Detail with the shared single-entry/confirm and delete/Undo contracts; corrected the Android layout illustrations for Stats and wearable summaries. | Android guidance now preserves the PRD's write boundary, all four phone Stats chart families, the Wear weekly total, and row-level recoverable deletion without claiming runtime verification. |
+| 3.4.3 | 2026-09-23 | Corrected the compact and expanded Android History illustrations to show every date in seven weekday columns, the today-only add action, disabled future dates, and an internally consistent Day Detail sample; matched the Android Wear Today water level to its readout and added editable sources. | The visual handoff now demonstrates complete calendar/detail surfaces with consistent values and a proportional wearable level, while preserving shared semantics and the absence of runtime proof. |

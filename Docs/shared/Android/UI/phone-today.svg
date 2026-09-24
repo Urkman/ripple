@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="780" viewBox="0 0 360 780">
+  <desc>Android Today layout illustration. It is not a runtime capture.</desc>
+  <style>text{font-family:Arial,sans-serif;fill:#16333b}.muted{fill:#617a80}.surface{fill:#fff;stroke:#b9cbd0;stroke-width:1.5}.accent{fill:#e4f2f4;stroke:#348b99;stroke-width:1.5}.primary{fill:#1a7a8c}.white{fill:#fff}</style>
+  <rect width="360" height="780" fill="#f5f8f9"/>
+  <text x="28" y="34" font-size="13" font-weight="700">RIPPLE</text>
+  <text x="28" y="59" font-size="17" font-weight="700">Today</text>
+  <text x="28" y="78" font-size="12" class="muted">Wednesday · 23 September</text>
+  <rect x="28" y="96" width="304" height="286" rx="30" fill="#fff" stroke="#348b99" stroke-width="3"/>
+  <path d="M40 210 H320 V365 H40 Z" fill="#9ed9e1"/>
+  <text x="180" y="164" text-anchor="middle" font-size="33" font-weight="700">1,250 ml</text>
+  <text x="180" y="190" text-anchor="middle" font-size="15" class="muted">Goal 2,000 ml · 62%</text>
+  <text x="180" y="332" text-anchor="middle" font-size="14" font-weight="600">750 ml remaining</text>
+  <text x="28" y="415" font-size="15" font-weight="700">Quick add</text>
+  <rect x="28" y="430" width="96" height="58" rx="14" class="accent"/>
+  <rect x="132" y="430" width="96" height="58" rx="14" class="accent"/>
+  <rect x="236" y="430" width="96" height="58" rx="14" class="accent"/>
+  <text x="76" y="454" text-anchor="middle" font-size="12">Glass</text><text x="76" y="475" text-anchor="middle" font-size="14" font-weight="700">250 ml</text>
+  <text x="180" y="454" text-anchor="middle" font-size="12">Cup</text><text x="180" y="475" text-anchor="middle" font-size="14" font-weight="700">200 ml</text>
+  <text x="284" y="454" text-anchor="middle" font-size="12">Bottle</text><text x="284" y="475" text-anchor="middle" font-size="14" font-weight="700">500 ml</text>
+  <rect x="28" y="502" width="304" height="54" rx="14" class="primary"/>
+  <text x="180" y="536" text-anchor="middle" font-size="16" font-weight="700" style="fill:#fff">Custom amount</text>
+  <text x="180" y="582" text-anchor="middle" font-size="12" class="muted">Success feedback overlays actions; no layout shift</text>
+  <line x1="20" y1="628" x2="340" y2="628" stroke="#cad7da" stroke-width="1"/>
+  <text x="45" y="660" text-anchor="middle" font-size="12" font-weight="700" fill="#1a7a8c">Today</text>
+  <text x="135" y="660" text-anchor="middle" font-size="12" class="muted">History</text>
+  <text x="225" y="660" text-anchor="middle" font-size="12" class="muted">Stats</text>
+  <text x="315" y="660" text-anchor="middle" font-size="12" class="muted">Settings</text>
+  <text x="28" y="724" font-size="11" class="muted">Illustrative Android layout · no Recent list</text>
+</svg>

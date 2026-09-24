@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+  <desc>Android Wear Today layout illustration with one amount-entry action. Not a runtime capture.</desc>
+  <style>text{font-family:Arial,sans-serif;fill:#f2fbfc}.muted{fill:#b4c9cd}.on-water{fill:#0b3d4a}.water{fill:#4fb3c6}.accent{fill:#286a75;stroke:#9ed9e1;stroke-width:2}</style>
+  <rect width="360" height="360" rx="54" fill="#0f1b1f"/>
+  <text x="24" y="34" font-size="12" class="muted">TODAY</text>
+  <path d="M0 43 H360 V360 H0 Z" class="water"/>
+  <text x="180" y="91" text-anchor="middle" font-size="34" font-weight="700" style="fill:#0b3d4a">1,750 ml</text>
+  <text x="180" y="117" text-anchor="middle" font-size="13" style="fill:#0b3d4a">Goal 2,000 ml · 88% · 250 ml left</text>
+  <circle cx="180" cy="263" r="42" class="accent"/>
+  <text x="180" y="278" text-anchor="middle" font-size="42" font-weight="700">+</text>
+</svg>

@@ -1,7 +1,7 @@
 # Ripple Design System
 
 **Document type:** Shared visual, interaction, and reusable-element contract  
-**Version:** 1.2.1 — 23 September 2026
+**Version:** 1.2.2 — 23 September 2026
 **Last verified:** 2026-09-23
 **Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 **Status:** Normative companion to [`Ripple_PRD.md`](Ripple_PRD.md)
@@ -513,8 +513,8 @@ design-system primitives.
 | Element | Contract | iOS owner | Android/native mapping |
 |---|---|---|---|
 | Watch water backdrop | Full-canvas flat level field; no phone hero tilt; supports reduced motion. | `Components/WatchWaterBackdrop.swift` | Wear Compose/custom canvas design-system primitive. |
-| Watch log button | Crown/touch-friendly predefined log with amount/unit and source. | `Components/WatchLogButton.swift` | Wear-native button styled with shared tokens. |
-| Watch quick amount row | Compact predefined actions with stable hit targets and no phone tab chrome. | `Components/WatchQuickAmountRow.swift` | Wear-native action row. |
+| Watch log button | One `+` entry point that opens amount selection; it does not log by itself. | `Components/WatchLogButton.swift` | Wear-native primary button styled with shared tokens. |
+| Watch quick amount row | Three configured amount presets inside the amount sheet; selection updates the draft and does not log. | `Components/WatchQuickAmountRow.swift` | Wear-native preset row with stable hit targets. |
 | Watch day row | Seven-day local history row with amount/goal/status. | `Components/WatchDayRow.swift` | Wear-native list item. |
 | Watch stat chart | One compact current-ISO-week chart with textual summary. | `Components/WatchStatChart.swift` | Wear chart primitive. |
 | Widget glass | Read-only glass silhouette/remaining surface; no stream/tilt/calendar/chart. | `Components/WidgetGlass.swift` plus widget extension | Glance/widget native layout with shared roles. |
@@ -607,5 +607,6 @@ These are layout tokens only; water geometry and motion tokens are unchanged.
 | 1.1.0 | 2026-09-19 | Added container-based responsive tokens, derived two-pane thresholds, and readable hero overflow behavior. | Both platforms can adapt to live window and fold changes without feature-local geometry constants. |
 | 1.2.0 | 2026-09-20 | Added shared minimum-width and summary-width tokens for responsive Stats and Settings panels. | Broad iPhone Duo and iPad regions use readable adaptive grids while compact containers continue to stack without feature-local geometry. |
 | 1.2.1 | 2026-09-23 | Added the shared `color.on-action` role for readable content on filled Lagoon/Aqua actions and aligned the iOS reference token implementation with the documented stroke, typography, metric, and motion ownership. | iOS and Android can map action foreground contrast to native `onPrimary`/content roles without feature-local white values or undocumented visual ownership. |
+| 1.2.2 | 2026-09-23 | Clarified the wearable logging-entry and preset-row component contracts: the single root action opens the amount sheet, while its three presets only update a draft. | Apple Watch and Wear OS can share the PRD's confirmation boundary without suggesting that a preset tap logs immediately. |
 
-*End of Ripple design system 1.2.1.*
+*End of Ripple design system 1.2.2.*

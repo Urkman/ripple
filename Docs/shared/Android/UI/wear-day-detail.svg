@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+  <desc>Android Wear Day Detail layout illustration with row-level soft delete and Undo. Not a runtime capture.</desc>
+  <style>text{font-family:Arial,sans-serif;fill:#f2fbfc}.muted{fill:#b4c9cd}.row{fill:#1a3036}.accent{fill:#286a75;stroke:#9ed9e1;stroke-width:1.5}</style>
+  <rect width="360" height="360" rx="54" fill="#0f1b1f"/>
+  <text x="22" y="28" font-size="11" class="muted">‹ HISTORY</text>
+  <text x="22" y="52" font-size="18" font-weight="700">Thu, 17 Sep</text>
+  <rect x="20" y="64" width="320" height="56" rx="14" class="accent"/>
+  <text x="180" y="89" text-anchor="middle" font-size="22" font-weight="700">950 ml</text>
+  <text x="180" y="108" text-anchor="middle" font-size="11" class="muted">Goal 2,000 ml · 1,050 ml left</text>
+  <text x="22" y="145" font-size="13" font-weight="700">Entries</text>
+  <rect x="20" y="152" width="320" height="44" rx="11" class="row"/><text x="32" y="170" font-size="11">15:08 · 250 ml</text><text x="32" y="187" font-size="9" class="muted">Glass · Watch</text><text x="326" y="178" text-anchor="end" font-size="10" class="muted">Delete</text>
+  <rect x="20" y="202" width="320" height="44" rx="11" class="row"/><text x="32" y="220" font-size="11">11:20 · 500 ml</text><text x="32" y="237" font-size="9" class="muted">Bottle · App</text><text x="326" y="228" text-anchor="end" font-size="10" class="muted">Delete</text>
+  <rect x="20" y="252" width="320" height="44" rx="11" class="row"/><text x="32" y="270" font-size="11">08:05 · 200 ml</text><text x="32" y="287" font-size="9" class="muted">Cup · Widget</text><text x="326" y="278" text-anchor="end" font-size="10" class="muted">Delete</text>
+  <text x="180" y="326" text-anchor="middle" font-size="10" class="muted">Soft delete · short Undo · no second confirmation</text>
+</svg>

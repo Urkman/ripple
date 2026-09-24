@@ -4,9 +4,9 @@ Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean 
 
 This document describes the iOS repository's architecture and current implementation. Product behavior remains defined by the shared [PRD](Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts. The platform-independent surface, design, and data contracts are maintained in the [screen catalog](Ripple_SCREEN_CATALOG.md), [design system](Ripple_DESIGN_SYSTEM.md), and [data model](Ripple_DATA_MODEL.md); this document maps those contracts to Swift implementation boundaries without redefining them.
 
-**Document version:** 1.10.1
+**Document version:** 1.11.0
 
-**Last verified:** 2026-09-20
+**Last verified:** 2026-09-24
 
 **Reference release baseline:** Apple marketing version 1.1 — 2026-09-17
 
@@ -21,7 +21,8 @@ Ripple is organized around a small set of invariants:
 - Deletion is a soft delete using `isDeleted`; restore and undo are explicit use cases.
 - Undo means `UndoLastIntake` for the last own, non-deleted intake. There is no distributed undo stack.
 - View models orchestrate domain use cases but do not contain persistence, CloudKit, HealthKit, or notification code.
-- Navigation is platform-local. There is no app-wide router.
+- Navigation is platform-local. App targets may use a platform-local root
+  coordinator; there is no app-wide router.
 - Product invariants are shared through `Docs/shared/Ripple_PRD.md`; implementation and persistence remain platform-local. Platform conditionals belong in apps, UI adapters, or composition code.
 - The UI uses the tokens and reusable components from `RippleUI`; features do not define parallel colors, typography, or motion systems.
 
@@ -288,6 +289,13 @@ order: Welcome, Units, Health permission, Goal, Containers, and Reminders.
 
 The environment provides use cases and a small amount of layout configuration. It does not provide a global navigation router or a data store.
 
+The iOS composition root owns `RippleNavigationCoordinator`, an
+`@MainActor @Observable` shell model that stores the selected root section and
+maps pending `RippleRoute` system requests to that selection. It does not own
+feature view models, domain use cases, or feature-local child navigation;
+History detail navigation and presented sheets remain with their owning
+feature views.
+
 ### Screen structure
 
 On iPhone and iPad, `RootView` provides four tabs:
@@ -301,7 +309,7 @@ History and Stats are deliberately separate products. History is a month activit
 
 Platform roots are local to each app target. The root shell is not compiled as part of the multiplatform `RippleFeatures` target:
 
-- iOS (`Apps/RippleiOS/RootView.swift`): tab navigation and local navigation stacks/splits.
+- iOS (`Apps/RippleiOS/RootView.swift`, `RippleNavigationCoordinator.swift`): root tab navigation and local navigation stacks/splits.
 - watchOS (`Apps/RipplewatchOS/WatchRootView.swift`): horizontal Today, History, and Stats pages.
 - macOS (`Apps/RipplemacOS/MacRootView.swift`): `NavigationSplitView` sidebar with keyboard commands and menu-bar composition.
 - tvOS (`Apps/RippletvOS/TVRootView.swift`): minimal Today surface and predefined logging actions.
@@ -343,7 +351,7 @@ repository-relative; the canonical description is linked separately.
 | `edit-container` | [`screens/edit-container.md`](screens/edit-container.md) | Private `ContainerEditorSheet` in `SettingsView.swift` | Existing ID draft; `UpsertContainer`, `DeleteContainer`. |
 | `edit-reminder` | [`screens/edit-reminder.md`](screens/edit-reminder.md) | Private `ReminderEditorSheet` in `SettingsView.swift` | Local rule draft; `RescheduleReminders`. |
 | `onboarding` | [`screens/onboarding.md`](screens/onboarding.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Onboarding/OnboardingView.swift`; `OnboardingPages.swift` is support | `OnboardingViewModel`; profile/goal/permission use cases. |
-| `watch-today` | [`screens/watch-today.md`](screens/watch-today.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchTodayView.swift` | `WatchTodayViewModel`; `LogIntake` with source `watch`. |
+| `watch-today` | [`screens/watch-today.md`](screens/watch-today.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchTodayView.swift` | `WatchTodayViewModel`; opens the amount sheet, observes Today, and exposes eligible Undo. |
 | `watch-custom-amount` | [`screens/watch-custom-amount.md`](screens/watch-custom-amount.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchCustomAmountView.swift` | `WatchAmountSelection`; `LogIntake` with source `watch`. |
 | `watch-history` | [`screens/watch-history.md`](screens/watch-history.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchHistoryView.swift` | `WatchHistoryViewModel`; recent-seven-day observation. |
 | `watch-day-detail` | [`screens/watch-day-detail.md`](screens/watch-day-detail.md) | `Packages/RippleFeatures/Sources/RippleFeatures/Watch/WatchDayDetailView.swift` | `WatchDayDetailViewModel`; soft-delete/restore. |
@@ -467,7 +475,10 @@ All app and widget targets use the configured App Group and CloudKit identifiers
 
 Amount resolution is centralized in the intent adapter and ends at `LogIntake`. Container entities use stable UUIDs and query the settings repository. Shortcut phrases and localized strings are declared with the app name so Siri and Shortcuts remain stable across locales.
 
-`RippleNavigation` is a narrow pending-route handoff for system requests. It is consumed by the relevant app composition root; it is not a general-purpose navigation coordinator.
+`RippleNavigation` is a narrow pending-route handoff for system requests. The
+iOS composition root consumes it through `RippleNavigationCoordinator`, which
+selects the requested root section. It is not a general-purpose,
+cross-platform navigation coordinator.
 
 ## 13. Concurrency model
 
@@ -677,3 +688,5 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.9.0 | 2026-09-18 | Verified the implementation map and notification adapter against the Apple 1.1 release baseline; documented the current permission-aware, replaceable-next-reminder behavior without changing the Swift package boundaries. | The Android handoff can mirror the observable reminder contract while keeping scheduling platform-local and all logging on the shared domain use case. |
 | 1.10.0 | 2026-09-19 | Mapped container-based Today/History reflow and iOS 27.1 native active-fold arrangement to the existing view/UI boundaries. | Four tabs, scene lifecycle, selection, and entry drafts survive resize; domain and motion remain unchanged. |
 | 1.10.1 | 2026-09-20 | Mapped the shared adaptive panel and Stats summary tokens to StatsView and SettingsView while keeping native scroll containers and the system TabView rail. | iPhone Duo and iPad use readable multi-column analysis/settings regions without device-specific branches or new feature state. |
+| 1.10.2 | 2026-09-23 | Mapped Wear Today to the single amount-sheet entry point and kept `LogIntake(source: watch)` on the explicit confirmation surface. | The iOS implementation map now matches the PRD and canonical Watch Today/custom-amount contracts without implying an immediate root-screen write. |
+| 1.11.0 | 2026-09-24 | Added the iOS-only `RippleNavigationCoordinator` for root-section selection and pending App Intent route consumption while keeping feature-local child navigation and sheets local. | Root navigation now has an explicit observable owner and `OpenTodayIntent`/`OpenHistoryIntent` can select the requested section without introducing a cross-platform router. |

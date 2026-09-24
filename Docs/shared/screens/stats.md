@@ -1,7 +1,7 @@
 # Ripple Surface — Stats
 
 **Stable surface ID:** `stats`
-**Surface contract version:** 1.1.2
+**Surface contract version:** 1.1.3
 **Last verified:** 2026-09-23
 **Kind:** Root screen
 **Localized name:** `Statistik` / `Stats`
@@ -56,13 +56,13 @@ outside the PRD or replace the native platform mapping.
 
 Editable source: [stats--ready--compact.svg](../wireframes/stats--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.2. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.3. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 ![Stats ready-state expanded wireframe: persistent period selector and two-column chart composition](../wireframes/stats--ready--expanded.png)
 
 Editable source: [stats--ready--expanded.svg](../wireframes/stats--ready--expanded.svg).
 
-Caption: Representative ready state in the expanded semantic viewport; shared surface contract version 1.1.2. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the expanded semantic viewport; shared surface contract version 1.1.3. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -138,6 +138,7 @@ picker or four-chart composition.
 | 1.1.1 | 2026-09-20 | Clarified the available-width rule for grouped summary tiles and adaptive chart columns on broad containers. | iPhone Duo and iPad can use readable two-column analysis without changing chart order, data meaning, or the compact stack. |
 
 | 1.1.2 | 2026-09-23 | Added the visible-element inventory and reconciled the shared wireframes to four distinct chart families plus a dedicated highlights region. | Stats references now preserve chart type/structure, dependent period context, summaries, highlights, and large-text fallback. |
+| 1.1.3 | 2026-09-23 | Completed the expanded container-distribution chart so every illustrated container row, percentage, and bar is visible. | The expanded chart now preserves the full bounded distribution instead of clipping its final row. |
 
 ## Related contracts
 

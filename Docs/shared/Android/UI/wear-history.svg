@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+  <desc>Android Wear History partial viewport illustration with a visible cue to the seventh day. Not a runtime capture.</desc>
+  <style>text{font-family:Arial,sans-serif;fill:#f2fbfc}.muted{fill:#b4c9cd}.row{fill:#1a3036}.ring{fill:none;stroke:#4fb3c6;stroke-width:3}</style>
+  <rect width="360" height="360" rx="54" fill="#0f1b1f"/>
+  <text x="24" y="34" font-size="20" font-weight="700">History</text>
+  <text x="24" y="52" font-size="11" class="muted">Today + six previous local days</text>
+  <rect x="20" y="64" width="320" height="36" rx="12" class="row"/><circle cx="42" cy="82" r="10" class="ring"/><text x="62" y="86" font-size="12">Today · 1.8 L</text><text x="322" y="86" text-anchor="end" font-size="10" class="muted">goal</text>
+  <rect x="20" y="106" width="320" height="36" rx="12" class="row"/><circle cx="42" cy="124" r="10" class="ring"/><text x="62" y="128" font-size="12">Tue · 2.0 L</text><text x="322" y="128" text-anchor="end" font-size="10" class="muted">goal</text>
+  <rect x="20" y="148" width="320" height="36" rx="12" class="row"/><circle cx="42" cy="166" r="10" class="ring"/><text x="62" y="170" font-size="12">Mon · 1.4 L</text><text x="322" y="170" text-anchor="end" font-size="10" class="muted">70%</text>
+  <rect x="20" y="190" width="320" height="36" rx="12" class="row"/><circle cx="42" cy="208" r="10" class="ring"/><text x="62" y="212" font-size="12">Sun, 20 Sep · 2.1 L</text><text x="322" y="212" text-anchor="end" font-size="10" class="muted">goal</text>
+  <rect x="20" y="232" width="320" height="36" rx="12" class="row"/><circle cx="42" cy="250" r="10" class="ring"/><text x="62" y="254" font-size="12">Sat, 19 Sep · 1.7 L</text><text x="322" y="254" text-anchor="end" font-size="10" class="muted">85%</text>
+  <rect x="20" y="274" width="320" height="36" rx="12" class="row"/><circle cx="42" cy="292" r="10" class="ring"/><text x="62" y="296" font-size="12">Fri, 18 Sep · 2.0 L</text><text x="322" y="296" text-anchor="end" font-size="10" class="muted">goal</text>
+  <text x="180" y="336" text-anchor="middle" font-size="11" class="muted">↓ Scroll for the seventh day · no month calendar</text>
+</svg>

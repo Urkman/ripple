@@ -1,5 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="520" height="520" viewBox="0 0 520 520">
-  <desc>Ripple Wear Today ready wireframe, surface contract 1.1.0.</desc>
-  <style>text{font-family:system-ui,-apple-system,sans-serif;fill:#f2fbfc}.muted{fill:#a9c7cc}.surface{fill:#17262b;stroke:#5caab4;stroke-width:2}.accent{fill:#2d6570;stroke:#9ed9e1;stroke-width:2}.water{fill:#5caab4}</style>
-  <rect width="520" height="520" rx="70" fill="#0f1b1f"/><text x="36" y="58" font-size="15" class="muted">WEARABLE · TODAY</text><text x="260" y="120" text-anchor="middle" font-size="38" font-weight="700">1 250 ml</text><text x="260" y="150" text-anchor="middle" font-size="17" class="muted">62 % · 750 ml left</text><path d="M0 330 Q260 302 520 330 L520 520 L0 520 Z" class="water"/><text x="260" y="270" text-anchor="middle" font-size="15" class="muted">flat full-canvas level field</text><rect x="62" y="382" width="116" height="52" rx="20" class="accent"/><rect x="202" y="382" width="116" height="52" rx="20" class="accent"/><rect x="342" y="382" width="116" height="52" rx="20" class="accent"/><text x="120" y="415" text-anchor="middle" font-size="17">+250</text><text x="260" y="415" text-anchor="middle" font-size="17">+350</text><text x="400" y="415" text-anchor="middle" font-size="17">+500</text><text x="260" y="476" text-anchor="middle" font-size="17" class="muted">+ Custom amount</text>
+  <desc>Ripple Wear Today ready wireframe, surface contract 1.1.2.</desc>
+  <style>text{font-family:system-ui,-apple-system,sans-serif;fill:#f2fbfc}.muted{fill:#a9c7cc}.on-water{fill:#0b3d4a}.surface{fill:#17262b;stroke:#5caab4;stroke-width:2}.accent{fill:#2d6570;stroke:#9ed9e1;stroke-width:2}.water{fill:#4fb3c6}</style>
+  <rect width="520" height="520" rx="70" fill="#0f1b1f"/>
+  <text x="36" y="58" font-size="15" class="muted">WEARABLE · TODAY</text>
+  <path d="M0 65 H520 V520 H0 Z" class="water"/>
+  <text x="260" y="112" text-anchor="middle" font-size="38" font-weight="700" style="fill:#0b3d4a">1 750 ml</text>
+  <text x="260" y="146" text-anchor="middle" font-size="17" style="fill:#0b3d4a">Goal 2 000 ml · 88 % · 250 ml left</text>
+  <text x="260" y="258" text-anchor="middle" font-size="15" style="fill:#0b3d4a">flat full-canvas level field</text>
+  <circle cx="260" cy="425" r="48" class="accent"/>
+  <text x="260" y="443" text-anchor="middle" font-size="50" font-weight="700">+</text>
 </svg>

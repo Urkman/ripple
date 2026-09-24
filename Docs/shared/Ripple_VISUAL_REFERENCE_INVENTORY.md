@@ -1,7 +1,7 @@
 # Ripple visual reference inventory
 
 **Document type:** Shared visual-reference audit and visible-element inventory
-**Document version:** 1.0.0
+**Document version:** 1.0.2
 **Last verified:** 2026-09-23
 **Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 
@@ -34,8 +34,9 @@ does not replace the product, data, design, or platform contracts.
   their content to Ripple. They are not required in a shared wireframe; the
   product-owned labels, values, actions, and state indicators inside them are.
 - The shared wireframes are neutral illustrations, not runtime screenshots.
-  Runtime Android captures for resize/fold behavior do not yet exist; that gap
-  remains explicit in the Android handoff.
+  Android/UI PNGs are authored layout illustrations, not emulator/device
+  captures. Android runtime evidence is absent from this handoff and remains an
+  explicit acceptance task in the independent Android project.
 
 ## Reference register
 
@@ -52,27 +53,27 @@ does not replace the product, data, design, or platform contracts.
 | [`watch-history.png`](screens/ios/watch-history.png) | Supporting evidence | Recent history, wearable, cropped | Three rows are visible in the crop; the shared contract still requires seven elapsed local days and a continuation/scroll affordance. |
 | [`watch-stats.png`](screens/ios/watch-stats.png) | Current visual target | Current ISO week, wearable, cropped | Week context, three summaries, and one compact chart; time/page indicators are platform chrome. |
 
-### Android layout evidence
+### Android layout illustrations
 
-The PNGs in [`Android/UI/README.md`](Android/UI/README.md) are Android layout
-evidence/reference captures, not pixel targets for iOS and not runtime proof.
-They are inspected here for visible product composition and native-control
-placement.
+The PNGs in [`Android/UI/README.md`](Android/UI/README.md) are authored Android
+layout illustrations, not implementation evidence or runtime captures. They
+are inspected here for visible product composition; native-control behavior is
+defined in the Android UI specification.
 
 | Reference | Classification | State / viewport | Visible scope and limitation |
 |---|---|---|---|
-| [`phone-today.png`](Android/UI/phone-today.png) | Supporting evidence / Android layout target | Ready, compact phone | Hero, readout, three ordered quick adds, custom amount, and root navigation; the Android navigation bar is native chrome. |
-| [`phone-history.png`](Android/UI/phone-history.png) | Supporting evidence / Android layout target | Populated month, compact phone | Month pager, weekday row, day rings, selected-day context; top/bottom Android chrome is native. |
-| [`phone-day-detail.png`](Android/UI/phone-day-detail.png) | Supporting evidence / Android layout target | Ready, compact phone | Selected date, static summary, add action, three intake rows, and row actions. |
-| [`phone-stats.png`](Android/UI/phone-stats.png) | Supporting evidence / Android layout target | Week, compact phone | Android groups chart content under Daily intake, Patterns, and Highlights; the shared semantic contract retains four distinct chart families. |
-| [`phone-settings.png`](Android/UI/phone-settings.png) | Supporting evidence / Android layout target | Ready, compact phone | Profile, goal, containers, reminders/health, data, and about; native list/control rendering is platform-owned. |
-| [`phone-onboarding.png`](Android/UI/phone-onboarding.png) | Supporting evidence / Android layout target | First run, compact phone | Six-page sequence overview and Continue action; native permission surfaces are not pictured. |
-| [`tablet-history-split.png`](Android/UI/tablet-history-split.png) | Supporting evidence / Android layout target | Ready, expanded tablet | Calendar and selected day detail are visible side by side; rail and top app bar are native chrome. |
-| [`tablet-stats.png`](Android/UI/tablet-stats.png) | Supporting evidence / Android layout target | Week, expanded tablet | Summary row and four chart/highlight regions in an adaptive grid. |
-| [`wear-today.png`](Android/UI/wear-today.png) | Supporting evidence / Android layout target | Ready, wearable | Android-native predefined amount chips and full-canvas field; this is a platform expression of the wearable logging action, not Apple Watch chrome. |
-| [`wear-history.png`](Android/UI/wear-history.png) | Supporting evidence / Android layout target | Seven-day history, wearable | Six rows are visible in the crop; the contract requires seven elapsed days and native scroll/paging for the remaining row. |
-| [`wear-day-detail.png`](Android/UI/wear-day-detail.png) | Supporting evidence / Android layout target | Ready, wearable | Selected date, summary, three entry rows, and individual delete action. |
-| [`wear-stats.png`](Android/UI/wear-stats.png) | Supporting evidence / Android layout target | Current ISO week, wearable | Summary and one compact chart; no period picker. |
+| [`phone-today.png`](Android/UI/phone-today.png) | Current Android layout illustration (not runtime evidence) | Ready, compact phone | Hero fill matches the 62% readout; flat idle level, three ordered quick adds, custom amount, and root navigation; Android navigation is native chrome. |
+| [`phone-history.png`](Android/UI/phone-history.png) | Current Android layout illustration (not runtime evidence) | Populated September 2026, compact phone | All 30 dates fit in seven weekday columns; today is selected with its add action, future dates are disabled, and Android root navigation is native. |
+| [`phone-day-detail.png`](Android/UI/phone-day-detail.png) | Supporting Android layout illustration (not runtime evidence) | Ready, compact phone | Selected date, static summary, add action, three intake rows, and row actions. |
+| [`phone-stats.png`](Android/UI/phone-stats.png) | Current Android layout illustration (not runtime evidence) | Week, compact phone | Period and range context, three summary metrics, four distinct chart families, and separate Highlights. |
+| [`phone-settings.png`](Android/UI/phone-settings.png) | Supporting Android layout illustration (not runtime evidence) | Ready, compact phone | Profile, goal, containers, reminders/health, data, and about; native list/control rendering is platform-owned. |
+| [`phone-onboarding.png`](Android/UI/phone-onboarding.png) | Supporting Android layout illustration (not runtime evidence) | First run, compact phone | Six-page sequence overview and Continue action; native permission surfaces are not pictured. |
+| [`tablet-history-split.png`](Android/UI/tablet-history-split.png) | Current Android layout illustration (not runtime evidence) | Expanded tablet, today selected | Complete seven-column month, disabled future dates, and selected-today detail with contained static glass, matching entry total, and today-only add; rail is native navigation. |
+| [`tablet-stats.png`](Android/UI/tablet-stats.png) | Current Android layout illustration (not runtime evidence) | Week, expanded tablet | Three summary metrics; actual-vs-goal, goal-rate, daypart, and container charts; separate Highlights. |
+| [`wear-today.png`](Android/UI/wear-today.png) | Current Android layout illustration (not runtime evidence) | Ready, wearable | Flat full-canvas level matches the 88% readout; complete goal context and one entry point to amount selection. |
+| [`wear-history.png`](Android/UI/wear-history.png) | Supporting Android layout illustration (not runtime evidence) | Seven-day history, wearable | Six rows are visible in the crop; the contract requires seven elapsed days and native scroll/paging for the remaining row. |
+| [`wear-day-detail.png`](Android/UI/wear-day-detail.png) | Current Android layout illustration (not runtime evidence) | Ready, wearable | Selected date, summary, rows with time/amount/container/source, row-level delete, and transient Undo. |
+| [`wear-stats.png`](Android/UI/wear-stats.png) | Current Android layout illustration (not runtime evidence) | Current ISO week, wearable | Average/day, goal hits, total, and one compact chart; no period picker. |
 
 ## Surface inventories
 
@@ -95,11 +96,11 @@ NavigationBar/Rail, and device/fold frame.
 | Product-owned region or element | Required visible content | State / viewport | Wireframe mapping |
 |---|---|---|---|
 | Header/context | Ripple identity and localized local date/context | Ready compact; outer display | `today--ready--compact`, adaptive header/context note |
-| Hero vessel | Contained 2D glass silhouette, water level, flat idle surface, consumed amount/unit and percentage/goal readout | Ready, zero, adaptive | Hero/readout region; no circular progress |
+| Hero vessel | Contained 2D glass silhouette, water level proportional to consumed/goal, flat idle surface, consumed amount/unit and percentage/goal readout | Ready, zero, adaptive | Hero/readout region; no circular progress |
 | Remaining status | Remaining amount and goal status with units | All ready/zero states | Remaining region below hero |
 | Ordered quick adds | Exactly the first three saved containers, each with icon/name/amount and equal-width non-scrolling action bounds | Compact and expanded | Quick-add row/action region |
 | Custom amount | Explicit labeled action opening custom entry | All compact/expanded layouts | Safe action region |
-| Confirmation feedback | Localized completed-log feedback and optional undo without moving measured content | Success | Floating feedback annotation |
+| Confirmation feedback | Localized completed-log feedback and optional undo without moving measured content | Success | State contract; omitted from ready-state illustration |
 | Reflow regions | Hero/actions side-by-side only when they fit; constrained vertical fallback; state/draft retention | Resize/fold | `today--resize--adaptive.png/.svg` |
 
 ## custom-amount
@@ -302,9 +303,9 @@ status/navigation chrome.
 **Canonical surface:** [`screens/watch-today.md`](screens/watch-today.md)
 **Reference set:** Apple Watch Today, Android Wear Today, shared wearable
 wireframe.
-**Classification:** Platform-specific wearable evidence with an explicit
-native action variation; shared outcome and water/readout structure remain
-common.
+**Classification:** Apple Watch Today is the current visual target. Android
+Wear is a supporting layout illustration aligned to the same single-entry
+flow; neither image is runtime proof.
 **States/viewports:** Ready wearable; empty/goal/offline/reduced-motion in text.
 **Excluded chrome:** Watch time, page dots, crown/rotary affordance, and
 Wear/Watch page navigation.
@@ -312,9 +313,9 @@ Wear/Watch page navigation.
 | Product-owned region or element | Required visible content | State / viewport | Wireframe mapping |
 |---|---|---|---|
 | Context/readout | Today context, consumed amount/unit, goal, remaining, percentage | Ready | Top/readout region |
-| Full-canvas level | Static contained water-level field with no tilt or idle loop | Ready/empty/goal | Full wearable field |
-| Logging action region | Platform-native predefined action or single add entry that reaches the documented custom amount flow; action meaning/amount stays explicit | Apple Watch vs Android Wear | Lower action region; native platform mapping resolves the variation |
-| Feedback | Completed-log confirmation and eligible undo | Success | Floating feedback, no layout reservation |
+| Full-canvas level | Static contained water-level field proportional to the readout, with no tilt or idle loop | Ready/empty/goal | Full wearable field; ready example 88% |
+| Logging action | One `+` entry point opens the amount sheet; no direct root-screen log | Ready | Single action region |
+| Feedback | Completed-log confirmation and eligible undo | Success | State contract; transient and layout-neutral |
 
 ## watch-custom-amount
 
@@ -328,8 +329,8 @@ Wear/Watch page navigation.
 |---|---|---|---|
 | Context | Back/dismiss and localized amount title | Ready | Header |
 | Amount draft | Current amount/unit and adjustable range/step | Ready/invalid | Numeric readout/rotary note |
-| Optional presets | Compact saved-container selection when supported | Ready, variable | Selection region |
-| Confirm | Explicit confirm/log action; selection or adjustment alone does not write | Ready/invalid/success | Primary action |
+| Presets and draft | Exactly three configured amount presets with selected state; adjustment changes amount and clears container identity | Ready/invalid | Three preset choices and current amount |
+| Confirm/dismiss | Explicit confirm logs; system dismissal discards; selection or adjustment alone does not write | Ready/invalid/success | Primary action and system dismissal |
 
 ## watch-history
 
@@ -358,13 +359,13 @@ scroll indicators.
 Apple runtime capture.
 **Classification:** Android supporting evidence and shared semantic wireframe.
 **States/viewports:** Ready selected day; empty and delete/undo states.
-**Excluded chrome:** Native swipe-back, rotary focus, and confirmation surface.
+**Excluded chrome:** Native swipe-back, rotary focus, and transient Undo host styling.
 
 | Product-owned region or element | Required visible content | State / viewport | Wireframe mapping |
 |---|---|---|---|
 | Date/summary | Selected date, total, goal/remaining status | Ready | Header/summary |
 | Entries | Chronological rows with time, amount/unit, source/container | Ready/empty | Repeated rows |
-| Delete action | Individual row-level soft delete, explicit consequence, and Undo feedback | Ready/delete | Row/action region |
+| Delete action | Individual row-level soft delete followed by transient Undo; no second confirmation | Ready/delete | Row/action region and transient feedback state |
 
 ## watch-stats
 
@@ -475,10 +476,9 @@ and host picker chrome.
 
 ## Reconciled differences and remaining gaps
 
-- The shared Stats wireframes now preserve four separate chart-family regions
-  and a dedicated highlights region. Android's compact reference groups some of
-  those charts under “Patterns”; that is classified as native grouping, not a
-  license to remove the four semantic families.
+- The shared and Android Stats illustrations preserve four separate
+  chart-family regions and a dedicated Highlights region. The former Android
+  chart groupings that omitted the container distribution have been replaced.
 - The shared Settings wireframe now keeps Health, Sync, Export, and About as
   distinct product-owned groups even though the Android reference visually
   groups some rows. The platform mapping may group native rows only when it
@@ -487,8 +487,12 @@ and host picker chrome.
   adaptive overview remains a responsive composition diagram, not a runtime
   capture.
 - The shared Wear History wireframe now represents all seven elapsed days and a
-  continuation cue. The Apple and Android captures show fewer rows only because
+  continuation cue. The Apple and Android illustrations show fewer rows only because
   their visible crops/densities differ.
+- Wear Today uses one `+` entry point; its amount sheet owns the three presets,
+  rotary adjustment, and explicit confirmation. Wear Day Detail deletes one row
+  immediately and exposes the documented short Undo action; neither surface
+  permits an extra direct-write or edit path.
 - Android resize/fold runtime evidence is still missing. The current iPhone Duo
   outer-display capture verifies only the pictured compact zero state; it does
   not prove live reflow, active-fold placement, or state retention.
@@ -498,3 +502,5 @@ and host picker chrome.
 | Version | Date | Change | Impact |
 |---|---|---|---|
 | 1.0.0 | 2026-09-23 | Added the evidence classification and visible-element inventory for all 22 stable surfaces; reconciled current captures, shared wireframes, and platform-owned chrome. | Documentation review can verify product-owned region order, density, repeated elements, chart structure, wearable continuation, and known evidence gaps without treating screenshots as a second product authority. |
+| 1.0.1 | 2026-09-23 | Rebuilt Android Stats/Wear layout illustrations, reconciled wearable logging and delete flows to the PRD, and distinguished authored diagrams from runtime evidence. | Current reference mappings expose all required summary/chart content and preserve the separate Android runtime-acceptance gap. |
+| 1.0.2 | 2026-09-23 | Replaced the clipped Android phone and tablet History illustrations with complete seven-column month views; aligned tablet Day Detail totals and corrected both wearable Today fill levels to match their readouts. | The Android visual audit now verifies complete calendar dates, today-only add, disabled future days, consistent split-detail values, and proportional wearable water without mistaking diagrams for runtime proof. |

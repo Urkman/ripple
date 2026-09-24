@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="900" viewBox="0 0 1024 900">
+  <desc>Android expanded Stats layout illustration with complete chart families and highlights. Not a runtime capture.</desc>
+  <style>text{font-family:Arial,sans-serif;fill:#16333b}.muted{fill:#617a80}.surface{fill:#fff;stroke:#b9cbd0;stroke-width:1.5}.accent{fill:#e4f2f4}.bar{fill:#4fb3c6}.line{fill:none;stroke:#1a7a8c;stroke-width:3}.goal{stroke:#1a7a8c;stroke-width:2;stroke-dasharray:6 4}</style>
+  <rect width="1024" height="900" fill="#f5f8f9"/>
+  <rect x="18" y="18" width="126" height="864" rx="20" fill="#e7f1f3"/>
+  <text x="81" y="62" text-anchor="middle" font-size="14" font-weight="700">RIPPLE</text>
+  <text x="81" y="126" text-anchor="middle" font-size="14">Today</text><text x="81" y="178" text-anchor="middle" font-size="14">History</text>
+  <rect x="34" y="198" width="94" height="46" rx="13" fill="#1a7a8c"/><text x="81" y="227" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Stats</text>
+  <text x="81" y="282" text-anchor="middle" font-size="14">Settings</text>
+  <text x="176" y="58" font-size="30" font-weight="700">Stats</text>
+  <text x="176" y="82" font-size="13" class="muted">Independent destination · adaptive two-column analysis</text>
+  <rect x="176" y="98" width="816" height="48" rx="14" class="accent"/>
+  <text x="312" y="128" text-anchor="middle" font-size="15" font-weight="700">Week</text><text x="584" y="128" text-anchor="middle" font-size="15">Month</text><text x="856" y="128" text-anchor="middle" font-size="15">Year</text>
+  <text x="176" y="169" font-size="14" class="muted">‹   21–27 September 2026 · current ISO week · 3 elapsed days   ›</text>
+  <rect x="176" y="184" width="252" height="78" rx="15" class="accent"/><rect x="440" y="184" width="252" height="78" rx="15" class="accent"/><rect x="704" y="184" width="288" height="78" rx="15" class="accent"/>
+  <text x="198" y="213" font-size="13" class="muted">Avg / day</text><text x="198" y="245" font-size="22" font-weight="700">1,850 ml</text>
+  <text x="462" y="213" font-size="13" class="muted">Goal hit</text><text x="462" y="245" font-size="22" font-weight="700">2 / 3 days</text>
+  <text x="726" y="213" font-size="13" class="muted">Total</text><text x="726" y="245" font-size="22" font-weight="700">5,550 ml</text>
+  <rect x="176" y="278" width="396" height="174" rx="16" class="surface"/>
+  <text x="198" y="307" font-size="16" font-weight="700">Actual vs goal</text><text x="198" y="328" font-size="12" class="muted">Daily intake · ml · dashed line is daily goal</text>
+  <line x1="210" y1="420" x2="548" y2="420" stroke="#b9cbd0"/><line x1="210" y1="366" x2="548" y2="366" class="goal"/>
+  <rect x="252" y="380" width="48" height="40" class="bar"/><rect x="352" y="356" width="48" height="64" class="bar"/><rect x="452" y="342" width="48" height="78" class="bar"/>
+  <text x="276" y="441" text-anchor="middle" font-size="10" class="muted">Mon</text><text x="376" y="441" text-anchor="middle" font-size="10" class="muted">Tue</text><text x="476" y="441" text-anchor="middle" font-size="10" class="muted">Wed</text>
+  <rect x="588" y="278" width="404" height="174" rx="16" class="surface"/>
+  <text x="610" y="307" font-size="16" font-weight="700">Goal hit rate</text><text x="610" y="328" font-size="12" class="muted">Completed days · 0–100%</text>
+  <line x1="628" y1="420" x2="956" y2="420" stroke="#b9cbd0"/>
+  <path d="M690 420 L790 360 L890 360" class="line"/><circle cx="690" cy="420" r="5" fill="#1a7a8c"/><circle cx="790" cy="360" r="5" fill="#1a7a8c"/><circle cx="890" cy="360" r="5" fill="#1a7a8c"/>
+  <text x="690" y="441" text-anchor="middle" font-size="10" class="muted">Mon</text><text x="790" y="441" text-anchor="middle" font-size="10" class="muted">Tue</text><text x="890" y="441" text-anchor="middle" font-size="10" class="muted">Wed</text>
+  <rect x="176" y="468" width="396" height="174" rx="16" class="surface"/>
+  <text x="198" y="497" font-size="16" font-weight="700">Daypart distribution</text><text x="198" y="518" font-size="12" class="muted">Morning · midday · afternoon · evening</text>
+  <line x1="210" y1="610" x2="548" y2="610" stroke="#b9cbd0"/>
+  <rect x="230" y="561" width="52" height="49" class="bar"/><rect x="310" y="538" width="52" height="72" class="bar"/><rect x="390" y="575" width="52" height="35" class="bar"/><rect x="470" y="548" width="52" height="62" class="bar"/>
+  <text x="256" y="630" text-anchor="middle" font-size="9" class="muted">Morning</text><text x="336" y="630" text-anchor="middle" font-size="9" class="muted">Midday</text><text x="416" y="630" text-anchor="middle" font-size="9" class="muted">Afternoon</text><text x="496" y="630" text-anchor="middle" font-size="9" class="muted">Evening</text>
+  <rect x="588" y="468" width="404" height="174" rx="16" class="surface"/>
+  <text x="610" y="497" font-size="16" font-weight="700">Container distribution</text><text x="610" y="518" font-size="12" class="muted">Share of logged amount · top items + Other</text>
+  <text x="610" y="550" font-size="12">Glass</text><rect x="682" y="538" width="164" height="12" rx="6" class="bar"/><text x="856" y="550" font-size="11" class="muted">42%</text>
+  <text x="610" y="576" font-size="12">Bottle</text><rect x="682" y="564" width="121" height="12" rx="6" class="bar"/><text x="813" y="576" font-size="11" class="muted">31%</text>
+  <text x="610" y="602" font-size="12">Cup</text><rect x="682" y="590" width="70" height="12" rx="6" class="bar"/><text x="762" y="602" font-size="11" class="muted">18%</text>
+  <text x="610" y="628" font-size="12">Other</text><rect x="682" y="616" width="35" height="12" rx="6" class="bar"/><text x="727" y="628" font-size="11" class="muted">9%</text>
+  <rect x="176" y="658" width="816" height="186" rx="16" class="surface"/>
+  <text x="198" y="689" font-size="16" font-weight="700">Highlights</text>
+  <text x="198" y="725" font-size="14">Best day · Wed · 2,250 ml</text><text x="574" y="725" font-size="14">Weakest completed · Mon · 1,200 ml</text>
+  <text x="198" y="761" font-size="14">No-entry days · 0</text><text x="574" y="761" font-size="14">Qualifying goal run · 2 days</text>
+  <text x="198" y="813" font-size="12" class="muted">Empty ranges show no artificial chart marks; large text returns to a single-column stack.</text>
+  <text x="176" y="876" font-size="12" class="muted">Illustrative Android layout · native navigation rail and controls · not a device capture</text>
+</svg>

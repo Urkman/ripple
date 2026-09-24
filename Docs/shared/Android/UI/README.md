@@ -1,6 +1,6 @@
 # Android UI reference pack
 
-**Reference pack revision:** 3.4.0 (tracks the Android UI specification)
+**Reference pack revision:** 3.4.2 (tracks Android UI specification 3.4.3)
 **Last verified:** 2026-09-23
 **Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 
@@ -15,8 +15,13 @@ This pack separates evidence from the Android presentation contract:
 - Evidence classification and product-owned visible-element coverage come from the [Ripple visual reference inventory](../../Ripple_VISUAL_REFERENCE_INVENTORY.md).
 
 - The existing iOS PNGs are evidence of the current product hierarchy and visual priorities.
-- The PNGs in this directory are Android layout evidence/reference captures. The text contracts name Android-native controls and responsive behavior; images are not pixel-perfect iOS copies and never override the shared semantic contracts.
-- Real Android emulator and Wear captures are the final acceptance artifacts. These layout images do not replace runtime verification.
+- The PNGs in this directory are authored Android layout illustrations, not
+  emulator/device captures. The text contracts define Android-native controls
+  and responsive behavior; the illustrations suggest composition but never
+  override the shared semantic contracts.
+- Real Android emulator and Wear captures are not present in this handoff pack.
+  They remain final acceptance artifacts in the independent Android project;
+  these illustrations do not replace runtime verification.
 
 ## Shared semantic wireframes
 
@@ -24,9 +29,9 @@ The 22 canonical surfaces also have platform-independent PNG previews and
 same-stem editable SVG sources in
 [`../../wireframes/README.md`](../../wireframes/README.md). The [shared screen
 catalog](../../Ripple_SCREEN_CATALOG.md) links each primary image. Those
-wireframes are the neutral layout contract; the PNGs in this Android pack
-remain Android-specific evidence and may show native density, controls, and
-navigation.
+wireframes are the neutral layout contract; the PNGs in this Android pack are
+Android-specific layout illustrations and may suggest native density,
+controls, and navigation. Neither image set proves runtime behavior.
 The [visual reference inventory](../../Ripple_VISUAL_REFERENCE_INVENTORY.md)
 is the full audit of what each reference shows, what is cropped or
 system-owned, and which product-owned elements the shared wireframe must
@@ -34,17 +39,17 @@ retain.
 
 ## Resize/fold reference update
 
-Revision 3.4.0 keeps the shared neutral [Today adaptive](../../wireframes/today--resize--adaptive.png)
+Revision 3.4.2 keeps the shared neutral [Today adaptive](../../wireframes/today--resize--adaptive.png)
 and [History adaptive](../../wireframes/history--resize--adaptive.png) illustrations.
 Their editable sources and rendering instructions live in the shared wireframe
 pack. The iPhone Duo outer-display Today capture verifies the compact ready
-state only; existing iOS and Android images remain baseline evidence of their
-pictured states. The visual inventory and corrected shared wireframes now make
+state only; iOS images remain implementation evidence and Android images remain
+illustrative layout targets. The visual inventory and corrected shared wireframes now make
 the History add action, Stats chart families/Highlights, Settings group
 separation, Day Detail actions, Edit Container delete, and seven Wear History
 days explicit. No static image demonstrates live resize, active-fold
-arrangement, or selection/draft retention, and no new Android runtime captures
-were produced. Validate those behaviors against the 3.4.0 UI specification
+arrangement, or selection/draft retention, and no Android runtime captures
+were produced. Validate those behaviors against the 3.4.2 UI specification
 before adding runtime evidence. Historical image provenance remains intact.
 
 ## iOS evidence
@@ -58,53 +63,58 @@ before adding runtime evidence. Historical image provenance remains intact.
 - [Watch History](../../screens/ios/watch-history.png)
 - [Watch Stats](../../screens/ios/watch-stats.png)
 
-## Android layout contracts
+## Android layout illustrations
+
+Every image below is an authored layout illustration rather than a runtime
+capture. The shared surface contracts define product meaning; Android UI
+guidance defines native interaction. Editable SVG sources are linked for the
+illustrations revised with this reference pack.
 
 | Reference | Contract |
 |---|---|
-| `phone-today.png` | Four-root phone shell; contained glass hero; first three saved-container quick adds sharing the full width of a fixed non-scrolling row in Settings order; custom amount with slider followed by a wider, unlabeled all-container selection; transient confirmation toast over the lower actions without layout change; no Recent list |
-| `phone-history.png` | Horizontal month pager; weekday grid; one capped ring per day; future days disabled |
+| [`phone-today.png`](phone-today.png) ([source](phone-today.svg)) | Four-root phone shell; contained glass hero with a flat idle surface and fill matching the 62% readout; first three ordered saved-container quick adds; custom amount; layout-neutral confirmation; no Recent list |
+| [`phone-history.png`](phone-history.png) ([source](phone-history.svg)) | Horizontal month pager; all dates in a seven-column month grid; one capped ring per day; today-only add; future days disabled |
 | `phone-day-detail.png` | Nested Day Detail; localized weekday/date top-app-bar title without a duplicate compact content heading, static contained glass/readout summary, goal and remaining status, intake rows, edit/delete/restore, add only for today; today's add confirms with a transient toast and delete uses a transient Snackbar action for Undo |
-| `phone-stats.png` | Week/Month/Year selector; summaries; four chart families; highlights |
+| [`phone-stats.png`](phone-stats.png) ([source](phone-stats.svg)) | Period selector and dependent range row; average, goal hits, total; actual-vs-goal, goal-rate, four-bucket daypart, and container-distribution charts; separate Highlights |
 | `phone-settings.png` | Profile, goal, containers, reminders, Health, sync, export, about |
 | `phone-onboarding.png` | Six onboarding pages and native permission handoffs |
-| `tablet-history-split.png` | Expanded History calendar/detail split |
-| `tablet-stats.png` | Expanded Stats with persistent navigation and chart content |
-| `wear-today.png` | Full-canvas water field; predefined actions; Crown-first custom amount |
-| `wear-history.png` | Seven elapsed local days; Wear-native list |
-| `wear-day-detail.png` | Wear Day Detail; individual intake deletion with a transient Snackbar/Toast Undo action |
-| `wear-stats.png` | Current ISO-week summary; one compact chart |
+| [`tablet-history-split.png`](tablet-history-split.png) ([source](tablet-history-split.svg)) | Expanded History with all dates in seven columns; selected-today detail with a contained static glass, matching entry total, and today-only add |
+| [`tablet-stats.png`](tablet-stats.png) ([source](tablet-stats.svg)) | Expanded Stats with persistent navigation, three required summary metrics, four distinct chart families, and separate Highlights |
+| [`wear-today.png`](wear-today.png) ([source](wear-today.svg)) | Flat full-canvas field proportional to the 88% readout, complete goal context, and one `+` entry point to amount selection |
+| [`wear-history.png`](wear-history.png) ([source](wear-history.svg)) | Seven elapsed local days; Wear-native list |
+| [`wear-day-detail.png`](wear-day-detail.png) ([source](wear-day-detail.svg)) | Date and summary; chronological rows with time/amount/container/source; row-level soft delete and transient Undo |
+| [`wear-stats.png`](wear-stats.png) ([source](wear-stats.svg)) | Current ISO-week context; average/day, goal hits, total, and one compact chart |
 
 ## Stable surface IDs and evidence map
 
 Stable IDs are defined once in [`Ripple_SCREEN_CATALOG.md`](../../Ripple_SCREEN_CATALOG.md),
 and each ID has one canonical platform-independent description under
-[`../../screens/`](../../screens/). The captures below are evidence for the
-listed surfaces; they do not create new screens or change the canonical
-description-file rule. The complete state/viewport/crop/chrome and
+[`../../screens/`](../../screens/). The images below illustrate the listed
+surfaces; they do not establish runtime behavior, create new screens, or change
+the canonical description-file rule. The complete state/viewport/crop/chrome and
 product-owned visible-element review is maintained in the [visual reference
 inventory](../../Ripple_VISUAL_REFERENCE_INVENTORY.md).
 
-| Stable ID | Capture(s) | Evidence purpose |
+| Stable ID | Android illustration(s) | Coverage role; not runtime proof |
 |---|---|---|
-| `today` | `phone-today.png` | Compact ready-state hierarchy, first three ordered quick adds, full-width action row. |
-| `history` | `phone-history.png`, `tablet-history-split.png` | Compact month grid and expanded calendar/detail context. |
-| `day-detail` | `phone-day-detail.png`, `tablet-history-split.png` | Static summary, selected date, entries, and responsive detail placement. |
-| `stats` | `phone-stats.png`, `tablet-stats.png` | Period selector, summaries, charts, and expanded layout. |
+| `today` | `phone-today.png` | Compact ready-state hierarchy, flat idle water proportional to the readout, ordered quick adds, and full-width custom action. |
+| `history` | `phone-history.png`, `tablet-history-split.png` | Complete compact and expanded month grids with today-only add, plus expanded calendar/detail context. |
+| `day-detail` | `phone-day-detail.png`, `tablet-history-split.png` | Static contained-glass summary, selected date, entries matching the total, and responsive detail placement. |
+| `stats` | `phone-stats.png`, `tablet-stats.png` | Period plus range context, three summaries, four distinct chart families, and separate Highlights. |
 | `settings` | `phone-settings.png` | Settings groups, native-control placement, and container ordering context. |
 | `onboarding` | `phone-onboarding.png` | Six-page flow and native permission handoff context. |
-| `watch-today` | `wear-today.png` | Wear-native Today logging and full-canvas water level. |
+| `watch-today` | `wear-today.png` | Proportional flat-field readout and one entry point to amount selection. |
 | `watch-history` | `wear-history.png` | Seven elapsed local days. |
-| `watch-day-detail` | `wear-day-detail.png` | Wear entry detail and individual delete/Undo. |
-| `watch-stats` | `wear-stats.png` | Current ISO-week summary and compact chart. |
+| `watch-day-detail` | `wear-day-detail.png` | Wear entry detail with time/amount/container/source and row-level delete/Undo. |
+| `watch-stats` | `wear-stats.png` | Current ISO-week average, goal hits, total, and one compact chart. |
 | `custom-amount`, `edit-intake`, `add-container`, `edit-container`, `edit-reminder`, `widget`, `quick-log-control`, `notification-actions`, `shortcuts-and-intents`, `complication`, `share-export` | No static image in this pack | Behavior is defined by the shared catalog and Android UI/architecture documents; add a capture only when it materially improves acceptance coverage. |
 
 ## Layout previews
 
-These images are the visual layout references for the Android port. They show
-information hierarchy, responsive composition, and native Android control
-placement; they are not pixel targets for iOS or a request to reproduce iOS
-chrome.
+These images are visual layout references for the Android port. They show
+information hierarchy and responsive composition; native Android control
+placement remains specified in the UI contract. They are not runtime captures,
+pixel targets for iOS, or a request to reproduce iOS chrome.
 
 ### Phone
 
@@ -145,7 +155,7 @@ Material 3, Window Size Classes, standard Android permission surfaces, and
 Wear-native navigation while preserving the same screens, information
 priority, and flows.
 
-The static `phone-today.png` capture intentionally shows the ready state without
+The static `phone-today.png` illustration intentionally shows the ready state without
 transient feedback. It is a seeded baseline with three quick-add actions. At
 runtime, Today shows the first three saved containers sharing the full width of
 a fixed, non-scrolling row in Settings order, while the custom amount sheet places a slider before its
@@ -155,13 +165,15 @@ overlay above the lower actions; it never changes the measured hero or quick-add
 layout. Today's Day Detail add uses the same localized transient confirmation;
 Day Detail delete uses the same transient surface with an Undo action.
 Sync, permission, loading, and unresolved errors remain in their inline state
-surfaces until resolved or retried.
+surfaces until resolved or retried. The Wear Today illustration shows the
+single entry point; its separate amount-sheet contract owns the three presets,
+rotary adjustment, and explicit log confirmation.
 
 ## Visual audit
 
 Every canonical surface has a shared PNG/SVG pair, and the inventory maps all
-22 IDs to the inspected iOS/Android evidence or records when no runtime
-capture exists. Cropped captures are labeled as partial evidence rather than
+22 IDs to inspected iOS implementation evidence, Android layout illustrations,
+or records when no runtime capture exists. Cropped captures are labeled as partial evidence rather than
 being treated as complete composition. Shared wireframes preserve the
 product-owned regions that may be missing from a crop: Stats has four chart
 families plus Highlights, Settings has eight groups, History has a today-only
@@ -187,3 +199,5 @@ substitute for the PRD, screen catalog, design system, or data model.
 | 3.3.0 | 2026-09-19 | Linked new neutral responsive Today/History illustrations and added an iPhone Duo outer-display Today capture while keeping active-fold evidence explicitly pending. | The Android handoff remains current without treating a compact ready-state capture as proof of live resizing or fold behavior. |
 | 3.3.1 | 2026-09-20 | Recorded the adaptive Stats/Settings panel rule without changing the existing evidence images. | Android implementers have current cross-platform responsive guidance while the reference captures remain stable baseline evidence. |
 | 3.4.0 | 2026-09-23 | Audited the complete evidence set against the shared visual inventory and updated the shared wireframe coverage while preserving Android-native evidence and known runtime gaps. | The reference pack now makes every product-owned visible region traceable without turning cropped images or native chrome into competing product contracts. |
+| 3.4.1 | 2026-09-23 | Rebuilt Android Stats and Wear layout illustrations against the canonical chart, summary, logging, and delete/Undo contracts; clarified that PNGs are illustrations, not device captures. | Android reviewers can see the complete required compositions while runtime build/device acceptance remains clearly deferred to the separate Android repository. |
+| 3.4.2 | 2026-09-23 | Rebuilt the Android phone/tablet History illustrations with every date in seven columns, today-only add, disabled future dates, and matching Day Detail totals; corrected the Wear Today fill ratio and linked editable sources. | The references now show complete calendar surfaces and proportional/consistent sample values, while remaining authored illustrations rather than runtime evidence. |

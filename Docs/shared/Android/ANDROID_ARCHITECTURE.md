@@ -9,7 +9,7 @@
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.8.1
+**Document version:** 1.8.3
 
 **UI companion:** [Ripple Android UI Specification](ANDROID_UI_SPEC.md)
 
@@ -302,8 +302,8 @@ an editable SVG source; it does not prescribe Android control appearance.
 | `edit-container` | [`../screens/edit-container.md`](../screens/edit-container.md) | `Android/feature/settings/src/main/kotlin/de/stefansturm/ripple/feature/settings/EditContainerSheet.kt` | Existing container draft; `UpsertContainer`, `DeleteContainer`. |
 | `edit-reminder` | [`../screens/edit-reminder.md`](../screens/edit-reminder.md) | `Android/feature/settings/src/main/kotlin/de/stefansturm/ripple/feature/settings/EditReminderSheet.kt` | Reminder draft; `RescheduleReminders`. |
 | `onboarding` | [`../screens/onboarding.md`](../screens/onboarding.md) | `Android/feature/onboarding/src/main/kotlin/de/stefansturm/ripple/feature/onboarding/OnboardingScreen.kt` | Six-page local setup and permission handoff. |
-| `watch-today` | [`../screens/watch-today.md`](../screens/watch-today.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/today/WearTodayScreen.kt` | Wear Today state; `LogIntake(source = WATCH)`. |
-| `watch-custom-amount` | [`../screens/watch-custom-amount.md`](../screens/watch-custom-amount.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/today/WearCustomAmountScreen.kt` | Rotary-first amount draft; `LogIntake(source = WATCH)`. |
+| `watch-today` | [`../screens/watch-today.md`](../screens/watch-today.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/today/WearTodayScreen.kt` | Wear Today snapshot and single amount-sheet entry point; no direct write. |
+| `watch-custom-amount` | [`../screens/watch-custom-amount.md`](../screens/watch-custom-amount.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/today/WearCustomAmountScreen.kt` | Three preset draft choices, rotary adjustment, explicit `LogIntake(source = WATCH)` confirmation. |
 | `watch-history` | [`../screens/watch-history.md`](../screens/watch-history.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/history/WearHistoryScreen.kt` | Seven elapsed days. |
 | `watch-day-detail` | [`../screens/watch-day-detail.md`](../screens/watch-day-detail.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/history/WearDayDetailScreen.kt` | Wear entry detail and soft delete. |
 | `watch-stats` | [`../screens/watch-stats.md`](../screens/watch-stats.md) | `Android/wear/src/main/kotlin/de/stefansturm/ripple/wear/stats/WearStatsScreen.kt` | Current ISO-week summary and one chart. |
@@ -624,8 +624,7 @@ Quick Settings Tile
 notification action
 launcher shortcut
 Google Assistant/App Action fulfillment
-Wear OS predefined amount
-Wear OS rotary custom amount
+Wear OS amount-sheet confirmation
 ```
 
 Source values include `app`, `widget`, `control`, `notification`, `assistant`, and `watch`. The source is metadata on the intake; it never selects a different amount algorithm or persistence path.
@@ -957,10 +956,11 @@ Do not reproduce Apple Watch page indicators, crown controls, or swipe navigatio
 
 Today:
 
-- full water-level field;
-- predefined amounts;
-- rotary-first custom amount entry;
-- local log confirmation;
+- full-canvas flat water-level field with consumed/goal/remaining/percentage readout;
+- one `+` entry point that opens the amount sheet without writing;
+- three amount presets and rotary adjustment in that sheet, updating a draft only;
+- explicit confirmation as the only Wear `LogIntake(source = WATCH)` call;
+- local success confirmation after the stored log;
 - offline behavior;
 - source `.WATCH`.
 
@@ -1354,3 +1354,5 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.7.0 | 2026-09-11 | Corrected the surface ownership contract: each screen and sheet now has one canonical platform-independent description file, while Android source files may be split or co-located according to native module conventions. Replaced the target one-file manifest with a canonical-description-to-implementation map. | Android remains traceable to every shared surface without imposing a production source-file structure that was not requested. |
 | 1.8.0 | 2026-09-18 | Recorded the Apple 1.1 release baseline, linked the shared neutral wireframe pack, and clarified the Android finalization boundary: documentation is current, but runtime Android acceptance still belongs to the independent Android project. | Android implementation has one current capability/layout handoff for feedback, reminders, Undo, accessibility, responsive surfaces, and native expression without claiming unperformed builds or device tests. |
 | 1.8.1 | 2026-09-23 | Mapped the shared `color.on-action` foreground role to Android `onPrimary`/native content colors for filled Lagoon/Aqua actions. | Android action controls can preserve contrast without feature-local white styling while remaining Material/Wear-native. |
+| 1.8.2 | 2026-09-23 | Mapped Wear Today to a single amount-sheet entry point and placed preset/rotary selection plus the confirmed log boundary on the Wear custom-amount surface. | Android implementation entry points now follow the shared surface contracts without treating a preset selection as an immediate write. |
+| 1.8.3 | 2026-09-23 | Replaced stale direct Wear preset/custom logging descriptions in the entry-point map and Wear screen summary with one Today amount-sheet entry, draft-only presets/rotary adjustment, and explicit confirmation. | The architecture map now reflects the shared explicit-confirm write boundary throughout, without implying that selecting a preset or opening the sheet logs. |

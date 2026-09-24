@@ -1,7 +1,7 @@
 # Ripple Surface — Settings
 
 **Stable surface ID:** `settings`
-**Surface contract version:** 1.1.2
+**Surface contract version:** 1.1.3
 **Last verified:** 2026-09-23
 **Kind:** Root screen
 **Localized name:** `Einstellungen` / `Settings`
@@ -63,7 +63,7 @@ outside the PRD or replace the native platform mapping.
 
 Editable source: [settings--ready--compact.svg](../wireframes/settings--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.2. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.3. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model
@@ -152,6 +152,7 @@ The complete container list is never silently truncated.
 | 1.1.1 | 2026-09-20 | Clarified that broad settings containers may form an adaptive group grid while compact containers stack and preserve the complete ordered list. | iPhone Duo and iPad gain a readable multi-column composition without changing settings order, controls, or persistence behavior. |
 
 | 1.1.2 | 2026-09-23 | Added the visible-element inventory and separated Health, Sync, Export, and About in the shared Settings wireframe. | Settings references now preserve all eight semantic groups even when a native platform groups rows visually. |
+| 1.1.3 | 2026-09-23 | Corrected the seeded Cup amount shown in the shared settings wireframe. | The illustrated default containers now agree with the shared data model. |
 
 ## Related contracts
 

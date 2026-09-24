@@ -1,7 +1,7 @@
 # Ripple Surface — Custom amount
 
 **Stable surface ID:** `custom-amount`
-**Surface contract version:** 1.1.1
+**Surface contract version:** 1.1.2
 **Last verified:** 2026-09-23
 **Kind:** Sheet
 **Localized name:** `Benutzerdefinierte Menge` / `Custom amount`
@@ -57,7 +57,7 @@ outside the PRD or replace the native platform mapping.
 
 Editable source: [custom-amount--ready--compact.svg](../wireframes/custom-amount--ready--compact.svg).
 
-Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.1. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
+Caption: Representative ready state in the compact semantic viewport; shared surface contract version 1.1.2. The neutral illustration shows hierarchy only and does not prescribe native navigation or control appearance.
 
 
 ## Read model and draft
@@ -137,6 +137,7 @@ layout while preserving name, icon, amount, and selected state.
 | 1.1.0 | 2026-09-18 | Added the shared ready-state wireframe and verified the contract against the Apple 1.1 baseline. | Android receives a current neutral layout reference without replacing native controls or runtime evidence. |
 
 | 1.1.1 | 2026-09-23 | Added current-reference classification and a linked visible-element inventory for this surface. | Product-owned regions, state/viewport coverage, and system-chrome exclusions are traceable for the cross-platform handoff. |
+| 1.1.2 | 2026-09-23 | Corrected the seeded Cup amount in the wireframe to match the shared data model. | The illustrated container choices now match the canonical 250/200/500 ml seed set. |
 
 ## Related contracts
 
