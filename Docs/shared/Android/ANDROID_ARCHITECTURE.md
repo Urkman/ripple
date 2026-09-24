@@ -2,14 +2,14 @@
 
 **Status:** Approved design for implementation
 
-**Last verified:** 2026-09-23
+**Last verified:** 2026-09-24
 
 **Reference release baseline:** Apple marketing version 1.1 — 2026-09-17
 
 **Platform scope:** Android phones, tablets/foldables, Android home-screen/system surfaces, and Wear OS
 **Out of scope:** iOS/Android data sharing, macOS, tvOS, and visionOS
 
-**Document version:** 1.8.3
+**Document version:** 1.8.4
 
 **UI companion:** [Ripple Android UI Specification](ANDROID_UI_SPEC.md)
 
@@ -22,6 +22,13 @@ current iOS product screens, information hierarchy, and user flows while
 looking and behaving like a well-designed Android app. It must not copy iOS
 navigation chrome, controls, typography, glass treatment, or platform-specific
 presentation merely to achieve functional parity.
+
+The iOS composition root may centralize iOS route state in
+`RippleNavigationCoordinator`. That coordinator is an iOS implementation
+detail, not a shared contract or an Android entry-point dependency. Android
+owns its own typed destination graph, navigation host, adaptive root
+navigation, and predictive-back behavior; do not port the Swift coordinator or
+give an Android class the same cross-platform meaning.
 
 ## Current release handoff baseline
 
@@ -1356,3 +1363,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.8.1 | 2026-09-23 | Mapped the shared `color.on-action` foreground role to Android `onPrimary`/native content colors for filled Lagoon/Aqua actions. | Android action controls can preserve contrast without feature-local white styling while remaining Material/Wear-native. |
 | 1.8.2 | 2026-09-23 | Mapped Wear Today to a single amount-sheet entry point and placed preset/rotary selection plus the confirmed log boundary on the Wear custom-amount surface. | Android implementation entry points now follow the shared surface contracts without treating a preset selection as an immediate write. |
 | 1.8.3 | 2026-09-23 | Replaced stale direct Wear preset/custom logging descriptions in the entry-point map and Wear screen summary with one Today amount-sheet entry, draft-only presets/rotary adjustment, and explicit confirmation. | The architecture map now reflects the shared explicit-confirm write boundary throughout, without implying that selecting a preset or opening the sheet logs. |
+| 1.8.4 | 2026-09-24 | Clarified that the iOS `RippleNavigationCoordinator` is an iOS composition-root detail and that Android owns its own typed destination graph, navigation host, adaptive root navigation, and predictive-back behavior. | Android implementers can use the iOS route owner as source-platform context without porting Swift navigation or introducing a cross-platform router abstraction. |

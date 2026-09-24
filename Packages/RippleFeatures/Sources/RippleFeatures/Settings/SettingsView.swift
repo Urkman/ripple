@@ -6,11 +6,18 @@ public struct SettingsView: View {
     @Bindable var model: SettingsViewModel
     @Environment(\.locale) private var locale
     @Environment(\.rippleExpandedLayout) private var usesExpandedLayout
-    @State private var containerEditor: Container?
-    @State private var isReminderEditorPresented = false
+    @State private var localPresentation: SettingsRoute?
+    private let externalPresentation: Binding<SettingsRoute?>?
+    private let onPresent: ((SettingsRoute) -> Void)?
 
-    public init(model: SettingsViewModel) {
+    public init(
+        model: SettingsViewModel,
+        presentation: Binding<SettingsRoute?>? = nil,
+        onPresent: ((SettingsRoute) -> Void)? = nil
+    ) {
         self.model = model
+        self.externalPresentation = presentation
+        self.onPresent = onPresent
     }
 
     public var body: some View {
@@ -45,27 +52,33 @@ public struct SettingsView: View {
         .rippleNavigationBarVisibility(hidden: usesExpandedLayout)
         .rippleNavigationBarBackground(RippleColor.waterFoam)
         .task { await model.refresh() }
-        .sheet(item: $containerEditor) { container in
-            ContainerEditorSheet(
-                container: container,
-                title: model.containers.contains(where: { $0.id == container.id })
-                    ? L10n.text("Edit")
-                    : L10n.text("Add container"),
-                preferredUnit: model.profile.preferredUnit,
-                isCurrentDefault: container.isDefault,
-                onSave: { updatedContainer in
-                    Task { await model.saveContainer(updatedContainer) }
-                }
-            )
+        .sheet(item: presentationBinding) { presentation in
+            switch presentation {
+            case .container(let container):
+                ContainerEditorSheet(
+                    container: container,
+                    title: model.containers.contains(where: { $0.id == container.id })
+                        ? L10n.text("Edit")
+                        : L10n.text("Add container"),
+                    preferredUnit: model.profile.preferredUnit,
+                    isCurrentDefault: container.isDefault,
+                    onSave: { updatedContainer in
+                        Task { await model.saveContainer(updatedContainer) }
+                    }
+                )
+            case .reminders:
+                ReminderEditorSheet(
+                    reminder: model.reminder,
+                    onSave: { updatedReminder in
+                        Task { await model.saveReminder(updatedReminder) }
+                    }
+                )
+            }
         }
-        .sheet(isPresented: $isReminderEditorPresented) {
-            ReminderEditorSheet(
-                reminder: model.reminder,
-                onSave: { updatedReminder in
-                    Task { await model.saveReminder(updatedReminder) }
-                }
-            )
-        }
+    }
+
+    private var presentationBinding: Binding<SettingsRoute?> {
+        externalPresentation ?? $localPresentation
     }
 
     private var profileCard: some View {
@@ -196,7 +209,7 @@ public struct SettingsView: View {
     private var remindersCard: some View {
         GlassCard(title: L10n.text("Reminders")) {
             Button {
-                isReminderEditorPresented = true
+                present(.reminders)
             } label: {
                 HStack(spacing: RippleSpace.md) {
                     VStack(alignment: .leading, spacing: RippleSpace.xs) {
@@ -346,7 +359,7 @@ public struct SettingsView: View {
                 .accessibilityHidden(true)
 
             Button {
-                containerEditor = container
+                present(.container(container))
             } label: {
                 HStack(spacing: RippleSpace.md) {
                     Image(systemName: container.symbolName)
@@ -395,13 +408,27 @@ public struct SettingsView: View {
     }
 
     private func addContainer() {
-        containerEditor = Container(
-            name: L10n.text("Glass"),
-            amountMl: 250,
-            isDefault: !model.containers.contains(where: \.isDefault),
-            sort: (model.containers.map(\.sort).max() ?? -1) + 1,
-            symbolName: "cup.and.saucer.fill"
+        present(
+            .container(
+                Container(
+                    name: L10n.text("Glass"),
+                    amountMl: 250,
+                    isDefault: !model.containers.contains(where: \.isDefault),
+                    sort: (model.containers.map(\.sort).max() ?? -1) + 1,
+                    symbolName: "cup.and.saucer.fill"
+                )
+            )
         )
+    }
+
+    private func present(_ route: SettingsRoute) {
+        if let onPresent {
+            onPresent(route)
+        } else if let externalPresentation {
+            externalPresentation.wrappedValue = route
+        } else {
+            localPresentation = route
+        }
     }
 
     private func requestHealthWrite() {

@@ -51,6 +51,7 @@
 		A109743C43A1EEF204CAD0F6 /* RippleFeatures in Frameworks */ = {isa = PBXBuildFile; productRef = 6ABFB3BAC778AF6E83F73172 /* RippleFeatures */; };
 		A3BB31A38ECC0FDB916F5FA3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060371C6F8D1AF6DD6C7B466 /* WidgetKit.framework */; };
 		A9795773F9C847A480749705 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84360B5B45A2416B9F79345E /* RootView.swift */; };
+		0F8AAE44E2FDE794A656E79B /* RippleNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6C2DF20CB9EF6CD94E775A /* RippleNavigationCoordinator.swift */; };
 		B0FEDDE41D8D90302E3FEA3C /* LogWaterControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868A0651C5BB96734A89AEC7 /* LogWaterControl.swift */; };
 		B37BE9A6C9679B54E1C8B0B7 /* RippleIntentsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2D97794A16AA6CA9ADDC675A /* RippleIntentsCore */; };
 		B6ED41C25E94F42D7AF15A37 /* RippleDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD03F525D8478C6C27DBAFE /* RippleDomain */; };
@@ -166,6 +167,7 @@
 		6F82A41F7BC567700B054D3D /* Ripple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ripple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7085764F90926748B3382B80 /* RippleWatchWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RippleWatchWidgets.entitlements; sourceTree = "<group>"; };
 		84360B5B45A2416B9F79345E /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		2C6C2DF20CB9EF6CD94E775A /* RippleNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleNavigationCoordinator.swift; sourceTree = "<group>"; };
 		868A0651C5BB96734A89AEC7 /* LogWaterControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogWaterControl.swift; sourceTree = "<group>"; };
 		8BEFDAC5A6F4CB2590481390 /* RippleIntentsCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RippleIntentsCore; path = Packages/RippleIntentsCore; sourceTree = SOURCE_ROOT; };
 		8E92F86B7E7651C36E3AD419 /* RippleTVApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RippleTVApp.swift; sourceTree = "<group>"; };
@@ -344,6 +346,7 @@
 				6A3B485130D021E62855CC95 /* RippleiOS.entitlements */,
 				06288C8BFF2C32E610C25CE7 /* RippleiOSApp.swift */,
 				143B5FEC77544C2E91359919088FAAD5 /* DemoDataGateView.swift */,
+				2C6C2DF20CB9EF6CD94E775A /* RippleNavigationCoordinator.swift */,
 				84360B5B45A2416B9F79345E /* RootView.swift */,
 			);
 			path = RippleiOS;
@@ -752,6 +755,7 @@
 			files = (
 				59CDA1DA745813379D15F3AF /* RippleiOSApp.swift in Sources */,
 				16174FF60B6B42AEA4BED9C35E437F5B /* DemoDataGateView.swift in Sources */,
+				0F8AAE44E2FDE794A656E79B /* RippleNavigationCoordinator.swift in Sources */,
 				A9795773F9C847A480749705 /* RootView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

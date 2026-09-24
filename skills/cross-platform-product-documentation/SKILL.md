@@ -227,6 +227,22 @@ and system UI to differ. A native variation is not a license to remove a
 shared product feature or to change the chart/list/control composition without
 an explicit platform contract and rationale.
 
+### Navigation ownership
+
+Document navigation semantics and entry/exit relationships in canonical surface
+contracts, but keep routing implementation in the platform architecture
+contract. A platform may centralize routes without making that router part of the
+shared product model.
+
+For Ripple, the iOS composition root owns `RippleNavigationCoordinator` as an
+app-wide typed router within the iOS target. `RootView` owns its route state and
+binds tabs, typed child paths, and root presentations. Feature modules expose
+narrow bindings/actions and never import the iOS app target. This is not a
+cross-platform router: Android uses its native typed destinations/navigation
+host, and watchOS, macOS, tvOS, and visionOS retain their native roots. Do not
+copy the iOS coordinator into another platform or describe it as shared product
+behavior.
+
 ### 7. Document design and data contracts
 
 For every token, state, reusable element, entity, field, read model, and use

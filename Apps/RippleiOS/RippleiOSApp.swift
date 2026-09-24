@@ -2,7 +2,6 @@ import Foundation
 import RippleData
 import RippleDomain
 import RippleFeatures
-import RippleIntentsCore
 import RippleUI
 import SwiftUI
 import UserNotifications
@@ -24,8 +23,6 @@ struct RippleiOSApp: App {
         WindowGroup {
             rootView
                 .environment(\.rippleUseCases, container.useCases)
-                .onOpenURL { _ in }
-                .onAppear { consumePendingRoute() }
         }
     }
 
@@ -53,11 +50,6 @@ struct RippleiOSApp: App {
         ProcessInfo.processInfo.arguments.contains("-ripple-demo-data")
     }
     #endif
-
-    private func consumePendingRoute() {
-        _ = RippleNavigation.pending
-        RippleNavigation.pending = nil
-    }
 }
 
 final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {

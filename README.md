@@ -60,7 +60,7 @@ project.
 
 | Target or surface | Experience |
 | --- | --- |
-| iOS / iPadOS | Today, History, Stats, Settings, onboarding, HealthKit, and local navigation. iPad uses adaptive split layouts where appropriate. |
+| iOS / iPadOS | Today, History, Stats, Settings, onboarding, HealthKit, and an app-wide typed navigation coordinator. iPad uses adaptive split layouts where appropriate. |
 | watchOS | Three horizontal pages: Today, History, and Stats. Today supports Crown-first amount selection; History shows the most recent seven elapsed local days; Stats shows the current ISO week. |
 | iOS widgets | Small, medium, and large Today widgets plus interactive quick logging. Lock Screen and StandBy use focused remaining/progress surfaces. |
 | Apple Watch complications | Circular, rectangular, and inline complication families with today's progress and a quick log action. |
@@ -73,7 +73,10 @@ The project currently declares 27.0 deployment targets for iOS, watchOS,
 macOS, tvOS, and visionOS. Android is an independent project; this repository
 contains its shared product, screen, design, data, and architecture handoff
 under [`Docs/shared/Android/`](Docs/shared/Android/), not an Android
-implementation.
+implementation. For a project-independent readiness checklist and conversion
+workflow, see [Android App Conversion How-to](Docs/ANDROID_CONVERSION_HOWTO.md).
+An [Android AGENTS template](Docs/ANDROID_AGENTS_TEMPLATE.md) provides
+project-neutral implementation rules for a separate Android repository.
 
 ## Architecture
 

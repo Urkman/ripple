@@ -93,7 +93,9 @@ RippleData               SwiftData, CloudKit, HealthKit, notifications
 - No second source of truth in UserDefaults (ephemeral widget placeholder only).
 - A HealthKit failure must **not** roll back the log.
 - Undo = `UndoLastIntake` on the last own, non-deleted entry. No distributed undo stack.
-- Navigation is platform-local (tab / split / Watch page). No app-wide router.
+- Navigation is platform-local to each app target. The iOS composition root may
+  own an app-wide typed router for iOS destinations; macOS, watchOS, tvOS, and
+  visionOS retain their own native root navigation.
 - `#if os()` only in apps, UI adapters, composition root. Not in use cases. Not in view models for rules.
 - Internally always **integer milliliters**. UI converts via `UnitConverter`.
 - Soft delete (`isDeleted`). No hard wipe without an export path.

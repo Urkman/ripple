@@ -45,3 +45,8 @@ app/composition root
 The diagram is a responsibility guide, not a mandatory directory layout.
 Navigation and source-file organization remain native Android implementation
 decisions.
+
+When the source platform is iOS, an iOS app-wide coordinator (if documented)
+is not an Android entry-point dependency. Record Android-native route and module
+paths instead of porting the iOS coordinator or giving it cross-platform
+meaning.

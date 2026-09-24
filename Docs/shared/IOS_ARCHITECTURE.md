@@ -4,7 +4,7 @@ Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean 
 
 This document describes the iOS repository's architecture and current implementation. Product behavior remains defined by the shared [PRD](Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts. The platform-independent surface, design, and data contracts are maintained in the [screen catalog](Ripple_SCREEN_CATALOG.md), [design system](Ripple_DESIGN_SYSTEM.md), and [data model](Ripple_DATA_MODEL.md); this document maps those contracts to Swift implementation boundaries without redefining them.
 
-**Document version:** 1.11.0
+**Document version:** 1.12.1
 
 **Last verified:** 2026-09-24
 
@@ -21,8 +21,9 @@ Ripple is organized around a small set of invariants:
 - Deletion is a soft delete using `isDeleted`; restore and undo are explicit use cases.
 - Undo means `UndoLastIntake` for the last own, non-deleted intake. There is no distributed undo stack.
 - View models orchestrate domain use cases but do not contain persistence, CloudKit, HealthKit, or notification code.
-- Navigation is platform-local. App targets may use a platform-local root
-  coordinator; there is no app-wide router.
+- Navigation is platform-local to each app target. The iOS composition root may
+  own an app-wide typed router for iOS destinations; other Apple targets retain
+  their own native navigation state.
 - Product invariants are shared through `Docs/shared/Ripple_PRD.md`; implementation and persistence remain platform-local. Platform conditionals belong in apps, UI adapters, or composition code.
 - The UI uses the tokens and reusable components from `RippleUI`; features do not define parallel colors, typography, or motion systems.
 
@@ -59,7 +60,7 @@ The repository is split into package layers. Apps and extensions are composition
 | `RippleUI` | None; Core Motion on supported platforms | Design tokens, reusable controls, hero water geometry, motion, widgets, watch components |
 | `RippleFeatures` | `RippleDomain`, `RippleUI` | Reusable screen views and `@Observable` view models; it does not contain executable platform root shells |
 
-The apps link the packages together. `RippleFeatures` intentionally does not depend on `RippleData`; the app composition root injects the domain use cases into reusable feature screens and owns the platform-local root navigation shell.
+The apps link the packages together. `RippleFeatures` intentionally does not depend on `RippleData`; the app composition root injects the domain use cases into reusable feature screens and owns the iOS app-wide route state plus the platform-local root navigation shell.
 
 ## 3. Repository layout
 
@@ -287,14 +288,16 @@ The current Today hierarchy intentionally has no Recent or last-entry list;
 History and Day Detail own entry inspection. Onboarding is six pages in this
 order: Welcome, Units, Health permission, Goal, Containers, and Reminders.
 
-The environment provides use cases and a small amount of layout configuration. It does not provide a global navigation router or a data store.
+The environment provides use cases and a small amount of layout configuration. It does not provide a data store or a cross-platform router; the iOS composition root passes typed navigation bindings and actions into feature views.
 
 The iOS composition root owns `RippleNavigationCoordinator`, an
-`@MainActor @Observable` shell model that stores the selected root section and
-maps pending `RippleRoute` system requests to that selection. It does not own
-feature view models, domain use cases, or feature-local child navigation;
-History detail navigation and presented sheets remain with their owning
-feature views.
+`@MainActor @Observable` app-wide router for the iOS target. Its typed route
+state owns root-section selection, the compact History path, custom-amount
+presentation, and Settings presentation routes. Feature views remain in
+`RippleFeatures`; they receive narrow bindings/actions and render the
+destination or sheet content without importing the app target. The router does
+not cross platform boundaries or replace the native root navigation shells on
+watchOS, macOS, tvOS, or visionOS.
 
 ### Screen structure
 
@@ -309,7 +312,7 @@ History and Stats are deliberately separate products. History is a month activit
 
 Platform roots are local to each app target. The root shell is not compiled as part of the multiplatform `RippleFeatures` target:
 
-- iOS (`Apps/RippleiOS/RootView.swift`, `RippleNavigationCoordinator.swift`): root tab navigation and local navigation stacks/splits.
+- iOS (`Apps/RippleiOS/RootView.swift`, `RippleNavigationCoordinator.swift`): app-wide typed routing for the four tabs, compact History → Day Detail, and root-owned presentations, with iPad split rendering preserved by the History feature.
 - watchOS (`Apps/RipplewatchOS/WatchRootView.swift`): horizontal Today, History, and Stats pages.
 - macOS (`Apps/RipplemacOS/MacRootView.swift`): `NavigationSplitView` sidebar with keyboard commands and menu-bar composition.
 - tvOS (`Apps/RippletvOS/TVRootView.swift`): minimal Today surface and predefined logging actions.
@@ -398,7 +401,7 @@ controls and navigation where possible:
 | Shared behavior | Native iOS expression | Ripple responsibility |
 |---|---|---|
 | Four app roots | `TabView` in the iPhone root; platform-local split/sidebar roots on larger Apple devices | Preserve four root meanings and no back button on root tabs. |
-| Child navigation | `NavigationStack`/split navigation owned by the platform root | Keep History → Day Detail relationship and selected-date context. |
+| Child navigation | Typed `NavigationStack` paths and split navigation owned by the iOS root, with narrow feature bindings/actions | Keep History → Day Detail relationship and selected-date context while preserving native iPad split behavior. |
 | Grouped settings/content | `Form`, `List`, or `GlassCard` composition | Use `RippleUI` tokens/components; views do not write SwiftData. |
 | Text entry | Native `TextField`/text editor | Draft validation, localized labels, integer-ml conversion. |
 | Amount selection | Native `Slider` for Custom Amount and container editor; `AmountStepper` only where explicitly required | Range 50–2,000 ml, step 10, unit-aware value and accessibility. |
@@ -475,10 +478,11 @@ All app and widget targets use the configured App Group and CloudKit identifiers
 
 Amount resolution is centralized in the intent adapter and ends at `LogIntake`. Container entities use stable UUIDs and query the settings repository. Shortcut phrases and localized strings are declared with the app name so Siri and Shortcuts remain stable across locales.
 
-`RippleNavigation` is a narrow pending-route handoff for system requests. The
-iOS composition root consumes it through `RippleNavigationCoordinator`, which
-selects the requested root section. It is not a general-purpose,
-cross-platform navigation coordinator.
+`RippleNavigation` remains a narrow pending-route handoff for system requests.
+The iOS composition root consumes it through `RippleNavigationCoordinator`,
+which maps those requests into the app-wide iOS route state. The coordinator is
+not shared with the other Apple app targets; each target retains its native
+navigation model.
 
 ## 13. Concurrency model
 
@@ -552,7 +556,17 @@ For a new behavior, follow this sequence:
 8. Add unit tests for the use case and representative UI/platform tests for the new state.
 9. Verify light/dark mode, Dynamic Type XXXL, Reduce Motion, empty/loading/error states, and localization.
 
-Do not add a direct `ModelContext` to a view, a second intake writer, a UserDefaults source of truth, a global router, or a platform-specific copy of a domain rule.
+Do not add a direct `ModelContext` to a view, a second intake writer, a UserDefaults source of truth, a cross-platform router, or a platform-specific copy of a domain rule. Extend `RippleNavigationCoordinator` for new iOS routes instead of creating a second router or singleton.
+
+For a new iOS navigable surface or presentation:
+
+- add the typed route, destination, or presentation state to
+  `Apps/RippleiOS/RippleNavigationCoordinator.swift`;
+- bind the state and destination rendering in `RootView`;
+- expose only narrow `Binding` values or routing closures from
+  `RippleFeatures` views, without importing the app target; and
+- preserve each platform's native root shell when mapping the same shared
+  surface to watchOS, macOS, tvOS, visionOS, or Android.
 
 ## 17. Related specifications
 
@@ -690,3 +704,5 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.10.1 | 2026-09-20 | Mapped the shared adaptive panel and Stats summary tokens to StatsView and SettingsView while keeping native scroll containers and the system TabView rail. | iPhone Duo and iPad use readable multi-column analysis/settings regions without device-specific branches or new feature state. |
 | 1.10.2 | 2026-09-23 | Mapped Wear Today to the single amount-sheet entry point and kept `LogIntake(source: watch)` on the explicit confirmation surface. | The iOS implementation map now matches the PRD and canonical Watch Today/custom-amount contracts without implying an immediate root-screen write. |
 | 1.11.0 | 2026-09-24 | Added the iOS-only `RippleNavigationCoordinator` for root-section selection and pending App Intent route consumption while keeping feature-local child navigation and sheets local. | Root navigation now has an explicit observable owner and `OpenTodayIntent`/`OpenHistoryIntent` can select the requested section without introducing a cross-platform router. |
+| 1.12.0 | 2026-09-24 | Expanded `RippleNavigationCoordinator` into the iOS app-wide typed router for root sections, compact History → Day Detail, custom-amount presentation, and Settings presentation routes; feature views now receive narrow routing bindings/actions. | iOS navigation state has one composition-root owner without coupling `RippleFeatures` to the app target or changing native navigation ownership on the other Apple platforms. |
+| 1.12.1 | 2026-09-24 | Updated the iOS contribution workflow and implementation checklist to extend `RippleNavigationCoordinator` for new iOS routes while explicitly banning only cross-platform or duplicate router abstractions. | Future iOS navigation work has one documented composition-root entry point and cannot accidentally introduce a second router or app-target dependency into `RippleFeatures`. |

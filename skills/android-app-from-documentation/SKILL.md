@@ -115,6 +115,12 @@ a second semantic surface contract in code comments or platform docs.
   amount-resolution, undo, or permission path.
 - Keep user-visible state unidirectional and lifecycle-safe. Prefer immutable
   UI state, explicit events, stable IDs, and cancellation-aware coroutines.
+- Source-platform routing is context, not an Android dependency. In Ripple,
+  `RippleNavigationCoordinator` is scoped to the iOS app target; Android must
+  implement its own native typed destinations, navigation host, adaptive root
+  navigation, and predictive-back behavior from the Android architecture/UI
+  contracts. Do not port the Swift coordinator or create an Android class with
+  the same cross-platform meaning.
 
 ## Implementation workflow
 

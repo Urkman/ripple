@@ -183,6 +183,24 @@ views. If the project uses SwiftData, CloudKit, HealthKit, or another store,
 preserve its existing boundary and use the relevant specialist skill before
 changing schema or concurrency behavior.
 
+### Navigation foundation
+
+When preparing Ripple's existing iOS app, preserve the composition-root
+navigation ownership defined by `Docs/shared/IOS_ARCHITECTURE.md`:
+
+- `Apps/RippleiOS/RippleNavigationCoordinator.swift` is the single
+  `@MainActor @Observable` app-wide router for iOS.
+- `RootView` owns and binds its typed root sections, destinations, paths, and
+  presentations.
+- `RippleFeatures` views may receive narrow `Binding` values or routing
+  closures, but must not import the app target or create a second router.
+- The coordinator is iOS-target scoped; other Apple targets keep their native
+  navigation shells.
+
+When adding a navigable iOS surface, extend the coordinator route state and
+wire the destination from `RootView` before adding feature callbacks. Do not
+introduce a singleton or a parallel feature-local app router.
+
 ### 6. Update AGENTS.md with the documentation contract
 
 Create a root `AGENTS.md` when one is absent. If it exists, preserve its

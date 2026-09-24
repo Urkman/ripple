@@ -10,9 +10,14 @@ public struct TodayView: View {
     @Environment(\.rippleExpandedLayout) private var usesExpandedLayout
     @State private var gravityTilt = GravityTiltController()
     @State private var showsCustomAmount = false
+    private let onPresentCustomAmount: (() -> Void)?
 
-    public init(model: TodayViewModel) {
+    public init(
+        model: TodayViewModel,
+        onPresentCustomAmount: (() -> Void)? = nil
+    ) {
         self.model = model
+        self.onPresentCustomAmount = onPresentCustomAmount
     }
 
     public var body: some View {
@@ -280,7 +285,11 @@ public struct TodayView: View {
     }
 
     private func showCustomAmount() {
-        showsCustomAmount = true
+        if let onPresentCustomAmount {
+            onPresentCustomAmount()
+        } else {
+            showsCustomAmount = true
+        }
     }
 
     private func formattedDate(_ date: Date) -> String {

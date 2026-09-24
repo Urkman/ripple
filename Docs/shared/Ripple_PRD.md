@@ -3,8 +3,8 @@
 **Dokumenttyp:** Implementierungs-PRD (Single Source of Truth)
 **Empfänger:** Grok Build (Implementation)
 **Produkt:** Ripple – Water Tracker
-**Version:** 3.4.1 — 20. September 2026
-**Last verified:** 2026-09-20
+**Version:** 3.4.2 — 24. September 2026
+**Last verified:** 2026-09-24
 **Reference release baseline:** Apple marketing version 1.1 — 17. September 2026
 **Lizenz:** MIT
 **Sprache UI:** Deutsch + Englisch (String Catalogs)
@@ -217,7 +217,11 @@ final class TodayViewModel {
 
 Views enthalten keine Use-Case-Logik. Animation beobachtet `snapshot`, schreibt nicht in den Store.
 
-Navigation ist plattformlokal (Tab / Split / Watch-Page). Kein app-weiter Router.
+Navigation bleibt pro App-Zielplattform lokal (Tab / Split / Watch-Page). Der
+iOS-Kompositionsroot darf innerhalb des iOS-Targets einen app-weiten
+typisierten Router verwenden; watchOS, macOS, tvOS und visionOS behalten ihre
+nativen Root-Navigationen. Es gibt keine gemeinsame plattformübergreifende
+Router-Abstraktion.
 
 ---
 
@@ -552,7 +556,7 @@ Ambient: großer Pegel, Siri Remote Fokus auf +250 / +500 / +750. Kein Fein-Edit
 
 ### 12.6 visionOS
 
-Fenster + Glass. Die systemseitige adaptive Glass-Fläche füllt das resizable Fenster; es gibt kein zusätzliches schwarzes Innenpanel. Das Fenster bleibt resizable, darf aber nicht kleiner als die definierte Mindestfläche von 720 × 440 pt werden (`windowResizability(.contentMinSize)`). Ein führendes, vertikales Ornament bietet die lokale Navigation **Today | History | Stats | Settings** als SF-Symbol-Icons mit vollständigen Accessibility-Labels; die Log-Aktionen (gespeicherte Behälter + Custom amount) liegen gesammelt im unteren Ornament. Das Ornament bleibt innerhalb der verfügbaren Fensterbreite und scrollt bei kleinen Größen horizontal. Kein zusätzlicher Inline-Log-Button und keine separate Default-Mengen-Aktion, die einen gespeicherten Behälter dupliziert. History und Stats verwenden ihre bestehenden Feature-Screens und Datenverträge. Kein Immersive Space und kein app-weiter Router. Widgets pinnbar, wenn Target Widget-Extension mitnimmt.
+Fenster + Glass. Die systemseitige adaptive Glass-Fläche füllt das resizable Fenster; es gibt kein zusätzliches schwarzes Innenpanel. Das Fenster bleibt resizable, darf aber nicht kleiner als die definierte Mindestfläche von 720 × 440 pt werden (`windowResizability(.contentMinSize)`). Ein führendes, vertikales Ornament bietet die lokale Navigation **Today | History | Stats | Settings** als SF-Symbol-Icons mit vollständigen Accessibility-Labels; die Log-Aktionen (gespeicherte Behälter + Custom amount) liegen gesammelt im unteren Ornament. Das Ornament bleibt innerhalb der verfügbaren Fensterbreite und scrollt bei kleinen Größen horizontal. Kein zusätzlicher Inline-Log-Button und keine separate Default-Mengen-Aktion, die einen gespeicherten Behälter dupliziert. History und Stats verwenden ihre bestehenden Feature-Screens und Datenverträge. Kein Immersive Space und keine gemeinsame plattformübergreifende Router-Abstraktion; die Navigation bleibt visionOS-nativ. Widgets pinnbar, wenn Target Widget-Extension mitnimmt.
 
 ---
 
@@ -1217,7 +1221,8 @@ History, Stats und Settings und zeigt nur Symbole mit vollständigen
 Accessibility-Labels. Alle Log-Aktionen liegen im unteren Ornament:
 gespeicherte Behälter und `Custom amount`. Es gibt keinen zusätzlichen
 Inline-Log-Button, keine doppelte Default-Mengen-Aktion, keinen Immersive
-Space und keinen app-weiten Router.
+Space und keine gemeinsame plattformübergreifende Router-Abstraktion; die
+Navigation bleibt visionOS-nativ.
 
 Die Watch-App verwendet keinen Monatskalender und keinen Perioden-Picker. Ihre
 History-Seite zeigt sieben lokale Kalendertage (heute und die sechs vorherigen)
@@ -1511,5 +1516,6 @@ Die Historie ist unveränderlich; neue Einträge werden unten angefügt.
 | 3.3.1 | 2026-09-18 | Die aktuelle Apple-Marketingversion 1.1 als Referenzbaseline dokumentiert, die Release-1.1-Abgrenzung gegenüber zukünftigen Produktstufen klargestellt und den Wireframe-Handoff für iOS und Android vorbereitet; keine neue Produktfunktion ergänzt. | Android erhält einen eindeutigen aktuellen Verhaltensstand für Feedback, Erinnerungen, Verlauf-Undo und Accessibility, ohne die bisher ausgeschlossenen vNext-Funktionen zu übernehmen. |
 | 3.4.0 | 2026-09-19 | Containerabhängige Today-/History-Komposition, Größenwechsel mit Zustandserhalt und Systemregionen bei aktiver Falte spezifiziert. | iPhone Duo und veränderliche Tablet-/Android-Fenster bleiben bedienbar; keine Änderung an Domain oder Wasser-Motion. |
 | 3.4.1 | 2026-09-20 | Breite Stats-/Settings-Regionen dürfen Summary-, Chart- und Einstellungsgruppen adaptiv spalten, während kompakte Regionen stapeln. | iPhone Duo und andere veränderliche Fenster erhalten lesbare Analyse- und Konfigurationsflächen ohne neue Navigation oder Domainlogik. |
+| 3.4.2 | 2026-09-24 | Die Navigationserklärung erlaubt den iOS-Kompositionsroot als app-weiten typisierten Router innerhalb des iOS-Targets und grenzt ihn ausdrücklich von den nativen Navigationen der übrigen Apple-Plattformen sowie von Android ab. | Die gemeinsame Produktdokumentation widerspricht nicht mehr der iOS-Referenzarchitektur; Produktsemantik und plattformunabhängige Screen-Flows bleiben unverändert. |
 
-*Ende PRD 3.4.1. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*
+*Ende PRD 3.4.2. Implementiere die Reihenfolge aus Abschnitt 19 und prüfe die Definition of Done aus Abschnitt 20.*

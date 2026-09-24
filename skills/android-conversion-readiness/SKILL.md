@@ -23,6 +23,15 @@ Produce an evidence-backed readiness report with one of these outcomes:
 The report must identify the exact file, line or check, severity, and the next
 authority/action needed. Never turn a missing decision into an assumption.
 
+### Source-platform routing is not shared architecture
+
+Treat `RippleNavigationCoordinator` in the iOS architecture reference as
+iOS-only composition-root context. Readiness passes only when the Android
+architecture/UI contracts define Android-native root and nested navigation;
+they must not require Swift route types, `RootView`, or an Android port of the
+iOS coordinator. Shared contracts describe screen meaning and flows, not the
+source platform's router implementation.
+
 ## Scope and boundaries
 
 Use this skill when the user asks whether an iOS/shared product repository is

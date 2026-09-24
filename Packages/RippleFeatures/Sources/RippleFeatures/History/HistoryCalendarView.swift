@@ -15,10 +15,22 @@ public struct HistoryCalendarView: View {
     @State private var compactSelectedDay: Date?
     @State private var showsCustomAmount = false
     @State private var detailRefreshID = 0
+    private let externalDetailRefreshID: Int?
+    private let onOpenDay: ((Date) -> Void)?
+    private let onPresentCustomAmount: (() -> Void)?
 
-    public init(model: HistoryViewModel, todayModel: TodayViewModel) {
+    public init(
+        model: HistoryViewModel,
+        todayModel: TodayViewModel,
+        detailRefreshID: Int? = nil,
+        onOpenDay: ((Date) -> Void)? = nil,
+        onPresentCustomAmount: (() -> Void)? = nil
+    ) {
         self.model = model
         self.todayModel = todayModel
+        self.externalDetailRefreshID = detailRefreshID
+        self.onOpenDay = onOpenDay
+        self.onPresentCustomAmount = onPresentCustomAmount
         let initialMonth = model.month(atOffset: 0)
         _pagerPosition = State(initialValue: initialMonth)
     }
@@ -59,16 +71,25 @@ public struct HistoryCalendarView: View {
         }
     }
 
+    @ViewBuilder
     private var iPhoneHistoryScreen: some View {
-        NavigationStack {
-            calendar
-                .navigationTitle(L10n.text("History"))
-                .rippleNavigationBarBackground(RippleColor.waterFoam)
-                .navigationDestination(item: $compactSelectedDay) { day in
-                    DayDetailView(day: day, useCases: useCases, refreshID: detailRefreshID)
-                }
-                .toolbar { calendarToolbar }
+        if onOpenDay == nil {
+            NavigationStack {
+                iPhoneHistoryContent
+                    .navigationDestination(item: $compactSelectedDay) { day in
+                        DayDetailView(day: day, useCases: useCases, refreshID: detailRefreshID)
+                    }
+            }
+        } else {
+            iPhoneHistoryContent
         }
+    }
+
+    private var iPhoneHistoryContent: some View {
+        calendar
+            .navigationTitle(L10n.text("History"))
+            .rippleNavigationBarBackground(RippleColor.waterFoam)
+            .toolbar { calendarToolbar }
     }
 
     private var iPadHistoryScreen: some View {
@@ -124,7 +145,7 @@ public struct HistoryCalendarView: View {
             DayDetailView(
                 day: day,
                 useCases: useCases,
-                refreshID: detailRefreshID,
+                refreshID: externalDetailRefreshID ?? detailRefreshID,
                 onAdd: showCustomAmount
             )
                 .id(day)
@@ -300,11 +321,19 @@ public struct HistoryCalendarView: View {
 
     private func select(_ date: Date) {
         model.select(date)
-        compactSelectedDay = date
+        if let onOpenDay {
+            onOpenDay(date)
+        } else {
+            compactSelectedDay = date
+        }
     }
 
     private func showCustomAmount() {
-        showsCustomAmount = true
+        if let onPresentCustomAmount {
+            onPresentCustomAmount()
+        } else {
+            showsCustomAmount = true
+        }
     }
 
     private func refreshAfterCustomAmount() {
