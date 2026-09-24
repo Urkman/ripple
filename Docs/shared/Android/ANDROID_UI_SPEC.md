@@ -1,8 +1,8 @@
 # Ripple Android UI Specification
 
 **Status:** Android implementation companion specification
-**Document version:** 3.4.3
-**Last verified:** 2026-09-23
+**Document version:** 3.4.4
+**Last verified:** 2026-09-24
 **Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 **Architecture:** [Ripple Android Architecture](ANDROID_ARCHITECTURE.md)
 **Product contract:** [Ripple PRD](../Ripple_PRD.md)
@@ -41,6 +41,13 @@ system owns semantic colors, typography, spacing, shape, motion, reusable
 elements, and native-control policy. The shared data model owns fields,
 invariants, storage, and use-case boundaries. This document must link to those
 contracts rather than silently redefine them.
+
+The current iOS source baseline also contains an app-target-scoped
+`RippleNavigationCoordinator` that centralizes iOS root selection and several
+iOS presentation routes. It is implementation context only: Android owns its
+own typed root/nested destinations, navigation host, adaptive navigation, and
+predictive-back behavior. No Android surface, wireframe, or route may depend on
+Swift route types or on the iOS coordinator's source structure.
 
 ## Container resizing and fold posture
 
@@ -83,6 +90,8 @@ The contract is maintained in layers:
 The current iOS source inspected for this revision includes:
 
 - `Apps/RippleiOS/RootView.swift` — four roots: Today, History, Stats, Settings;
+- `Apps/RippleiOS/RippleNavigationCoordinator.swift` — iOS-only typed route and
+  presentation owner; not an Android dependency;
 - `Packages/RippleFeatures/Sources/RippleFeatures/Today/TodayView.swift` —
   hero, remaining amount, floating confirmation toast, the first three
   saved-container quick adds, and custom amount, with no Recent section;
@@ -1047,3 +1056,4 @@ at the bottom.
 | 3.4.1 | 2026-09-23 | Added the Android mapping for shared `color.on-action` content on filled Lagoon/Aqua actions. | Material and Wear controls can use native `onPrimary` content roles while preserving shared contrast semantics without local white values. |
 | 3.4.2 | 2026-09-23 | Aligned Wear Today, amount presets, and Wear Day Detail with the shared single-entry/confirm and delete/Undo contracts; corrected the Android layout illustrations for Stats and wearable summaries. | Android guidance now preserves the PRD's write boundary, all four phone Stats chart families, the Wear weekly total, and row-level recoverable deletion without claiming runtime verification. |
 | 3.4.3 | 2026-09-23 | Corrected the compact and expanded Android History illustrations to show every date in seven weekday columns, the today-only add action, disabled future dates, and an internally consistent Day Detail sample; matched the Android Wear Today water level to its readout and added editable sources. | The visual handoff now demonstrates complete calendar/detail surfaces with consistent values and a proportional wearable level, while preserving shared semantics and the absence of runtime proof. |
+| 3.4.4 | 2026-09-24 | Recorded the latest iOS composition-root routing change as source-platform context and explicitly kept it outside the Android navigation contract. | Android implementers can preserve native typed destinations, adaptive root navigation, and predictive back without porting Swift route state or changing any shared surface semantics. |

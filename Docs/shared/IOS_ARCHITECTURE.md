@@ -4,7 +4,7 @@ Ripple is a Swift 6, SwiftUI-first hydration app built as a feature-first Clean 
 
 This document describes the iOS repository's architecture and current implementation. Product behavior remains defined by the shared [PRD](Ripple_PRD.md), including its consolidated Today, History, Stats, and motion contracts. The platform-independent surface, design, and data contracts are maintained in the [screen catalog](Ripple_SCREEN_CATALOG.md), [design system](Ripple_DESIGN_SYSTEM.md), and [data model](Ripple_DATA_MODEL.md); this document maps those contracts to Swift implementation boundaries without redefining them.
 
-**Document version:** 1.12.1
+**Document version:** 1.13.0
 
 **Last verified:** 2026-09-24
 
@@ -371,6 +371,24 @@ fact is an implementation note only; their canonical layout and function are
 already independent files under `Docs/shared/screens/`, and the shared
 contract does not require a later source split.
 
+### iOS composition-root routing overlay
+
+The surface implementation table above identifies the feature entry points.
+The following overlay identifies the additional iOS composition-root ownership
+introduced by `RippleNavigationCoordinator`; it does not move feature ownership
+or turn the route state into a shared product contract.
+
+| Shared surface(s) | Coordinator state | `RootView` wiring | Feature seam and result |
+|---|---|---|---|
+| `today`, `history`, `stats`, `settings` | `selectedSection` and `open(Route)` | Binds the four root selections to the iOS tab shell; consumes pending `RippleRoute` requests when the scene becomes active. | Feature views keep their own read models and use cases; selecting a root changes presentation context only. |
+| `history`, `day-detail` | `historyPath` and `Destination.historyDay` | Compact History supplies `onOpenDay`; the typed destination renders `DayDetailView` from the iOS root. | The History feature continues to own calendar selection and the expanded split detail pane; compact navigation preserves the selected date. |
+| `today`, `history`, `custom-amount` | `presentedSheet` and `historyDetailRefreshID` | Today and History receive `onPresentCustomAmount`; the root presents `CustomAmountSheet` and increments the refresh identity after dismissal before refreshing Today and History. | The sheet still owns draft validation and calls `LogIntake`; presentation ownership does not add a second write path. |
+| `settings`, `add-container`, `edit-container`, `edit-reminder` | `settingsPresentation: SettingsRoute?` | The root binds the route into `SettingsView`; Settings renders the appropriate editor sheet and returns through the binding. | `SettingsViewModel` remains the owner of profile/container/reminder operations; the coordinator only selects the Settings root and presentation route. |
+
+This overlay is intentionally iOS-only. watchOS, macOS, tvOS, visionOS, and
+Android retain their native root and nested navigation models while mapping the
+same canonical surface contracts.
+
 ### RippleUI component ownership manifest
 
 Every custom element referenced by a feature has one owning file in `RippleUI`.
@@ -407,7 +425,7 @@ controls and navigation where possible:
 | Amount selection | Native `Slider` for Custom Amount and container editor; `AmountStepper` only where explicitly required | Range 50–2,000 ml, step 10, unit-aware value and accessibility. |
 | Boolean setting | Native `Toggle` | One-default invariant and permission/settings use case. |
 | Choice/mode/period | Native picker/menu/segmented control | Localized options and read/use-case update. |
-| Presented sheet | Native sheet presentation with platform detents/drag affordance | One canonical surface description, an appropriate owning feature boundary, explicit cancel/save, and no accidental mutation. |
+| Presented sheet | Native sheet presentation with platform detents/drag affordance; iOS root state may bind into a feature surface | One canonical surface description, an appropriate owning feature boundary, explicit cancel/save, and no accidental mutation. |
 | Destructive action | Native alert/confirmation dialog or platform gesture confirmation | Soft delete, consequence copy, undo/restore semantics. |
 | Reorder | SDK 27 reorder API where supported by the target | Persist normalized `sort` through `UpsertContainer`; tvOS uses its documented platform boundary. |
 | Share/permissions | Native system share and permission surfaces | Pre-explanation, adapter result, no impersonation of OS UI. |
@@ -706,3 +724,4 @@ Newest entries are appended at the bottom. Historical entries are immutable.
 | 1.11.0 | 2026-09-24 | Added the iOS-only `RippleNavigationCoordinator` for root-section selection and pending App Intent route consumption while keeping feature-local child navigation and sheets local. | Root navigation now has an explicit observable owner and `OpenTodayIntent`/`OpenHistoryIntent` can select the requested section without introducing a cross-platform router. |
 | 1.12.0 | 2026-09-24 | Expanded `RippleNavigationCoordinator` into the iOS app-wide typed router for root sections, compact History → Day Detail, custom-amount presentation, and Settings presentation routes; feature views now receive narrow routing bindings/actions. | iOS navigation state has one composition-root owner without coupling `RippleFeatures` to the app target or changing native navigation ownership on the other Apple platforms. |
 | 1.12.1 | 2026-09-24 | Updated the iOS contribution workflow and implementation checklist to extend `RippleNavigationCoordinator` for new iOS routes while explicitly banning only cross-platform or duplicate router abstractions. | Future iOS navigation work has one documented composition-root entry point and cannot accidentally introduce a second router or app-target dependency into `RippleFeatures`. |
+| 1.13.0 | 2026-09-24 | Added a verified composition-root routing overlay to the surface implementation map, covering root selection, compact History → Day Detail, root-owned Custom Amount presentation/refresh, and Settings editor presentation. | The iOS handoff now shows how the latest route owner surrounds each feature surface without confusing platform-specific routing with shared surface semantics or introducing a second write path. |

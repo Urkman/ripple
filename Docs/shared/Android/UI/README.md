@@ -1,7 +1,7 @@
 # Android UI reference pack
 
-**Reference pack revision:** 3.4.2 (tracks Android UI specification 3.4.3)
-**Last verified:** 2026-09-23
+**Reference pack revision:** 3.4.3 (tracks Android UI specification 3.4.4)
+**Last verified:** 2026-09-24
 **Reference release baseline:** Apple marketing version 1.1 — 17 September 2026
 
 This pack separates evidence from the Android presentation contract:
@@ -62,6 +62,15 @@ before adding runtime evidence. Historical image provenance remains intact.
 - [Watch Today](../../screens/ios/watch-today.png)
 - [Watch History](../../screens/ios/watch-history.png)
 - [Watch Stats](../../screens/ios/watch-stats.png)
+
+## Source-platform routing note
+
+The latest iOS implementation centralizes iOS root selection and selected
+presentations in `RippleNavigationCoordinator`. This is source-platform
+context only; it does not change the Android illustrations or shared surface
+composition. Android keeps its own native typed destinations, adaptive root
+navigation, and predictive-back behavior, and must not port the Swift route
+owner.
 
 ## Android layout illustrations
 
@@ -201,3 +210,4 @@ substitute for the PRD, screen catalog, design system, or data model.
 | 3.4.0 | 2026-09-23 | Audited the complete evidence set against the shared visual inventory and updated the shared wireframe coverage while preserving Android-native evidence and known runtime gaps. | The reference pack now makes every product-owned visible region traceable without turning cropped images or native chrome into competing product contracts. |
 | 3.4.1 | 2026-09-23 | Rebuilt Android Stats and Wear layout illustrations against the canonical chart, summary, logging, and delete/Undo contracts; clarified that PNGs are illustrations, not device captures. | Android reviewers can see the complete required compositions while runtime build/device acceptance remains clearly deferred to the separate Android repository. |
 | 3.4.2 | 2026-09-23 | Rebuilt the Android phone/tablet History illustrations with every date in seven columns, today-only add, disabled future dates, and matching Day Detail totals; corrected the Wear Today fill ratio and linked editable sources. | The references now show complete calendar surfaces and proportional/consistent sample values, while remaining authored illustrations rather than runtime evidence. |
+| 3.4.3 | 2026-09-24 | Recorded the iOS-only composition-root routing change as implementation context without changing Android layout illustrations or shared visual evidence. | The reference pack makes the source-platform boundary explicit while preserving the current images, stable-ID map, and Android-native navigation responsibility. |

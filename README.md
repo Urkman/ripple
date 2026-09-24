@@ -60,7 +60,7 @@ project.
 
 | Target or surface | Experience |
 | --- | --- |
-| iOS / iPadOS | Today, History, Stats, Settings, onboarding, HealthKit, and an app-wide typed navigation coordinator. iPad uses adaptive split layouts where appropriate. |
+| iOS / iPadOS | Today, History, Stats, Settings, onboarding, HealthKit, and the app-wide typed iOS navigation coordinator. iPad uses adaptive split layouts where appropriate. |
 | watchOS | Three horizontal pages: Today, History, and Stats. Today supports Crown-first amount selection; History shows the most recent seven elapsed local days; Stats shows the current ISO week. |
 | iOS widgets | Small, medium, and large Today widgets plus interactive quick logging. Lock Screen and StandBy use focused remaining/progress surfaces. |
 | Apple Watch complications | Circular, rectangular, and inline complication families with today's progress and a quick log action. |
@@ -91,6 +91,14 @@ RippleIntentsCore     App Intents, App Shortcuts, and system adapters
 RippleDomain          Entities, use cases, formatting, and ports
 RippleData            SwiftData, CloudKit, HealthKit, notifications, and mapping
 ```
+
+The iOS composition root owns the single `RippleNavigationCoordinator`. It
+keeps typed root selection, compact History → Day Detail navigation, the
+root-presented Custom Amount sheet, and Settings editor presentations in one
+iOS target boundary. `RootView` binds that state into feature views through
+narrow actions and bindings; `RippleFeatures` does not import the app target.
+The coordinator is not shared architecture: watchOS, macOS, tvOS, visionOS,
+and Android retain their native navigation models.
 
 The central write flow is intentionally shared:
 
@@ -167,7 +175,7 @@ Ripple.xcworkspace       Shared workspace
 project.yml              XcodeGen project definition
 Makefile                 Common test and build commands
 Apps/
-  RippleiOS/              iOS composition root
+  RippleiOS/              iOS composition root and typed route owner
   RipplewatchOS/          watchOS composition root
   RipplemacOS/            macOS composition root
   RippletvOS/             tvOS composition root
@@ -374,6 +382,12 @@ When product behavior, a screen, a data rule, or a platform boundary changes,
 update the affected contract alongside the implementation. The README is an
 orientation guide; the shared contracts are authoritative for detailed
 behavior.
+
+The current handoff baseline is dated 24 September 2026. The iOS architecture
+mapping is version 1.13.0; the Android architecture, Android UI specification,
+and Android reference pack are versions 1.8.4, 3.4.4, and 3.4.3 respectively.
+The latest routing change is implementation-only: shared product semantics,
+surface IDs, and wireframes remain unchanged.
 
 ## Contributing and license
 
