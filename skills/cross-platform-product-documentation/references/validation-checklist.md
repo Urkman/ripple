@@ -46,6 +46,9 @@ documentation contract; they do not prove runtime behavior.
   with the text, legibility, clipping, and unintended platform styling.
 - [ ] The wireframe preserves the reference's product-owned region order,
   grouping, information density, repeated-element counts, and visible controls.
+- [ ] Product-owned silhouettes, shape/containment boundaries, and fill/clip
+  relationships are recognizable; static motion states are identified in
+  the image and dynamic behavior remains in the canonical text.
 - [ ] Dependent context/date-range rows, selection and progress indicators,
   pager/continuation cues, helper/footer content, and chart type/series/axes/
   legends are represented when visible in the target state.

@@ -1,4 +1,100 @@
-# Ripple – Water Tracker
+# Ripple — Cross-platform without cross-platform
+
+Ripple is a test project for converting an existing iOS app into a native
+Android app **entirely through AI**, without a cross-platform framework or a
+shared application codebase. This iOS repository is the reference implementation
+and the place where the reusable AI skills for that conversion are developed
+and applied. The independent [Ripple Android repository](https://github.com/Urkman/ripple-android)
+is the target implementation. Together, the repositories demonstrate how one
+product can be built for two platforms while each app keeps its native
+architecture, UI, and system integrations.
+
+My preference for native apps comes from using cross-platform apps that feel
+wrong on iOS. Even polished apps can miss details of the platform's expected
+behavior. In Flutter apps, I often notice this in the animations for presenting
+sheets and swiping back through navigation; they do not feel right to me on
+iOS. I wanted Ripple to use native interactions and motion on each platform.
+
+The conversion is **documentation-driven**. The iOS project produces a
+platform-independent product handoff in [`Docs/shared/`](Docs/shared/): product
+behavior, one canonical description per surface, design tokens, data rules,
+Android mappings, wireframes, and visual references. The Android AI workflow
+uses that handoff and the Android repository's own instructions to implement
+the app. It does not inspect, import, or translate the iOS source code in the
+Android target. The experiment therefore tests whether a complete written
+contract and specialized AI skills can carry an existing product across
+platforms without sharing implementation code.
+
+The **DesignSystem is a prerequisite for transferring the UI**. Before Android
+UI work begins, the product needs defined semantic roles for colors,
+typography, spacing, shapes, reusable components, and motion. The shared
+contract defines what those roles mean; Android maps them to native resources
+and components. This gives the AI a consistent design foundation for every
+surface instead of asking it to recreate the visual language screen by screen.
+
+## AI skills and conversion workflow
+
+The four [project-local Codex skills](skills/README.md) are maintained in this
+repository. Each has a distinct role in the workflow:
+
+1. **Prepare the iOS foundation — [`ios-app-setup`](skills/ios-app-setup/SKILL.md).**
+   Use this when creating a blank iOS project or bringing an existing one into
+   a consistent state. It checks the Xcode project, targets, shared source and
+   resources, establishes or adopts one DesignSystem, and adds documentation
+   synchronization rules to `AGENTS.md`. It verifies the foundation without
+   inventing product screens or replacing an existing architecture.
+2. **Turn the product into a handoff —
+   [`cross-platform-product-documentation`](skills/cross-platform-product-documentation/SKILL.md).**
+   Use this in the iOS repository to maintain the authoritative PRD, stable
+   screen IDs, one platform-independent description and wireframe per surface,
+   design-system and data-model contracts, and the native platform mappings.
+   It inventories current visual references, keeps shared meaning separate
+   from iOS and Android implementation details, and synchronizes affected
+   documents and version histories when the product changes. Its DesignSystem
+   contract must define the shared visual roles before Android UI is built.
+3. **Check the handoff before implementation —
+   [`android-conversion-readiness`](skills/android-conversion-readiness/SKILL.md).**
+   Run this in the iOS repository before handing the documentation to Android.
+   Its automated and manual checks cover surface and wireframe completeness,
+   design-token ownership and use, data boundaries, Android-native mappings,
+   and acceptance criteria. It reports **READY**, **READY WITH WARNINGS**, or
+   **BLOCKED** with evidence and specific next actions; it does not build the
+   Android app or silently decide missing product behavior. Its deterministic
+   check runs with
+   `python3 skills/android-conversion-readiness/scripts/audit_android_readiness.py .`;
+   the report also requires a manual review of the contracts and references.
+4. **Build the native Android app —
+   [`android-app-from-documentation`](skills/android-app-from-documentation/SKILL.md).**
+   Use this in the Android repository with the complete `Docs/shared/` handoff
+   and that repository's `AGENTS.md`. It maps each stable surface ID to Android
+   code, implements domain and data boundaries before broad UI work, maps the
+   defined design roles to native Android resources and components, and builds
+   phone, wearable, and system surfaces in testable slices. Build, test,
+   accessibility, and emulator evidence must support the result; iOS
+   screenshots or a successful compile alone do not establish Android runtime
+   behavior.
+
+Install the repository copies of all four skills for local Codex use:
+
+```sh
+mkdir -p ~/.codex/skills
+cp -R skills/ios-app-setup ~/.codex/skills/
+cp -R skills/cross-platform-product-documentation ~/.codex/skills/
+cp -R skills/android-conversion-readiness ~/.codex/skills/
+cp -R skills/android-app-from-documentation ~/.codex/skills/
+```
+
+Invoke the relevant skill by name for each stage: `$ios-app-setup` for the iOS
+foundation, `$cross-platform-product-documentation` for the handoff,
+`$android-conversion-readiness` for the audit, and
+`$android-app-from-documentation` from the Android target repository. Update a
+skill in [`skills/`](skills/) first, validate it, and reinstall that copy
+locally. The [Android conversion guide](Docs/ANDROID_CONVERSION_HOWTO.md)
+contains the readiness gates and a starter prompt for the Android target.
+Platform-specific implementation also follows the specialist skills required
+by [`AGENTS.md`](AGENTS.md) or the Android repository's own instructions.
+
+## The app
 
 Hydration that follows you.
 
@@ -8,7 +104,7 @@ reminder. The app is the quiet place for today's level, history, statistics,
 and personal setup.
 
 [Download Ripple on the App Store](https://apps.apple.com/us/app/ripple-water-tracker/id6808143149) ·
-[View the source on GitHub](https://github.com/Urkman/ripple)
+[View the iOS source on GitHub](https://github.com/Urkman/ripple)
 
 ## Screenshots
 
@@ -70,7 +166,8 @@ project.
 | Siri, Shortcuts, Control Center, notifications | Native system entry points that all use the shared logging domain operation. |
 
 The project currently declares 27.0 deployment targets for iOS, watchOS,
-macOS, tvOS, and visionOS. Android is an independent project; this repository
+macOS, tvOS, and visionOS. Android is an independent project:
+[Ripple for Android](https://github.com/Urkman/ripple-android). This repository
 contains its shared product, screen, design, data, and architecture handoff
 under [`Docs/shared/Android/`](Docs/shared/Android/), not an Android
 implementation. For a project-independent readiness checklist and conversion
@@ -308,47 +405,6 @@ make build-ios
 
 Application and widget targets can also be tested from Xcode using the
 corresponding platform destination.
-
-## Project-local Codex skills
-
-Ripple keeps reusable Codex workflow skills in [`skills/`](skills/). They are
-part of the repository because the project has strict cross-platform product,
-architecture, design, data, and documentation boundaries. The skills make
-those rules repeatable for contributors and agents instead of relying on
-tribal knowledge or allowing iOS and Android implementations to drift apart.
-
-The repository copies are canonical: update a skill under `skills/` first,
-then reinstall it for local Codex use.
-
-- [`cross-platform-product-documentation`](skills/cross-platform-product-documentation/SKILL.md)
-  keeps the product contract, screen catalog, canonical surface descriptions,
-  design system, data model, wireframes, and platform handoffs coherent. Its
-  purpose is to give every screen and system surface one authoritative,
-  rebuildable description.
-- [`android-app-from-documentation`](skills/android-app-from-documentation/SKILL.md)
-  builds or extends the independent Android project from the shared contracts.
-  Its purpose is to preserve product behavior and data boundaries while still
-  allowing Android-native navigation, controls, layouts, and Wear OS UI.
-- [`ios-app-setup`](skills/ios-app-setup/SKILL.md) prepares a blank or existing
-  iOS project with shared foundations, DesignSystem ownership, resources,
-  tests, and documentation-sync rules. Its purpose is to establish a stable
-  implementation foundation; it intentionally does not invent or implement
-  product screens from documentation.
-
-Install the project-local packages from the repository root:
-
-```bash
-mkdir -p ~/.codex/skills
-cp -R skills/cross-platform-product-documentation ~/.codex/skills/
-cp -R skills/android-app-from-documentation ~/.codex/skills/
-cp -R skills/ios-app-setup ~/.codex/skills/
-```
-
-When a local skill changes, reinstall that package and validate it before
-committing. The task-specific technical skills required for SwiftUI, SwiftData,
-concurrency, charts, App Intents, builds, debugging, and App Store Connect are
-listed in [`AGENTS.md`](AGENTS.md) and should be read before the corresponding
-work.
 
 ## Documentation
 

@@ -24,8 +24,8 @@ the existing UI. Keep each kind of decision in one place:
 - **Canonical surface descriptions:** exactly one platform-independent file
   per screen, sheet, wearable surface, and documented system entry point. Each
   file owns that surface's layout, function, read model, actions, states,
-  validation, accessibility, responsive behavior, design contract, and
-  forbidden behavior.
+  validation, accessibility, responsive behavior, product-owned geometry and
+  containment meaning, design contract, and forbidden behavior.
 - **Design system contract:** semantic colors, typography, spacing, shapes,
   motion, reusable UI elements, system-control policy, and accessibility
   acceptance.
@@ -79,6 +79,9 @@ including, where present:
   dismissal affordances, selection indicators, and pager/continuation cues;
 - every repeated row, card, divider, progress indicator, badge, and status
   treatment;
+- recognizable product-owned silhouettes, shape geometry, container or vessel
+  boundaries, clip/containment geometry, fill boundaries, and other visual
+  primitives whose form carries product meaning;
 - chart type, series, axes, labels, legends, reference lines, and the number
   and order of chart regions; and
 - grouping, containment, alignment, reading order, relative sizing, spacing
@@ -91,6 +94,14 @@ dependent date/range row are separate required regions unless the authority
 explicitly defines them as one control. A line chart cannot silently become a
 bar chart, and a wearable history surface cannot silently become a different
 summary list merely because the latter is easier to draw.
+
+When a product-owned form carries meaning, preserve its recognizable silhouette
+and its relationship to contained content: a vessel must read as that vessel,
+not as a generic card, and a clipped fill must follow the documented boundary.
+Static wireframes cannot prove dynamic behavior. They must identify the shown
+state (for example, upright/idle) while the canonical description records the
+motion relationship, such as content responding to device movement, without
+inventing a second static UI state.
 
 Treat system-owned status bars, device frames, platform tab/navigation chrome,
 and other operating-system decoration separately. They may be omitted from a
@@ -139,8 +150,9 @@ visual inventory for each state and viewport:
    whether it is the current visual target or supporting evidence.
 2. Enumerate product-owned regions from top to bottom and left to right. Include
    text/value content, units, controls, indicators, repeated items, chart
-   structure, navigation/context rows, separators, hints, and partially visible
-   continuation. Record counts and order where they are visible.
+   structure, navigation/context rows, separators, hints, shape/silhouette and
+   containment boundaries, and partially visible continuation. Record counts and
+   order where they are visible.
 3. Mark system-owned chrome separately instead of dropping it without a
    decision. Record native variations that a platform document must map.
 4. Compare references against one another and against existing wireframes. A
@@ -185,6 +197,8 @@ Describe meaning, not framework code. Each file should answer:
 - Which design tokens and reusable elements are required?
 - Which product-owned visible elements from the reference inventory must be
   present, in what order/grouping, and in which states or viewports?
+- Which product-owned silhouettes, containment boundaries, and relationships
+  between form and motion must remain recognizable across platforms?
 - What is deliberately forbidden?
 
 Use semantic terms such as “top navigation”, “grouped surface”, “horizontal
@@ -210,6 +224,12 @@ accepting an image, compare it with the visual inventory: all product-owned
 regions, repeated elements, chart structures, navigation/context rows, and
 wearable continuation cues must be visible or explicitly represented by the
 documented state.
+
+For shape-dependent surfaces, the image must show the semantic silhouette and
+the relevant fill/clip or containment relationship. If the surface responds to
+motion, label the static state represented by the image and keep the behavioral
+contract in the canonical text; a still image is evidence of composition, not
+proof of animation.
 
 ### 6. Separate shared semantics from native expression
 

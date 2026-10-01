@@ -12,7 +12,8 @@ including labels and values, units, controls, dependent context or
 date/range-navigation rows, repeated rows/cards, progress and selection
 indicators, separators, pager/continuation cues, chart type and structure,
 legends/axes/reference lines, helper or footer text, and partially visible
-content that communicates scrolling or pagination. Preserve region order,
+content that communicates scrolling or pagination. Preserve recognizable
+product-owned silhouettes, shape/containment boundaries, region order,
 grouping, alignment, relative sizing, density, and visual hierarchy.
 
 Low fidelity may simplify exact typography, color, icon artwork, shadows, and
@@ -21,6 +22,12 @@ recompose a product-owned element. A selector with a dependent context row,
 or a chart with a particular series and axis structure, remains that structure
 in the wireframe unless the written contract explicitly makes the difference a
 state or viewport variant.
+
+For a form-driven surface, the wireframe must preserve the semantic silhouette
+and the way contained content follows or clips to that form. A static image
+should identify its illustrated state, such as upright/idle, while motion
+relationships remain in the canonical surface text; the image is not a runtime
+animation proof.
 
 If a current capture conflicts with an older wireframe, classify the conflict
 as state, viewport, localization, system-owned chrome, stale artifact, or

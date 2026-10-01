@@ -5,10 +5,16 @@ product into a native Android implementation. It applies whether the source
 product currently runs on iOS, another platform, or multiple platforms.
 
 This is process guidance, not a product or architecture contract. Product
-behavior must come from the source project's authoritative documentation. The
-Android target repository's own `AGENTS.md` and established conventions govern
-Android implementation. Do not copy one project's agent instructions into an
-unrelated Android repository.
+behavior must come from the authoritative documentation handoff in
+`Docs/shared/`. The Android target repository's own `AGENTS.md` and established
+conventions govern Android implementation. Do not copy one project's agent
+instructions into an unrelated Android repository.
+
+For this workflow, start in the current working directory and build the
+Android app there from the complete documentation handoff in `Docs/shared/`.
+The source application and its implementation repository are not required
+inputs. Do not inspect or import source-platform application code when the
+shared documentation is available.
 
 ## Prerequisites
 
@@ -25,8 +31,10 @@ be marked not applicable only with a documented reason and owner.
 - Conflicts between requirements, existing behavior, and visual references are
   resolved by the product owner or recorded as blockers. They are not settled
   by guessing during implementation.
-- The source and target repositories are identified. Instructions for the
-  source platform are not assumed to govern the Android repository.
+- The current working directory is the Android target working tree, and
+  `Docs/shared/` is the complete product and implementation handoff. Source
+  application code and source-platform repository instructions are not needed
+  inputs for the Android build.
 
 ### 2. Product behavior and surfaces are documented
 
@@ -63,13 +71,13 @@ be marked not applicable only with a documented reason and owner.
 
 - Shared color, typography, spacing, size, shape, motion, elevation, and
   reusable-component roles have named definitions and owners.
-- Existing production UI has been audited for feature-local style values.
-  Product UI consumes the named design-system tokens/components; each raw value
-  is either migrated or classified as an allowed geometry calculation,
-  platform adapter, or other documented exception.
-- If source UI code is unavailable for review, record token-use compliance as
-  unknown/deferred, not as a pass. A known, unclassified feature-level style
-  violation blocks product UI implementation.
+- The Android implementation will consume the named design-system
+  tokens/components; each raw value must be migrated or classified as an
+  allowed geometry calculation, platform adapter, or other documented
+  exception.
+- Source application UI code is outside this workflow. Verify token ownership
+  and usage against `Docs/shared/` and the Android implementation as it is
+  built; do not block the Android build on an unavailable source UI audit.
 - Missing roles are resolved in the design-system contract before they are
   independently invented by the Android implementation. Android mappings
   preserve semantic roles while using native resources, components, and system
@@ -113,21 +121,21 @@ blocker for product UI work, not a polish item to defer until the end.
 
 ### 7. The Android implementation environment is understood
 
-- The target repository is selected and its existing changes are understood
-  before files are replaced or generated.
+- The current working directory is selected as the Android target, and its
+  existing changes are understood before files are replaced or generated.
 - It has Android-specific binding instructions. If they are missing, create
-  them before implementation; the [project-neutral Android AGENTS template](ANDROID_AGENTS_TEMPLATE.md)
+  them in the current target; the [project-neutral Android AGENTS template](ANDROID_AGENTS_TEMPLATE.md)
   can be copied and merged with target-repository rules.
-- For an existing app, its Gradle root, modules, package IDs, SDK/toolchain,
-  architecture, localization, test commands, and available devices are known.
-  For a new app, choices that the contracts leave open are recorded before they
-  shape the product code.
+- For an existing app in the current folder, its Gradle root, modules, package
+  IDs, SDK/toolchain, architecture, localization, test commands, and available
+  devices are known. For a new app, choices that the contracts leave open are
+  recorded before they shape the product code.
 - Required credentials, permissions, external services, hardware, and build
   infrastructure are available or have an explicit setup owner.
 
-The Android repository does not have to exist for a documentation readiness
-review. In that case, report implementation setup and runtime verification as
-deferred; do not claim the app itself has been built or accepted.
+If the current folder does not contain an Android project yet, create the
+Android project there as part of the requested implementation. Do not switch
+to or inspect a separate source application to fill that setup gap.
 
 ## Readiness outcomes
 
@@ -144,39 +152,40 @@ Use evidence, not an overall impression, to classify the handoff:
   unresolved; data boundaries are unclear; or the Android mapping would need
   to invent or remove product behavior.
 
-When blocked, stop before broad product implementation. Report the exact source
-and issue, the authority that must resolve it, and the smallest next action.
+When blocked, stop before broad product implementation. Report the exact
+document and issue, the authority that must resolve it, and the smallest next
+action.
 Do not silently repair a product decision inside Android code. An absent target
-Android repository is a deferred setup state, not by itself proof that the
-source documentation is blocked.
+Android project in the current folder is a setup task, not a reason to inspect
+the source application.
 
 ## Conversion workflow
 
-1. **Set scope and authority.** Name the product, requested surfaces, target
-   devices, exclusions, source repository, target repository, and owners. Read
-   the source instructions and target Android instructions independently. If
-   the target repository or its Android-specific `AGENTS.md` is missing, include
-   its creation from the [generic template](ANDROID_AGENTS_TEMPLATE.md) in setup
-   scope before implementation.
-2. **Package the complete handoff.** Include the authoritative product and
-   domain contracts, surface index and descriptions, design system, Android
-   architecture/UI mapping, visual inventory, and all linked references/assets.
-   Preserve directory structure, relative links, and version context. Do not
-   copy unrelated source-platform instructions as Android rules.
-3. **Run a readiness review.** Inspect the documentation and relevant current
-   UI source. Check surface coverage, visual inventories, named-token use,
-   domain/data boundaries, Android mappings, and acceptance criteria against
-   the prerequisites above. Keep findings evidence-backed and classify each as
-   blocker, warning, pass, or deferred.
+1. **Start in the current folder and establish authority.** Use the current
+   working directory as the Android target. Name the requested surfaces, target
+   devices, exclusions, and owners. Read the current folder's Android-specific
+   instructions independently from the complete `Docs/shared/` handoff. Do not
+   inspect or request a source application repository.
+2. **Use the complete shared handoff in place.** Read the authoritative product
+   and domain contracts, surface index and descriptions, design system, Android
+   architecture/UI mapping, visual inventory, and all linked references/assets
+   under `Docs/shared/`. Preserve directory structure, relative links, and
+   version context. Do not replace the documentation handoff with source-app
+   code or screenshots.
+3. **Run a documentation-first readiness review.** Inspect `Docs/shared/` and
+   the current Android project only. Check surface coverage, visual inventories,
+   named-token use, domain/data boundaries, Android mappings, and acceptance
+   criteria against the prerequisites above. Keep findings evidence-backed and
+   classify each as blocker, warning, pass, or deferred.
 4. **Resolve blockers at their source.** Update the document that owns the
    decision, synchronize affected companion/platform documents, and repeat the
    relevant readiness checks. Do not introduce a new product decision merely
    to make the audit pass.
-5. **Inspect the Android target and create a traceability map.** Preserve
-   existing work. For every in-scope stable surface ID, map its canonical
-   description to Android entry points, state/data owners, domain operations,
-   design tokens/components, system adapters, and verification coverage. A
-   surface need not correspond to one source file.
+5. **Inspect the current Android target and create a traceability map.**
+   Preserve existing work. For every in-scope stable surface ID, map its
+   canonical description to Android entry points, state/data owners, domain
+   operations, design tokens/components, system adapters, and verification
+   coverage. A surface need not correspond to one source file.
 6. **Implement in small vertical slices.** Establish domain/data boundaries and
    shared design-system foundations before broad UI work. Then implement
    surfaces and system clients in reviewable increments, using documented
@@ -213,48 +222,50 @@ source documentation is blocked.
 
 ## Starter prompt
 
-Replace the bracketed values before using this prompt. If the target Android
-repository does not exist, include repository setup in scope or treat it as a
-deferred prerequisite.
+Use this prompt from the Android target's current working directory. It builds
+from the shared documentation handoff in place; it does not require a source
+application repository.
 
 ```text
-Assess and, if ready, convert [PRODUCT] to a native Android implementation.
+Build the complete native Android app in the current working directory from
+the documentation handoff in `Docs/shared/`.
 
-Source repository/documentation: [PATH OR LINK]
-Target Android repository: [PATH, OR “not created”]
+Use `$android-app-from-documentation` as the implementation skill. Treat every
+document under `Docs/shared/` as the product and Android implementation input:
+read the PRD, screen catalog, every canonical surface description, design
+system, data model, Android architecture/UI contracts, visual inventory,
+wireframe pack, and linked Android reference material before broad UI work.
+
+Do not inspect, import, or request the source application, its iOS/Apple source
+code, or a separate source repository. Do not ask for a separate target path:
+the current working directory is the Android target. Read an Android-specific
+`AGENTS.md` in the current folder if present, preserve existing Android work,
+and create or complete the Android project in this folder. If Android-specific
+instructions are missing, establish them in the current target before broad
+implementation using the applicable project rules.
+
 Requested scope: [FULL CONVERSION OR NAMED SURFACES/FEATURES]
 Target devices/platform surfaces: [PHONE, TABLET, WEARABLE, SYSTEM SURFACES, ETC.]
 
-Read the source repository's binding instructions and the target Android
-repository's instructions separately. If the target exists, inspect its
-`AGENTS.md`, existing changes, architecture, build setup, toolchain, tests, and
-available emulator/device targets. If the target or its Android-specific
-`AGENTS.md` is missing, include creating it from the project-neutral
-[`ANDROID_AGENTS_TEMPLATE.md`](ANDROID_AGENTS_TEMPLATE.md) in the setup plan and
-do not begin Android code changes before it exists. Preserve user work and
-local conventions.
-
-Before coding, perform an evidence-backed readiness review using the
-prerequisites in this guide. Verify authoritative product behavior, complete
-surface and state coverage, visual-element inventories, design-system token
-ownership and production-code use, domain/data boundaries, Android-native
-mapping, localization/accessibility/adaptive requirements, and an executable
-acceptance plan. Return READY, READY WITH WARNINGS, or BLOCKED with exact file
-and line/check evidence, severity, and next action. Do not invent product
-behavior or silently edit the source contract just to clear a finding; any
-contract change must follow its documented authority process.
+Before coding, perform an evidence-backed documentation readiness review using
+the prerequisites in this guide. Verify authoritative product behavior,
+complete surface and state coverage, visual-element inventories, design-system
+token ownership, domain/data boundaries, Android-native mapping,
+localization/accessibility/adaptive requirements, and an executable acceptance
+plan from `Docs/shared/` and the current Android project only. Return READY,
+READY WITH WARNINGS, or BLOCKED with exact file and line/check evidence,
+severity, and next action. Do not invent product behavior or silently edit the
+shared contract just to clear a finding; any contract change must follow its
+documented authority process.
 
 If BLOCKED, stop before product implementation and report the smallest
 authority-preserving actions needed. If READY WITH WARNINGS, track each warning
-and its verification owner. If the status is READY or READY WITH WARNINGS, and
-implementation is in the requested scope, use a suitable
-Android-from-documentation implementation skill (such as
-`$android-app-from-documentation`, if available), create or update a
-documentation-to-code map before broad UI work, and proceed in small, testable
-slices. Follow the Android repository's architecture and the documented domain
-operations, use named design-system tokens, preserve every documented
-product-owned element, and prefer native Android controls where they satisfy
-the contract.
+and its verification owner. If the status is READY or READY WITH WARNINGS,
+create or update a documentation-to-code map before broad UI work and proceed
+in small, testable slices. Follow the current Android project's architecture
+and the documented domain operations, use named design-system tokens, preserve
+every documented product-owned element, and prefer native Android controls
+where they satisfy the contract.
 
 Run applicable build, lint, unit, UI/instrumentation, and emulator/device
 checks. Finish with implemented surface coverage, checks and runtime flows
