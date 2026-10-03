@@ -72,6 +72,17 @@ documentation contract; they do not prove runtime behavior.
       the semantic contract.
 - [ ] Platform-specific navigation/input/system behavior is documented only in
       the relevant platform mapping.
+- [ ] Permission-backed and external-data flows map the full path from explicit
+      user action through current authorization/provider state, documented data
+      scope and validation, source-of-truth change/domain operation, and
+      observable outcome/fallback.
+- [ ] Positive-path tests assert resulting domain or persisted state and its
+      observable effect; negative-path tests verify protected data is not read
+      or written without current authorization. Relevant denial, unavailable
+      provider, no-eligible-data, and revoked-access cases are covered.
+- [ ] Fake-based automated evidence is distinguished from real
+      device/provider verification; unavailable runtime verification is marked
+      unverified or deferred.
 - [ ] Evidence captures are labeled by role; they do not silently override
       written behavioral or domain contracts.
 - [ ] Current visual targets, older wireframes, and exploratory images are

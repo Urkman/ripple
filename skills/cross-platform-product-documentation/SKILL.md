@@ -272,7 +272,20 @@ what is source of truth and which systems are only projections or clients.
 Do not duplicate amount/business logic in widgets, intents, notifications,
 wearable entry points, or view descriptions.
 
-### 8. Synchronize platform handoffs
+### 8. Build a documentation-to-code map
+
+Map each canonical surface and critical cross-surface flow to its platform
+implementation entry points, state/data owners, domain operations, system or
+external adapters, and verification coverage. For each critical flow, trace the
+complete acceptance path: the initiating user action, any permission decision
+or external adapter, the data read/change/projection, the named operation, the
+observable product outcome, and the documented success and failure behavior.
+Name the relevant test layer and the assertions that cover those transitions
+and outcomes. Generic entries such as “unit/UI/instrumentation coverage” or a
+test that only confirms an adapter method was called do not establish this
+traceability.
+
+### 9. Synchronize platform handoffs
 
 When a shared screen, flow, token, data rule, or accessibility contract
 changes, update the affected platform architecture/UI documents in the same
@@ -281,7 +294,64 @@ semantic description. Keep current implementation paths honest; distinguish
 verified paths from recommended/target paths and never claim code changed when
 the task changed documentation only.
 
-### 9. Version and validate
+### 10. Verify incrementally
+
+Verify each implementation slice against its documented behavior and record
+the evidence as it is gathered. Keep build, automated-test, and runtime
+verification results distinct. A successful compile, manifest declaration,
+permission prompt, isolated formula test, or screenshot cannot stand in for an
+integrated user flow.
+
+#### Permission-backed and external-data flows
+
+For every feature that depends on a runtime permission or external/provider data,
+define and verify a vertical acceptance path from the user's action to the
+observable product outcome. Record this path in the documentation-to-code map:
+
+1. Explain the data use before handing off to system permission UI.
+2. Request access only after an explicit user action through the native
+   permission contract.
+3. Read the actual authorization and provider state after the result or return
+   from system UI; never infer that access was granted from the callback alone.
+4. Check current authorization before every protected read or write.
+5. Apply the documented data scope, time range, units, and validation.
+6. Persist or project data through the documented source of truth and invoke
+   the named domain operation.
+7. Verify the resulting user-visible behavior and documented fallback.
+
+Acceptance coverage must include the authorized positive path and relevant
+failure states, including denial, unavailable provider, no eligible data, and
+revocation or loss of access. Positive-path tests must assert the resulting
+domain or persisted state and its observable effect, not merely that a
+permission request or adapter method was called. Negative-path tests must
+verify that protected data is not accessed without authorization.
+
+Use fakes for deterministic unit/integration coverage and a real provider or
+device for runtime verification where available. If provider/device verification
+cannot be performed, record it as unverified or deferred; do not report the
+end-to-end flow as runtime-verified. A manifest declaration, permission
+prompt, successful build, or isolated domain-formula test is not by itself
+evidence that the integrated feature works.
+
+### 11. Report honestly
+
+For every critical permission-backed or external-data flow, report these
+statuses separately:
+
+- **Implemented:** the documented path exists in the product code.
+- **Automated tested:** named automated tests assert the relevant positive and
+  negative outcomes, including resulting domain/persisted state where
+  applicable.
+- **Device/provider checked:** the integrated path was exercised with a real
+  device or provider; identify the environment and observed outcome.
+- **Not verified:** required automated or runtime evidence is missing,
+  unavailable, or deferred; state what remains and why.
+
+Do not collapse these into a single “complete” or “tested” status. Clearly
+separate documentation review, build results, automated coverage, and runtime
+evidence.
+
+### 12. Version and validate
 
 For every versioned document changed:
 
